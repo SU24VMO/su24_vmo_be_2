@@ -2,6 +2,7 @@
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 
 namespace SU24_VMO_API.Services
@@ -57,7 +58,7 @@ namespace SU24_VMO_API.Services
             //them request tao bai post sau
 
             var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) { throw new Exception("Account not found!"); }
+            if (account == null) { throw new NotFoundException("Account not found!"); }
             if (account.Role == BusinessObject.Enums.Role.Member)
             {
                 var user = _userRepository.GetByAccountId(request.AccountId)!;
