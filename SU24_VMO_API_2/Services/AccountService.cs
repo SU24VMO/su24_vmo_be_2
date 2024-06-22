@@ -68,7 +68,8 @@ namespace SU24_VMO_API.Services
 
         public Account? GetByAccountId(Guid accountId)
         {
-            return _accountRepository.GetById(accountId);
+            var account = _accountRepository.GetById(accountId);
+            return account;
         }
 
         public Account? CreateAccount(CreateAccountRequest request)
