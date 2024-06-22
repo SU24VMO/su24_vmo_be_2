@@ -580,9 +580,14 @@ namespace SU24_VMO_API.Services
                 throw new Exception("End date must be greater than start date!");
             }
 
-            if (Convert.ToInt64(request.TargetAmount) < 0)
+            if (!long.TryParse(request.TargetAmount, out long targetAmount))
             {
-                throw new Exception("Target amount must greater or equal than 0.");
+                throw new Exception("Target amount must be a valid number.");
+            }
+
+            if (targetAmount < 0)
+            {
+                throw new Exception("Target amount must be greater than or equal to 0.");
             }
         }
     }
