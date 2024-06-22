@@ -130,6 +130,9 @@ namespace SU24_VMO_API.Services
 
             if (acceptOrRejectCreateOrganizationRequestRequest.IsApproved == true)
             {
+                request.ApprovedBy = acceptOrRejectCreateOrganizationRequestRequest.RequestManagerId;
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = true;
                 request.IsPending = false;
                 request.IsLocked = false;
@@ -141,6 +144,7 @@ namespace SU24_VMO_API.Services
             }
             else
             {
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = false;
                 request.IsPending = false;
                 request.IsLocked = false;

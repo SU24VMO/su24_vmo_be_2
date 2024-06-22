@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
+using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
@@ -119,6 +120,9 @@ namespace SU24_VMO_API.Services
                 account = user!.Account;
                 user!.IsVerified = true;
 
+                request.ApprovedBy = updateMemberAccountRequest.RequestManagerId;
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = true;
                 request.IsPending = false;
                 request.IsLocked = false;
@@ -134,6 +138,7 @@ namespace SU24_VMO_API.Services
                 account = user!.Account;
                 user!.IsVerified = false;
 
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = false;
                 request.IsPending = false;
                 request.IsLocked = false;

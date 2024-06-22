@@ -270,6 +270,9 @@ namespace SU24_VMO_API.Services
                     request.IsApproved = true;
                     request.IsPending = false;
                     request.IsLocked = false;
+                    request.ApprovedBy = updateCampaignRequest.RequestManagerId;
+                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsRejected = false;
                     result = true;
 
@@ -330,6 +333,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
+                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
                     request.IsPending = false;
                     request.IsLocked = false;
@@ -350,6 +354,10 @@ namespace SU24_VMO_API.Services
                     campaign.IsActive = true;
                     campaign.IsTransparent = true;
 
+
+                    request.ApprovedBy = updateCampaignRequest.RequestManagerId;
+                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = true;
                     request.IsPending = false;
                     request.IsLocked = false;
@@ -413,6 +421,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
+                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
                     request.IsPending = false;
                     request.IsLocked = false;

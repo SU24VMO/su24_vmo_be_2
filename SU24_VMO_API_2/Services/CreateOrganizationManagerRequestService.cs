@@ -109,6 +109,9 @@ namespace SU24_VMO_API.Services
                 organizationManager = _organizationManagerRepository.GetById(request.OrganizationManagerID);
                 organizationManager!.IsVerified = true;
 
+                request.ApprovedBy = updateCreateOrganizationManagerVerifiedAccount.RequestManagerId;
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = true;
                 request.IsPending = false;
                 request.IsLocked = false;
@@ -121,6 +124,7 @@ namespace SU24_VMO_API.Services
                 organizationManager = _organizationManagerRepository.GetById(request.OrganizationManagerID);
                 organizationManager!.IsVerified = false;
 
+                request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = false;
                 request.IsPending = false;
                 request.IsLocked = false;

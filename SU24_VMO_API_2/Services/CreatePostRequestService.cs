@@ -134,6 +134,7 @@ namespace SU24_VMO_API.Services
                 {
                     createPostRequest.ApprovedBy = request.RequestManagerId;
                     createPostRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    createPostRequest.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     createPostRequest.IsApproved = true;
                     createPostRequest.IsLocked = false;
                     createPostRequest.IsPending = false;
