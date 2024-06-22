@@ -55,43 +55,6 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
-        //[HttpPost]
-        //[Authorize(Roles = "Member")]
-        //[Route("create-by-member-role")]
-
-        //public async Task<IActionResult> CreateCampaignRequestWithMemberRoleAsync(Guid accountId, [FromForm] CreateCampaignRequestRequest request)
-        //{
-        //    try
-        //    {
-        //        var result = await _service.CreateCampaignRequestWithMemberRoleAsync(accountId, request);
-        //        if (result != null)
-        //        {
-        //            var response = new ResponseMessage()
-        //            {
-        //                Message = "Create successfully!",
-        //            };
-        //            return Ok(response);
-        //        }
-        //        else
-        //        {
-        //            var response = new ResponseMessage()
-        //            {
-        //                Message = $"Error: Add failed!"
-        //            };
-        //            return BadRequest(response);
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var response = new ResponseMessage()
-        //        {
-        //            Message = $"Error: {ex.Message}"
-        //        };
-        //        return BadRequest(response);
-        //    }
-        //}
-
         [HttpPost]
         [Authorize(Roles = "OrganizationManager, Member")]
         [Route("create")]

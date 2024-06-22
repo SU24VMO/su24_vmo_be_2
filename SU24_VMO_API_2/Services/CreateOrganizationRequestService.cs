@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Implements;
 using Repository.Interfaces;
@@ -40,7 +41,7 @@ namespace SU24_VMO_API.Services
             return repository.GetById(id);
         }
 
-        public async Task<CreateOrganizationRequest?> CreateOrganizationRequest(Guid organizationManagerID, CreateOrganizationRequestRequest request)
+        public async Task<CreateOrganizationRequest?> CreateOrganizationRequest(Guid organizationManagerID,[FromForm] CreateOrganizationRequestRequest request)
         {
             //TryValidateCreateOrganizationRequest(request);
             //var organization = _organizationRepository.GetById(request.OrganizationID);
