@@ -55,7 +55,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager")]
         [Route("create-new")]
 
-        public async Task<IActionResult> CreateOrganizationRequest(Guid organizationManagerId, CreateOrganizationRequestRequest request)
+        public async Task<IActionResult> CreateOrganizationRequest(Guid organizationManagerId, [FromForm] CreateOrganizationRequestRequest request)
         {
             try
             {

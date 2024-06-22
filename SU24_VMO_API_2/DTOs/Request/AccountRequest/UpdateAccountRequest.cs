@@ -6,9 +6,6 @@ namespace SU24_VMO_API.DTOs.Request.AccountRequest
     public class UpdateAccountRequest
     {
         public Guid AccountID { get; set; }
-        public string? Username { get; set; } = default!;
-        public string? Avatar { get; set; }
-        public string? Email { get; set; } = default!;
         public string? FirstName { get; set; } = default!;
         public string? LastName { get; set; } = default!;
 
@@ -20,7 +17,5 @@ namespace SU24_VMO_API.DTOs.Request.AccountRequest
         public string? FacebookUrl { get; set; } = default!;
         public string? YoutubeUrl { get; set; } = default!;
         public string? TiktokUrl { get; set; } = default!;
-        public bool IsActived { get; set; } = default!;
-        public bool IsBlocked { get; set; } = default!;
     }
 }

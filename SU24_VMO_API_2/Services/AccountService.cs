@@ -6,6 +6,7 @@ using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.JWTAuthSupport;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
@@ -93,7 +94,7 @@ namespace SU24_VMO_API.Services
                 var admin = new Admin
                 {
                     AccountID = account.AccountID,
-                    AdminID = Guid.NewGuid(),        
+                    AdminID = Guid.NewGuid(),
                     FirstName = "",
                     LastName = "",
                     PhoneNumber = ""
@@ -170,31 +171,96 @@ namespace SU24_VMO_API.Services
 
         public void UpdateAccount(UpdateAccountRequest request)
         {
-            TryValidateUpdateRequest(request);
+            //TryValidateUpdateRequest(request);
             var account = _accountRepository.GetById(request.AccountID);
             if (account == null)
             {
-                throw new Exception("Account is not existed!");
+                throw new NotFoundException("Account is not existed!");
             }
-
-            if (!String.IsNullOrEmpty(request.Username))
+            var user = new User();
+            var om = new OrganizationManager();
+            if (account.Role == Role.User || account.Role == Role.Member)
             {
-                account.Username = request.Username;
+                user = _userRepository.GetByAccountId(account.AccountID)!;
+                if (!String.IsNullOrEmpty(request.FirstName))
+                {
+                    user.FirstName = request.FirstName;
+                }
+                if (!String.IsNullOrEmpty(request.LastName))
+                {
+                    user.LastName = request.LastName;
+                }
+                if (!String.IsNullOrEmpty(request.PhoneNumber))
+                {
+                    user.PhoneNumber = request.PhoneNumber;
+                }
+                if (!String.IsNullOrEmpty(request.BirthDay.ToString()))
+                {
+                    user.BirthDay = request.BirthDay;
+                }
+                if (!String.IsNullOrEmpty(request.Gender))
+                {
+                    user.Gender = request.Gender;
+                }
+                if (!String.IsNullOrEmpty(request.FacebookUrl))
+                {
+                    user.FacebookUrl = request.FacebookUrl;
+                }
+                if (!String.IsNullOrEmpty(request.YoutubeUrl))
+                {
+                    user.YoutubeUrl = request.YoutubeUrl;
+                }
+                if (!String.IsNullOrEmpty(request.TiktokUrl))
+                {
+                    user.TiktokUrl = request.TiktokUrl;
+                }
+                account.ModifiedBy = user.UserID;
+                _accountRepository.Update(account);
+                _userRepository.Update(user);
             }
-            if (!String.IsNullOrEmpty(request.Avatar))
+            else if (account.Role == Role.OrganizationManager)
             {
-                account.Avatar = request.Avatar;
+                om = _organizationManagerRepository.GetByAccountID(account.AccountID)!;
+                if (!String.IsNullOrEmpty(request.FirstName))
+                {
+                    om.FirstName = request.FirstName;
+                }
+                if (!String.IsNullOrEmpty(request.LastName))
+                {
+                    om.LastName = request.LastName;
+                }
+                if (!String.IsNullOrEmpty(request.PhoneNumber))
+                {
+                    om.PhoneNumber = request.PhoneNumber;
+                }
+                if (!String.IsNullOrEmpty(request.BirthDay.ToString()))
+                {
+                    om.BirthDay = (DateTime)request.BirthDay!;
+                }
+                if (!String.IsNullOrEmpty(request.Gender))
+                {
+                    om.Gender = request.Gender;
+                }
+                if (!String.IsNullOrEmpty(request.FacebookUrl))
+                {
+                    om.FacebookUrl = request.FacebookUrl;
+                }
+                if (!String.IsNullOrEmpty(request.YoutubeUrl))
+                {
+                    om.YoutubeUrl = request.YoutubeUrl;
+                }
+                if (!String.IsNullOrEmpty(request.TiktokUrl))
+                {
+                    om.TiktokUrl = request.TiktokUrl;
+                }
+                account.ModifiedBy = om.OrganizationManagerID;
+                _accountRepository.Update(account);
+                _organizationManagerRepository.Update(om);
             }
-            if (!String.IsNullOrEmpty(request.IsActived.ToString()))
+            else
             {
-                account.IsActived = request.IsActived;
+                return;
             }
-            if (!String.IsNullOrEmpty(request.IsBlocked.ToString()))
-            {
-                account.IsBlocked = request.IsBlocked;
-            }
-
-            _accountRepository.Update(account);
         }
 
         //function login
@@ -525,12 +591,12 @@ namespace SU24_VMO_API.Services
                 throw new Exception("Username was existed!");
             }
         }
-        private void TryValidateUpdateRequest(UpdateAccountRequest request)
-        {
-            if (!String.IsNullOrEmpty(request.Username) && _accountRepository.GetByUsername(request.Username) != null)
-            {
-                throw new Exception("Username was existed!");
-            }
-        }
+        //private void TryValidateUpdateRequest(UpdateAccountRequest request)
+        //{
+        //    if (!String.IsNullOrEmpty(request.Username) && _accountRepository.GetByUsername(request.Username) != null)
+        //    {
+        //        throw new Exception("Username was existed!");
+        //    }
+        //}
     }
 }
