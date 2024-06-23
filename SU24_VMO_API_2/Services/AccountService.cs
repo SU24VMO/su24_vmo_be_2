@@ -172,12 +172,9 @@ namespace SU24_VMO_API.Services
 
         public void UpdateAccount(UpdateAccountRequest request)
         {
-            //TryValidateUpdateRequest(request);
-            var account = _accountRepository.GetById(request.AccountID);
-            if (account == null)
-            {
-                throw new NotFoundException("Account is not existed!");
-            }
+            TryValidateUpdateRequest(request);
+            var account = _accountRepository.GetById(request.AccountID)!;
+
             var user = new User();
             var om = new OrganizationManager();
             if (account.Role == Role.User || account.Role == Role.Member)
@@ -592,12 +589,35 @@ namespace SU24_VMO_API.Services
                 throw new Exception("Username was existed!");
             }
         }
-        //private void TryValidateUpdateRequest(UpdateAccountRequest request)
-        //{
-        //    if (!String.IsNullOrEmpty(request.Username) && _accountRepository.GetByUsername(request.Username) != null)
-        //    {
-        //        throw new Exception("Username was existed!");
-        //    }
-        //}
+        private void TryValidateUpdateRequest(UpdateAccountRequest request)
+        {
+            var account = _accountRepository.GetById(request.AccountID);
+            if (account == null)
+            {
+                throw new NotFoundException("Account is not existed!");
+            }
+
+
+            if (!String.IsNullOrEmpty(request.PhoneNumber))
+            {
+                if (account.Role == Role.Member || account.Role == Role.User)
+                {
+                    var user = _userRepository.GetByAccountId(request.AccountID)!;
+                    if (user.PhoneNumber != null && user.PhoneNumber.Equals(request.PhoneNumber))
+                    {
+                        throw new Exception("Phonenumber was existed!");
+                    }
+                }
+
+                if (account.Role == Role.OrganizationManager)
+                {
+                    var om = _organizationManagerRepository.GetByAccountID(request.AccountID)!;
+                    if (om.PhoneNumber != null && om.PhoneNumber.Equals(request.PhoneNumber))
+                    {
+                        throw new Exception("Phonenumber was existed!");
+                    }
+                }
+            }
+        }
     }
 }

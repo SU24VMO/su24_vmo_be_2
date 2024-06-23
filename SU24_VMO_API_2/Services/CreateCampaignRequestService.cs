@@ -333,6 +333,10 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
+                    campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
+                    campaign.IsActive = false;
+                    campaign.IsTransparent = false;
+
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
                     request.IsPending = false;
@@ -421,6 +425,10 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
+                    campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
+                    campaign.IsActive = false;
+                    campaign.IsTransparent = false;
+
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
                     request.IsPending = false;

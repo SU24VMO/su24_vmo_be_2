@@ -137,28 +137,6 @@ namespace SU24_VMO_API.Controllers
             }
         }
 
-        //[HttpPost("register/organization-manager")]
-        //public IActionResult RegisterOrganizationManager(CreateNewOrganizationManagerRequest request)
-        //{
-        //    try
-        //    {
-        //        var organizationManager = _organizationManagerService.CreateOrganizationManager(request);
-        //        if (request == null) return BadRequest("Email already exist!");
-        //        var response = new ResponseMessage()
-        //        {
-        //            Message = "Register successfully!",
-        //        };
-        //        return Login(new LoginRequest() { Email = request.Email, Password = request.Password });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var response = new ResponseMessage()
-        //        {
-        //            Message = $"Error: {ex.Message}"
-        //        };
-        //        return BadRequest(response);
-        //    }
-        //}
         [DBTransaction]
         [HttpPost("register/request-manager")]
         public IActionResult RegisterRequestManager(CreateNewRequestManagerRequest request)
