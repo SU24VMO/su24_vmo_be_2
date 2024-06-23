@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using System.Security.Principal;
 
 namespace SU24_VMO_API.Services
 {
@@ -13,13 +14,15 @@ namespace SU24_VMO_API.Services
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IRequestManagerRepository _requestManagerRepository;
+        private readonly INotificationRepository _notificationRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         private readonly FirebaseService _firebaseService;
 
         public CreatePostRequestService(ICreatePostRequestRepository repository, IAccountRepository accountRepository,
             IUserRepository userRepository, FirebaseService firebaseService, IPostRepository postRepository,
-            IRequestManagerRepository requestManagerRepository, IOrganizationManagerRepository organizationManagerRepository)
+            IRequestManagerRepository requestManagerRepository, IOrganizationManagerRepository organizationManagerRepository,
+            INotificationRepository notificationRepository)
         {
             _repository = repository;
             _accountRepository = accountRepository;
@@ -28,6 +31,7 @@ namespace SU24_VMO_API.Services
             _postRepository = postRepository;
             _requestManagerRepository = requestManagerRepository;
             _organizationManagerRepository = organizationManagerRepository;
+            _notificationRepository = notificationRepository;
         }
 
         public IEnumerable<CreatePostRequest> GetAll()
@@ -49,6 +53,7 @@ namespace SU24_VMO_API.Services
                 Cover = await _firebaseService.UploadImage(request.Cover),
                 Title = request.Title,
                 Content = request.Content,
+                IsActive = false,
                 Image = await _firebaseService.UploadImage(request.Image),
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
             };
@@ -58,6 +63,18 @@ namespace SU24_VMO_API.Services
             //them request tao bai post sau
 
             var account = _accountRepository.GetById(request.AccountId);
+
+            var notification = new Notification
+            {
+                NotificationID = Guid.NewGuid(),
+                NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                AccountID = account!.AccountID,
+                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                IsSeen = false,
+                Content = "Yêu cầu tạo bài viết của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!"
+            };
+
+
             if (account == null) { throw new NotFoundException("Account not found!"); }
             if (account.Role == BusinessObject.Enums.Role.Member)
             {
@@ -74,6 +91,7 @@ namespace SU24_VMO_API.Services
                     IsRejected = false
                 };
                 var createPostRequestCreated = _repository.Save(createPostRequest);
+                _notificationRepository.Save(notification);
                 return createPostRequestCreated;
             }
             else if (account.Role == BusinessObject.Enums.Role.OrganizationManager)
@@ -91,6 +109,7 @@ namespace SU24_VMO_API.Services
                     IsRejected = false
                 };
                 var createPostRequestCreated = _repository.Save(createPostRequest);
+                _notificationRepository.Save(notification);
                 return createPostRequestCreated;
             }
             else
@@ -102,35 +121,22 @@ namespace SU24_VMO_API.Services
 
         public void AcceptOrRejectCreatePostRequest(UpdateCreatePostRequest request)
         {
-            ////them post trc
-            //var createPostRequest = _repository.GetById(request.CreatePostRequestId);
-            ////them request tao bai post sau
-            //if(createPostRequest != null)
-            //{
-            //    var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
-            //    if (requestManager == null) { throw new Exception("RequestManager not found!"); }
-
-            //    if (!String.IsNullOrEmpty(request.Content))
-            //    {
-
-            //    }
-            //    if (!String.IsNullOrEmpty(request.Title))
-            //    {
-
-            //    }
-            //    if (request.Cover != null)
-            //    {
-
-            //    }
-            //    if (request.Image != null)
-            //    {
-
-            //    }
-            //}
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
             var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
+            var om = new OrganizationManager();
+            var user = new User();
+
+            var notification = new Notification
+            {
+                NotificationID = Guid.NewGuid(),
+                NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                IsSeen = false,
+            };
+
             if (createPostRequest != null && requestManager != null)
             {
+                var post = _postRepository.GetById(createPostRequest.PostID)!;
                 if (request.IsAccept)
                 {
                     createPostRequest.ApprovedBy = request.RequestManagerId;
@@ -140,6 +146,19 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsLocked = false;
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = false;
+                    post.IsActive = true;
+                    if (createPostRequest.CreateByOM != null)
+                    {
+                        om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;
+                        notification.AccountID = om.AccountID;
+                        notification.Content = "Yêu cầu tạo bài viết của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
+                    }
+                    else
+                    {
+                        user = _userRepository.GetById((Guid)createPostRequest.CreateByUser!)!;
+                        notification.AccountID = user.AccountID;
+                        notification.Content = "Yêu cầu tạo bài viết của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
+                    }
                 }
                 else
                 {
@@ -148,7 +167,23 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsLocked = false;
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = true;
+                    post.IsActive = false;
+                    if (createPostRequest.CreateByOM != null)
+                    {
+                        om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;
+                        notification.AccountID = om.AccountID;
+                        notification.Content = "Yêu cầu tạo bài viết của bạn chưa được công nhận, hãy kiểm tra kĩ hơn để yêu cầu được dễ dàng thông qua!";
+                    }
+                    else
+                    {
+                        user = _userRepository.GetById((Guid)createPostRequest.CreateByUser!)!;
+                        notification.AccountID = user.AccountID;
+                        notification.Content = "Yêu cầu tạo bài viết của bạn chưa được công nhận, hãy kiểm tra kĩ hơn để yêu cầu được dễ dàng thông qua!";
+                    }
                 }
+                _repository.Update(createPostRequest);
+                _postRepository.Update(post);
+                _notificationRepository.Save(notification);
             }
 
         }

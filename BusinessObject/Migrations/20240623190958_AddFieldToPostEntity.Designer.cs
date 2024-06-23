@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(VMODBContext))]
-    partial class VMODBContextModelSnapshot : ModelSnapshot
+    [Migration("20240623190958_AddFieldToPostEntity")]
+    partial class AddFieldToPostEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -746,10 +748,10 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime?>("ApprovedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreateByOM")
+                    b.Property<Guid>("CreateByOM")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CreateByUser")
+                    b.Property<Guid>("CreateByUser")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
@@ -1473,12 +1475,14 @@ namespace BusinessObject.Migrations
                     b.HasOne("BusinessObject.Models.OrganizationManager", "OrganizationManager")
                         .WithMany("CreatePostRequests")
                         .HasForeignKey("CreateByOM")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("BusinessObject.Models.User", "User")
                         .WithMany("CreatePostRequests")
                         .HasForeignKey("CreateByUser")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("BusinessObject.Models.Post", "Post")
                         .WithOne("CreatePostRequest")

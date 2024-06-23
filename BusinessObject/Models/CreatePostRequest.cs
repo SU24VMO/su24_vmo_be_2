@@ -11,8 +11,8 @@ namespace BusinessObject.Models
     {
         public Guid CreatePostRequestID { get; set; } = default!;
         public Guid PostID { get; set; } = default!;
-        public Guid CreateByUser { get; set; } = default!;
-        public Guid CreateByOM { get; set; } = default!;
+        public Guid? CreateByUser { get; set; } = default!;
+        public Guid? CreateByOM { get; set; } = default!;
 
         public Guid? ApprovedBy { get; set; } = default!;
         public DateTime? ApprovedDate { get; set; }

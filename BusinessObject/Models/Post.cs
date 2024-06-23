@@ -14,6 +14,7 @@ namespace BusinessObject.Models
         public string Title { get; set; } = default!;
         public string Content { get; set; } = default!;
         public string Image { get; set; } = default!;
+        public bool IsActive { get; set; } = default!;
         public DateTime CreateAt { get; set; } = default!;
         public DateTime? UpdateAt { get; set; } = default!;
         public CreatePostRequest? CreatePostRequest { get; set; }
