@@ -24,14 +24,14 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public List<Notification> GetAllNotification()
+        public IEnumerable<Notification> GetAllNotification()
         {
-            return _notificationRepository.GetAll().ToList();
+            return _notificationRepository.GetAll();
         }
 
-        public List<Notification> GetAllNotificationsByAccountId(Guid accountId)
+        public IEnumerable<Notification> GetAllNotificationsByAccountId(Guid accountId)
         {
-            return _notificationRepository.GetAllNotificationsByAccountId(accountId).ToList();
+            return _notificationRepository.GetAllNotificationsByAccountId(accountId);
         }
 
         public Notification? CreateNotificationNewAccountRequest(CreateNotificationRequest createNotificationRequest)

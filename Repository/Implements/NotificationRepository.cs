@@ -20,14 +20,14 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Notifications
-                .Include(a => a.Account);
+                .Include(a => a.Account).ToList();
         }
 
         public IEnumerable<Notification> GetAllNotificationsByAccountId(Guid accountId)
         {
             using var context = new VMODBContext();
             return context.Notifications
-                .Include(a => a.Account).Where(a => a.AccountID.Equals(accountId));
+                .Include(a => a.Account).Where(a => a.AccountID.Equals(accountId)).ToList();
         }
 
         public Notification? GetById(Guid id)
