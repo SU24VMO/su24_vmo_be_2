@@ -113,7 +113,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("checking")]
 
         public IActionResult UpdateCreateActivity(UpdateCreateActivityRequest request)
         {

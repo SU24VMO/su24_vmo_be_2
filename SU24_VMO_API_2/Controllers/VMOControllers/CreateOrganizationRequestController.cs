@@ -123,7 +123,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPut]
         [Authorize(Roles = "RequestManager")]
-        [Route("checking/update-status")]
+        [Route("checking")]
 
         public IActionResult AcceptOrRejectCreateOrganizationRequest(AcceptOrRejectCreateOrganizationRequestRequest request)
         {

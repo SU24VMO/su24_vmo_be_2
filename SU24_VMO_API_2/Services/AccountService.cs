@@ -2,6 +2,7 @@
 using BusinessObject.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
@@ -10,6 +11,7 @@ using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.JWTAuthSupport;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
+using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -566,6 +568,19 @@ namespace SU24_VMO_API.Services
             _accountRepository.Update(account);
             return true;
         }
+
+        public bool? CheckPassword(CheckPasswordRequest request)
+        {
+            var account = _accountRepository.GetByEmail(request.Email.Trim());
+            if (account == null) throw new NotFoundException("Email is not valid.");
+            PasswordUtils.CreatePasswordHash(request.OldPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            if (account.HashPassword.Equals(passwordHash) && account.SaltPassword.Equals(passwordSalt))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void TryValidateResetPasswordRequest(ResetPasswordRequest request)
         {
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
