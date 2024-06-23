@@ -98,6 +98,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 // Log the exception details here if necessary
                 return BadRequest(response);
             }
+            catch(UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()

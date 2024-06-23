@@ -58,7 +58,7 @@ namespace SU24_VMO_API.Services
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
             };
             var postCreated = _postRepository.Save(post);
-            if (postCreated == null) { return null; }
+            if (postCreated == null) { throw new Exception("Create post request fail!"); }
 
             //them request tao bai post sau
 
@@ -114,7 +114,7 @@ namespace SU24_VMO_API.Services
             }
             else
             {
-                return null;
+                throw new UnauthorizedAccessException("Role of this account is not accept!");
             }
 
         }
