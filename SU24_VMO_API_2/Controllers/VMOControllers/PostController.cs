@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
@@ -10,15 +11,18 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class PostController : ControllerBase
     {
         private readonly PostService _postService;
+        private readonly PaginationService<Post> _paginationService;
 
-        public PostController(PostService postService)
+
+        public PostController(PostService postService, PaginationService<Post> paginationService)
         {
             _postService = postService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllPosts()
+        public IActionResult GetAllPosts(int? pageSize, int? pageNo)
         {
             try
             {
@@ -27,7 +31,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = posts
+                    Data = _paginationService.PaginateList(posts, pageSize, pageNo)
                 };
 
                 return Ok(response);
