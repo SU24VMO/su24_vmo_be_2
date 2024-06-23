@@ -58,7 +58,7 @@ namespace SU24_VMO_API.Services
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
             };
             var postCreated = _postRepository.Save(post);
-            if (postCreated != null) { return null; }
+            if (postCreated == null) { return null; }
 
             //them request tao bai post sau
 
@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Services
                 var createPostRequest = new CreatePostRequest
                 {
                     CreatePostRequestID = Guid.NewGuid(),
-                    PostID = post.PostID,
+                    PostID = postCreated.PostID,
                     CreateByUser = user.UserID,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsApproved = false,
@@ -100,7 +100,7 @@ namespace SU24_VMO_API.Services
                 var createPostRequest = new CreatePostRequest
                 {
                     CreatePostRequestID = Guid.NewGuid(),
-                    PostID = post.PostID,
+                    PostID = postCreated.PostID,
                     CreateByOM = organizationManager.OrganizationManagerID,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsApproved = false,
