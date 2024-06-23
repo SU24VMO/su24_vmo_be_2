@@ -364,7 +364,7 @@ namespace SU24_VMO_API.Services
                     request.IsRejected = false;
                     result = true;
 
-                    om = _organizationManagerRepository.GetById((Guid)request!.CreateByUser!);
+                    om = _organizationManagerRepository.GetById((Guid)request!.CreateByOM!);
 
                     notification.AccountID = om!.AccountID;
                     notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
@@ -428,7 +428,7 @@ namespace SU24_VMO_API.Services
                     request.IsRejected = true;
                     result = true;
 
-                    om = _organizationManagerRepository.GetById((Guid)request!.CreateByUser!);
+                    om = _organizationManagerRepository.GetById((Guid)request!.CreateByOM!);
 
                     notification.AccountID = om!.AccountID;
                     notification.Content = "Yêu cầu tạo chiến dịch của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
