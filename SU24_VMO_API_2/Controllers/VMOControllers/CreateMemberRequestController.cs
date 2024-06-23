@@ -15,17 +15,19 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class CreateMemberRequestController : ControllerBase
     {
         private readonly CreateMemberRequestService _service;
+        private readonly PaginationService<CreateMemberRequest> _paginationService;
 
-        public CreateMemberRequestController(CreateMemberRequestService service)
+        public CreateMemberRequestController(CreateMemberRequestService service, PaginationService<CreateMemberRequest> paginationService)
         {
             _service = service;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Authorize(Roles = "RequestManager")]
         [Route("all")]
 
-        public IActionResult GetAllCreateMemberRequests()
+        public IActionResult GetAllCreateMemberRequests(int? pageSize, int? pageNo)
         {
             try
             {
@@ -33,7 +35,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = requests
+                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo)
                 };
                 return Ok(response);
             }
