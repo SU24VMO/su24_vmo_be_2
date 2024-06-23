@@ -1,9 +1,11 @@
 ﻿
 
 using BusinessObject.Models;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using System.Text.RegularExpressions;
 
@@ -27,6 +29,11 @@ namespace SU24_VMO_API.Services
             return _notificationRepository.GetAll().ToList();
         }
 
+        public List<Notification> GetAllNotificationsByAccountId(Guid accountId)
+        {
+            return _notificationRepository.GetAllNotificationsByAccountId(accountId).ToList();
+        }
+
         public Notification? CreateNotificationNewAccountRequest(CreateNotificationRequest createNotificationRequest)
         {
             TryValidateCreateNotificationRequest(createNotificationRequest);
@@ -41,6 +48,19 @@ namespace SU24_VMO_API.Services
             };
             var notificationAdded = _notificationRepository.Save(notification);
             return notificationAdded;
+        }
+        
+        public bool? UpdateIsSeenNotification(Guid accountId)
+        {
+            var account = _accountRepository.GetById(accountId);
+            if (account == null) { new NotFoundException("Account not found!"); }
+            var notifications = _notificationRepository.GetAllNotificationsByAccountId(accountId);
+            foreach (var notification in notifications)
+            {
+                notification.IsSeen = true;
+                _notificationRepository.Update(notification);
+            }
+            return true;
         }
 
         private void TryValidateCreateNotificationRequest(CreateNotificationRequest request)

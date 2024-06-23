@@ -23,6 +23,13 @@ namespace Repository.Implements
                 .Include(a => a.Account);
         }
 
+        public IEnumerable<Notification> GetAllNotificationsByAccountId(Guid accountId)
+        {
+            using var context = new VMODBContext();
+            return context.Notifications
+                .Include(a => a.Account).Where(a => a.AccountID.Equals(accountId));
+        }
+
         public Notification? GetById(Guid id)
         {
             using var context = new VMODBContext();
