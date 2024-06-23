@@ -222,6 +222,7 @@ namespace SU24_VMO_API.Controllers
 
 
         [HttpPost("check-password")]
+        [Authorize(Roles = "User, Member, OrganizationManager, RequestManager, Admin")]
         public IActionResult CheckingPassword(CheckPasswordRequest request)
         {
             try

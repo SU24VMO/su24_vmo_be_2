@@ -573,8 +573,7 @@ namespace SU24_VMO_API.Services
         {
             var account = _accountRepository.GetByEmail(request.Email.Trim());
             if (account == null) throw new NotFoundException("Email is not valid.");
-            PasswordUtils.CreatePasswordHash(request.OldPassword, out byte[] passwordHash, out byte[] passwordSalt);
-            if (account.HashPassword.Equals(passwordHash) && account.SaltPassword.Equals(passwordSalt))
+            if (PasswordUtils.VerifyPasswordHash(request.OldPassword, account.HashPassword, account.SaltPassword))
             {
                 return true;
             }
