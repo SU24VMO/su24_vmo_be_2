@@ -13,6 +13,7 @@ namespace BusinessObject.Models
         public string Link { get; set; } = default!;
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public Guid CreateBy { get; set; }
         public StatementPhase? StatementPhase { get; set; }
     }
 }

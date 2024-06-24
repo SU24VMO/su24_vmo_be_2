@@ -36,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(requests, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo)
                 };
                 return Ok(response);
             }

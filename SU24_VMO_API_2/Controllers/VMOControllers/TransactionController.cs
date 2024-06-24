@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Request;
@@ -13,10 +14,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
 
         private readonly TransactionService _transactionService;
+        private readonly PaginationService<Transaction> _paginationService;
 
-        public TransactionController(TransactionService transactionService)
+        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService)
         {
             _transactionService = transactionService;
+            _paginationService = paginationService;
         }
 
         [HttpPost]
@@ -55,7 +58,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("history-transaction/account/{accountId}")]
 
-        public IActionResult GetHistoryTransactionByAccountId(Guid accountId)
+        public IActionResult GetHistoryTransactionByAccountId(Guid accountId, int? pageSize, int? pageNo)
         {
             try
             {
@@ -63,7 +66,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return Ok(new ResponseMessage
                 {
                     Message = "Get successfully!",
-                    Data = transactions
+                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo)
                 });
             }
             catch (Exception ex)

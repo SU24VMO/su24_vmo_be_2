@@ -1,9 +1,11 @@
 ﻿using BusinessObject.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -12,15 +14,17 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class StatementFileController : ControllerBase
     {
         private readonly StatementFileService _statementFileService;
+        private readonly PaginationService<StatementFile> _paginationService;
 
-        public StatementFileController(StatementFileService statementFileService)
+        public StatementFileController(StatementFileService statementFileService, PaginationService<StatementFile> paginationService)
         {
             _statementFileService = statementFileService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllStatementFile()
+        public IActionResult GetAllStatementFile(int? pageSize, int? pageNo)
         {
             try
             {
@@ -29,7 +33,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = statementFiles
+                    Data = _paginationService.PaginateList(statementFiles, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -51,30 +55,53 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 var statementFile = await _statementFileService.UploadStatementFileAsync(request);
-                if (statementFile == null)
+                var response = new ResponseMessage()
                 {
-                    var response = new ResponseMessage()
-                    {
-                        Message = "StatementPhase not found!"
-                    };
-                    return NotFound(response);
+                    Message = "Upload successfully!"
+                };
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"Database error: {dbEx.InnerException.Message}";
                 }
                 else
                 {
-                    var response = new ResponseMessage()
-                    {
-                        Message = "Upload successfully!"
-                    };
-                    return Ok(response);
+                    response.Message = "Database update error.";
                 }
+                // Log the exception details here if necessary
+                return BadRequest(response);
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 var response = new ResponseMessage()
                 {
                     Message = $"Error: {ex.Message}"
                 };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {argEx.ParamName} cannot be null."
+                };
+                // Log the exception details here if necessary
                 return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
     }
