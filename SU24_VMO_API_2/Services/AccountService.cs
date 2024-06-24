@@ -584,7 +584,7 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new Exception("Email is not valid.");
+                throw new BadRequestException("Email is not valid.");
             }
         }
 
@@ -592,15 +592,15 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new Exception("Email is not valid.");
+                throw new BadRequestException("Email is not valid.");
             }
             if (_accountRepository.GetByEmail(request.Email) != null)
             {
-                throw new Exception("Email was existed!");
+                throw new BadRequestException("Email was existed!");
             }
             if (_accountRepository.GetByUsername(request.Username) != null)
             {
-                throw new Exception("Username was existed!");
+                throw new BadRequestException("Username was existed!");
             }
         }
         private void TryValidateUpdateRequest(UpdateAccountRequest request)
@@ -608,30 +608,43 @@ namespace SU24_VMO_API.Services
             var account = _accountRepository.GetById(request.AccountID);
             if (account == null)
             {
-                throw new NotFoundException("Account is not existed!");
+                throw new NotFoundException("Account does not exist!");
             }
-
 
             if (!String.IsNullOrEmpty(request.PhoneNumber))
             {
                 if (account.Role == Role.Member || account.Role == Role.User)
                 {
                     var user = _userRepository.GetByAccountId(request.AccountID)!;
-                    if (user.PhoneNumber != null && user.PhoneNumber.Equals(request.PhoneNumber))
+                    if (user.PhoneNumber != null && user.PhoneNumber.Equals(request.PhoneNumber) && IsPhoneNumberExisted(request.PhoneNumber))
                     {
-                        throw new Exception("Phonenumber was existed!");
+                        throw new BadRequestException("Phone number already exists!");
                     }
                 }
 
                 if (account.Role == Role.OrganizationManager)
                 {
                     var om = _organizationManagerRepository.GetByAccountID(request.AccountID)!;
-                    if (om.PhoneNumber != null && om.PhoneNumber.Equals(request.PhoneNumber))
+                    if (om.PhoneNumber != null && om.PhoneNumber.Equals(request.PhoneNumber) && IsPhoneNumberExisted(request.PhoneNumber))
                     {
-                        throw new Exception("Phonenumber was existed!");
+                        throw new BadRequestException("Phone number already exists!");
                     }
                 }
             }
         }
+
+        // Helper method to check if the phone number exists in the system
+        private bool IsPhoneNumberExisted(string phoneNumber)
+        {
+            var userWithPhone = _userRepository.GetByPhone(phoneNumber);
+            if (userWithPhone != null)
+            {
+                return true;
+            }
+
+            var orgManagerWithPhone = _organizationManagerRepository.GetByPhone(phoneNumber);
+            return orgManagerWithPhone != null;
+        }
+
     }
 }
