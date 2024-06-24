@@ -53,7 +53,7 @@ namespace Repository.Implements
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateOrganizationManagerRequests)
                 .Include(a => a.CreateCampaignRequests).ToList()
-                .FirstOrDefault(d => d.AccountID.Equals(id));
+                .FirstOrDefault(d => d.RequestManagerID.Equals(id));
         }
 
         public RequestManager? GetByPhone(string phone)
