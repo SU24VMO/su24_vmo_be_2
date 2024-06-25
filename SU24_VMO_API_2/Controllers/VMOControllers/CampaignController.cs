@@ -155,7 +155,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-new")]
         public async Task<IActionResult> CreateNewCampaign(CreateNewCampaignRequest request)
         {
             try

@@ -114,9 +114,12 @@ namespace SU24_VMO_API.Services
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
-                    var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
-                    createCampaignRequest.Campaign!.Organization = organization;
-                    campaigns.Add(createCampaignRequest.Campaign!);
+                    if(createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                    {
+                        var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                        createCampaignRequest.Campaign!.Organization = organization;
+                        campaigns.Add(createCampaignRequest.Campaign!);
+                    }
                 }
             }
             return campaigns;

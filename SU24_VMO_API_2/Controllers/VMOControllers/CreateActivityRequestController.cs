@@ -47,7 +47,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-new")]
 
         public  IActionResult CreateActivityRequest(Guid accountId, CreateActivityRequestRequest request)
         {

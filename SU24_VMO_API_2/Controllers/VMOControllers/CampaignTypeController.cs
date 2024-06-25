@@ -77,7 +77,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-new")]
 
         //[Authorize(Roles = "RequestManager, Admin")]
         public IActionResult CreateCampaignType(CreateCampaignTypeRequest typeRequest)

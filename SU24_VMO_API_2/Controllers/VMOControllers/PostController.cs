@@ -45,5 +45,32 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return BadRequest(response);
             }
         }
+
+
+        [HttpGet]
+        [Route("all/organization-manager/{organizationManagerId}")]
+        public IActionResult GetAllPostsOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var posts = _postService.GetAllPostsByOrganizationManagerId(organizationManagerId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(posts, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
     }
 }

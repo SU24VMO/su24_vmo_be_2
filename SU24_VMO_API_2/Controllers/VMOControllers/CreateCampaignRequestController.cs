@@ -57,7 +57,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPost]
         [Authorize(Roles = "OrganizationManager, Member")]
-        [Route("create")]
+        [Route("create-new")]
 
         public async Task<IActionResult> CreateCampaignRequestAsync(Guid accountId, [FromForm] CreateCampaignRequestRequest request)
         {

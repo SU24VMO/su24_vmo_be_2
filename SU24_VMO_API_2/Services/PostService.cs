@@ -22,6 +22,11 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
+        public IEnumerable<Post> GetAllPostsByOrganizationManagerId(Guid organizationManagerId)
+        {
+            return repository.GetAllPostByOrganizationManagerId(organizationManagerId);
+        }
+
         public Post? GetById(Guid id)
         {
             return repository.GetById(id);

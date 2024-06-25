@@ -22,7 +22,10 @@ namespace Repository.Implements
             return context.Campaigns
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
-                .Include(a => a.Transactions).ToList();
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhase)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase).ToList();
         }
 
         public Campaign? GetById(Guid id)
@@ -31,7 +34,10 @@ namespace Repository.Implements
             return context.Campaigns
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
-                .Include(a => a.Transactions).ToList()
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhase)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase).ToList()
                 .FirstOrDefault(d => d.CampaignID.Equals(id));
         }
 
@@ -41,7 +47,10 @@ namespace Repository.Implements
             return context.Campaigns
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
-                .Include(a => a.Transactions).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhase)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
         }
 
         public Campaign? Save(Campaign entity)

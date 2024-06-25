@@ -76,7 +76,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-new")]
         [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
 
         public IActionResult CreateBankingAccount(CreateBankingAccountRequest request)

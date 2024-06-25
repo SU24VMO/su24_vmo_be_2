@@ -23,6 +23,23 @@ namespace Repository.Implements
                 .Include(a => a.CreatePostRequest).ToList();
         }
 
+        public IEnumerable<Post> GetAllPostByOrganizationManagerId(Guid organizationManagerId)
+        {
+            using var context = new VMODBContext();
+            var createPostRequests = context.CreatePostRequests.Include(a => a.Post).Where(a => a.CreateByOM.Equals(organizationManagerId)).ToList();
+            var posts = new List<Post>();
+            foreach (var post in createPostRequests)
+            {
+                if (post.Post != null)
+                    posts.Add(post.Post!);
+            }
+            return posts;
+        }
+        public IEnumerable<Post> GetAllPostByUserId(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Post? GetById(Guid id)
         {
             using var context = new VMODBContext();
