@@ -78,6 +78,256 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("{campaignId}")]
+        public IActionResult GetAllCampaignByCampaignId(Guid campaignId)
+        {
+            try
+            {
+                var campaign = _campaignService.GetCampaignByCampaignId(campaignId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = campaign
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("all/filter/campaign-type/{campaignTypeId}")]
+        public IActionResult GetAllCampaignByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeId(campaignTypeId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/filter/active-status")]
+        public IActionResult GetAllCampaignsWithActiveStatus(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithActiveStatus();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/filter/unactive-status")]
+        public IActionResult GetAllCampaignsWithUnActiveStatus(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithUnActiveStatus();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("all/filter/donate-phase/end-status")]
+        public IActionResult GetAllCampaignsWithDonatePhaseWasEnd(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithDonatePhaseWasEnd();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("all/filter/donate-phase/processing-status")]
+        public IActionResult GetAllCampaignsWithDonatePhaseIsProcessing(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithDonatePhaseIsProcessing();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/filter/processing-phase/processing-status")]
+        public IActionResult GetAllCampaignsWithProcessingPhaseIsProcessing(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithProcessingPhaseIsProcessing();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/filter/statement-phase/processing-status")]
+        public IActionResult GetAllCampaignsWithStatementPhaseIsProcessing(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithStatementPhaseIsProcessing();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        [Route("all/filter/end-status")]
+        public IActionResult GetAllCampaignsWithEndStatus(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithEndStatus();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+
+
+
+        [HttpGet]
+        [Route("{campaignId}")]
         public IActionResult GetCampaignById(Guid campaignId)
         {
             try

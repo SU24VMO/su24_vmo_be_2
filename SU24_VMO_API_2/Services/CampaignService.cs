@@ -110,9 +110,119 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
+        public IEnumerable<Campaign> GetAllCampaignsWithUnActiveStatus()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.IsActive == false);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+        public IEnumerable<Campaign> GetAllCampaignsWithActiveStatus()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.IsActive == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+
+        public IEnumerable<Campaign> GetAllCampaignsWithEndStatus()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.IsComplete == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+
+        public IEnumerable<Campaign> GetAllCampaignsWithDonatePhaseWasEnd()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
         public IEnumerable<Campaign> GetAllCampaignsByCampaignName(string campaignName)
         {
             var campaigns = _campaignRepository.GetCampaignsByCampaignName(campaignName);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+
+
+        public IEnumerable<Campaign> GetAllCampaignsWithDonatePhaseIsProcessing()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.DonatePhase != null && c.DonatePhase.IsProcessing == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+        public IEnumerable<Campaign> GetAllCampaignsWithProcessingPhaseIsProcessing()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.ProcessingPhase != null && c.ProcessingPhase.IsProcessing == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+
+        public IEnumerable<Campaign> GetAllCampaignsWithStatementPhaseIsProcessing()
+        {
+            var campaigns = _campaignRepository.GetAll().Where(c => c.StatementPhase != null && c.StatementPhase.IsProcessing == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
+
+        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeId(Guid campaignTypeId)
+        {
+            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId(campaignTypeId);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)

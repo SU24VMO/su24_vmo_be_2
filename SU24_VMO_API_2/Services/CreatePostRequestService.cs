@@ -123,7 +123,10 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreatePostRequest(UpdateCreatePostRequest request)
         {
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
+            if(createPostRequest == null) { throw new NotFoundException("Create post request not found!"); }
             var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
+            if (requestManager == null) { throw new NotFoundException("Request manager not found!"); }
+
             var om = new OrganizationManager();
             var user = new User();
 

@@ -10,5 +10,7 @@ namespace Repository.Interfaces
     public interface ICampaignRepository : ICrudBaseRepository<Campaign, Guid>
     {
         public IEnumerable<Campaign> GetCampaignsByCampaignName(string campaignName);
+        public IEnumerable<Campaign> GetCampaignsByCampaignTypeId(Guid campaignTypeId);
+
     }
 }

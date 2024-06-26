@@ -53,6 +53,18 @@ namespace Repository.Implements
                 .Include(a => a.StatementPhase).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
         }
 
+        public IEnumerable<Campaign> GetCampaignsByCampaignTypeId(Guid campaignTypeId)
+        {
+            using var context = new VMODBContext();
+            return context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhase)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));
+        }
+
         public Campaign? Save(Campaign entity)
         {
             try
