@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
@@ -14,10 +15,11 @@ namespace SU24_VMO_API.Services
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository, 
-            IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository, 
-            INotificationRepository notificationRepository)
+        public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository,
+            IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
+            INotificationRepository notificationRepository, IAccountRepository accountRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -25,6 +27,7 @@ namespace SU24_VMO_API.Services
             _organizationManagerRepository = organizationManagerRepository;
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _notificationRepository = notificationRepository;
+            _accountRepository = accountRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -62,6 +65,8 @@ namespace SU24_VMO_API.Services
         {
             var processingPhase = repository.GetById(request.ProcessingPhaseId);
             if (processingPhase == null) { throw new NotFoundException("Processing phase not found!"); }
+            var account = _accountRepository.GetById(request.AccountId);
+            if (account == null) { throw new NotFoundException("Account not found!"); }
             var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
             if (request.IsEnd == true)
@@ -69,6 +74,8 @@ namespace SU24_VMO_API.Services
                 processingPhase.IsEnd = true;
                 processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 processingPhase.IsProcessing = false;
+                processingPhase.IsLocked = true;
+                processingPhase.UpdateBy = request.AccountId;
                 repository.Update(processingPhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -102,6 +109,7 @@ namespace SU24_VMO_API.Services
                 processingPhase.IsEnd = false;
                 processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 processingPhase.IsProcessing = true;
+                processingPhase.UpdateBy = request.AccountId;
                 repository.Update(processingPhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -136,8 +144,11 @@ namespace SU24_VMO_API.Services
         public void Update(UpdateProcessingPhaseRequest request)
         {
             var processingPhase = repository.GetById(request.ProcessingPhaseId);
-            if (processingPhase == null) { return; }
-            if(!String.IsNullOrEmpty(request.Name))
+            if (processingPhase == null) { throw new NotFoundException("Processing phase not found!"); }
+
+            if (processingPhase.IsLocked) throw new BadRequestException("This phase was locked!");
+
+            if (!String.IsNullOrEmpty(request.Name))
             {
                 processingPhase.Name = request.Name;
             }
@@ -148,14 +159,6 @@ namespace SU24_VMO_API.Services
             if (!String.IsNullOrEmpty(request.EndDate.ToString()))
             {
                 processingPhase.EndDate = request.EndDate;
-            }
-            if (request.IsEnd != null)
-            {
-                processingPhase.IsEnd = (bool)request.IsEnd;
-            }
-            if (request.IsProcessing != null)
-            {
-                processingPhase.IsProcessing = (bool)request.IsProcessing;
             }
             repository.Update(processingPhase);
         }

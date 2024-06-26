@@ -16,6 +16,8 @@ namespace BusinessObject.Models
         public DateTime CreateDate { get; set; }
         public bool IsProcessing { get; set; }
         public bool IsEnd { get; set; } = default!;
+        public Guid? UpdateBy { get; set; }
+        public bool IsLocked { get; set; }
         public DateTime? UpdateDate { get; set; }
         public Campaign? Campaign { get; set; }
 

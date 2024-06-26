@@ -98,12 +98,29 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Campaign> GetAllCampaigns()
         {
-            return _campaignRepository.GetAll();
+            var campaigns = _campaignRepository.GetAll();
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+
+            }
+            return campaigns;
         }
 
         public IEnumerable<Campaign> GetAllCampaignsByCampaignName(string campaignName)
         {
-            return _campaignRepository.GetCampaignsByCampaignName(campaignName);
+            var campaigns = _campaignRepository.GetCampaignsByCampaignName(campaignName);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
         }
 
         public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId)
@@ -114,13 +131,21 @@ namespace SU24_VMO_API.Services
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
-                    if(createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                    if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
                     {
                         var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                         createCampaignRequest.Campaign!.Organization = organization;
                         campaigns.Add(createCampaignRequest.Campaign!);
                     }
                 }
+            }
+
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
             }
             return campaigns;
         }
@@ -134,6 +159,14 @@ namespace SU24_VMO_API.Services
                 {
                     campaigns.Add(createCampaignRequest.Campaign!);
                 }
+            }
+
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
             }
             return campaigns;
         }

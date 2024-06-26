@@ -3,6 +3,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -14,10 +15,11 @@ namespace SU24_VMO_API.Services
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public DonatePhaseService(IDonatePhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -25,6 +27,7 @@ namespace SU24_VMO_API.Services
             _organizationManagerRepository = organizationManagerRepository;
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _notificationRepository = notificationRepository;
+            _accountRepository = accountRepository;
         }
 
 
@@ -37,6 +40,9 @@ namespace SU24_VMO_API.Services
         {
             var donatePhase = _repository.GetById(request.DonatePhaseId);
             if (donatePhase == null) { throw new NotFoundException("Donate phase not found!"); }
+            var account = _accountRepository.GetById(request.AccountId);
+            if (account == null) { throw new NotFoundException("Account not found!"); }
+
             var campaign = _campaignRepository.GetById(donatePhase.CampaignId)!;
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
             if (request.IsEnd == true)
@@ -44,6 +50,8 @@ namespace SU24_VMO_API.Services
                 donatePhase.IsEnd = true;
                 donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 donatePhase.IsProcessing = false;
+                donatePhase.IsLocked = true;
+                donatePhase.UpdateBy = request.AccountId;
                 _repository.Update(donatePhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -77,6 +85,7 @@ namespace SU24_VMO_API.Services
                 donatePhase.IsEnd = false;
                 donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 donatePhase.IsProcessing = true;
+                donatePhase.UpdateBy = request.AccountId;
                 _repository.Update(donatePhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -146,6 +155,27 @@ namespace SU24_VMO_API.Services
             return _repository.GetDonatePhaseByCampaignId(campaignId);
         }
 
+        public void Update(UpdateDonatePhaseRequest request)
+        {
+            var donatePhase = _repository.GetById(request.DonatePhaseId);
+            if (donatePhase == null) { throw new NotFoundException("Donate phase not found!"); }
+
+            if (donatePhase.IsLocked) throw new BadRequestException("This phase was locked!");
+
+            if (!String.IsNullOrEmpty(request.Name))
+            {
+                donatePhase.Name = request.Name;
+            }
+            if (!String.IsNullOrEmpty(request.StartDate.ToString()))
+            {
+                donatePhase.StartDate = request.StartDate;
+            }
+            if (!String.IsNullOrEmpty(request.EndDate.ToString()))
+            {
+                donatePhase.EndDate = request.EndDate;
+            }
+            _repository.Update(donatePhase);
+        }
 
     }
 }

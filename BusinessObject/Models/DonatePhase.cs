@@ -16,6 +16,8 @@ namespace BusinessObject.Models
         public string CurrentMoney { get; set; } = default!;
         public double Percent { get; set; }
         public DateTime CreateDate { get; set; }
+        public Guid? UpdateBy { get; set; }
+        public bool IsLocked { get; set; }
         public bool IsProcessing { get; set; }
         public bool IsEnd { get; set; } = default!;
         public DateTime? UpdateDate { get; set; }

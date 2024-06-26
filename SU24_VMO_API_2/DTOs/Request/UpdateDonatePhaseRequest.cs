@@ -1,8 +1,8 @@
-﻿namespace SU24_VMO_API.DTOs.Request
+﻿namespace SU24_VMO_API_2.DTOs.Request
 {
-    public class UpdateProcessingPhaseRequest
+    public class UpdateDonatePhaseRequest
     {
-        public Guid ProcessingPhaseId { get; set; } = default!;
+        public Guid DonatePhaseId { get; set; } = default!;
         public Guid AccountId { get; set; }
         public string? Name { get; set; } = default!;
         public DateTime? StartDate { get; set; }

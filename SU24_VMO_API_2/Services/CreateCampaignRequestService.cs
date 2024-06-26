@@ -291,6 +291,7 @@ namespace SU24_VMO_API.Services
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             CurrentMoney = "0",
                             IsProcessing = true,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn ủng hộ",
                             Percent = 0,
@@ -308,6 +309,7 @@ namespace SU24_VMO_API.Services
                             CampaignId = campaign.CampaignID,
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             IsProcessing = false,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn xử lý, giải ngân",
                         };
@@ -324,6 +326,7 @@ namespace SU24_VMO_API.Services
                             CampaignId = campaign.CampaignID,
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             IsProcessing = false,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn sao kê",
                         };
@@ -383,6 +386,7 @@ namespace SU24_VMO_API.Services
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             CurrentMoney = "0",
                             IsProcessing = true,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn ủng hộ",
                             Percent = 0,
@@ -400,6 +404,7 @@ namespace SU24_VMO_API.Services
                             CampaignId = campaign.CampaignID,
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             IsProcessing = false,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn xử lý, giải ngân",
                         };
@@ -416,6 +421,7 @@ namespace SU24_VMO_API.Services
                             CampaignId = campaign.CampaignID,
                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                             IsProcessing = false,
+                            IsLocked = false,
                             IsEnd = false,
                             Name = "Giai đoạn sao kê",
                         };
