@@ -9,7 +9,7 @@ namespace SU24_VMO_API.DTOs.Request
         [Required]
         public Guid RequestManagerId { get; set; }
         [Required]
-        public bool IsAccept {  get; set; }
+        public bool IsApproved {  get; set; }
 
     }
 }
