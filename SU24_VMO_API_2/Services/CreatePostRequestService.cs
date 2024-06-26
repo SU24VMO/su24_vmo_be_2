@@ -55,6 +55,7 @@ namespace SU24_VMO_API.Services
                 Content = request.Content,
                 IsActive = false,
                 Image = await _firebaseService.UploadImage(request.Image),
+                Description = request.Description,
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
             };
             var postCreated = _postRepository.Save(post);

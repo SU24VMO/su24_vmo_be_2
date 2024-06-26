@@ -12,6 +12,7 @@ namespace SU24_VMO_API.DTOs.Request
         public string Content { get; set; } = default!;
         [Required]
         public IFormFile Image { get; set; } = default!;
+        public string? Description { get; set; } = default!;
         [Required]
         public Guid AccountId { get; set; }
     }
