@@ -36,6 +36,21 @@ namespace SU24_VMO_API.Services
             return _repository.GetAll();
         }
 
+        public DonatePhase? GetDonatePhaseById(Guid donatePhaseId)
+        {
+            return _repository.GetById(donatePhaseId);
+        }
+
+
+
+        public DonatePhase? GetPercentDonatePhaseOfCampaignByCampaignId(Guid campaignId)
+        {
+            var campaign = _campaignRepository.GetById(campaignId);
+            if(campaign == null) { throw new NotFoundException("Campaign not found!"); }
+            var donatePhase = campaign.DonatePhase;
+            return donatePhase;
+        }
+
         public void UpdateDonatePhaseStatus(UpdateDonatePhaseStatusRequest request)
         {
             var donatePhase = _repository.GetById(request.DonatePhaseId);

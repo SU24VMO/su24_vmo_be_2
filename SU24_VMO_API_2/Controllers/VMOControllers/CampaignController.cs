@@ -78,7 +78,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("{campaignId}")]
-        public IActionResult GetAllCampaignByCampaignId(Guid campaignId)
+        public IActionResult GetCampaignByCampaignId(Guid campaignId)
         {
             try
             {
@@ -101,6 +101,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return BadRequest(response);
             }
         }
+
 
         [HttpGet]
         [Route("all/filter/campaign-type/{campaignTypeId}")]

@@ -51,6 +51,61 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+
+        [HttpGet]
+        [Route("percent")]
+        public IActionResult GetPercentDonatePhaseOfCampaignByCampaignId(Guid campaignId)
+        {
+            try
+            {
+                var donatePhase = _donatePhaseService.GetPercentDonatePhaseOfCampaignByCampaignId(campaignId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = donatePhase
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("{donatePhaseId}")]
+        public IActionResult GetDonatePhaseByDonatePhaseId(Guid donatePhaseId)
+        {
+            try
+            {
+                var donatePhase = _donatePhaseService.GetDonatePhaseById(donatePhaseId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = donatePhase
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
         [HttpPost]
         [Authorize(Roles = "OrganizationManager, Member")]
         [Route("create-new")]

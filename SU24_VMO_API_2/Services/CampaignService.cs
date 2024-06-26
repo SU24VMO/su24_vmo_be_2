@@ -96,6 +96,8 @@ namespace SU24_VMO_API.Services
             return _campaignRepository.GetById(campaignId);
         }
 
+
+
         public IEnumerable<Campaign> GetAllCampaigns()
         {
             var campaigns = _campaignRepository.GetAll();
