@@ -79,11 +79,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Route("create-new")]
         [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
 
-        public IActionResult CreateActivity(CreateNewActivityRequest request)
+        public async Task<IActionResult> CreateActivityAsync([FromForm] CreateNewActivityRequest request)
         {
             try
             {
-                var activity = _activityService.CreateActivity(request);
+                var activity = await _activityService.CreateActivity(request);
                 if (activity == null)
                 {
                     var response = new ResponseMessage()

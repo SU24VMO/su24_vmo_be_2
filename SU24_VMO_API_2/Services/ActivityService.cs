@@ -11,11 +11,16 @@ namespace SU24_VMO_API.Services
     {
         private readonly IActivityRepository _activityRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
+        private readonly IActivityImageRepository _activityImageRepository;
+        private readonly FirebaseService _firebaseService;
 
-        public ActivityService(IActivityRepository activityRepository, IProcessingPhaseRepository processingPhaseRepository)
+        public ActivityService(IActivityRepository activityRepository, IProcessingPhaseRepository processingPhaseRepository,
+            FirebaseService firebaseService, IActivityImageRepository activityImageRepository)
         {
             _activityRepository = activityRepository;
             _processingPhaseRepository = processingPhaseRepository;
+            _firebaseService = firebaseService;
+            _activityImageRepository = activityImageRepository;
         }
 
         public IEnumerable<Activity> GetAll()
@@ -28,7 +33,7 @@ namespace SU24_VMO_API.Services
             return _activityRepository.GetById(id);
         }
 
-        public Activity? CreateActivity(CreateNewActivityRequest request)
+        public async Task<Activity?> CreateActivity(CreateNewActivityRequest request)
         {
             TryValidateCreateActivityRequest(request);
             var activity = new Activity
@@ -40,8 +45,22 @@ namespace SU24_VMO_API.Services
                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                 IsActive = true,
             };
-
             var activityCreated = _activityRepository.Save(activity);
+
+            if (request.ActivityImages != null && activityCreated != null)
+                foreach (var item in request.ActivityImages)
+                {
+                    var activityImage = new ActivityImage
+                    {
+                        ActivityImageId = Guid.NewGuid(),
+                        ActivityId = activity.ActivityId,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Link = await _firebaseService.UploadImage(item),
+                        IsActive = true,
+                    };
+                    _activityImageRepository.Save(activityImage);
+                }
+
             return activityCreated;
         }
 
@@ -49,7 +68,7 @@ namespace SU24_VMO_API.Services
         {
             TryValidateUpdateActivityRequest(request);
             var activity = _activityRepository.GetById(request.ActivityId)!;
-            if(!String.IsNullOrEmpty(activity.Title))
+            if (!String.IsNullOrEmpty(activity.Title))
             {
                 activity.Title = request.Title!.Trim();
             }

@@ -17,10 +17,12 @@ namespace SU24_VMO_API.Services
         private readonly IActivityRepository _activityRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IActivityImageRepository _activityImageRepository;
+        private readonly FirebaseService _firebaseService;
 
         public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository, IAccountRepository accountRepository,
-            IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository, IUserRepository userRepository, INotificationRepository notificationRepository, 
-            IRequestManagerRepository requestManagerRepository)
+            IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository, IUserRepository userRepository, INotificationRepository notificationRepository,
+            IRequestManagerRepository requestManagerRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
@@ -30,6 +32,8 @@ namespace SU24_VMO_API.Services
             _userRepository = userRepository;
             _notificationRepository = notificationRepository;
             _requestManagerRepository = requestManagerRepository;
+            _activityImageRepository = activityImageRepository;
+            _firebaseService = firebaseService;
         }
 
         public IEnumerable<CreateActivityRequest> GetAll()
@@ -52,7 +56,7 @@ namespace SU24_VMO_API.Services
             _repository.Update(entity);
         }
 
-        public CreateActivityRequest? CreateActivityRequest(Guid accountId, CreateActivityRequestRequest request)
+        public async Task<CreateActivityRequest?> CreateActivityRequestAsync(Guid accountId, CreateActivityRequestRequest request)
         {
             TryValidateRegisterRequest(request);
             var createActivityRequest = new CreateActivityRequest();
@@ -69,6 +73,7 @@ namespace SU24_VMO_API.Services
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsActive = true,
                 };
+
 
 
                 var activityAdded = _activityRepository.Save(activity);
@@ -94,6 +99,22 @@ namespace SU24_VMO_API.Services
                         CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                         IsSeen = false,
                     };
+
+
+                    if (request.ActivityImages != null && activityAdded != null)
+                        foreach (var item in request.ActivityImages)
+                        {
+                            var activityImage = new ActivityImage
+                            {
+                                ActivityImageId = Guid.NewGuid(),
+                                ActivityId = activity.ActivityId,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                IsActive = true,
+                            };
+                            _activityImageRepository.Save(activityImage);
+                        }
+
                     var createActivityRequested = _repository.Save(createActivityRequest);
                     if (createActivityRequested != null) _notificationRepository.Save(notification);
                     return createActivityRequested;
@@ -138,6 +159,21 @@ namespace SU24_VMO_API.Services
                         CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                         IsSeen = false,
                     };
+
+                    if (request.ActivityImages != null && activityAdded != null)
+                        foreach (var item in request.ActivityImages)
+                        {
+                            var activityImage = new ActivityImage
+                            {
+                                ActivityImageId = Guid.NewGuid(),
+                                ActivityId = activity.ActivityId,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                IsActive = true,
+                            };
+                            _activityImageRepository.Save(activityImage);
+                        }
+
                     var createActivityRequested = _repository.Save(createActivityRequest);
                     if (createActivityRequested != null) _notificationRepository.Save(notification);
                     return createActivityRequested;
