@@ -36,7 +36,35 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateMemberRequest>? GetAllCreateMemberRequests()
         {
-            return _createMemberRequestRepository.GetAll();
+            var requests = _createMemberRequestRepository.GetAll();
+            foreach (var request in requests)
+            {
+                if (request.User != null)
+                {
+                    if (request.User.CreateCampaignRequests != null)
+                        request.User.CreateCampaignRequests.Clear();
+                    if (request.User.CreatePostRequests != null)
+                        request.User.CreatePostRequests.Clear();
+                    if (request.User.CreateUserVerifiedRequests != null)
+                        request.User.CreateUserVerifiedRequests.Clear();
+                }
+                if (request.RequestManager != null)
+                {
+                    if (request.RequestManager.CreateCampaignRequests != null)
+                        request.RequestManager.CreateCampaignRequests.Clear();
+                    if (request.RequestManager.CreatePostRequests != null)
+                        request.RequestManager.CreatePostRequests.Clear();
+                    if (request.RequestManager.CreateMemberRequests != null)
+                        request.RequestManager.CreateMemberRequests.Clear();
+                    if (request.RequestManager.CreateActivityRequests != null)
+                        request.RequestManager.CreateActivityRequests.Clear();
+                    if (request.RequestManager.CreateOrganizationManagerRequests != null)
+                        request.RequestManager.CreateOrganizationManagerRequests.Clear();
+                    if (request.RequestManager.CreateOrganizationRequests != null)
+                        request.RequestManager.CreateOrganizationRequests.Clear();
+                }
+            }
+            return requests;
         }
 
         public CreateMemberRequest? CreateMemberRequest(CreateMemberAccountRequest request)
@@ -149,7 +177,7 @@ namespace SU24_VMO_API.Services
                 notification.Content = "Yêu cầu trở thành thành viên của bạn chưa được công nhận, hãy cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
             }
 
-            
+
 
             _createMemberRequestRepository.Update(request);
             _userRepository.Update(user);

@@ -257,6 +257,8 @@ namespace SU24_VMO_API.Services
                 if (campaign.CampaignType != null)
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
+                    campaign.Organization = null;
+                if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
             }
             return campaigns;
@@ -277,6 +279,8 @@ namespace SU24_VMO_API.Services
             {
                 if (campaign.CampaignType != null)
                     campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
             }

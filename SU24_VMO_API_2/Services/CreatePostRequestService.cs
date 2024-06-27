@@ -123,7 +123,7 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreatePostRequest(UpdateCreatePostRequest request)
         {
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
-            if(createPostRequest == null) { throw new NotFoundException("Create post request not found!"); }
+            if (createPostRequest == null) { throw new NotFoundException("Create post request not found!"); }
             var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
             if (requestManager == null) { throw new NotFoundException("Request manager not found!"); }
 
@@ -141,7 +141,7 @@ namespace SU24_VMO_API.Services
             if (createPostRequest != null && requestManager != null)
             {
                 var post = _postRepository.GetById(createPostRequest.PostID)!;
-                if (request.IsAccept)
+                if (request.IsApproved)
                 {
                     createPostRequest.ApprovedBy = request.RequestManagerId;
                     createPostRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);

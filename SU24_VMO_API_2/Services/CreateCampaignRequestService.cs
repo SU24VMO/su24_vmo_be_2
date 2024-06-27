@@ -40,7 +40,35 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequests()
         {
-            return _createCampaignRequestRepository.GetAll();
+            var requests = _createCampaignRequestRepository.GetAll();
+            foreach (var request in requests)
+            {
+                if (request.OrganizationManager != null)
+                {
+                    if (request.OrganizationManager.CreateCampaignRequests != null)
+                        request.OrganizationManager.CreateCampaignRequests.Clear();
+                    if (request.OrganizationManager.CreatePostRequests != null)
+                        request.OrganizationManager.CreatePostRequests.Clear();
+                    if (request.OrganizationManager.CreateOrganizationRequests != null)
+                        request.OrganizationManager.CreateOrganizationRequests.Clear();
+                }
+                if (request.RequestManager != null)
+                {
+                    if (request.RequestManager.CreateCampaignRequests != null)
+                        request.RequestManager.CreateCampaignRequests.Clear();
+                    if (request.RequestManager.CreatePostRequests != null)
+                        request.RequestManager.CreatePostRequests.Clear();
+                    if (request.RequestManager.CreateMemberRequests != null)
+                        request.RequestManager.CreateMemberRequests.Clear();
+                    if (request.RequestManager.CreateActivityRequests != null)
+                        request.RequestManager.CreateActivityRequests.Clear();
+                    if (request.RequestManager.CreateOrganizationManagerRequests != null)
+                        request.RequestManager.CreateOrganizationManagerRequests.Clear();
+                    if (request.RequestManager.CreateOrganizationRequests != null)
+                        request.RequestManager.CreateOrganizationRequests.Clear();
+                }
+            }
+            return requests;
         }
 
         public async Task<CreateCampaignRequest?> CreateCampaignRequestAsync(Guid accountId, CreateCampaignRequestRequest request)

@@ -21,16 +21,96 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Organization> GetAllOrganizations()
         {
-            return _organizationRepository.GetAll();
+            var organizations = _organizationRepository.GetAll();
+            foreach (var organization in organizations)
+            {
+                if (organization.Campaigns != null)
+                {
+                    organization.Campaigns.Clear();
+                }
+                if (organization.Achievements != null)
+                {
+                    organization.Achievements.Clear();
+                }
+                if (organization.OrganizationManager != null)
+                {
+                    organization.OrganizationManager.Organizations = null;
+                }
+
+                if (organization.OrganizationManager != null)
+                {
+                    if (organization.OrganizationManager.CreateCampaignRequests != null)
+                        organization.OrganizationManager.CreateCampaignRequests.Clear();
+                    if (organization.OrganizationManager.CreateOrganizationRequests != null)
+                        organization.OrganizationManager.CreateOrganizationRequests.Clear();
+                    if (organization.OrganizationManager.CreatePostRequests != null)
+                        organization.OrganizationManager.CreatePostRequests.Clear();
+                }
+            }
+            return organizations;
         }
 
         public IEnumerable<Organization> GetAllOrganizationsByOrganizationName(string organizationName)
         {
-            return _organizationRepository.GetOrganizationsByOrganizationName(organizationName);
+            var organizations = _organizationRepository.GetOrganizationsByOrganizationName(organizationName);
+            foreach (var organization in organizations)
+            {
+                if (organization.Campaigns != null)
+                {
+                    organization.Campaigns.Clear();
+                }
+                if (organization.Achievements != null)
+                {
+                    organization.Achievements.Clear();
+                }
+                if (organization.OrganizationManager != null)
+                {
+                    organization.OrganizationManager.Organizations = null;
+                }
+
+                if (organization.OrganizationManager != null)
+                {
+                    if (organization.OrganizationManager.CreateCampaignRequests != null)
+                        organization.OrganizationManager.CreateCampaignRequests.Clear();
+                    if (organization.OrganizationManager.CreateOrganizationRequests != null)
+                        organization.OrganizationManager.CreateOrganizationRequests.Clear();
+                    if (organization.OrganizationManager.CreatePostRequests != null)
+                        organization.OrganizationManager.CreatePostRequests.Clear();
+                }
+            }
+            return organizations;
         }
         public IEnumerable<Organization> GetAllOrganizationsByOrganizationManagerId(Guid organizationManagerId)
         {
-            return _organizationRepository.GetAllOrganizationsByOrganizationManagerId(organizationManagerId);
+            var organizations = _organizationRepository.GetAllOrganizationsByOrganizationManagerId(organizationManagerId);
+            foreach (var organization in organizations)
+            {
+                if (organization.Campaigns != null)
+                {
+                    organization.Campaigns.Clear();
+                }
+                if (organization.Achievements != null)
+                {
+                    organization.Achievements.Clear();
+                }
+                if (organization.OrganizationManager != null)
+                {
+                    organization.OrganizationManager.Organizations = null;
+                }
+
+                if (organization.OrganizationManager != null)
+                {
+                    if (organization.OrganizationManager.CreateCampaignRequests != null)
+                        organization.OrganizationManager.CreateCampaignRequests.Clear();
+                    if (organization.OrganizationManager.CreateOrganizationRequests != null)
+                        organization.OrganizationManager.CreateOrganizationRequests.Clear();
+                    if (organization.OrganizationManager.CreatePostRequests != null)
+                        organization.OrganizationManager.CreatePostRequests.Clear();
+                }
+
+
+            }
+            return organizations;
         }
 
         public Organization? GetById(Guid id)
