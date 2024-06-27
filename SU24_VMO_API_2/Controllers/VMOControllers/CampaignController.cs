@@ -129,6 +129,32 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("all/filter/campaign-type/active-status/{campaignTypeId}")]
+        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsWithActiveStatusByCampaignTypeId(campaignTypeId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpGet]
         [Route("all/filter/active-status")]

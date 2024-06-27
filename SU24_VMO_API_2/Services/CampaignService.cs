@@ -235,6 +235,20 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
+
+        public IEnumerable<Campaign> GetAllCampaignsWithActiveStatusByCampaignTypeId(Guid campaignTypeId)
+        {
+            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId(campaignTypeId).Where(c => c.IsActive == true);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+            }
+            return campaigns;
+        }
+
         public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId)
         {
             var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);

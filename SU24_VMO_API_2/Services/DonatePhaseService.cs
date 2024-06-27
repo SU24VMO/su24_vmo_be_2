@@ -41,12 +41,58 @@ namespace SU24_VMO_API.Services
             return _repository.GetById(donatePhaseId);
         }
 
+        public IEnumerable<DonatePhase?> GetDonatePhaseByOMId(Guid omId)
+        {
+            var om = _organizationManagerRepository.GetById(omId);
+            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listDonatePhase = new List<DonatePhase>();
+            foreach (var item in campaign)
+            {
+                var donatePhase = _repository.GetDonatePhaseByCampaignId(item.CampaignID);
+                if (donatePhase != null)
+                    listDonatePhase.Add(donatePhase);
+            }
+            return listDonatePhase;
+        }
+
+        public IEnumerable<DonatePhase?> GetDonatePhaseByUserId(Guid userId)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user == null) { throw new NotFoundException("User not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listDonatePhase = new List<DonatePhase>();
+            foreach (var item in campaign)
+            {
+                var donatePhase = _repository.GetDonatePhaseByCampaignId(item.CampaignID);
+                if (donatePhase != null)
+                    listDonatePhase.Add(donatePhase);
+            }
+            return listDonatePhase;
+        }
+
 
 
         public DonatePhase? GetPercentDonatePhaseOfCampaignByCampaignId(Guid campaignId)
         {
             var campaign = _campaignRepository.GetById(campaignId);
-            if(campaign == null) { throw new NotFoundException("Campaign not found!"); }
+            if (campaign == null) { throw new NotFoundException("Campaign not found!"); }
             var donatePhase = campaign.DonatePhase;
             return donatePhase;
         }

@@ -12,6 +12,7 @@ namespace SU24_VMO_API.Services
     {
         private readonly IStatementPhaseRepository _repository;
         private readonly ICampaignRepository _campaignRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly INotificationRepository _notificationRepository;
@@ -19,7 +20,7 @@ namespace SU24_VMO_API.Services
 
         public StatementPhaseService(IStatementPhaseRepository repository, ICampaignRepository campaignRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationManagerRepository organizationManagerRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IUserRepository userRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -27,6 +28,7 @@ namespace SU24_VMO_API.Services
             _organizationManagerRepository = organizationManagerRepository;
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
+            _userRepository = userRepository;
         }
 
         public IEnumerable<StatementPhase> GetAll()
@@ -38,6 +40,54 @@ namespace SU24_VMO_API.Services
         {
             return _repository.GetById(id);
         }
+
+
+        public IEnumerable<StatementPhase?> GetStatementPhaseByOMId(Guid omId)
+        {
+            var om = _organizationManagerRepository.GetById(omId);
+            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listStatementPhase = new List<StatementPhase>();
+            foreach (var item in campaign)
+            {
+                var statementPhase = _repository.GetStatementPhaseByCampaignId(item.CampaignID);
+                if (statementPhase != null)
+                    listStatementPhase.Add(statementPhase);
+            }
+            return listStatementPhase;
+        }
+
+        public IEnumerable<StatementPhase?> GetStatementPhaseByUserId(Guid userId)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user == null) { throw new NotFoundException("User not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listStatementPhase = new List<StatementPhase>();
+            foreach (var item in campaign)
+            {
+                var statementPhase = _repository.GetStatementPhaseByCampaignId(item.CampaignID);
+                if (statementPhase != null)
+                    listStatementPhase.Add(statementPhase);
+            }
+            return listStatementPhase;
+        }
+
 
         public StatementPhase? CreateStatementPhase(CreateStatementPhaseRequest request)
         {
