@@ -14,12 +14,13 @@ namespace SU24_VMO_API.Services
         private readonly IUserRepository _userRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
+        private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IAccountRepository _accountRepository;
 
         public DonatePhaseService(IDonatePhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IProcessingPhaseRepository processingPhaseRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -28,6 +29,7 @@ namespace SU24_VMO_API.Services
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
+            _processingPhaseRepository = processingPhaseRepository;
         }
 
 
@@ -113,6 +115,19 @@ namespace SU24_VMO_API.Services
                 donatePhase.IsProcessing = false;
                 donatePhase.IsLocked = true;
                 donatePhase.UpdateBy = request.AccountId;
+
+                var processingPhase = new ProcessingPhase();
+                if (campaign.ProcessingPhase != null)
+                {
+                    processingPhase = campaign.ProcessingPhase;
+                    processingPhase.IsProcessing = true;
+                    processingPhase.IsLocked = false;
+                    processingPhase.IsEnd = false;
+                }
+
+
+
+                _processingPhaseRepository.Update(processingPhase);
                 _repository.Update(donatePhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -147,6 +162,20 @@ namespace SU24_VMO_API.Services
                 donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 donatePhase.IsProcessing = true;
                 donatePhase.UpdateBy = request.AccountId;
+
+
+                var processingPhase = new ProcessingPhase();
+                if (campaign.ProcessingPhase != null)
+                {
+                    processingPhase = campaign.ProcessingPhase;
+                    processingPhase.IsProcessing = false;
+                    processingPhase.IsLocked = false;
+                    processingPhase.IsEnd = false;
+                }
+
+
+
+                _processingPhaseRepository.Update(processingPhase);
                 _repository.Update(donatePhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {

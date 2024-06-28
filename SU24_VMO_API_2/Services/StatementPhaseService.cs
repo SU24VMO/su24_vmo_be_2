@@ -126,6 +126,8 @@ namespace SU24_VMO_API.Services
                 statementPhase.IsLocked = true;
                 statementPhase.UpdateBy = request.AccountId;
                 _repository.Update(statementPhase);
+                campaign.IsComplete = true;
+                _campaignRepository.Update(campaign);
                 if (createCampaignRequest.CreateByOM != null)
                 {
                     var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
@@ -160,6 +162,8 @@ namespace SU24_VMO_API.Services
                 statementPhase.IsProcessing = true;
                 statementPhase.UpdateBy = request.AccountId;
                 _repository.Update(statementPhase);
+                campaign.IsComplete = false;
+                _campaignRepository.Update(campaign);
                 if (createCampaignRequest.CreateByOM != null)
                 {
                     var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);

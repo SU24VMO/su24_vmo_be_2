@@ -11,6 +11,7 @@ namespace SU24_VMO_API.Services
     {
         private readonly IProcessingPhaseRepository repository;
         private readonly ICampaignRepository _campaignRepository;
+        private readonly IStatementPhaseRepository _statementRepository;
         private readonly IUserRepository _userRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
@@ -19,7 +20,7 @@ namespace SU24_VMO_API.Services
 
         public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -28,6 +29,7 @@ namespace SU24_VMO_API.Services
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
+            _statementRepository = statementRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -124,6 +126,20 @@ namespace SU24_VMO_API.Services
                 processingPhase.IsProcessing = false;
                 processingPhase.IsLocked = true;
                 processingPhase.UpdateBy = request.AccountId;
+
+
+                var statementPhase = new StatementPhase();
+                if (campaign.StatementPhase != null)
+                {
+                    statementPhase = campaign.StatementPhase;
+                    statementPhase.IsProcessing = true;
+                    statementPhase.IsLocked = false;
+                    statementPhase.IsEnd = false;
+                }
+
+
+
+                _statementRepository.Update(statementPhase);
                 repository.Update(processingPhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -158,6 +174,19 @@ namespace SU24_VMO_API.Services
                 processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 processingPhase.IsProcessing = true;
                 processingPhase.UpdateBy = request.AccountId;
+
+                var statementPhase = new StatementPhase();
+                if (campaign.StatementPhase != null)
+                {
+                    statementPhase = campaign.StatementPhase;
+                    statementPhase.IsProcessing = false;
+                    statementPhase.IsLocked = false;
+                    statementPhase.IsEnd = false;
+                }
+
+
+
+                _statementRepository.Update(statementPhase);
                 repository.Update(processingPhase);
                 if (createCampaignRequest.CreateByOM != null)
                 {

@@ -52,7 +52,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/{campaignName}")]
-        public IActionResult GetAllCampaignByCampaignName(string campaignName,int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCampaignName(string campaignName, int? pageSize, int? pageNo)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return Ok(response);
             }
             catch (Exception ex)
-            {   
+            {
                 var response = new ResponseMessage()
                 {
                     Message = $"Error: {ex.Message}"
@@ -405,6 +405,120 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
+
+        [HttpGet]
+        [Route("create-by/organization-manager/{organizationManagerId}/{phase}/processing-status")]
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string? phase)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(organizationManagerId, phase);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+
+
+        [HttpGet]
+        [Route("create-by/organization-manager/{organizationManagerId}/donate-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(organizationManagerId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("create-by/organization-manager/{organizationManagerId}/processing-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(organizationManagerId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("create-by/organization-manager/{organizationManagerId}/statement-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(organizationManagerId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
         [HttpGet]
         [Route("create-by/member/{userId}")]
         public IActionResult GetAllCampaignByCreateByMemberId(Guid userId, int? pageSize, int? pageNo)
@@ -412,6 +526,116 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 var campaigns = _campaignService.GetAllCampaignByCreateByMemberId(userId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("create-by/member/{userId}/{phase}/processing-status")]
+        public IActionResult GetAllCampaignByCreateByMemberIdWithOptionsPhaseInProcessingPhase(Guid userId, int? pageSize, int? pageNo, string? phase)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithOptionsPhaseInProcessingPhase(userId, phase);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("create-by/member/{userId}/donate-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByMemberIdWithDonatePhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithDonatePhaseIsProcessing(userId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("create-by/member/{userId}/processing-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByMemberIdWithProcessingPhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithProcessingPhaseIsProcessing(userId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("create-by/member/{userId}/statement-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByMemberIdWithStatementPhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithStatementPhaseIsProcessing(userId);
 
                 var response = new ResponseMessage()
                 {
