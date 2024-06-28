@@ -247,7 +247,7 @@ namespace SU24_VMO_API.Services
         {
             if(campaignTypeId != null)
             {
-                var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId);
+                var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
                 foreach (var campaign in campaigns)
                 {
                     if (campaign.CampaignType != null)
