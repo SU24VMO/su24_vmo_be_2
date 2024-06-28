@@ -70,7 +70,14 @@ namespace SU24_VMO_API.Services
                         request.RequestManager.CreateOrganizationRequests.Clear();
                 }
                 var campaign = _campaignRepository.GetById(request.CampaignID);
-                request.Campaign = campaign;
+                if (campaign != null) request.Campaign = campaign;
+                if (request.Campaign != null && request.Campaign.Organization != null)
+                {
+                    request.Campaign.Organization = null;
+                    request.Campaign.CampaignType = null;
+                    request.Campaign.Transactions = null;
+                }
+
             }
             return requests;
         }
