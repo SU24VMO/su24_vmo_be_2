@@ -14,7 +14,7 @@ namespace SU24_VMO_API.Services
         private readonly ICampaignTypeRepository _campaignTypeRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
-        private readonly IProcessingPhaseRepository _processingPhaseRepository; 
+        private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly FirebaseService _firebaseService;
@@ -243,9 +243,98 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status)
+        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName)
         {
-            if(campaignTypeId != null)
+            //if (campaignTypeId != null)
+            //{
+            //    var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
+            //    foreach (var campaign in campaigns)
+            //    {
+            //        if (campaign.CampaignType != null)
+            //            campaign.CampaignType!.Campaigns = null;
+            //        if (campaign.Organization != null)
+            //            campaign.Organization!.Campaigns = null;
+            //    }
+
+            //    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+            //    {
+            //        campaigns = campaigns.Where(c => c.IsActive == true);
+            //        foreach (var campaign in campaigns)
+            //        {
+            //            if (campaign.CampaignType != null)
+            //                campaign.CampaignType!.Campaigns = null;
+            //            if (campaign.Organization != null)
+            //                campaign.Organization!.Campaigns = null;
+            //        }
+            //        return campaigns;
+            //    }
+
+            //    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+            //    {
+            //        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+            //        foreach (var campaign in campaigns)
+            //        {
+            //            if (campaign.CampaignType != null)
+            //                campaign.CampaignType!.Campaigns = null;
+            //            if (campaign.Organization != null)
+            //                campaign.Organization!.Campaigns = null;
+            //        }
+            //        return campaigns;
+            //    }
+
+            //    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+            //    {
+            //        campaigns = campaigns.Where(c => c.IsComplete == true);
+            //        foreach (var campaign in campaigns)
+            //        {
+            //            if (campaign.CampaignType != null)
+            //                campaign.CampaignType!.Campaigns = null;
+            //            if (campaign.Organization != null)
+            //                campaign.Organization!.Campaigns = null;
+            //        }
+            //        return campaigns;
+            //    }
+            //    return campaigns;
+            //}
+            //else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+            //{
+            //    var campaigns = GetAllCampaignsWithActiveStatus();
+            //    foreach (var campaign in campaigns)
+            //    {
+            //        if (campaign.CampaignType != null)
+            //            campaign.CampaignType!.Campaigns = null;
+            //        if (campaign.Organization != null)
+            //            campaign.Organization!.Campaigns = null;
+            //    }
+            //    return campaigns;
+            //}
+            //else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+            //{
+            //    var campaigns = GetAllCampaignsWithDonatePhaseWasEnd();
+            //    foreach (var campaign in campaigns)
+            //    {
+            //        if (campaign.CampaignType != null)
+            //            campaign.CampaignType!.Campaigns = null;
+            //        if (campaign.Organization != null)
+            //            campaign.Organization!.Campaigns = null;
+            //    }
+            //    return campaigns;
+            //}
+            //else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+            //{
+            //    var campaigns = GetAllCampaignsWithEndStatus();
+            //    foreach (var campaign in campaigns)
+            //    {
+            //        if (campaign.CampaignType != null)
+            //            campaign.CampaignType!.Campaigns = null;
+            //        if (campaign.Organization != null)
+            //            campaign.Organization!.Campaigns = null;
+            //    }
+            //    return campaigns;
+            //}
+            //return GetAllCampaignsWithActiveStatus();
+
+            if (campaignTypeId != null)
             {
                 var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
                 foreach (var campaign in campaigns)
@@ -255,48 +344,363 @@ namespace SU24_VMO_API.Services
                     if (campaign.Organization != null)
                         campaign.Organization!.Campaigns = null;
                 }
-
-                if (status != null && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                if (!String.IsNullOrEmpty(campaignName))
                 {
-                    campaigns = campaigns.Where(c => c.IsActive == true);
-                    foreach (var campaign in campaigns)
+                    campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
                     {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
+                        campaigns = campaigns.Where(c => c.IsActive == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
                     }
-                    return campaigns;
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsComplete == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
                 }
-
-                if (status != null && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                else
                 {
-                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                    foreach (var campaign in campaigns)
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
                     {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
+                        campaigns = campaigns.Where(c => c.IsActive == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
                     }
-                    return campaigns;
-                }
 
-                if (status != null && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                {
-                    campaigns = campaigns.Where(c => c.IsComplete == true);
-                    foreach (var campaign in campaigns)
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
                     {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
+                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
                     }
-                    return campaigns;
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsComplete == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
                 }
                 return campaigns;
             }
-            return GetAllCampaignsWithActiveStatus();
+            else if (!String.IsNullOrEmpty(status))
+            {
+                if (campaignTypeId != null)
+                {
+                    var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
+                    if (!String.IsNullOrEmpty(campaignName))
+                    {
+                        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsActive == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsComplete == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsActive == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsComplete == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                    }
+                    return campaigns;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(campaignName))
+                    {
+                        var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsActive == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                        {
+                            campaigns = campaigns.Where(c => c.IsComplete == true);
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                        return campaigns;
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                        {
+                            var campaigns = GetAllCampaignsWithActiveStatus();
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                        else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                        {
+                            var campaigns = GetAllCampaignsWithDonatePhaseWasEnd();
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                        else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                        {
+                            var campaigns = GetAllCampaignsWithEndStatus();
+                            foreach (var campaign in campaigns)
+                            {
+                                if (campaign.CampaignType != null)
+                                    campaign.CampaignType!.Campaigns = null;
+                                if (campaign.Organization != null)
+                                    campaign.Organization!.Campaigns = null;
+                            }
+                            return campaigns;
+                        }
+                        else
+                        {
+                            return new List<Campaign>();
+                        }
+                    }
+                }
+            }
+            else if (!String.IsNullOrEmpty(campaignName))
+            {
+                var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
+                if (campaignTypeId != null)
+                {
+                    campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsActive == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsComplete == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+                    return campaigns;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsActive == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+
+                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                    {
+                        campaigns = campaigns.Where(c => c.IsComplete == true);
+                        foreach (var campaign in campaigns)
+                        {
+                            if (campaign.CampaignType != null)
+                                campaign.CampaignType!.Campaigns = null;
+                            if (campaign.Organization != null)
+                                campaign.Organization!.Campaigns = null;
+                        }
+                        return campaigns;
+                    }
+                    return campaigns;
+                }
+            } else
+            {
+                return new List<Campaign>();
+            }
         }
 
 
@@ -375,7 +779,7 @@ namespace SU24_VMO_API.Services
         {
             var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);
             var campaigns = new List<Campaign>();
-            if (createCampaignRequests != null) 
+            if (createCampaignRequests != null)
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
@@ -407,7 +811,7 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, string? status)
         {
-            if (status != null && status.ToLower().Equals("donate-phase".ToLower()))
+            if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("donate-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);
                 var campaigns = new List<Campaign>();
@@ -439,7 +843,7 @@ namespace SU24_VMO_API.Services
                 }
                 return campaigns;
             }
-            else if (status != null && status.ToLower().Equals("processing-phase".ToLower()))
+            else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("processing-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);
                 var campaigns = new List<Campaign>();
@@ -471,7 +875,7 @@ namespace SU24_VMO_API.Services
                 }
                 return campaigns;
             }
-            else if (status != null && status.ToLower().Equals("statement-phase".ToLower()))
+            else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("statement-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);
                 var campaigns = new List<Campaign>();
@@ -512,7 +916,7 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Campaign?> GetAllCampaignByCreateByMemberIdWithOptionsPhaseInProcessingPhase(Guid userId, string? status)
         {
-            if (status != null && status.ToLower().Equals("donate-phase".ToLower()))
+            if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("donate-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByMemberId(userId);
                 var campaigns = new List<Campaign>();
@@ -539,7 +943,7 @@ namespace SU24_VMO_API.Services
                 }
                 return campaigns;
             }
-            else if (status != null && status.ToLower().Equals("processing-phase".ToLower()))
+            else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("processing-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByMemberId(userId);
                 var campaigns = new List<Campaign>();
@@ -566,7 +970,7 @@ namespace SU24_VMO_API.Services
                 }
                 return campaigns;
             }
-            else if (status != null && status.ToLower().Equals("statement-phase".ToLower()))
+            else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("statement-phase".ToLower()))
             {
                 var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByMemberId(userId);
                 var campaigns = new List<Campaign>();
