@@ -604,7 +604,7 @@ namespace SU24_VMO_API.Services
                         }
                         else
                         {
-                            return new List<Campaign>();
+                            return GetAllCampaigns().Where(c => c.IsActive == true);
                         }
                     }
                 }
@@ -697,9 +697,10 @@ namespace SU24_VMO_API.Services
                     }
                     return campaigns;
                 }
-            } else
+            }
+            else
             {
-                return new List<Campaign>();
+                return GetAllCampaigns().Where(c => c.IsActive == true);
             }
         }
 
