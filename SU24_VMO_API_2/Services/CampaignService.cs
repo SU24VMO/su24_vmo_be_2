@@ -243,20 +243,11 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid campaignTypeId, string? status)
+        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status)
         {
-            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId(campaignTypeId);
-            foreach (var campaign in campaigns)
+            if(campaignTypeId != null)
             {
-                if (campaign.CampaignType != null)
-                    campaign.CampaignType!.Campaigns = null;
-                if (campaign.Organization != null)
-                    campaign.Organization!.Campaigns = null;
-            }
-
-            if (status != null && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-            {
-                campaigns = campaigns.Where(c => c.IsActive == true);
+                var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId);
                 foreach (var campaign in campaigns)
                 {
                     if (campaign.CampaignType != null)
@@ -264,35 +255,48 @@ namespace SU24_VMO_API.Services
                     if (campaign.Organization != null)
                         campaign.Organization!.Campaigns = null;
                 }
-                return campaigns;
-            }
 
-            if (status != null && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-            {
-                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                foreach (var campaign in campaigns)
+                if (status != null && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
                 {
-                    if (campaign.CampaignType != null)
-                        campaign.CampaignType!.Campaigns = null;
-                    if (campaign.Organization != null)
-                        campaign.Organization!.Campaigns = null;
+                    campaigns = campaigns.Where(c => c.IsActive == true);
+                    foreach (var campaign in campaigns)
+                    {
+                        if (campaign.CampaignType != null)
+                            campaign.CampaignType!.Campaigns = null;
+                        if (campaign.Organization != null)
+                            campaign.Organization!.Campaigns = null;
+                    }
+                    return campaigns;
+                }
+
+                if (status != null && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+                {
+                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+                    foreach (var campaign in campaigns)
+                    {
+                        if (campaign.CampaignType != null)
+                            campaign.CampaignType!.Campaigns = null;
+                        if (campaign.Organization != null)
+                            campaign.Organization!.Campaigns = null;
+                    }
+                    return campaigns;
+                }
+
+                if (status != null && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+                {
+                    campaigns = campaigns.Where(c => c.IsComplete == true);
+                    foreach (var campaign in campaigns)
+                    {
+                        if (campaign.CampaignType != null)
+                            campaign.CampaignType!.Campaigns = null;
+                        if (campaign.Organization != null)
+                            campaign.Organization!.Campaigns = null;
+                    }
+                    return campaigns;
                 }
                 return campaigns;
             }
-
-            if (status != null && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-            {
-                campaigns = campaigns.Where(c => c.IsComplete == true);
-                foreach (var campaign in campaigns)
-                {
-                    if (campaign.CampaignType != null)
-                        campaign.CampaignType!.Campaigns = null;
-                    if (campaign.Organization != null)
-                        campaign.Organization!.Campaigns = null;
-                }
-                return campaigns;
-            }
-            return campaigns;
+            return GetAllCampaignsWithActiveStatus();
         }
 
 
