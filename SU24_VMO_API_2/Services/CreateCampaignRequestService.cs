@@ -10,6 +10,7 @@ namespace SU24_VMO_API.Services
     public class CreateCampaignRequestService
     {
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
+        private readonly ICampaignRepository _campaignRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly INotificationRepository _notificationRepository;
@@ -23,7 +24,7 @@ namespace SU24_VMO_API.Services
         public CreateCampaignRequestService(ICreateCampaignRequestRepository createCampaignRequestRepository, FirebaseService firebaseService,
             IUserRepository userRepository, IAccountRepository accountRepository, CampaignService campaignService, INotificationRepository notificationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IOrganizationManagerRepository organizationManagerRepository)
+            IOrganizationManagerRepository organizationManagerRepository, ICampaignRepository campaignRepository)
         {
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _firebaseService = firebaseService;
@@ -35,6 +36,7 @@ namespace SU24_VMO_API.Services
             _processingPhaseRepository = processingPhaseRepository;
             _statementPhaseRepository = statementPhaseRepository;
             _organizationManagerRepository = organizationManagerRepository;
+            _campaignRepository = campaignRepository;
         }
 
 
@@ -66,6 +68,14 @@ namespace SU24_VMO_API.Services
                         request.RequestManager.CreateOrganizationManagerRequests.Clear();
                     if (request.RequestManager.CreateOrganizationRequests != null)
                         request.RequestManager.CreateOrganizationRequests.Clear();
+                }
+                var campaigns = _campaignRepository.GetAll();
+                foreach (var campaign in campaigns)
+                {
+                    if (request.CampaignID == campaign.CampaignID)
+                    {
+                        request.Campaign = campaign;
+                    }
                 }
             }
             return requests;

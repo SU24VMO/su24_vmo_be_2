@@ -13,17 +13,24 @@ namespace SU24_VMO_API.Services
         private readonly ICampaignRepository _campaignRepository;
         private readonly ICampaignTypeRepository _campaignTypeRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
+        private readonly IDonatePhaseRepository _donatePhaseRepository;
+        private readonly IProcessingPhaseRepository _processingPhaseRepository; 
+        private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly FirebaseService _firebaseService;
 
         public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
-            ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository)
+            ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
+            IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
             _campaignTypeRepository = campaignTypeRepository;
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _organizationRepository = organizationRepository;
+            _donatePhaseRepository = donatePhaseRepository;
+            _processingPhaseRepository = processingPhaseRepository;
+            _statementPhaseRepository = statementPhaseRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -372,7 +379,8 @@ namespace SU24_VMO_API.Services
                     {
                         var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                         createCampaignRequest.Campaign!.Organization = organization;
-                        if (createCampaignRequest.Campaign!.DonatePhase != null && createCampaignRequest.Campaign!.DonatePhase.IsProcessing == true)
+                        var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (donatePhase != null && donatePhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -407,7 +415,8 @@ namespace SU24_VMO_API.Services
                         {
                             var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
-                            if (createCampaignRequest.Campaign!.DonatePhase != null && createCampaignRequest.Campaign!.DonatePhase.IsProcessing == true)
+                            var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
+                            if (donatePhase != null && donatePhase.IsProcessing == true)
                             {
                                 campaigns.Add(createCampaignRequest.Campaign!);
                             }
@@ -438,7 +447,8 @@ namespace SU24_VMO_API.Services
                         {
                             var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
-                            if (createCampaignRequest.Campaign!.ProcessingPhase != null && createCampaignRequest.Campaign!.ProcessingPhase.IsProcessing == true)
+                            var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(createCampaignRequest.CampaignID);
+                            if (processingPhase != null && processingPhase.IsProcessing == true)
                             {
                                 campaigns.Add(createCampaignRequest.Campaign!);
                             }
@@ -469,7 +479,8 @@ namespace SU24_VMO_API.Services
                         {
                             var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
-                            if (createCampaignRequest.Campaign!.StatementPhase != null && createCampaignRequest.Campaign!.StatementPhase.IsProcessing == true)
+                            var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(createCampaignRequest.CampaignID);
+                            if (statementPhase != null && statementPhase.IsProcessing == true)
                             {
                                 campaigns.Add(createCampaignRequest.Campaign!);
                             }
@@ -505,7 +516,8 @@ namespace SU24_VMO_API.Services
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign!.DonatePhase != null && createCampaignRequest.Campaign!.DonatePhase.IsProcessing == true)
+                        var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (donatePhase != null && donatePhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -531,7 +543,8 @@ namespace SU24_VMO_API.Services
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign!.ProcessingPhase != null && createCampaignRequest.Campaign!.ProcessingPhase.IsProcessing == true)
+                        var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (processingPhase != null && processingPhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -557,7 +570,8 @@ namespace SU24_VMO_API.Services
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign!.StatementPhase != null && createCampaignRequest.Campaign!.StatementPhase.IsProcessing == true)
+                        var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (statementPhase != null && statementPhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -591,7 +605,8 @@ namespace SU24_VMO_API.Services
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
-                    if (createCampaignRequest.Campaign!.DonatePhase != null && createCampaignRequest.Campaign!.DonatePhase.IsProcessing == true)
+                    var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
+                    if (donatePhase != null && donatePhase.IsProcessing == true)
                     {
                         campaigns.Add(createCampaignRequest.Campaign!);
                     }
@@ -623,7 +638,8 @@ namespace SU24_VMO_API.Services
                     {
                         var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                         createCampaignRequest.Campaign!.Organization = organization;
-                        if (createCampaignRequest.Campaign!.ProcessingPhase != null && createCampaignRequest.Campaign!.ProcessingPhase.IsProcessing == true)
+                        var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (processingPhase != null && processingPhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -652,7 +668,8 @@ namespace SU24_VMO_API.Services
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
-                    if (createCampaignRequest.Campaign!.ProcessingPhase != null && createCampaignRequest.Campaign!.ProcessingPhase.IsProcessing == true)
+                    var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(createCampaignRequest.CampaignID);
+                    if (processingPhase != null && processingPhase.IsProcessing == true)
                     {
                         campaigns.Add(createCampaignRequest.Campaign!);
                     }
@@ -686,7 +703,8 @@ namespace SU24_VMO_API.Services
                     {
                         var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                         createCampaignRequest.Campaign!.Organization = organization;
-                        if (createCampaignRequest.Campaign!.StatementPhase != null && createCampaignRequest.Campaign!.StatementPhase.IsProcessing == true)
+                        var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(createCampaignRequest.CampaignID);
+                        if (statementPhase != null && statementPhase.IsProcessing == true)
                         {
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -716,7 +734,8 @@ namespace SU24_VMO_API.Services
             {
                 foreach (var createCampaignRequest in createCampaignRequests)
                 {
-                    if (createCampaignRequest.Campaign!.StatementPhase != null && createCampaignRequest.Campaign!.StatementPhase.IsProcessing == true)
+                    var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(createCampaignRequest.CampaignID);
+                    if (statementPhase != null && statementPhase.IsProcessing == true)
                     {
                         campaigns.Add(createCampaignRequest.Campaign!);
                     }

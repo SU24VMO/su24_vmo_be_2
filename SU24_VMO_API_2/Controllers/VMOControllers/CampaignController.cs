@@ -105,11 +105,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-type")]
-        public IActionResult GetAllCampaignByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo, string? status)
+        public IActionResult GetAllCampaignByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status);
+                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeId(campaignTypeId);
 
                 var response = new ResponseMessage()
                 {
@@ -130,12 +130,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("all/filter/campaign-type/active-status/{campaignTypeId}")]
-        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo)
+        [Route("all/filter/campaign-type/active-status")]
+        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo, string? status)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsWithActiveStatusByCampaignTypeId(campaignTypeId);
+                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status);
 
                 var response = new ResponseMessage()
                 {
