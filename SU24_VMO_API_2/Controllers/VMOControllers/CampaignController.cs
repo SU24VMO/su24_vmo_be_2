@@ -131,11 +131,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-type/active-status")]
-        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName)
+        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName, string? createBy)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName);
+                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy);
 
                 var response = new ResponseMessage()
                 {
