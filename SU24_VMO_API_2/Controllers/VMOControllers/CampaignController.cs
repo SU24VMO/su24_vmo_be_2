@@ -6,6 +6,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using SU24_VMO_API_2.DTOs.Response;
 using System.Collections.Generic;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
@@ -16,12 +17,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
         private readonly CampaignService _campaignService;
         private readonly PaginationService<Campaign> _paginationService;
+        private readonly PaginationService<CampaignResponse> _paginationService2;
 
 
-        public CampaignController(CampaignService campaignService, PaginationService<Campaign> paginationService)
+
+        public CampaignController(CampaignService campaignService, PaginationService<Campaign> paginationService, PaginationService<CampaignResponse> paginationService2)
         {
             _campaignService = campaignService;
             _paginationService = paginationService;
+            _paginationService2 = paginationService2;
         }
 
         [HttpGet]
@@ -408,7 +412,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string? phase)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string phase)
         {
             try
             {
@@ -557,7 +561,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -584,7 +588,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -612,7 +616,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -640,7 +644,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
                 };
 
                 return Ok(response);
