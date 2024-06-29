@@ -11,16 +11,23 @@ namespace SU24_VMO_API.Services
     {
         private readonly IActivityRepository _activityRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly ICreateActivityRequestRepository _createActivityRequestRepository;
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly FirebaseService _firebaseService;
 
         public ActivityService(IActivityRepository activityRepository, IProcessingPhaseRepository processingPhaseRepository,
-            FirebaseService firebaseService, IActivityImageRepository activityImageRepository)
+            FirebaseService firebaseService, IActivityImageRepository activityImageRepository, IUserRepository userRepository,
+            IOrganizationManagerRepository organizationManagerRepository, ICreateActivityRequestRepository createActivityRequestRepository)
         {
             _activityRepository = activityRepository;
             _processingPhaseRepository = processingPhaseRepository;
             _firebaseService = firebaseService;
             _activityImageRepository = activityImageRepository;
+            _userRepository = userRepository;
+            _organizationManagerRepository = organizationManagerRepository;
+            _createActivityRequestRepository = createActivityRequestRepository;
         }
 
         public IEnumerable<Activity> GetAll()
@@ -62,6 +69,29 @@ namespace SU24_VMO_API.Services
                 }
 
             return activityCreated;
+        }
+
+
+        public IEnumerable<Activity?> GetAllActivityWasAcceptedWhichCreateByMember(Guid userId)
+        {
+            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.IsApproved == true && c.CreateByUser != null && c.CreateByUser.Equals(userId));
+            var activities = new List<Activity?>();
+            foreach (var request in createActivityRequests)
+            {
+                if (request.Activity != null) activities.Add(request.Activity);
+            }
+            return activities;
+        }
+
+        public IEnumerable<Activity?> GetAllActivityWasAcceptedWhichCreateByOM(Guid omId)
+        {
+            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.IsApproved == true && c.CreateByOM != null && c.CreateByOM.Equals(omId));
+            var activities = new List<Activity?>();
+            foreach (var request in createActivityRequests)
+            {
+                if (request.Activity != null) activities.Add(request.Activity);
+            }
+            return activities;
         }
 
         public void UpdateActivity(UpdateActivityRequest request)

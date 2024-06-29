@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
 {
@@ -85,6 +86,63 @@ namespace SU24_VMO_API.Services
                 var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
                 if (processingPhase != null)
                     listProcessingPhase.Add(processingPhase);
+            }
+            return listProcessingPhase;
+        }
+
+
+        public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByOMId(Guid omId)
+        {
+            var om = _organizationManagerRepository.GetById(omId);
+            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhaseResponse>();
+            foreach (var item in campaign)
+            {
+                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhase != null)
+                    listProcessingPhase.Add(new ProcessingPhaseResponse
+                    {
+                        CampaignName = item.Name,
+                        ProcessingPhaseId = processingPhase.ProcessingPhaseId
+                    });
+            }
+            return listProcessingPhase;
+        }
+
+
+
+        public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByUserId(Guid userId)
+        {
+            var user = _userRepository.GetById(userId);
+            if (user == null) { throw new NotFoundException("User not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhaseResponse>();
+            foreach (var item in campaign)
+            {
+                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhase != null)
+                    listProcessingPhase.Add(new ProcessingPhaseResponse
+                    {
+                        CampaignName = item.Name,
+                        ProcessingPhaseId = processingPhase.ProcessingPhaseId
+                    });
             }
             return listProcessingPhase;
         }

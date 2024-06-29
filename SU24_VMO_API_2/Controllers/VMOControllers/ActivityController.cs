@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Request;
@@ -13,17 +14,19 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class ActivityController : ControllerBase
     {
         private readonly ActivityService _activityService;
+        private readonly PaginationService<Activity> _paginationService;
 
-        public ActivityController(ActivityService activityService)
+        public ActivityController(ActivityService activityService, PaginationService<Activity> paginationService)
         {
             _activityService = activityService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "OrganizationManager, Member, User")]
 
-        public IActionResult GetAllActivitys()
+        public IActionResult GetAllActivitys(int? pageSize, int? pageNo)
         {
             try
             {
@@ -32,7 +35,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = activities
+                    Data = _paginationService.PaginateList(activities, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -60,6 +63,61 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 {
                     Message = "Get successfully!",
                     Data = activity
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("create-by/organization-manager/{organizationManagerId}")]
+
+        public IActionResult GetAllActivityWasAcceptedWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var activities = _activityService.GetAllActivityWasAcceptedWhichCreateByOM(organizationManagerId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(activities!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("create-by/member/{userId}")]
+
+        public IActionResult GetAllActivityWasAcceptedWhichCreateByMember(Guid userId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var activities = _activityService.GetAllActivityWasAcceptedWhichCreateByMember(userId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(activities!, pageSize, pageNo)
                 };
 
                 return Ok(response);
