@@ -6,6 +6,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -15,11 +16,14 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
         private readonly ActivityService _activityService;
         private readonly PaginationService<Activity> _paginationService;
+        private readonly PaginationService<ActivityResponse> _paginationService2;
 
-        public ActivityController(ActivityService activityService, PaginationService<Activity> paginationService)
+
+        public ActivityController(ActivityService activityService, PaginationService<Activity> paginationService, PaginationService<ActivityResponse> paginationService2)
         {
             _activityService = activityService;
             _paginationService = paginationService;
+            _paginationService2 = paginationService2;
         }
 
         [HttpGet]
@@ -90,7 +94,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(activities!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo)
                 };
 
                 return Ok(response);
@@ -117,7 +121,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(activities!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo)
                 };
 
                 return Ok(response);

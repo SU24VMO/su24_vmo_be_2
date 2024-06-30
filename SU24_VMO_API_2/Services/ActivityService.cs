@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
 {
@@ -13,13 +14,16 @@ namespace SU24_VMO_API.Services
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly IUserRepository _userRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private readonly ICreateActivityRequestRepository _createActivityRequestRepository;
+        private readonly ICampaignRepository _campaignRepository;
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly FirebaseService _firebaseService;
 
         public ActivityService(IActivityRepository activityRepository, IProcessingPhaseRepository processingPhaseRepository,
             FirebaseService firebaseService, IActivityImageRepository activityImageRepository, IUserRepository userRepository,
-            IOrganizationManagerRepository organizationManagerRepository, ICreateActivityRequestRepository createActivityRequestRepository)
+            IOrganizationManagerRepository organizationManagerRepository, ICreateActivityRequestRepository createActivityRequestRepository,
+            ICampaignRepository campaignRepository, IOrganizationRepository organizationRepository)
         {
             _activityRepository = activityRepository;
             _processingPhaseRepository = processingPhaseRepository;
@@ -28,6 +32,8 @@ namespace SU24_VMO_API.Services
             _userRepository = userRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _createActivityRequestRepository = createActivityRequestRepository;
+            _campaignRepository = campaignRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public IEnumerable<Activity> GetAll()
@@ -72,24 +78,76 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Activity?> GetAllActivityWhichCreateByMember(Guid userId)
+        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByMember(Guid userId)
         {
             var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByUser != null && c.CreateByUser.Equals(userId));
-            var activities = new List<Activity?>();
+            var activities = new List<ActivityResponse?>();
             foreach (var request in createActivityRequests)
             {
-                if (request.Activity != null) activities.Add(request.Activity);
+                if (request.Activity != null)
+                {
+                    var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                    if (processingPhase != null)
+                    {
+                        var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                        if (campaign != null && campaign.OrganizationID == null)
+                        {
+                            activities.Add(new ActivityResponse
+                            {
+                                ActivityId = request.ActivityID,
+                                ActivityImages = request.Activity.ActivityImages,
+                                Content = request.Activity.Content,
+                                IsActive = request.Activity.IsActive,
+                                CreateDate = request.Activity.CreateDate,
+                                Title = request.Activity.Title,
+                                ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                ProcessingPhase = request.Activity.ProcessingPhase,
+                                UpdateDate = request.Activity.UpdateDate,
+                                CampaignName = campaign.Name,
+                                OrganizationName = null,
+                            });
+                        }
+                    }
+                }
             }
             return activities;
         }
 
-        public IEnumerable<Activity?> GetAllActivityWhichCreateByOM(Guid omId)
+        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByOM(Guid omId)
         {
             var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
-            var activities = new List<Activity?>();
+            var activities = new List<ActivityResponse?>();
             foreach (var request in createActivityRequests)
             {
-                if (request.Activity != null) activities.Add(request.Activity);
+                if (request.Activity != null)
+                {
+                    var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                    if (processingPhase != null)
+                    {
+                        var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                        if (campaign != null && campaign.OrganizationID != null)
+                        {
+                            var organization = _organizationRepository.GetById((Guid)campaign.OrganizationID);
+                            if (organization != null)
+                            {
+                                activities.Add(new ActivityResponse
+                                {
+                                    ActivityId = request.ActivityID,
+                                    ActivityImages = request.Activity.ActivityImages,
+                                    Content = request.Activity.Content,
+                                    IsActive = request.Activity.IsActive,
+                                    CreateDate = request.Activity.CreateDate,
+                                    Title = request.Activity.Title,
+                                    ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                    ProcessingPhase = request.Activity.ProcessingPhase,
+                                    UpdateDate = request.Activity.UpdateDate,
+                                    CampaignName = campaign.Name,
+                                    OrganizationName = organization.Name,
+                                });
+                            }
+                        }
+                    }
+                }
             }
             return activities;
         }

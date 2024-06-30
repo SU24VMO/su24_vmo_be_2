@@ -354,34 +354,6 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
 
-
-
-
-        [HttpGet]
-        [Route("{campaignId}")]
-        public IActionResult GetCampaignById(Guid campaignId)
-        {
-            try
-            {
-                var campaign = _campaignService.GetCampaignByCampaignId(campaignId);
-
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = campaign
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"Error: {ex.Message}"
-                };
-                return BadRequest(response);
-            }
-        }
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
         public IActionResult GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo)

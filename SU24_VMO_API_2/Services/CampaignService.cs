@@ -105,7 +105,16 @@ namespace SU24_VMO_API.Services
 
         public Campaign? GetCampaignByCampaignId(Guid campaignId)
         {
-            return _campaignRepository.GetById(campaignId);
+            var campaign = _campaignRepository.GetById(campaignId);
+            if(campaign != null && campaign.Organization != null && campaign.Organization.Campaigns != null)
+            {
+                campaign.Organization.Campaigns = null;
+            }
+            if(campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
+            {
+                campaign.CampaignType.Campaigns = null;
+            }
+            return campaign;
         }
 
 
