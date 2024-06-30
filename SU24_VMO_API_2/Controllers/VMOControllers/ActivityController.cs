@@ -81,11 +81,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
 
-        public IActionResult GetAllActivityWasAcceptedWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllActivityWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo)
         {
             try
             {
-                var activities = _activityService.GetAllActivityWasAcceptedWhichCreateByOM(organizationManagerId);
+                var activities = _activityService.GetAllActivityWhichCreateByOM(organizationManagerId);
 
                 var response = new ResponseMessage()
                 {
@@ -108,11 +108,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/member/{userId}")]
 
-        public IActionResult GetAllActivityWasAcceptedWhichCreateByMember(Guid userId, int? pageSize, int? pageNo)
+        public IActionResult GetAllActivityWhichCreateByMember(Guid userId, int? pageSize, int? pageNo)
         {
             try
             {
-                var activities = _activityService.GetAllActivityWasAcceptedWhichCreateByMember(userId);
+                var activities = _activityService.GetAllActivityWhichCreateByMember(userId);
 
                 var response = new ResponseMessage()
                 {

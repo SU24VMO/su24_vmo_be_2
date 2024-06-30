@@ -48,7 +48,7 @@ namespace SU24_VMO_API.Services
         {
             var om = _organizationManagerRepository.GetById(omId);
             if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
-            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM != null && r.CreateByOM.Equals(omId));
 
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
@@ -61,7 +61,7 @@ namespace SU24_VMO_API.Services
             foreach (var item in campaign)
             {
                 var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null)
+                if (processingPhase != null && processingPhase.IsProcessing == true)
                     listProcessingPhase.Add(processingPhase);
             }
             return listProcessingPhase;
@@ -71,7 +71,7 @@ namespace SU24_VMO_API.Services
         {
             var user = _userRepository.GetById(userId);
             if (user == null) { throw new NotFoundException("User not found!"); }
-            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser != null && r.CreateByUser.Equals(userId));
 
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
@@ -84,7 +84,7 @@ namespace SU24_VMO_API.Services
             foreach (var item in campaign)
             {
                 var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null)
+                if (processingPhase != null && processingPhase.IsProcessing == true)
                     listProcessingPhase.Add(processingPhase);
             }
             return listProcessingPhase;
@@ -108,7 +108,7 @@ namespace SU24_VMO_API.Services
             foreach (var item in campaign)
             {
                 var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null)
+                if (processingPhase != null && processingPhase.IsProcessing == true)
                     listProcessingPhase.Add(new ProcessingPhaseResponse
                     {
                         CampaignName = item.Name,
@@ -137,7 +137,7 @@ namespace SU24_VMO_API.Services
             foreach (var item in campaign)
             {
                 var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null)
+                if (processingPhase != null && processingPhase.IsProcessing == true)
                     listProcessingPhase.Add(new ProcessingPhaseResponse
                     {
                         CampaignName = item.Name,

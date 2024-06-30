@@ -72,9 +72,9 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Activity?> GetAllActivityWasAcceptedWhichCreateByMember(Guid userId)
+        public IEnumerable<Activity?> GetAllActivityWhichCreateByMember(Guid userId)
         {
-            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.IsApproved == true && c.CreateByUser != null && c.CreateByUser.Equals(userId));
+            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByUser != null && c.CreateByUser.Equals(userId));
             var activities = new List<Activity?>();
             foreach (var request in createActivityRequests)
             {
@@ -83,9 +83,9 @@ namespace SU24_VMO_API.Services
             return activities;
         }
 
-        public IEnumerable<Activity?> GetAllActivityWasAcceptedWhichCreateByOM(Guid omId)
+        public IEnumerable<Activity?> GetAllActivityWhichCreateByOM(Guid omId)
         {
-            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.IsApproved == true && c.CreateByOM != null && c.CreateByOM.Equals(omId));
+            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
             var activities = new List<Activity?>();
             foreach (var request in createActivityRequests)
             {
