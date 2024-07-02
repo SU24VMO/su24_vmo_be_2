@@ -20,14 +20,16 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Achievements
-                .Include(a => a.Organization).ToList();
+                .Include(a => a.Organization)
+                .OrderByDescending(a => a.CreatedDate).ToList();
         }
 
         public Achievement? GetById(Guid id)
         {
             using var context = new VMODBContext();
             return context.Achievements
-                .Include(a => a.Organization).ToList()
+                .Include(a => a.Organization)
+                .OrderByDescending(a => a.CreatedDate).ToList()
                 .FirstOrDefault(a => a.AchievementID.Equals(id));
         }
 

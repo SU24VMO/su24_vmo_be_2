@@ -20,7 +20,8 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Activities
-                .Include(a => a.ProcessingPhase).ToList();
+                .Include(a => a.ProcessingPhase)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public Activity? GetById(Guid id)

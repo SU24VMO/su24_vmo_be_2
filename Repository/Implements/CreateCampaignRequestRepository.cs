@@ -23,7 +23,8 @@ namespace Repository.Implements
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList();
+                .Include(a => a.RequestManager)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByMemberId(Guid userId)
@@ -33,7 +34,8 @@ namespace Repository.Implements
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList().Where(c => c.CreateByUser.Equals(userId));
+                .Include(a => a.RequestManager)
+                .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByUser.Equals(userId));
         }
 
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId)
@@ -43,7 +45,8 @@ namespace Repository.Implements
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList().Where(c => c.CreateByOM.Equals(organizationManagerId));
+                .Include(a => a.RequestManager)
+                .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByOM.Equals(organizationManagerId));
         }
 
         public CreateCampaignRequest? GetById(Guid id)

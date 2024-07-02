@@ -23,7 +23,8 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.User)
                 .Include(a => a.RequestManager)
-                .Include(a => a.Activity).ToList();
+                .Include(a => a.Activity)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public CreateActivityRequest? GetById(Guid id)

@@ -22,7 +22,8 @@ namespace Repository.Implements
             return context.Organizations
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Achievements)
-                .Include(a => a.Campaigns).ToList();
+                .Include(a => a.Campaigns)
+                .OrderByDescending(a => a.CreatedAt).ToList();
         }
 
         public IEnumerable<Organization> GetAllOrganizationsByOrganizationManagerId(Guid organizationManagerId)
@@ -31,7 +32,8 @@ namespace Repository.Implements
             return context.Organizations
                 .Include(a => a.Achievements)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.Campaigns).ToList().Where(a => a.OrganizationManagerID.Equals(organizationManagerId));
+                .Include(a => a.Campaigns)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.OrganizationManagerID.Equals(organizationManagerId));
         }
 
         public Organization? GetById(Guid id)
@@ -50,7 +52,8 @@ namespace Repository.Implements
             return context.Organizations
                 .Include(a => a.Achievements)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.Campaigns).ToList().Where(a => a.Name!.ToLower().Contains(organizationName.Trim().ToLower()));
+                .Include(a => a.Campaigns)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Name!.ToLower().Contains(organizationName.Trim().ToLower()));
         }
 
         public Organization? Save(Organization entity)

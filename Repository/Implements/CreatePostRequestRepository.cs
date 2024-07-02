@@ -23,7 +23,8 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Post)
                 .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList();
+                .Include(a => a.RequestManager)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public CreatePostRequest? GetById(Guid id)

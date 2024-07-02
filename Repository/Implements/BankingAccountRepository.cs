@@ -21,7 +21,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.BankingAccounts
                 .Include(a => a.Account)
-                .Include(a => a.Transactions).ToList();
+                .Include(a => a.Transactions)
+                .OrderByDescending(a => a.CreatedAt).ToList();
         }
 
         public BankingAccount? GetById(Guid id)

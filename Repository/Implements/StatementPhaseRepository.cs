@@ -20,7 +20,7 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.StatementPhases
-                .Include(a => a.Campaign).ToList();
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public StatementPhase? GetById(Guid id)

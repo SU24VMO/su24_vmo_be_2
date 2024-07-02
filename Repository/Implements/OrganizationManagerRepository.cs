@@ -19,7 +19,8 @@ namespace Repository.Implements
                 .Include(a => a.CreateCampaignRequests)
                 .Include(a => a.CreatePostRequests)
                 .Include(a => a.Organizations)
-                .Include(a => a.BankingAccounts).ToList();
+                .Include(a => a.BankingAccounts)
+                .ToList();
         }
 
         public OrganizationManager? GetByAccountID(Guid accountID)

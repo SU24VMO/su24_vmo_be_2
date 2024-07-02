@@ -20,7 +20,8 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.ActivityImages
-                .Include(a => a.Activity).ToList();
+                .Include(a => a.Activity)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public ActivityImage? GetById(Guid id)

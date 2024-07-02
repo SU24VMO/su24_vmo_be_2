@@ -20,7 +20,8 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.CampaignTypes
-                .Include(a => a.Campaigns).ToList();
+                .Include(a => a.Campaigns)
+                .OrderByDescending(a => a.CreateAt).ToList();
         }
 
         public CampaignType? GetById(Guid id)

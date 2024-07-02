@@ -25,7 +25,8 @@ namespace Repository.Implements
                 .Include(a => a.Transactions)
                 .Include(a => a.ProcessingPhase)
                 .Include(a => a.DonatePhase)
-                .Include(a => a.StatementPhase).ToList();
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt).ToList();
         }
 
         public Campaign? GetById(Guid id)
@@ -50,7 +51,8 @@ namespace Repository.Implements
                 .Include(a => a.Transactions)
                 .Include(a => a.ProcessingPhase)
                 .Include(a => a.DonatePhase)
-                .Include(a => a.StatementPhase).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
         }
 
         public IEnumerable<Campaign> GetCampaignsByCampaignTypeId(Guid campaignTypeId)
@@ -62,7 +64,8 @@ namespace Repository.Implements
                 .Include(a => a.Transactions)
                 .Include(a => a.ProcessingPhase)
                 .Include(a => a.DonatePhase)
-                .Include(a => a.StatementPhase).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));
         }
 
         public Campaign? Save(Campaign entity)

@@ -20,7 +20,8 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Posts
-                .Include(a => a.CreatePostRequest).ToList();
+                .Include(a => a.CreatePostRequest)
+                .OrderByDescending(a => a.CreateAt).ToList();
         }
 
         public IEnumerable<Post> GetAllPostByOrganizationManagerId(Guid organizationManagerId)
@@ -33,7 +34,7 @@ namespace Repository.Implements
                 if (post.Post != null)
                     posts.Add(post.Post!);
             }
-            return posts;
+            return posts.OrderByDescending(a => a.CreateAt);
         }
         public IEnumerable<Post> GetAllPostByUserId(Guid userId)
         {

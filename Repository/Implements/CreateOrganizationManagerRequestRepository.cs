@@ -21,7 +21,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.CreateOrganizationManagerRequests
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.RequestManager).ToList();
+                .Include(a => a.RequestManager)
+                .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public CreateOrganizationManagerRequest? GetById(Guid id)

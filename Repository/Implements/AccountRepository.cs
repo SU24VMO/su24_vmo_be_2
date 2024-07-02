@@ -21,7 +21,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
-                .Include(a => a.Notifications).ToList();
+                .Include(a => a.Notifications)
+                .OrderByDescending(a => a.CreatedAt).ToList();
         }
 
         public IEnumerable<Account> GetAllAccountsWithMemberRole()
@@ -29,7 +30,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
-                .Include(a => a.Notifications).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
+                .Include(a => a.Notifications)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
         }
 
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole()
@@ -37,7 +39,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
-                .Include(a => a.Notifications).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
+                .Include(a => a.Notifications)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
         }
 
         public IEnumerable<Account> GetAllAccountsWithRequestManagerRole()
@@ -45,7 +48,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
-                .Include(a => a.Notifications).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.RequestManager));
+                .Include(a => a.Notifications)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.RequestManager));
         }
 
         public IEnumerable<Account> GetAllAccountsWithUserRole()
@@ -53,7 +57,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
-                .Include(a => a.Notifications).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.User));
+                .Include(a => a.Notifications)
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.User));
         }
 
         public Account? GetByEmail(string email)

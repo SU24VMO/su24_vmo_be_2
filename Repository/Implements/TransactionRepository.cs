@@ -22,7 +22,7 @@ namespace Repository.Implements
             return context.Transactions
                 .Include(a => a.Account)
                 .Include(a => a.BankingAccount)
-                .Include(a => a.Campaign).ToList();
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public Transaction? GetById(Guid id)
