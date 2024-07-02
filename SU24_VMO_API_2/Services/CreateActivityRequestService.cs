@@ -71,7 +71,7 @@ namespace SU24_VMO_API.Services
                     Content = request.Content,
                     Title = request.Title,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                    IsActive = true,
+                    IsActive = false,
                 };
 
 
@@ -132,7 +132,7 @@ namespace SU24_VMO_API.Services
                     Content = request.Content,
                     Title = request.Title,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                    IsActive = true,
+                    IsActive = false,
                 };
 
 
@@ -197,10 +197,15 @@ namespace SU24_VMO_API.Services
                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                 IsSeen = false,
             };
+            var activity = new Activity();
             if (createActivityRequest != null && requestManager != null)
             {
                 if (request.IsAccept == true)
                 {
+
+                    activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
+                    activity.IsActive = true;
+
                     createActivityRequest.IsApproved = true;
                     createActivityRequest.IsPending = false;
                     createActivityRequest.IsRejected = false;
@@ -220,14 +225,17 @@ namespace SU24_VMO_API.Services
                         notification.AccountID = om!.AccountID;
                         notification.Content = "Yêu cầu tạo hoạt động của bạn vừa được duyệt! Vui lòng theo dõi thông tin hoạt động đang diễn ra!";
                     }
-                    
 
                     _repository.Update(createActivityRequest);
+                    _activityRepository.Update(activity);
                     _notificationRepository.Save(notification);
 
                 }
                 else
                 {
+                    activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
+                    activity.IsActive = false;
+
                     createActivityRequest.IsApproved = false;
                     createActivityRequest.IsPending = false;
                     createActivityRequest.IsRejected = true;
@@ -247,7 +255,9 @@ namespace SU24_VMO_API.Services
                         notification.AccountID = om!.AccountID;
                         notification.Content = "Yêu cầu tạo hoạt động của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
                     }
+
                     _repository.Update(createActivityRequest);
+                    _activityRepository.Update(activity);
                     _notificationRepository.Save(notification);
                 }
 

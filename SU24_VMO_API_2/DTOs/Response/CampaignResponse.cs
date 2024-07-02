@@ -33,6 +33,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public ProcessingPhase? ProcessingPhase { get; set; }
         public StatementPhase? StatementPhase { get; set; }
         public User? User { get; set; } 
+        public OrganizationManager? OrganizationManager { get; set; }
         public List<Transaction>? Transactions { get; set; }
     }
 }

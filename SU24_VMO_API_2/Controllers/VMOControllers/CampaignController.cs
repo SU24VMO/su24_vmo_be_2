@@ -86,7 +86,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaign = _campaignService.GetCampaignByCampaignId(campaignId);
+                var campaign = _campaignService.GetCampaignResponseByCampaignId(campaignId);
 
                 var response = new ResponseMessage()
                 {

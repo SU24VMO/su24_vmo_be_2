@@ -16,6 +16,7 @@ namespace SU24_VMO_API.Services
         private readonly ICampaignTypeRepository _campaignTypeRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly IStatementPhaseRepository _statementPhaseRepository;
@@ -24,8 +25,8 @@ namespace SU24_VMO_API.Services
 
         public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
-            IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository, 
-            IUserRepository userRepository)
+            IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
+            IUserRepository userRepository, IOrganizationManagerRepository organizationManagerRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -36,6 +37,7 @@ namespace SU24_VMO_API.Services
             _processingPhaseRepository = processingPhaseRepository;
             _statementPhaseRepository = statementPhaseRepository;
             _userRepository = userRepository;
+            _organizationManagerRepository = organizationManagerRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -103,14 +105,90 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public CampaignResponse? GetCampaignResponseByCampaignId(Guid campaignId)
+        {
+            var campaign = _campaignRepository.GetById(campaignId);
+            var organizationManager = new OrganizationManager();
+            var campaignResponse = new CampaignResponse();
+            if (campaign != null && campaign.Organization != null && campaign.Organization.Campaigns != null)
+            {
+                campaign.Organization.Campaigns = null;
+                organizationManager = _organizationManagerRepository.GetById(campaign.Organization.OrganizationManagerID);
+            }
+            if (campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
+            {
+                campaign.CampaignType.Campaigns = null;
+            }
+
+            if (campaign != null && campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
+            if (campaign != null && campaign.ProcessingPhase != null) campaign.ProcessingPhase.Campaign = null;
+            if (campaign != null && campaign.StatementPhase != null) campaign.StatementPhase.Campaign = null;
+
+            if (campaign != null)
+            {
+                campaignResponse = new CampaignResponse
+                {
+                    CampaignID = campaign.CampaignID,
+                    OrganizationID = campaign.OrganizationID,
+                    CampaignTypeID = campaign.CampaignTypeID,
+                    ActualEndDate = campaign.ActualEndDate,
+                    Address = campaign.Address,
+                    ApplicationConfirmForm = campaign.ApplicationConfirmForm,
+                    CampaignType = campaign.CampaignType,
+                    CanBeDonated = campaign.CanBeDonated,
+                    CheckTransparentDate = campaign.CheckTransparentDate,
+                    CreateAt = campaign.CreateAt,
+                    Description = campaign.Description,
+                    DonatePhase = campaign.DonatePhase,
+                    ExpectedEndDate = campaign.ExpectedEndDate,
+                    Image = campaign.Image,
+                    IsActive = campaign.IsActive,
+                    IsComplete = campaign.IsComplete,
+                    IsModify = campaign.IsModify,
+                    IsTransparent = campaign.IsTransparent,
+                    Name = campaign.Name,
+                    Note = campaign.Note,
+                    Organization = campaign.Organization,
+                    ProcessingPhase = campaign.ProcessingPhase,
+                    StartDate = campaign.StartDate,
+                    StatementPhase = campaign.StatementPhase,
+                    TargetAmount = campaign.TargetAmount,
+                    Transactions = campaign.Transactions,
+                    UpdatedAt = campaign.UpdatedAt
+                };
+            }
+            campaignResponse.OrganizationManager = organizationManager;
+            if (campaignResponse.OrganizationManager != null)
+            {
+                campaignResponse.OrganizationManager.CreateCampaignRequests = null;
+                campaignResponse.OrganizationManager.Organizations = null;
+                campaignResponse.OrganizationManager.CreateOrganizationRequests = null;
+                campaignResponse.OrganizationManager.CreatePostRequests = null;
+                campaignResponse.OrganizationManager.BankingAccounts = null;
+            }
+            var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaignId);
+            if (campaign != null && createCampaignRequest != null && createCampaignRequest.CreateByUser != null)
+            {
+                var member = _userRepository.GetById((Guid)createCampaignRequest.CreateByUser);
+
+                if (campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
+                if (campaign.ProcessingPhase != null) campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null) campaign.StatementPhase.Campaign = null;
+
+                campaignResponse.User = member;
+            }
+            return campaignResponse;
+        }
+
+
         public Campaign? GetCampaignByCampaignId(Guid campaignId)
         {
             var campaign = _campaignRepository.GetById(campaignId);
-            if(campaign != null && campaign.Organization != null && campaign.Organization.Campaigns != null)
+            if (campaign != null && campaign.Organization != null && campaign.Organization.Campaigns != null)
             {
                 campaign.Organization.Campaigns = null;
             }
-            if(campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
+            if (campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
             {
                 campaign.CampaignType.Campaigns = null;
             }
@@ -128,6 +206,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
 
             }
             return campaigns;
@@ -142,6 +224,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -155,6 +241,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -169,6 +259,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -183,6 +277,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -196,6 +294,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -211,6 +313,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -224,6 +330,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -238,6 +348,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -252,6 +366,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -359,6 +477,10 @@ namespace SU24_VMO_API.Services
                             campaign.CampaignType!.Campaigns = null;
                         if (campaign.Organization != null)
                             campaign.Organization!.Campaigns = null;
+                        if (campaign.ProcessingPhase != null)
+                            campaign.ProcessingPhase.Campaign = null;
+                        if (campaign.StatementPhase != null)
+                            campaign.StatementPhase.Campaign = null;
                     }
                     if (!String.IsNullOrEmpty(campaignName))
                     {
@@ -372,6 +494,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -385,6 +511,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -398,6 +528,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -413,6 +547,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -426,6 +564,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -439,6 +581,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -462,6 +608,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -475,6 +625,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -488,6 +642,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -503,6 +661,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -516,6 +678,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -529,6 +695,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -549,6 +719,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -562,6 +736,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -575,6 +753,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -591,6 +773,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -603,6 +789,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -615,6 +805,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -640,6 +834,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -653,6 +851,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -666,6 +868,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -682,6 +888,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -695,6 +905,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -708,6 +922,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -731,6 +949,10 @@ namespace SU24_VMO_API.Services
                             campaign.CampaignType!.Campaigns = null;
                         if (campaign.Organization != null)
                             campaign.Organization!.Campaigns = null;
+                        if (campaign.ProcessingPhase != null)
+                            campaign.ProcessingPhase.Campaign = null;
+                        if (campaign.StatementPhase != null)
+                            campaign.StatementPhase.Campaign = null;
                     }
                     if (!String.IsNullOrEmpty(campaignName))
                     {
@@ -744,6 +966,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -757,6 +983,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -770,6 +1000,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -785,6 +1019,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -798,6 +1036,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -811,6 +1053,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -834,6 +1080,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -847,6 +1097,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -860,6 +1114,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -875,6 +1133,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -888,6 +1150,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -901,6 +1167,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -921,6 +1191,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -934,6 +1208,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -947,6 +1225,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -963,6 +1245,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -975,6 +1261,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -987,6 +1277,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1012,6 +1306,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1025,6 +1323,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1038,6 +1340,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1054,6 +1360,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1067,6 +1377,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1080,6 +1394,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1102,6 +1420,10 @@ namespace SU24_VMO_API.Services
                             campaign.CampaignType!.Campaigns = null;
                         if (campaign.Organization != null)
                             campaign.Organization!.Campaigns = null;
+                        if (campaign.ProcessingPhase != null)
+                            campaign.ProcessingPhase.Campaign = null;
+                        if (campaign.StatementPhase != null)
+                            campaign.StatementPhase.Campaign = null;
                     }
                     if (!String.IsNullOrEmpty(campaignName))
                     {
@@ -1115,6 +1437,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1128,6 +1454,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1141,6 +1471,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1156,6 +1490,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1169,6 +1507,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1182,6 +1524,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1205,6 +1551,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1218,6 +1568,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1231,6 +1585,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1246,6 +1604,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1259,6 +1621,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1272,6 +1638,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1292,6 +1662,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1305,6 +1679,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1318,6 +1696,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1334,6 +1716,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1346,6 +1732,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1358,6 +1748,10 @@ namespace SU24_VMO_API.Services
                                         campaign.CampaignType!.Campaigns = null;
                                     if (campaign.Organization != null)
                                         campaign.Organization!.Campaigns = null;
+                                    if (campaign.ProcessingPhase != null)
+                                        campaign.ProcessingPhase.Campaign = null;
+                                    if (campaign.StatementPhase != null)
+                                        campaign.StatementPhase.Campaign = null;
                                 }
                                 return campaigns;
                             }
@@ -1383,6 +1777,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1396,6 +1794,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1409,6 +1811,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1425,6 +1831,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1438,6 +1848,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1451,6 +1865,10 @@ namespace SU24_VMO_API.Services
                                     campaign.CampaignType!.Campaigns = null;
                                 if (campaign.Organization != null)
                                     campaign.Organization!.Campaigns = null;
+                                if (campaign.ProcessingPhase != null)
+                                    campaign.ProcessingPhase.Campaign = null;
+                                if (campaign.StatementPhase != null)
+                                    campaign.StatementPhase.Campaign = null;
                             }
                             return campaigns;
                         }
@@ -1474,6 +1892,10 @@ namespace SU24_VMO_API.Services
                     campaign.CampaignType!.Campaigns = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -1503,6 +1925,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization.OrganizationManager = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -1530,6 +1956,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization.OrganizationManager = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -1569,6 +1999,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization!.Campaigns = null;
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -1609,6 +2043,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1645,6 +2083,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1681,6 +2123,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1751,6 +2197,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1811,6 +2261,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1871,6 +2325,10 @@ namespace SU24_VMO_API.Services
                         campaign.Organization!.Campaigns = null;
                     if (campaign.DonatePhase != null)
                         campaign.DonatePhase.Campaign = null;
+                    if (campaign.ProcessingPhase != null)
+                        campaign.ProcessingPhase.Campaign = null;
+                    if (campaign.StatementPhase != null)
+                        campaign.StatementPhase.Campaign = null;
                 }
                 return campaigns;
             }
@@ -1937,6 +2395,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization.OrganizationManager = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -1975,6 +2437,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization!.Campaigns = null;
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -2037,6 +2503,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization!.Campaigns = null;
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
@@ -2077,6 +2547,10 @@ namespace SU24_VMO_API.Services
                     campaign.Organization!.Campaigns = null;
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
+                if (campaign.ProcessingPhase != null)
+                    campaign.ProcessingPhase.Campaign = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
             }
             return campaigns;
         }
