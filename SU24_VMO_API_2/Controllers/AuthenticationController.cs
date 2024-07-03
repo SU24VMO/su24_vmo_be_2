@@ -222,6 +222,35 @@ namespace SU24_VMO_API.Controllers
         }
 
 
+        [DBTransaction]
+        [HttpPost("forgot-password/reset-password")]
+
+        public IActionResult ResetForgotPassword(ResetPasswordRequest request)
+        {
+            try
+            {
+                var result = _accountService.ResetPassword(request);
+                if (result == true) return Ok(new ResponseMessage()
+                {
+                    Message = "Change successfully!",
+                });
+                var response = new ResponseMessage()
+                {
+                    Message = "Change fail! Please check email again!",
+                };
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
 
         [HttpPost("check-password")]
         [Authorize(Roles = "Volunteer, Member, OrganizationManager, Moderator, Admin")]
