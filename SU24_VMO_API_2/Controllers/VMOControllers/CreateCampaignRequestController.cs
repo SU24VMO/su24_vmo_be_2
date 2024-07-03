@@ -30,7 +30,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Moderator")]
-        public IActionResult GetAllCreateCampaignRequests(int? pageSize, int? pageNo)
+        public IActionResult GetAllCreateCampaignRequests(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(list!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(list!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);

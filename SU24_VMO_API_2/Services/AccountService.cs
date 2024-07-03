@@ -263,6 +263,41 @@ namespace SU24_VMO_API.Services
             }
         }
 
+        public void UpdateAccountStatus(UpdateAccountStatusRequest request)
+        {
+            var account = _accountRepository.GetById(request.AccountID)!;
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
+            var member = new Member();
+            var om = new OrganizationManager();
+            if (account.Role == Role.Volunteer || account.Role == Role.Member)
+            {
+                member = _memberRepository.GetByAccountId(account.AccountID)!;
+                if (request.IsActived != null)
+                {
+                    account.IsActived = (bool)request.IsActived;
+                }
+
+                account.ModifiedBy = member.MemberID;
+                _accountRepository.Update(account);
+                _memberRepository.Update(member);
+            }
+            else if (account.Role == Role.OrganizationManager)
+            {
+                om = _organizationManagerRepository.GetByAccountID(account.AccountID)!;
+                if (request.IsActived != null)
+                {
+                    account.IsActived = (bool)request.IsActived;
+                }
+                account.ModifiedBy = om.OrganizationManagerID;
+                _accountRepository.Update(account);
+                _organizationManagerRepository.Update(om);
+            }
+            else
+            {
+                return;
+            }
+        }
+
         //function login
         public (string?, string?) Login(string? methodAllowed, string password)
         {

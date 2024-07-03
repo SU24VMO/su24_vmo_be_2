@@ -1,10 +1,13 @@
 ﻿using SU24_VMO_API.DTOs.Response;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SU24_VMO_API.Services
 {
     public class PaginationService<T>
     {
-        public PaginationResponse<T> PaginateList(IEnumerable<T> inputList, int? pageSize, int? pageNo)
+        public PaginationResponse<T> PaginateList(IEnumerable<T> inputList, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty = null)
         {
             PaginationResponse<T> response = new PaginationResponse<T>
             {
@@ -14,6 +17,27 @@ namespace SU24_VMO_API.Services
                 TotalPage = 1,
                 List = inputList
             };
+
+            // Apply sorting based on the orderBy parameter and selector
+            if (!string.IsNullOrEmpty(orderByProperty))
+            {
+                var propertyInfo = typeof(T).GetProperty(orderByProperty, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                if (propertyInfo != null)
+                {
+                    if (!string.IsNullOrEmpty(orderBy))
+                    {
+                        if (orderBy.ToLower() == "asc")
+                        {
+                            inputList = inputList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+                        }
+                        else if (orderBy.ToLower() == "desc")
+                        {
+                            inputList = inputList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList();
+                        }
+                    }
+                }
+            }
+
 
             if (pageSize.HasValue && pageNo.HasValue)
             {

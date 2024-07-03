@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -26,7 +27,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllAccounts(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccounts(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -35,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, "Email")
                 };
 
                 return Ok(response);
@@ -53,7 +54,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/role/volunteer")]
-        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -78,7 +79,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/member")]
-        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -87,7 +88,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -103,7 +104,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/moderator")]
-        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -112,7 +113,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -128,7 +129,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/organization-manager")]
-        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -137,7 +138,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -321,6 +322,63 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                     };
                     return BadRequest(response);
                 }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"Database error: {dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {argEx.ParamName} cannot be null."
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+        [HttpPut("update-status")]
+        [Authorize(Roles = "Admin, Moderator")]
+        public IActionResult UpdateAccountStatus(UpdateAccountStatusRequest request)
+        {
+            try
+            {
+                _accountService.UpdateAccountStatus(request);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
             }
             catch (DbUpdateException dbEx)
             {

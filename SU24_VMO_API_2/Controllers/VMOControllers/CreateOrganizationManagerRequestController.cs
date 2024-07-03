@@ -28,7 +28,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "Moderator, OrganizationManager, Admin")]
         [Route("all")]
 
-        public IActionResult GetAllCreateOrganizationManagerRequests(int? pageSize, int? pageNo)
+        public IActionResult GetAllCreateOrganizationManagerRequests(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo, orderBy)
                 };
                 return Ok(response);
             }

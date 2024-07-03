@@ -30,7 +30,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Route("all")]
         [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
-        public IActionResult GetAllActivitys(int? pageSize, int? pageNo)
+        public IActionResult GetAllActivitys(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(activities, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(activities, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -85,7 +85,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
 
-        public IActionResult GetAllActivityWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllActivityWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -112,7 +112,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/volunteer/{memberId}")]
 
-        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo)
+        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);

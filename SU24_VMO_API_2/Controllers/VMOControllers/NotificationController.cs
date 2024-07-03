@@ -29,7 +29,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
         [Route("all/account/{accountId}")]
 
-        public IActionResult GetAllNotificationsByAccountId(int? pageSize, int? pageNo, Guid accountId)
+        public IActionResult GetAllNotificationsByAccountId(int? pageSize, int? pageNo, Guid accountId, string? orderBy)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(notifications, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(notifications, pageSize, pageNo, orderBy)
                 };
                 return Ok(response);
             }

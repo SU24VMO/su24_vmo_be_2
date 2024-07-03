@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllCampaigns(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaigns(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -56,7 +57,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/{campaignName}")]
-        public IActionResult GetAllCampaignByCampaignName(string campaignName, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCampaignName(string campaignName, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -65,7 +66,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -109,7 +110,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-type")]
-        public IActionResult GetAllCampaignByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCampaignTypeId(Guid campaignTypeId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -118,7 +119,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -135,7 +136,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-type/active-status")]
-        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName, string? createBy)
+        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName, string? createBy, string? orderBy)
         {
             try
             {
@@ -144,7 +145,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -162,7 +163,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/active-status")]
-        public IActionResult GetAllCampaignsWithActiveStatus(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithActiveStatus(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -171,7 +172,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -189,7 +190,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/unactive-status")]
-        public IActionResult GetAllCampaignsWithUnActiveStatus(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithUnActiveStatus(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -198,7 +199,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -217,7 +218,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/donate-phase/end-status")]
-        public IActionResult GetAllCampaignsWithDonatePhaseWasEnd(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithDonatePhaseWasEnd(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -226,7 +227,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -245,7 +246,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/donate-phase/processing-status")]
-        public IActionResult GetAllCampaignsWithDonatePhaseIsProcessing(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithDonatePhaseIsProcessing(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -254,7 +255,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -272,7 +273,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/processing-phase/processing-status")]
-        public IActionResult GetAllCampaignsWithProcessingPhaseIsProcessing(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithProcessingPhaseIsProcessing(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -281,7 +282,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -299,7 +300,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/statement-phase/processing-status")]
-        public IActionResult GetAllCampaignsWithStatementPhaseIsProcessing(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithStatementPhaseIsProcessing(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -308,7 +309,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -328,7 +329,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/end-status")]
-        public IActionResult GetAllCampaignsWithEndStatus(int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignsWithEndStatus(int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -337,7 +338,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -356,7 +357,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -365,7 +366,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -384,7 +385,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string phase)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string phase, string? orderBy)
         {
             try
             {
@@ -393,7 +394,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -414,7 +415,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/donate-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -423,7 +424,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -442,7 +443,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/processing-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -451,7 +452,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -470,7 +471,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/statement-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -479,7 +480,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -497,7 +498,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}")]
-        public IActionResult GetAllCampaignByCreateByVolunteerId(Guid memberId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByVolunteerId(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -506,7 +507,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -524,7 +525,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid memberId, int? pageSize, int? pageNo, string? phase)
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid memberId, int? pageSize, int? pageNo, string? phase, string? orderBy)
         {
             try
             {
@@ -533,7 +534,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -551,7 +552,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}/donate-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByVolunteerIdWithDonatePhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithDonatePhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -560,7 +561,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -579,7 +580,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}/processing-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByVolunteerIdWithProcessingPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithProcessingPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -588,7 +589,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
@@ -607,7 +608,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}/statement-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByVolunteerIdWithStatementPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithStatementPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
         {
             try
             {
@@ -616,7 +617,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy)
                 };
 
                 return Ok(response);
