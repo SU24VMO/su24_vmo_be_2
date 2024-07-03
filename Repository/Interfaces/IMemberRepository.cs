@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
-    public interface ICreateMemberRequestRepository : ICrudBaseRepository<CreateMemberRequest, Guid>
+    public interface IMemberRepository : ICrudBaseRepository<Member, Guid>
     {
-
+        public Member? GetByAccountId(Guid? accountId);
+        public Member? GetByPhone(string phone);
     }
 }

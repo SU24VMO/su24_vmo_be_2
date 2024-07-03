@@ -32,7 +32,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public DonatePhase? DonatePhase { get; set; }
         public ProcessingPhase? ProcessingPhase { get; set; }
         public StatementPhase? StatementPhase { get; set; }
-        public User? User { get; set; } 
+        public Member? Member { get; set; } 
         public OrganizationManager? OrganizationManager { get; set; }
         public List<Transaction>? Transactions { get; set; }
     }

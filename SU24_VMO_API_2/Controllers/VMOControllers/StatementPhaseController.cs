@@ -156,12 +156,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("create-by/user/{userId}")]
-        public IActionResult GetProcessingPhaseByUserId(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/member/{memberId}")]
+        public IActionResult GetStatementPhaseByMemberId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var listStatementPhases = _statementPhaseService.GetStatementPhaseByUserId(userId);
+                var listStatementPhases = _statementPhaseService.GetStatementPhaseByMemberId(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -226,7 +226,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateStatementPhase(UpdateStatementPhaseRequest request)
         {
             try
@@ -284,7 +284,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("status/update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateStatementPhaseStatus(UpdateStatementPhaseStatusRequest request)
         {
             try

@@ -9,19 +9,19 @@ using System.Text.RegularExpressions;
 
 namespace SU24_VMO_API.Services
 {
-    public class RequestManagerService
+    public class ModeratorService
     {
-        private readonly IRequestManagerRepository _requestManagerRepository;
+        private readonly IModeratorRepository _requestManagerRepository;
         private readonly IAccountRepository _accountRepository;
 
 
-        public RequestManagerService(IRequestManagerRepository requestManagerRepository, IAccountRepository accountRepository)
+        public ModeratorService(IModeratorRepository requestManagerRepository, IAccountRepository accountRepository)
         {
             _requestManagerRepository = requestManagerRepository;
             _accountRepository = accountRepository;
         }
 
-        public RequestManager? CreateRequestManager(CreateNewRequestManagerRequest request)
+        public Moderator? CreateModerator(CreateNewRequestManagerRequest request)
         {
             TryValidateRegisterRequest(request);
             if (_accountRepository.GetByEmail(request.Email) != null) return null;
@@ -35,16 +35,16 @@ namespace SU24_VMO_API.Services
                 Email = request.Email,
                 Username = request.Username,
                 Avatar = request.Avatar,
-                Role = Role.RequestManager,
+                Role = Role.Moderator,
                 IsActived = true,
                 IsBlocked = false,
                 CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
                 UpdatedAt = null,
             };
 
-            var requestManager = new RequestManager()
+            var requestManager = new Moderator()
             {
-                RequestManagerID = Guid.NewGuid(),
+                ModeratorID = Guid.NewGuid(),
                 AccountID = account.AccountID,
                 PhoneNumber = request.PhoneNumber,
                 FirstName = request.FirstName,

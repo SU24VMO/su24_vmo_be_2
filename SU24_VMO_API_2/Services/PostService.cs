@@ -11,16 +11,16 @@ namespace SU24_VMO_API.Services
     public class PostService
     {
         private readonly IPostRepository repository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly FirebaseService _firebaseService;
 
-        public PostService(IPostRepository repository, FirebaseService firebaseService, IUserRepository userRepository,
+        public PostService(IPostRepository repository, FirebaseService firebaseService, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository)
         {
             this.repository = repository;
             _firebaseService = firebaseService;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _organizationManagerRepository = organizationManagerRepository;
         }
 
@@ -58,9 +58,9 @@ namespace SU24_VMO_API.Services
             return postReponses;
         }
 
-        public IEnumerable<PostResponse> GetAllPostsByUserId(Guid userId)
+        public IEnumerable<PostResponse> GetAllPostsByMemberId(Guid memberId)
         {
-            var posts = repository.GetAllPostByUserId(userId);
+            var posts = repository.GetAllPostsByMemberId(memberId);
             var postReponses = new List<PostResponse>();
 
 
@@ -70,7 +70,7 @@ namespace SU24_VMO_API.Services
                 {
                     post.CreatePostRequest = null;
                 }
-                var user = _userRepository.GetById(userId);
+                var member = _memberRepository.GetById(memberId);
                 postReponses.Add(new PostResponse
                 {
                     PostID = post.PostID,
@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Services
                     IsActive = post.IsActive,
                     Title = post.Title,
                     UpdateAt = post.UpdateAt,
-                    AuthorName = user!.FirstName.Trim() + " " + user!.LastName.Trim()
+                    AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
                 });
             }
             return postReponses;
@@ -110,10 +110,10 @@ namespace SU24_VMO_API.Services
                 postResponse.AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim();
                 return postResponse;
             }
-            else if (post.CreatePostRequest != null && post.CreatePostRequest.CreateByUser != null)
+            else if (post.CreatePostRequest != null && post.CreatePostRequest.CreateByMember != null)
             {
-                var user = _userRepository.GetById((Guid)post.CreatePostRequest.CreateByUser);
-                postResponse.AuthorName = user!.FirstName.Trim() + " " + user!.LastName.Trim();
+                var member = _memberRepository.GetById((Guid)post.CreatePostRequest.CreateByMember);
+                postResponse.AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim();
                 return postResponse;
             }
             else throw new BadRequestException("Post existed but can not found request of this post to append name of the author!");

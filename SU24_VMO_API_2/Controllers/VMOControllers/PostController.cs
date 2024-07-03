@@ -236,12 +236,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("all/user/{userId}")]
-        public IActionResult GetAllPostsByUserId(Guid userId, int? pageSize, int? pageNo)
+        [Route("all/member/{memberId}")]
+        public IActionResult GetAllPostsByMemberId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var posts = _postService.GetAllPostsByUserId(userId);
+                var posts = _postService.GetAllPostsByMemberId(memberId);
 
                 var response = new ResponseMessage()
                 {

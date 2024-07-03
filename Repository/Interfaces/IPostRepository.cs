@@ -10,7 +10,7 @@ namespace Repository.Interfaces
     public interface IPostRepository : ICrudBaseRepository<Post, Guid>
     {
         public IEnumerable<Post> GetAllPostByOrganizationManagerId(Guid organizationManagerId);
-        public IEnumerable<Post> GetAllPostByUserId(Guid userId);
+        public IEnumerable<Post> GetAllPostsByMemberId(Guid memberId);
 
     }
 }

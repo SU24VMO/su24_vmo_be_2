@@ -11,7 +11,7 @@ namespace BusinessObject.Models
     {
         public Guid CreatePostRequestID { get; set; } = default!;
         public Guid PostID { get; set; } = default!;
-        public Guid? CreateByUser { get; set; } = default!;
+        public Guid? CreateByMember { get; set; } = default!;
         public Guid? CreateByOM { get; set; } = default!;
 
         public Guid? ApprovedBy { get; set; } = default!;
@@ -27,7 +27,7 @@ namespace BusinessObject.Models
 
         public Post? Post { get; set; }
         public OrganizationManager? OrganizationManager { get; set; }
-        public RequestManager? RequestManager { get; set; }
-        public User? User { get; set; }
+        public Moderator? Moderator { get; set; }
+        public Member? Member { get; set; }
     }
 }

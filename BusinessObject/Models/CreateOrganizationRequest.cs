@@ -37,6 +37,6 @@ namespace BusinessObject.Models
 
         public Organization? Organization { get; set; }
         public OrganizationManager? OrganizationManager { get; set; }
-        public RequestManager? RequestManager { get; set; }
+        public Moderator? Moderator { get; set; }
     }
 }

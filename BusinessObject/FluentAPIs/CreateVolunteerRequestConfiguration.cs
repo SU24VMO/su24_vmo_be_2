@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.FluentAPIs
 {
-    public class CreateMemberRequestConfiguration : IEntityTypeConfiguration<CreateMemberRequest>
+    public class CreateVolunteerRequestConfiguration : IEntityTypeConfiguration<CreateVolunteerRequest>
     {
-        public void Configure(EntityTypeBuilder<CreateMemberRequest> builder)
+        public void Configure(EntityTypeBuilder<CreateVolunteerRequest> builder)
         {
-            builder.ToTable("CreateMemberRequest");
-            builder.HasKey(x => x.CreateMemberRequestID);
-            builder.Property(x => x.UserID).IsRequired();
+            builder.ToTable("CreateVolunteerRequest");
+            builder.HasKey(x => x.CreateVolunteerRequestID);
+            builder.Property(x => x.MemberID).IsRequired();
             builder.Property(x => x.CreateBy).IsRequired();
             builder.Property(x => x.CreateDate).IsRequired();
             builder.Property(x => x.IsApproved).IsRequired();

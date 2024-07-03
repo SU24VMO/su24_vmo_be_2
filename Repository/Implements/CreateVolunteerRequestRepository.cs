@@ -9,38 +9,38 @@ using System.Threading.Tasks;
 
 namespace Repository.Implements
 {
-    public class CreateMemberRequestRepository : ICreateMemberRequestRepository
+    public class CreateVolunteerRequestRepository : ICreateVolunteerRequestRepository
     {
         public void DeleteById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<CreateMemberRequest> GetAll()
+        public IEnumerable<CreateVolunteerRequest> GetAll()
         {
             using var context = new VMODBContext();
-            return context.CreateMemberRequests
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+            return context.CreateVolunteerRequests
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
-        public CreateMemberRequest? GetById(Guid id)
+        public CreateVolunteerRequest? GetById(Guid id)
         {
             using var context = new VMODBContext();
-            return context.CreateMemberRequests
-                .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList()
-                .FirstOrDefault(d => d.CreateMemberRequestID.Equals(id));
+            return context.CreateVolunteerRequests
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList()
+                .FirstOrDefault(d => d.CreateVolunteerRequestID.Equals(id));
         }
 
-        public CreateMemberRequest? Save(CreateMemberRequest entity)
+        public CreateVolunteerRequest? Save(CreateVolunteerRequest entity)
         {
             try
             {
                 using var context = new VMODBContext();
                 entity.Email = entity.Email.ToLower();
-                var userAdded = context.CreateMemberRequests.Add(entity);
+                var userAdded = context.CreateVolunteerRequests.Add(entity);
                 context.SaveChanges();
                 return userAdded.Entity;
             }
@@ -50,7 +50,7 @@ namespace Repository.Implements
             }
         }
 
-        public void Update(CreateMemberRequest entity)
+        public void Update(CreateVolunteerRequest entity)
         {
             try
             {

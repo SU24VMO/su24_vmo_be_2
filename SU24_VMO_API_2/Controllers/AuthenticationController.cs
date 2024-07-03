@@ -8,6 +8,7 @@ using SU24_VMO_API.Attributes;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using Microsoft.EntityFrameworkCore;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
+using BusinessObject.Models;
 
 namespace SU24_VMO_API.Controllers
 {
@@ -16,20 +17,21 @@ namespace SU24_VMO_API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly AccountService _accountService;
-        private readonly UserService _userService;
+        private readonly MemberService _memberService;
         private readonly OrganizationManagerService _organizationManagerService;
-        private readonly RequestManagerService _requestManagerService;
+        private readonly ModeratorService _moderatorService;
 
 
 
 
 
-        public AuthenticationController(AccountService accountService, UserService userService, OrganizationManagerService organizationManagerService, RequestManagerService requestManagerService)
+        public AuthenticationController(AccountService accountService, MemberService memberService, 
+            OrganizationManagerService organizationManagerService, ModeratorService moderatorService)
         {
             _accountService = accountService;
-            _userService = userService;
+            _memberService = memberService;
             _organizationManagerService = organizationManagerService;
-            _requestManagerService = requestManagerService;
+            _moderatorService = moderatorService;
         }
 
         [HttpPost("login")]
@@ -85,14 +87,14 @@ namespace SU24_VMO_API.Controllers
 
         [DBTransaction]
         [HttpPost("register")]
-        public IActionResult Register(CreateUserRequest request)
+        public IActionResult Register(CreateMemberRequest request)
         {
             try
             {
-                if (request.AccountType.Equals("user"))
+                if (request.AccountType.Equals("member"))
                 {
-                    var user = _userService.CreateUser(request);
-                    if (user == null) return BadRequest("Email already exist!");
+                    var member = _memberService.CreateMember(request);
+                    if (member == null) return BadRequest("Email already exist!");
                     var response = new ResponseMessage()
                     {
                         Message = "Register successfully!",
@@ -141,12 +143,12 @@ namespace SU24_VMO_API.Controllers
         }
 
         [DBTransaction]
-        [HttpPost("register/request-manager")]
-        public IActionResult RegisterRequestManager(CreateNewRequestManagerRequest request)
+        [HttpPost("register/moderator")]
+        public IActionResult RegisterModerator(CreateNewRequestManagerRequest request)
         {
             try
             {
-                var requestManager = _requestManagerService.CreateRequestManager(request);
+                var moderator = _moderatorService.CreateModerator(request);
                 if (request == null) return BadRequest("Email already exist!");
                 var response = new ResponseMessage()
                 {
@@ -171,7 +173,7 @@ namespace SU24_VMO_API.Controllers
         {
             try
             {
-                var result = _userService.ChangePasswordInCaseForgot(email);
+                var result = _memberService.ChangePasswordInCaseForgot(email);
                 if (result == null) return NotFound("Email not found!");
                 var response = new ResponseMessage()
                 {
@@ -192,7 +194,7 @@ namespace SU24_VMO_API.Controllers
 
         [DBTransaction]
         [HttpPost("reset-password")]
-        [Authorize(Roles = "User, Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, Member, OrganizationManager, Moderator")]
 
         public IActionResult Reset(ResetPasswordRequest request)
         {
@@ -222,7 +224,7 @@ namespace SU24_VMO_API.Controllers
 
 
         [HttpPost("check-password")]
-        [Authorize(Roles = "User, Member, OrganizationManager, RequestManager, Admin")]
+        [Authorize(Roles = "Volunteer, Member, OrganizationManager, Moderator, Admin")]
         public IActionResult CheckingPassword(CheckPasswordRequest request)
         {
             try

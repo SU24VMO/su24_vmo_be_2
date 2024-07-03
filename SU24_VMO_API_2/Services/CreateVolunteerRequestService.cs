@@ -12,21 +12,21 @@ using System.Text.RegularExpressions;
 
 namespace SU24_VMO_API.Services
 {
-    public class CreateMemberRequestService
+    public class CreateVolunteerRequestService
     {
-        private readonly ICreateMemberRequestRepository _createMemberRequestRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly ICreateVolunteerRequestRepository _createVolunteerRequestRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly CampaignService _campaignService;
         private readonly INotificationRepository _notificationRepository;
 
 
 
-        public CreateMemberRequestService(ICreateMemberRequestRepository createMemberRequestRepository, IUserRepository userRepository,
+        public CreateVolunteerRequestService(ICreateVolunteerRequestRepository createVolunteerRequestRepository, IMemberRepository memberRepository,
             IAccountRepository accountRepository, CampaignService campaignService, INotificationRepository notificationRepository)
         {
-            _createMemberRequestRepository = createMemberRequestRepository;
-            _userRepository = userRepository;
+            _createVolunteerRequestRepository = createVolunteerRequestRepository;
+            _memberRepository = memberRepository;
             _accountRepository = accountRepository;
             _campaignService = campaignService;
             _notificationRepository = notificationRepository;
@@ -34,49 +34,49 @@ namespace SU24_VMO_API.Services
 
 
 
-        public IEnumerable<CreateMemberRequest>? GetAllCreateMemberRequests()
+        public IEnumerable<CreateVolunteerRequest>? GetAllCreateVolunteerRequests()
         {
-            var requests = _createMemberRequestRepository.GetAll();
+            var requests = _createVolunteerRequestRepository.GetAll();
             foreach (var request in requests)
             {
-                if (request.User != null)
+                if (request.Member != null)
                 {
-                    if (request.User.CreateCampaignRequests != null)
-                        request.User.CreateCampaignRequests.Clear();
-                    if (request.User.CreatePostRequests != null)
-                        request.User.CreatePostRequests.Clear();
-                    if (request.User.CreateUserVerifiedRequests != null)
-                        request.User.CreateUserVerifiedRequests.Clear();
+                    if (request.Member.CreateCampaignRequests != null)
+                        request.Member.CreateCampaignRequests.Clear();
+                    if (request.Member.CreatePostRequests != null)
+                        request.Member.CreatePostRequests.Clear();
+                    if (request.Member.CreateMemberVerifiedRequests != null)
+                        request.Member.CreateMemberVerifiedRequests.Clear();
                 }
-                if (request.RequestManager != null)
+                if (request.Moderator != null)
                 {
-                    if (request.RequestManager.CreateCampaignRequests != null)
-                        request.RequestManager.CreateCampaignRequests.Clear();
-                    if (request.RequestManager.CreatePostRequests != null)
-                        request.RequestManager.CreatePostRequests.Clear();
-                    if (request.RequestManager.CreateMemberRequests != null)
-                        request.RequestManager.CreateMemberRequests.Clear();
-                    if (request.RequestManager.CreateActivityRequests != null)
-                        request.RequestManager.CreateActivityRequests.Clear();
-                    if (request.RequestManager.CreateOrganizationManagerRequests != null)
-                        request.RequestManager.CreateOrganizationManagerRequests.Clear();
-                    if (request.RequestManager.CreateOrganizationRequests != null)
-                        request.RequestManager.CreateOrganizationRequests.Clear();
+                    if (request.Moderator.CreateCampaignRequests != null)
+                        request.Moderator.CreateCampaignRequests.Clear();
+                    if (request.Moderator.CreatePostRequests != null)
+                        request.Moderator.CreatePostRequests.Clear();
+                    if (request.Moderator.CreateVolunteerRequests != null)
+                        request.Moderator.CreateVolunteerRequests.Clear();
+                    if (request.Moderator.CreateActivityRequests != null)
+                        request.Moderator.CreateActivityRequests.Clear();
+                    if (request.Moderator.CreateOrganizationManagerRequests != null)
+                        request.Moderator.CreateOrganizationManagerRequests.Clear();
+                    if (request.Moderator.CreateOrganizationRequests != null)
+                        request.Moderator.CreateOrganizationRequests.Clear();
                 }
             }
             return requests;
         }
 
-        public CreateMemberRequest? CreateMemberRequest(CreateMemberAccountRequest request)
+        public CreateVolunteerRequest? CreateVolunteerRequest(CreateVolunteerAccountRequest request)
         {
             TryValidateRegisterRequest(request);
-            if (_userRepository.GetById(request.UserID) == null) return null;
+            if (_memberRepository.GetById(request.MemberID) == null) return null;
             //PasswordUtils.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            var createMemberRequest = new CreateMemberRequest
+            var createVolunteerRequest = new CreateVolunteerRequest
             {
-                CreateMemberRequestID = Guid.NewGuid(),
-                UserID = request.UserID,
+                CreateVolunteerRequestID = Guid.NewGuid(),
+                MemberID = request.MemberID,
                 MemberName = request.MemberName,
                 Birthday = request.Birthday,
                 PhoneNumber = request.PhoneNumber,
@@ -87,7 +87,7 @@ namespace SU24_VMO_API.Services
                 ClubName = request.ClubName,
                 DetailDescriptionLink = request.DetailDescriptionLink,
                 AchievementLink = request.AchievementLink,
-                CreateBy = request.UserID,
+                CreateBy = request.MemberID,
                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                 IsAcceptTermOfUse = request.IsAcceptTermOfUse,
                 IsApproved = false,
@@ -96,8 +96,8 @@ namespace SU24_VMO_API.Services
                 IsLocked = false,
             };
 
-            var user = _userRepository.GetById(request.UserID);
-            var account = _accountRepository.GetById(user!.AccountID);
+            var volunteer = _memberRepository.GetById(request.MemberID);
+            var account = _accountRepository.GetById(volunteer!.AccountID);
 
 
             var notification = new Notification
@@ -111,20 +111,20 @@ namespace SU24_VMO_API.Services
             };
 
 
-            var createMemberRequestCreated = _createMemberRequestRepository.Save(createMemberRequest);
-            if (createMemberRequestCreated != null)
+            var createVolunteerRequestCreated = _createVolunteerRequestRepository.Save(createVolunteerRequest);
+            if (createVolunteerRequestCreated != null)
             {
                 _notificationRepository.Save(notification);
             }
 
-            return createMemberRequestCreated;
+            return createVolunteerRequestCreated;
         }
 
-        public bool AcceptOrRejectCreateMemberAccountRequest(UpdateCreateMemberAccountRequest updateMemberAccountRequest)
+        public bool AcceptOrRejectCreateVolunteerAccountRequest(UpdateCreateVolunteerAccountRequest updateVolunteerAccountRequest)
         {
-            TryValidateUpdateCreateMemberRequest(updateMemberAccountRequest);
-            var request = _createMemberRequestRepository.GetById((Guid)updateMemberAccountRequest.CreateMemberRequestID!);
-            var user = new User();
+            TryValidateUpdateCreateVolunteerRequest(updateVolunteerAccountRequest);
+            var request = _createVolunteerRequestRepository.GetById((Guid)updateVolunteerAccountRequest.CreateVolunteerRequestID!);
+            var volunteer = new Member();
             var account = new Account();
             var result = false;
             if (request == null)
@@ -142,13 +142,13 @@ namespace SU24_VMO_API.Services
                 IsSeen = false,
             };
 
-            if (updateMemberAccountRequest.IsApproved == true)
+            if (updateVolunteerAccountRequest.IsApproved == true)
             {
-                user = _userRepository.GetById(request.UserID);
-                account = user!.Account;
-                user!.IsVerified = true;
+                volunteer = _memberRepository.GetById(request.MemberID);
+                account = volunteer!.Account;
+                volunteer!.IsVerified = true;
 
-                request.ApprovedBy = updateMemberAccountRequest.RequestManagerId;
+                request.ApprovedBy = updateVolunteerAccountRequest.ModeratorId;
                 request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = true;
@@ -156,15 +156,15 @@ namespace SU24_VMO_API.Services
                 request.IsLocked = false;
                 request.IsRejected = false;
                 result = true;
-                account!.Role = Role.Member;
+                account!.Role = Role.Volunteer;
                 notification.AccountID = account!.AccountID;
                 notification.Content = "Yêu cầu trở thành thành viên của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
             }
             else
             {
-                user = _userRepository.GetById(request.UserID);
-                account = user!.Account;
-                user!.IsVerified = false;
+                volunteer = _memberRepository.GetById(request.MemberID);
+                account = volunteer!.Account;
+                volunteer!.IsVerified = false;
 
                 request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = false;
@@ -179,15 +179,15 @@ namespace SU24_VMO_API.Services
 
 
 
-            _createMemberRequestRepository.Update(request);
-            _userRepository.Update(user);
+            _createVolunteerRequestRepository.Update(request);
+            _memberRepository.Update(volunteer);
             _accountRepository.Update(account);
             _notificationRepository.Save(notification);
             return result;
         }
 
 
-        private void TryValidateRegisterRequest(CreateMemberAccountRequest request)
+        private void TryValidateRegisterRequest(CreateVolunteerAccountRequest request)
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
             {
@@ -200,9 +200,9 @@ namespace SU24_VMO_API.Services
         }
 
 
-        private void TryValidateUpdateCreateMemberRequest(UpdateCreateMemberAccountRequest request)
+        private void TryValidateUpdateCreateVolunteerRequest(UpdateCreateVolunteerAccountRequest request)
         {
-            if (String.IsNullOrEmpty(request.CreateMemberRequestID.ToString()))
+            if (String.IsNullOrEmpty(request.CreateVolunteerRequestID.ToString()))
             {
                 throw new Exception("Id must not be null or empty!");
             }

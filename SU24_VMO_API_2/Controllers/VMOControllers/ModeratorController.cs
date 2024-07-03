@@ -6,13 +6,13 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 {
     [Route("api/request-manager")]
     [ApiController]
-    public class RequestManagerController : ControllerBase
+    public class ModeratorController : ControllerBase
     {
-        private readonly RequestManagerService _service;
+        private readonly ModeratorService _service;
         private readonly AccountService _accountService;
 
 
-        public RequestManagerController(RequestManagerService service, AccountService accountService)
+        public ModeratorController(ModeratorService service, AccountService accountService)
         {
             _service = service;
             _accountService = accountService;

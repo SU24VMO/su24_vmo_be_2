@@ -12,9 +12,9 @@ namespace Repository.Interfaces
         public Account? GetByEmail(string email);
         public Account? GetByUsername(string username);
 
-        public IEnumerable<Account> GetAllAccountsWithMemberRole();
-        public IEnumerable<Account> GetAllAccountsWithUserRole();
-        public IEnumerable<Account> GetAllAccountsWithRequestManagerRole();
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole();
+        public IEnumerable<Account> GetAllAccountWithMemberRole();
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole();
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole();
     }
 }

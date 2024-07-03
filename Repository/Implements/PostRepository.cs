@@ -36,7 +36,7 @@ namespace Repository.Implements
             }
             return posts.OrderByDescending(a => a.CreateAt);
         }
-        public IEnumerable<Post> GetAllPostByUserId(Guid userId)
+        public IEnumerable<Post> GetAllPostsByMemberId(Guid userId)
         {
             throw new NotImplementedException();
         }

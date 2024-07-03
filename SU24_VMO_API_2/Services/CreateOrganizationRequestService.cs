@@ -130,7 +130,7 @@ namespace SU24_VMO_API.Services
 
             if (acceptOrRejectCreateOrganizationRequestRequest.IsApproved == true)
             {
-                request.ApprovedBy = acceptOrRejectCreateOrganizationRequestRequest.RequestManagerId;
+                request.ApprovedBy = acceptOrRejectCreateOrganizationRequestRequest.ModeratorId;
                 request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = true;

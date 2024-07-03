@@ -22,20 +22,20 @@ namespace Repository.Implements
             return context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
-        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByMemberId(Guid userId)
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId)
         {
             using var context = new VMODBContext();
             return context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
-                .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByUser.Equals(userId));
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByMember.Equals(memberId));
         }
 
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId)
@@ -44,8 +44,8 @@ namespace Repository.Implements
             return context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByOM.Equals(organizationManagerId));
         }
 
@@ -55,8 +55,8 @@ namespace Repository.Implements
             return context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList().
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList().
                     FirstOrDefault(a => a.CreateCampaignRequestID.Equals(id));
         }
 
@@ -66,8 +66,8 @@ namespace Repository.Implements
             return context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList().
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList().
                     FirstOrDefault(a => a.CampaignID.Equals(campaignId));
         }
 
@@ -139,7 +139,7 @@ namespace Repository.Implements
                 }
 
                 // Add the CreateCampaignRequest
-                entity.User = null;
+                entity.Member = null;
                 var createCampaignRequest = context.CreateCampaignRequests.Add(entity);
 
                 // Save all changes to the database

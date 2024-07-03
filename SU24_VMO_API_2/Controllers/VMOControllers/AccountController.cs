@@ -52,12 +52,37 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
+        [Route("all/role/volunteer")]
+        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var accounts = _accountService.GetAllAccountsWithVolunteerRole();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+        [HttpGet]
         [Route("all/role/member")]
-        public IActionResult GetAllAccountsWithMemberRole(int? pageSize, int? pageNo)
+        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithMemberRole();
+                var accounts = _accountService.GetAllAccountWithMemberRole();
 
                 var response = new ResponseMessage()
                 {
@@ -77,37 +102,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
         [HttpGet]
-        [Route("all/role/user")]
-        public IActionResult GetAllAccountWithUserRole(int? pageSize, int? pageNo)
+        [Route("all/role/moderator")]
+        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountWithUserRole();
-
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo)
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"Error: {ex.Message}"
-                };
-                return BadRequest(response);
-            }
-        }
-        [HttpGet]
-        [Route("all/role/request-manager")]
-        public IActionResult GetAllAccountsWithRequestManagerRole(int? pageSize, int? pageNo)
-        {
-            try
-            {
-                var accounts = _accountService.GetAllAccountsWithRequestManagerRole();
+                var accounts = _accountService.GetAllAccountsWithModeratorRole();
 
                 var response = new ResponseMessage()
                 {
@@ -242,7 +242,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut("update-information")]
-        [Authorize(Roles = "User, Member, OrganizationManager")]
+        [Authorize(Roles = "Volunteer, Member, OrganizationManager")]
         public IActionResult UpdateAccount(UpdateAccountRequest request)
         {
             try
@@ -299,7 +299,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut("update-information/avatar")]
-        [Authorize(Roles = "User, Member, OrganizationManager, RequestManager, Admin")]
+        [Authorize(Roles = "Volunteer, Member, OrganizationManager, RequestManager, Admin")]
         public async Task<IActionResult> UpdateAccountAvatar(Guid accountId, IFormFile request)
         {
             try

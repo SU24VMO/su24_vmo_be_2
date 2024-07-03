@@ -4,49 +4,49 @@ using Repository.Interfaces;
 
 namespace Repository.Implements
 {
-    public class UserRepository : IUserRepository
+    public class MemberRepository : IMemberRepository
     {
         public void DeleteById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<Member> GetAll()
         {
             using var context = new VMODBContext();
-            return context.Users
+            return context.Members
                 .Include(b => b.BankingAccounts)
                 .Include(c => c.Account)
                 .Include(c => c.CreateCampaignRequests).ToList();
         }
 
-        public User? GetById(Guid id)
+        public Member? GetById(Guid id)
         {
             using var context = new VMODBContext();
-            return context.Users
+            return context.Members
                 .Include(b => b.BankingAccounts)
                 .Include(c => c.Account)
                 .Include(c => c.CreateCampaignRequests).ToList()
-                .FirstOrDefault(d => d.UserID.Equals(id));
+                .FirstOrDefault(d => d.MemberID.Equals(id));
         }
 
-        public User? GetByAccountId(Guid? accountId)
+        public Member? GetByAccountId(Guid? accountId)
         {
             using var context = new VMODBContext();
-            return context.Users
+            return context.Members
                 .Include(b => b.BankingAccounts)
                 .Include(c => c.Account)
                 .Include(c => c.CreateCampaignRequests).ToList()
                 .FirstOrDefault(d => d.AccountID.Equals(accountId));
         }
 
-        public User? Save(User user)
+        public Member? Save(Member user)
         {
             using var context = new VMODBContext();
             var mytransaction = context.Database.BeginTransaction();
             try
             {
-                var userAdded = context.Users.Add(user);
+                var userAdded = context.Members.Add(user);
                 context.SaveChanges();
                 mytransaction.Commit();
                 return userAdded.Entity;
@@ -58,7 +58,7 @@ namespace Repository.Implements
             }
         }
 
-        public void Update(User entity)
+        public void Update(Member entity)
         {
             try
             {
@@ -73,10 +73,10 @@ namespace Repository.Implements
         }
 
 
-        public User? GetByPhone(string phone)
+        public Member? GetByPhone(string phone)
         {
             using var context = new VMODBContext();
-            return context.Users
+            return context.Members
                 .Include(b => b.BankingAccounts)
                 .Include(c => c.Account)
                 .Include(c => c.CreateCampaignRequests).ToList()

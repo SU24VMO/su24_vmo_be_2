@@ -25,7 +25,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "RequestManager, User, Member, OrganizationManager, Admin")]
+        [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
         [Route("all")]
 
         public IActionResult GetAllCreateOrganizationRequests(int? pageSize, int? pageNo)
@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         [Route("checking")]
 
         public IActionResult AcceptOrRejectCreateOrganizationRequest(AcceptOrRejectCreateOrganizationRequestRequest request)

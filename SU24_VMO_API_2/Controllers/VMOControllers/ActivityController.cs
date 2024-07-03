@@ -28,7 +28,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "OrganizationManager, Member, User")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
         public IActionResult GetAllActivitys(int? pageSize, int? pageNo)
         {
@@ -110,13 +110,13 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("create-by/member/{userId}")]
+        [Route("create-by/volunteer/{memberId}")]
 
-        public IActionResult GetAllActivityWhichCreateByMember(Guid userId, int? pageSize, int? pageNo)
+        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var activities = _activityService.GetAllActivityWhichCreateByMember(userId);
+                var activities = _activityService.GetAllActivityWhichCreateByVolunteer(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -139,7 +139,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPost]
         [Route("create-new")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
 
         public async Task<IActionResult> CreateActivityAsync([FromForm] CreateNewActivityRequest request)
         {
@@ -177,7 +177,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
 
         public IActionResult UpdateActivity(UpdateActivityRequest request)
         {

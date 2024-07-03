@@ -25,13 +25,13 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreatedAt).ToList();
         }
 
-        public IEnumerable<Account> GetAllAccountsWithMemberRole()
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole()
         {
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
                 .Include(a => a.Notifications)
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Volunteer));
         }
 
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole()
@@ -43,22 +43,22 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
         }
 
-        public IEnumerable<Account> GetAllAccountsWithRequestManagerRole()
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole()
         {
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
                 .Include(a => a.Notifications)
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.RequestManager));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Moderator));
         }
 
-        public IEnumerable<Account> GetAllAccountsWithUserRole()
+        public IEnumerable<Account> GetAllAccountWithMemberRole()
         {
             using var context = new VMODBContext();
             return context.Accounts
                 .Include(a => a.Transactions)
                 .Include(a => a.Notifications)
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.User));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
         }
 
         public Account? GetByEmail(string email)

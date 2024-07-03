@@ -12,7 +12,7 @@ namespace SU24_VMO_API.Services
     {
         private readonly IStatementPhaseRepository _repository;
         private readonly ICampaignRepository _campaignRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _userRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly INotificationRepository _notificationRepository;
@@ -20,7 +20,7 @@ namespace SU24_VMO_API.Services
 
         public StatementPhaseService(IStatementPhaseRepository repository, ICampaignRepository campaignRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationManagerRepository organizationManagerRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IUserRepository userRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IMemberRepository userRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -65,11 +65,11 @@ namespace SU24_VMO_API.Services
             return listStatementPhase;
         }
 
-        public IEnumerable<StatementPhase?> GetStatementPhaseByUserId(Guid userId)
+        public IEnumerable<StatementPhase?> GetStatementPhaseByMemberId(Guid userId)
         {
             var user = _userRepository.GetById(userId);
             if (user == null) { throw new NotFoundException("User not found!"); }
-            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember.Equals(userId));
 
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
@@ -141,9 +141,9 @@ namespace SU24_VMO_API.Services
                         IsSeen = false,
                     });
                 }
-                else if (createCampaignRequest.CreateByUser != null)
+                else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByUser);
+                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),
@@ -177,9 +177,9 @@ namespace SU24_VMO_API.Services
                         IsSeen = false,
                     });
                 }
-                else if (createCampaignRequest.CreateByUser != null)
+                else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByUser);
+                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),

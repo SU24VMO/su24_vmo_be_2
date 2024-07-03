@@ -8,27 +8,27 @@ using SU24_VMO_API.Services;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
-    [Route("api/user")]
+    [Route("api/member")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class MemberController : ControllerBase
     {
-        private readonly UserService _service;
+        private readonly MemberService _service;
         private readonly AccountService _accountService;
 
 
-        public UserController(UserService service, AccountService accountService)
+        public MemberController(MemberService service, AccountService accountService)
         {
             _service = service;
             _accountService = accountService;
         }
 
-        [HttpPut("update-information/{userId}")]
-        [Authorize(Roles = "User, Member")]
-        public IActionResult UpdateUser(Guid userId, [FromBody] UpdateUserRequest request)
+        [HttpPut("update-information/{memberId}")]
+        [Authorize(Roles = "Volunteer, Member")]
+        public IActionResult UpdateMember(Guid memberId, [FromBody] UpdateMemberRequest request)
         {
             try
             {
-                _service.UpdateUser(userId, request);
+                _service.UpdateMember(memberId, request);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",

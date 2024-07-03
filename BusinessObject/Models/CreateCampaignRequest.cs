@@ -11,7 +11,7 @@ namespace BusinessObject.Models
     {
         public Guid CreateCampaignRequestID { get; set; } = default!;
         public Guid CampaignID { get; set;} = default!;
-        public Guid? CreateByUser { get; set; } = default!;
+        public Guid? CreateByMember { get; set; } = default!;
         public Guid? CreateByOM { get; set; } = default!;
 
         public Guid? ApprovedBy { get; set; } = default!;
@@ -26,9 +26,9 @@ namespace BusinessObject.Models
         public bool IsLocked { get; set; } = default!;
 
         public Campaign? Campaign { get; set; }
-        public User? User { get; set; }
+        public Member? Member { get; set; }
         public OrganizationManager? OrganizationManager { get; set; }
-        public RequestManager? RequestManager { get; set; }
+        public Moderator? Moderator { get; set; }
 
     }
 }

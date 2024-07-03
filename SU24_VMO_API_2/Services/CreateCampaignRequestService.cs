@@ -11,7 +11,7 @@ namespace SU24_VMO_API.Services
     {
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly ICampaignRepository _campaignRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
@@ -22,13 +22,13 @@ namespace SU24_VMO_API.Services
         private readonly FirebaseService _firebaseService;
 
         public CreateCampaignRequestService(ICreateCampaignRequestRepository createCampaignRequestRepository, FirebaseService firebaseService,
-            IUserRepository userRepository, IAccountRepository accountRepository, CampaignService campaignService, INotificationRepository notificationRepository,
+            IMemberRepository memberRepository, IAccountRepository accountRepository, CampaignService campaignService, INotificationRepository notificationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICampaignRepository campaignRepository)
         {
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _firebaseService = firebaseService;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _accountRepository = accountRepository;
             _campaignService = campaignService;
             _notificationRepository = notificationRepository;
@@ -54,20 +54,20 @@ namespace SU24_VMO_API.Services
                     if (request.OrganizationManager.CreateOrganizationRequests != null)
                         request.OrganizationManager.CreateOrganizationRequests.Clear();
                 }
-                if (request.RequestManager != null)
+                if (request.Moderator != null)
                 {
-                    if (request.RequestManager.CreateCampaignRequests != null)
-                        request.RequestManager.CreateCampaignRequests.Clear();
-                    if (request.RequestManager.CreatePostRequests != null)
-                        request.RequestManager.CreatePostRequests.Clear();
-                    if (request.RequestManager.CreateMemberRequests != null)
-                        request.RequestManager.CreateMemberRequests.Clear();
-                    if (request.RequestManager.CreateActivityRequests != null)
-                        request.RequestManager.CreateActivityRequests.Clear();
-                    if (request.RequestManager.CreateOrganizationManagerRequests != null)
-                        request.RequestManager.CreateOrganizationManagerRequests.Clear();
-                    if (request.RequestManager.CreateOrganizationRequests != null)
-                        request.RequestManager.CreateOrganizationRequests.Clear();
+                    if (request.Moderator.CreateCampaignRequests != null)
+                        request.Moderator.CreateCampaignRequests.Clear();
+                    if (request.Moderator.CreatePostRequests != null)
+                        request.Moderator.CreatePostRequests.Clear();
+                    if (request.Moderator.CreateVolunteerRequests != null)
+                        request.Moderator.CreateVolunteerRequests.Clear();
+                    if (request.Moderator.CreateActivityRequests != null)
+                        request.Moderator.CreateActivityRequests.Clear();
+                    if (request.Moderator.CreateOrganizationManagerRequests != null)
+                        request.Moderator.CreateOrganizationManagerRequests.Clear();
+                    if (request.Moderator.CreateOrganizationRequests != null)
+                        request.Moderator.CreateOrganizationRequests.Clear();
                 }
                 var campaign = _campaignRepository.GetById(request.CampaignID);
                 if (campaign != null) request.Campaign = campaign;
@@ -88,7 +88,7 @@ namespace SU24_VMO_API.Services
 
             var account = _accountRepository.GetById(accountId);
             var om = new OrganizationManager();
-            var member = new User();
+            var volunteer = new Member();
             if (account == null)
             {
                 return null;
@@ -148,7 +148,7 @@ namespace SU24_VMO_API.Services
                         QRCode = qrImageLink
                     };
 
-                    var user = _userRepository.GetByAccountId(accountId);
+                    var member = _memberRepository.GetByAccountId(accountId);
 
 
                     var createCampaignRequest = new CreateCampaignRequest
@@ -182,9 +182,9 @@ namespace SU24_VMO_API.Services
                     }
                     return createCampaignRequestCreated;
                 }
-                else if (account.Role == Role.Member)
+                else if (account.Role == Role.Volunteer)
                 {
-                    member = _userRepository.GetByAccountId(accountId);
+                    volunteer = _memberRepository.GetByAccountId(accountId);
                     var linkImageCampaign = "";
                     if (request.ImageCampaign != null)
                     {
@@ -239,7 +239,7 @@ namespace SU24_VMO_API.Services
                         CreateCampaignRequestID = Guid.NewGuid(),
                         CampaignID = campaign.CampaignID,
                         Campaign = campaign,
-                        CreateByUser = member!.UserID,
+                        CreateByMember = volunteer!.MemberID,
                         CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                         IsApproved = false,
                         IsPending = true,
@@ -284,7 +284,7 @@ namespace SU24_VMO_API.Services
             var donatePhase = new DonatePhase();
             var processingPhase = new ProcessingPhase();
             var statementPhase = new StatementPhase();
-            var user = new User();
+            var member = new Member();
             var om = new OrganizationManager();
             var notification = new Notification
             {
@@ -298,7 +298,7 @@ namespace SU24_VMO_API.Services
                 return result;
             }
 
-            if (request.CreateByUser != null)
+            if (request.CreateByMember != null)
             {
                 if (updateCampaignRequest.IsApproved == true)
                 {
@@ -309,15 +309,15 @@ namespace SU24_VMO_API.Services
                     request.IsApproved = true;
                     request.IsPending = false;
                     request.IsLocked = false;
-                    request.ApprovedBy = updateCampaignRequest.RequestManagerId;
+                    request.ApprovedBy = updateCampaignRequest.ModeratorId;
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsRejected = false;
                     result = true;
 
-                    user = _userRepository.GetById((Guid)request!.CreateByUser!);
+                    member = _memberRepository.GetById((Guid)request!.CreateByMember!);
 
-                    notification.AccountID = user!.AccountID;
+                    notification.AccountID = member!.AccountID;
                     notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
 
                     var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
@@ -386,9 +386,9 @@ namespace SU24_VMO_API.Services
                     request.IsRejected = true;
                     result = true;
 
-                    user = _userRepository.GetById((Guid)request!.CreateByUser!);
+                    member = _memberRepository.GetById((Guid)request!.CreateByMember!);
 
-                    notification.AccountID = user!.AccountID;
+                    notification.AccountID = member!.AccountID;
                     notification.Content = "Yêu cầu tạo chiến dịch của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
                 }
             }
@@ -401,7 +401,7 @@ namespace SU24_VMO_API.Services
                     campaign.IsTransparent = true;
 
 
-                    request.ApprovedBy = updateCampaignRequest.RequestManagerId;
+                    request.ApprovedBy = updateCampaignRequest.ModeratorId;
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = true;
@@ -495,117 +495,6 @@ namespace SU24_VMO_API.Services
 
             return result;
         }
-
-
-        //public bool AcceptOrRejectCreateCampaignRequestByOMRole(UpdateCreateCampaignRequest updateCampaignRequest)
-        //{
-        //    TryValidateUpdateCreateCampaignRequest(updateCampaignRequest);
-        //    var request = _createCampaignRequestRepository.GetById((Guid)updateCampaignRequest.CreateCampaignRequestID!);
-        //    var result = false;
-        //    var campaign = new Campaign();
-        //    var donatePhase = new DonatePhase();
-        //    var processingPhase = new ProcessingPhase();
-        //    var statementPhase = new StatementPhase();
-        //    if (request == null)
-        //    {
-        //        return result;
-        //    }
-
-
-        //    var notification = new Notification
-        //    {
-        //        NotificationID = Guid.NewGuid(),
-        //        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-        //        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-        //        IsSeen = false,
-        //    };
-        //    if (updateCampaignRequest.IsApproved == true)
-        //    {
-        //        campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
-        //        campaign.IsActive = true;
-        //        campaign.IsTransparent = true;
-
-        //        request.IsApproved = true;
-        //        request.IsPending = false;
-        //        request.IsLocked = false;
-        //        request.IsRejected = false;
-        //        result = true;
-
-        //        var om = _organizationManagerRepository.GetById((Guid)request!.CreateByUser!);
-
-        //        notification.AccountID = om!.AccountID;
-        //        notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
-
-        //        var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
-        //        if (donatePhaseExisted == null)
-        //        {
-        //            donatePhase = new DonatePhase
-        //            {
-        //                DonatePhaseId = Guid.NewGuid(),
-        //                CampaignId = campaign.CampaignID,
-        //                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-        //                CurrentMoney = "0",
-        //                IsProcessing = true,
-        //                IsEnd = false,
-        //                Name = "Giai đoạn ủng hộ",
-        //                Percent = 0,
-        //                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
-        //            };
-        //            _donatePhaseRepository.Save(donatePhase);
-        //        }
-
-        //        var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-        //        if (processingPhaseExisted == null)
-        //        {
-        //            processingPhase = new ProcessingPhase
-        //            {
-        //                ProcessingPhaseId = Guid.NewGuid(),
-        //                CampaignId = campaign.CampaignID,
-        //                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-        //                IsProcessing = false,
-        //                IsEnd = false,
-        //                Name = "Giai đoạn xử lý, giải ngân",
-        //            };
-        //            _processingPhaseRepository.Save(processingPhase);
-
-        //        }
-
-        //        var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
-        //        if (statementPhaseExisted == null)
-        //        {
-        //            statementPhase = new StatementPhase
-        //            {
-        //                StatementPhaseId = Guid.NewGuid(),
-        //                CampaignId = campaign.CampaignID,
-        //                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-        //                IsProcessing = false,
-        //                IsEnd = false,
-        //                Name = "Giai đoạn sao kê",
-        //            };
-        //            _statementPhaseRepository.Save(statementPhase);
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        request.IsApproved = false;
-        //        request.IsPending = false;
-        //        request.IsLocked = false;
-        //        request.IsRejected = true;
-        //        result = true;
-
-        //        var om = _organizationManagerRepository.GetById((Guid)request!.CreateByUser!);
-
-        //        notification.AccountID = om!.AccountID;
-        //        notification.Content = "Yêu cầu tạo chiến dịch của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
-        //    }
-
-        //    _createCampaignRequestRepository.Update(request);
-        //    _campaignService.UpdateCampaign(campaign);
-        //    _notificationRepository.Save(notification);
-
-        //    return result;
-        //}
 
 
 

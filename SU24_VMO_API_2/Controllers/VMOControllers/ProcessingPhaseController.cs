@@ -161,12 +161,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("create-by/user/{userId}")]
-        public IActionResult GetProcessingPhaseByUserId(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/member/{memberId}")]
+        public IActionResult GetProcessingPhaseByMemberId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var processingPhases = _processingPhaseService.GetProcessingPhaseByUserId(userId);
+                var processingPhases = _processingPhaseService.GetProcessingPhaseByMemberId(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -231,12 +231,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("create-by/user")]
-        public IActionResult GetProcessingPhaseResponseByUserId(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/member")]
+        public IActionResult GetProcessingPhaseResponseByMemberId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var processingPhases = _processingPhaseService.GetProcessingPhaseResponseByUserId(userId);
+                var processingPhases = _processingPhaseService.GetProcessingPhaseResponseByMemberId(memberId);
 
                 var response = new ResponseMessage()
                 {

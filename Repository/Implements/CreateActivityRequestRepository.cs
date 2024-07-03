@@ -21,8 +21,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.CreateActivityRequests
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .Include(a => a.Activity)
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
@@ -32,8 +32,8 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.CreateActivityRequests
                 .Include(a => a.OrganizationManager)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .Include(a => a.Activity).ToList()
                 .FirstOrDefault(a => a.CreateActivityRequestID.Equals(id));
         }

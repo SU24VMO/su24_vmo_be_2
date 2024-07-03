@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 
 namespace Repository.Implements
 {
-    public class RequestManagerRepository : IRequestManagerRepository
+    public class ModeratorRepository : IModeratorRepository
     {
         public void DeleteById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<RequestManager> GetAll()
+        public IEnumerable<Moderator> GetAll()
         {
             using var context = new VMODBContext();
-            return context.RequestManagers
-                .Include(a => a.CreateMemberRequests)
+            return context.Moderators
+                .Include(a => a.CreateVolunteerRequests)
                 .Include(a => a.CreatePostRequests)
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateOrganizationManagerRequests)
                 .Include(a => a.CreateCampaignRequests).ToList();
         }
 
-        public RequestManager? GetByAccountID(Guid accountID)
+        public Moderator? GetByAccountID(Guid accountID)
         {
             using var context = new VMODBContext();
-            return context.RequestManagers
-                .Include(a => a.CreateMemberRequests)
+            return context.Moderators
+                .Include(a => a.CreateVolunteerRequests)
                 .Include(a => a.CreatePostRequests)
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateOrganizationManagerRequests)
@@ -39,28 +39,28 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.AccountID.Equals(accountID));
         }
 
-        public RequestManager? GetByEmail(string email)
+        public Moderator? GetByEmail(string email)
         {
             throw new NotImplementedException();
         }
 
-        public RequestManager? GetById(Guid id)
+        public Moderator? GetById(Guid id)
         {
             using var context = new VMODBContext();
-            return context.RequestManagers
-                .Include(a => a.CreateMemberRequests)
+            return context.Moderators
+                .Include(a => a.CreateVolunteerRequests)
                 .Include(a => a.CreatePostRequests)
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateOrganizationManagerRequests)
                 .Include(a => a.CreateCampaignRequests).ToList()
-                .FirstOrDefault(d => d.RequestManagerID.Equals(id));
+                .FirstOrDefault(d => d.ModeratorID.Equals(id));
         }
 
-        public RequestManager? GetByPhone(string phone)
+        public Moderator? GetByPhone(string phone)
         {
             using var context = new VMODBContext();
-            return context.RequestManagers
-                .Include(a => a.CreateMemberRequests)
+            return context.Moderators
+                .Include(a => a.CreateVolunteerRequests)
                 .Include(a => a.CreatePostRequests)
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateOrganizationManagerRequests)
@@ -68,12 +68,12 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.PhoneNumber.Equals(phone));
         }
 
-        public RequestManager? Save(RequestManager entity)
+        public Moderator? Save(Moderator entity)
         {
             try
             {
                 using var context = new VMODBContext();
-                var requestManagerCreated = context.RequestManagers.Add(entity);
+                var requestManagerCreated = context.Moderators.Add(entity);
                 context.SaveChanges();
                 return requestManagerCreated.Entity;
             }
@@ -83,7 +83,7 @@ namespace Repository.Implements
             }
         }
 
-        public void Update(RequestManager entity)
+        public void Update(Moderator entity)
         {
             try
             {

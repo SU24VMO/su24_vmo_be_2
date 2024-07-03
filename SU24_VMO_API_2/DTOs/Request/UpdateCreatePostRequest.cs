@@ -7,7 +7,7 @@ namespace SU24_VMO_API.DTOs.Request
         [Required]
         public Guid CreatePostRequestId { get; set; }
         [Required]
-        public Guid RequestManagerId { get; set; }
+        public Guid ModeratorId { get; set; }
         [Required]
         public bool IsApproved {  get; set; }
 

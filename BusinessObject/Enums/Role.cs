@@ -9,9 +9,9 @@ namespace BusinessObject.Enums
     public enum Role
     {
         Admin = 0,
-        User = 1,
-        Member = 2,
+        Member = 1,
+        Volunteer = 2,
         OrganizationManager = 3,
-        RequestManager = 4,
+        Moderator = 4,
     }
 }

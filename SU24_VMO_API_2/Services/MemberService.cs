@@ -14,23 +14,24 @@ using System.Text.RegularExpressions;
 
 namespace SU24_VMO_API.Services
 {
-    public class UserService
+    public class MemberService
     {
 
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly JwtTokenSupporter jwtTokenSupporter;
         private readonly INotificationRepository _notificationRepository;
 
-        public UserService(JwtTokenSupporter jwtTokenSupporter, IUserRepository _userRepository, IAccountRepository accountRepository, INotificationRepository notificationRepository)
+        public MemberService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository, IAccountRepository accountRepository, 
+            INotificationRepository notificationRepository)
         {
             this.jwtTokenSupporter = jwtTokenSupporter;
-            this._userRepository = _userRepository;
+            _memberRepository = memberRepository;
             this._accountRepository = accountRepository;
             _notificationRepository = notificationRepository;
         }
 
-        public User? CreateUser(CreateUserRequest request)
+        public Member? CreateMember(CreateMemberRequest request)
         {
             TryValidateRegisterRequest(request);
             if (_accountRepository.GetByEmail(request.Email) != null) return null;
@@ -44,7 +45,7 @@ namespace SU24_VMO_API.Services
                 Email = request.Email,
                 Username = request.Username,
                 Avatar = request.Avatar,
-                Role = Role.User,
+                Role = Role.Member,
                 IsActived = true,
                 IsBlocked = false,
                 CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
@@ -61,9 +62,9 @@ namespace SU24_VMO_API.Services
                 IsSeen = false,
             };
 
-            var user = new User()
+            var member = new Member()
             {
-                UserID = Guid.NewGuid(),
+                MemberID = Guid.NewGuid(),
                 AccountID = account.AccountID,
                 PhoneNumber = request.PhoneNumber,
                 FirstName = request.FirstName,
@@ -80,13 +81,13 @@ namespace SU24_VMO_API.Services
             var accountCreated = _accountRepository.Save(account);
             if(accountCreated != null)
             {
-                var userCreated = _userRepository.Save(user);
+                var userCreated = _memberRepository.Save(member);
                 if (userCreated != null)
                 {
                     _notificationRepository.Save(notification);
                 }
             }
-            return user;
+            return member;
         }
 
 
@@ -120,7 +121,7 @@ namespace SU24_VMO_API.Services
             return new string(password);
         }
 
-        private void TryValidateRegisterRequest(CreateUserRequest request)
+        private void TryValidateRegisterRequest(CreateMemberRequest request)
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
             {
@@ -147,19 +148,19 @@ namespace SU24_VMO_API.Services
             {
                 throw new Exception("Username was existed!");
             }
-            if (_userRepository.GetByPhone(request.PhoneNumber) != null)
+            if (_memberRepository.GetByPhone(request.PhoneNumber) != null)
             {
                 throw new Exception("Phone number was existed!");
             }
         }
 
 
-        public void UpdateUser(Guid userId, UpdateUserRequest request)
+        public void UpdateMember(Guid memberId, UpdateMemberRequest request)
         {
             try
             {
-                var user = _userRepository.GetById(userId) ?? throw new Exception("User not existed");
-                var account = _accountRepository.GetById(user.AccountID)!;
+                var member = _memberRepository.GetById(memberId) ?? throw new Exception("Member not existed");
+                var account = _accountRepository.GetById(member.AccountID)!;
 
                 if (request.Email != null && request.Email != account.Email)
                 {
@@ -181,40 +182,40 @@ namespace SU24_VMO_API.Services
                 }
                 if (request.FirstName != null)
                 {
-                    user.FirstName = request.FirstName;
+                    member.FirstName = request.FirstName;
                 }
                 if (request.LastName != null)
                 {
-                    user.LastName = request.LastName;
+                    member.LastName = request.LastName;
                 }
                 if (request.PhoneNumber != null)
                 {
-                    user.PhoneNumber = request.PhoneNumber;
+                    member.PhoneNumber = request.PhoneNumber;
                 }
                 if (request.Gender != null)
                 {
-                    user.Gender = request.Gender;
+                    member.Gender = request.Gender;
                 }
                 if (request.BirthDay != null)
                 {
-                    user.BirthDay = request.BirthDay;
+                    member.BirthDay = request.BirthDay;
                 }
                 if (request.FacebookUrl != null)
                 {
-                    user.FacebookUrl = request.FacebookUrl;
+                    member.FacebookUrl = request.FacebookUrl;
                 }
                 if (request.YoutubeUrl != null)
                 {
-                    user.YoutubeUrl = request.YoutubeUrl;
+                    member.YoutubeUrl = request.YoutubeUrl;
                 }
                 if (request.TiktokUrl != null)
                 {
-                    user.TiktokUrl = request.TiktokUrl;
+                    member.TiktokUrl = request.TiktokUrl;
                 }
 
                 account!.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
                 account!.ModifiedBy = account!.AccountID;
-                _userRepository.Update(user);
+                _memberRepository.Update(member);
                 _accountRepository.Update(account);
             }
             catch (Exception ex)

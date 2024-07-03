@@ -26,7 +26,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "RequestManager, User, Member, OrganizationManager, Admin")]
+        [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
         [Route("all/account/{accountId}")]
 
         public IActionResult GetAllNotificationsByAccountId(int? pageSize, int? pageNo, Guid accountId)
@@ -53,7 +53,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut]
-        [Authorize(Roles = "RequestManager, User, Member, OrganizationManager, Admin")]
+        [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
         [Route("checking")]
 
         public IActionResult UpdateIsSeenNotification(Guid accountId)

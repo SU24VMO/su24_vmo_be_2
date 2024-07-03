@@ -13,23 +13,23 @@ namespace SU24_VMO_API.Services
         private readonly ICreatePostRequestRepository _repository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IRequestManagerRepository _requestManagerRepository;
+        private readonly IModeratorRepository _moderatorRepository;
         private readonly INotificationRepository _notificationRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IPostRepository _postRepository;
         private readonly FirebaseService _firebaseService;
 
         public CreatePostRequestService(ICreatePostRequestRepository repository, IAccountRepository accountRepository,
-            IUserRepository userRepository, FirebaseService firebaseService, IPostRepository postRepository,
-            IRequestManagerRepository requestManagerRepository, IOrganizationManagerRepository organizationManagerRepository,
+            IMemberRepository memberRepository, FirebaseService firebaseService, IPostRepository postRepository,
+            IModeratorRepository moderatorRepository, IOrganizationManagerRepository organizationManagerRepository,
             INotificationRepository notificationRepository)
         {
             _repository = repository;
             _accountRepository = accountRepository;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _firebaseService = firebaseService;
             _postRepository = postRepository;
-            _requestManagerRepository = requestManagerRepository;
+            _moderatorRepository = moderatorRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _notificationRepository = notificationRepository;
         }
@@ -77,14 +77,14 @@ namespace SU24_VMO_API.Services
 
 
             if (account == null) { throw new NotFoundException("Account not found!"); }
-            if (account.Role == BusinessObject.Enums.Role.Member)
+            if (account.Role == BusinessObject.Enums.Role.Volunteer)
             {
-                var user = _userRepository.GetByAccountId(request.AccountId)!;
+                var volunteer = _memberRepository.GetByAccountId(request.AccountId)!;
                 var createPostRequest = new CreatePostRequest
                 {
                     CreatePostRequestID = Guid.NewGuid(),
                     PostID = postCreated.PostID,
-                    CreateByUser = user.UserID,
+                    CreateByMember = volunteer.MemberID,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsApproved = false,
                     IsLocked = false,
@@ -124,11 +124,11 @@ namespace SU24_VMO_API.Services
         {
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
             if (createPostRequest == null) { throw new NotFoundException("Create post request not found!"); }
-            var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
-            if (requestManager == null) { throw new NotFoundException("Request manager not found!"); }
+            var moderator = _moderatorRepository.GetById(request.ModeratorId);
+            if (moderator == null) { throw new NotFoundException("Request manager not found!"); }
 
             var om = new OrganizationManager();
-            var user = new User();
+            var user = new Member();
 
             var notification = new Notification
             {
@@ -138,12 +138,12 @@ namespace SU24_VMO_API.Services
                 IsSeen = false,
             };
 
-            if (createPostRequest != null && requestManager != null)
+            if (createPostRequest != null && moderator != null)
             {
                 var post = _postRepository.GetById(createPostRequest.PostID)!;
                 if (request.IsApproved)
                 {
-                    createPostRequest.ApprovedBy = request.RequestManagerId;
+                    createPostRequest.ApprovedBy = request.ModeratorId;
                     createPostRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     createPostRequest.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     createPostRequest.IsApproved = true;
@@ -159,7 +159,7 @@ namespace SU24_VMO_API.Services
                     }
                     else
                     {
-                        user = _userRepository.GetById((Guid)createPostRequest.CreateByUser!)!;
+                        user = _memberRepository.GetById((Guid)createPostRequest.CreateByMember!)!;
                         notification.AccountID = user.AccountID;
                         notification.Content = "Yêu cầu tạo bài viết của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
                     }
@@ -180,7 +180,7 @@ namespace SU24_VMO_API.Services
                     }
                     else
                     {
-                        user = _userRepository.GetById((Guid)createPostRequest.CreateByUser!)!;
+                        user = _memberRepository.GetById((Guid)createPostRequest.CreateByMember!)!;
                         notification.AccountID = user.AccountID;
                         notification.Content = "Yêu cầu tạo bài viết của bạn chưa được công nhận, hãy kiểm tra kĩ hơn để yêu cầu được dễ dàng thông qua!";
                     }

@@ -21,7 +21,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "OrganizationManager, Member, User")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
         public IActionResult GetAllBankingAccounts()
         {
@@ -77,7 +77,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPost]
         [Route("create-new")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
 
         public IActionResult CreateBankingAccount(CreateBankingAccountRequest request)
         {
@@ -115,7 +115,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
 
         public IActionResult UpdateBankingAccount(UpdateBankingAccountRequest request)
         {

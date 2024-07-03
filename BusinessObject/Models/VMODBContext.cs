@@ -27,7 +27,7 @@ namespace BusinessObject.Models
         public DbSet<Campaign> Campaigns { get; set; } = default!;
         public DbSet<CampaignType> CampaignTypes { get; set; } = default!;
         public DbSet<CreateCampaignRequest> CreateCampaignRequests { get; set; } = default!;
-        public DbSet<CreateMemberRequest> CreateMemberRequests { get; set; } = default!;
+        public DbSet<CreateVolunteerRequest> CreateVolunteerRequests { get; set; } = default!;
         public DbSet<CreateOrganizationRequest> CreateOrganizationRequests { get; set; } = default!;
         public DbSet<CreateActivityRequest> CreateActivityRequests { get; set; } = default!;
         public DbSet<CreateOrganizationManagerRequest> CreateOrganizationManagerRequests { get; set; } = default!;
@@ -38,11 +38,11 @@ namespace BusinessObject.Models
         public DbSet<OrganizationManager> OrganizationManagers { get; set; } = default!;
         public DbSet<Post> Posts { get; set; } = default!;
         public DbSet<ProcessingPhase> ProcessingPhases { get; set; } = default!;
-        public DbSet<RequestManager> RequestManagers { get; set; } = default!;
+        public DbSet<Moderator> Moderators { get; set; } = default!;
         public DbSet<StatementFile> StatementFiles { get; set; } = default!;
         public DbSet<StatementPhase> StatementPhases { get; set; } = default!;
         public DbSet<Transaction> Transactions { get; set; } = default!;
-        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<Member> Members { get; set; } = default!;
         public DbSet<AccountToken> AccountTokens { get; set; } = default!;
 
 
@@ -91,7 +91,7 @@ namespace BusinessObject.Models
             modelBuilder.Entity<Transaction>()
                 .Property(stage => stage.TransactionType)
                 .HasConversion<int>();
-            modelBuilder.Entity<CreateMemberRequest>()
+            modelBuilder.Entity<CreateVolunteerRequest>()
                 .Property(stage => stage.RoleInClub)
                 .HasConversion<int>();
 
@@ -105,7 +105,7 @@ namespace BusinessObject.Models
             modelBuilder.ApplyConfiguration(new CampaignConfiguration());
             modelBuilder.ApplyConfiguration(new CampaignTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CreateCampaignRequestConfiguration());
-            modelBuilder.ApplyConfiguration(new CreateMemberRequestConfiguration());
+            modelBuilder.ApplyConfiguration(new CreateVolunteerRequestConfiguration());
             modelBuilder.ApplyConfiguration(new CreateOrganizationRequestConfiguration());
             modelBuilder.ApplyConfiguration(new CreateActivityRequestConfiguration());
             modelBuilder.ApplyConfiguration(new CreateOrganizationManagerRequestConfiguration());
@@ -116,11 +116,11 @@ namespace BusinessObject.Models
             modelBuilder.ApplyConfiguration(new OrganizationManagerConfiguration());
             modelBuilder.ApplyConfiguration(new PostConfiguration());
             modelBuilder.ApplyConfiguration(new ProcessingPhaseConfiguration());
-            modelBuilder.ApplyConfiguration(new RequestManagerConfiguration());
+            modelBuilder.ApplyConfiguration(new ModeratorConfiguration());
             modelBuilder.ApplyConfiguration(new StatementFileConfiguration());
             modelBuilder.ApplyConfiguration(new StatementPhaseConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
-            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new MemberConfiguration());
 
 
         }

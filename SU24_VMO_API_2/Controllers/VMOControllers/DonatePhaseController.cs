@@ -305,12 +305,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("create-by/user/{userId}")]
-        public IActionResult GetDonatePhaseByUserId(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/member/{memberId}")]
+        public IActionResult GetDonatePhaseByMemberId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var donatePhases = _donatePhaseService.GetDonatePhaseByUserId(userId);
+                var donatePhases = _donatePhaseService.GetDonatePhaseByMemberId(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -375,7 +375,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Authorize(Roles = "OrganizationManager, Member")]
+        [Authorize(Roles = "OrganizationManager, Volunteer")]
         [Route("create-new")]
 
         public IActionResult CreateNewDonatePhase(DonatePhase donatePhase)
@@ -434,7 +434,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut("update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateDonatePhase(UpdateDonatePhaseRequest request)
         {
             try
@@ -492,7 +492,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("status/update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateDonatePhaseStatus(UpdateDonatePhaseStatusRequest request)
         {
             try

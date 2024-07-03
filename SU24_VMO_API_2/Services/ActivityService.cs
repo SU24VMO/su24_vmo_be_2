@@ -12,7 +12,7 @@ namespace SU24_VMO_API.Services
     {
         private readonly IActivityRepository _activityRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly ICreateActivityRequestRepository _createActivityRequestRepository;
@@ -21,7 +21,7 @@ namespace SU24_VMO_API.Services
         private readonly FirebaseService _firebaseService;
 
         public ActivityService(IActivityRepository activityRepository, IProcessingPhaseRepository processingPhaseRepository,
-            FirebaseService firebaseService, IActivityImageRepository activityImageRepository, IUserRepository userRepository,
+            FirebaseService firebaseService, IActivityImageRepository activityImageRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateActivityRequestRepository createActivityRequestRepository,
             ICampaignRepository campaignRepository, IOrganizationRepository organizationRepository)
         {
@@ -29,7 +29,7 @@ namespace SU24_VMO_API.Services
             _processingPhaseRepository = processingPhaseRepository;
             _firebaseService = firebaseService;
             _activityImageRepository = activityImageRepository;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _createActivityRequestRepository = createActivityRequestRepository;
             _campaignRepository = campaignRepository;
@@ -78,9 +78,9 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByMember(Guid userId)
+        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByVolunteer(Guid memberId)
         {
-            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByUser != null && c.CreateByUser.Equals(userId));
+            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
             var activities = new List<ActivityResponse?>();
             foreach (var request in createActivityRequests)
             {

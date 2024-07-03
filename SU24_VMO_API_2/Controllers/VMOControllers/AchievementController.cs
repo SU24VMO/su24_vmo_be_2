@@ -21,7 +21,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "OrganizationManager, Member, User")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
         public IActionResult GetAllAchievements()
         {

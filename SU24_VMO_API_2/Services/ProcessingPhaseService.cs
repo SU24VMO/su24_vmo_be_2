@@ -13,19 +13,19 @@ namespace SU24_VMO_API.Services
         private readonly IProcessingPhaseRepository repository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly IStatementPhaseRepository _statementRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IAccountRepository _accountRepository;
 
-        public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IUserRepository userRepository,
+        public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
             INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _notificationRepository = notificationRepository;
@@ -67,11 +67,11 @@ namespace SU24_VMO_API.Services
             return listProcessingPhase;
         }
 
-        public IEnumerable<ProcessingPhase?> GetProcessingPhaseByUserId(Guid userId)
+        public IEnumerable<ProcessingPhase?> GetProcessingPhaseByMemberId(Guid memberId)
         {
-            var user = _userRepository.GetById(userId);
-            if (user == null) { throw new NotFoundException("User not found!"); }
-            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser != null && r.CreateByUser.Equals(userId));
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) { throw new NotFoundException("Member not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember != null && r.CreateByMember.Equals(memberId));
 
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
@@ -120,11 +120,11 @@ namespace SU24_VMO_API.Services
 
 
 
-        public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByUserId(Guid userId)
+        public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByMemberId(Guid memberId)
         {
-            var user = _userRepository.GetById(userId);
-            if (user == null) { throw new NotFoundException("User not found!"); }
-            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByUser.Equals(userId));
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) { throw new NotFoundException("Member not found!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember.Equals(memberId));
 
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
@@ -212,9 +212,9 @@ namespace SU24_VMO_API.Services
                         IsSeen = false,
                     });
                 }
-                else if (createCampaignRequest.CreateByUser != null)
+                else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByUser);
+                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),
@@ -259,9 +259,9 @@ namespace SU24_VMO_API.Services
                         IsSeen = false,
                     });
                 }
-                else if (createCampaignRequest.CreateByUser != null)
+                else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByUser);
+                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),

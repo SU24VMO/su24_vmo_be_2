@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.Models
 {
-    public class User
+    public class Member
     {
-        public Guid UserID { get; set; } = default!;
+        public Guid MemberID { get; set; } = default!;
         public Guid AccountID { get; set; } = default!;
         public string? PhoneNumber { get; set; } = default!;
         public string FirstName { get; set; } = default!;
@@ -22,7 +22,7 @@ namespace BusinessObject.Models
         public string? TiktokUrl { get; set; } = default!;
         public bool IsVerified { get; set; } = default!;
         public Account? Account { get; set; }
-        public List<CreateMemberRequest>? CreateUserVerifiedRequests { get; set; }
+        public List<CreateVolunteerRequest>? CreateMemberVerifiedRequests { get; set; }
         public List<CreateCampaignRequest>? CreateCampaignRequests { get; set; }
         public List<BankingAccount>? BankingAccounts { get; set; }
         public List<CreatePostRequest>? CreatePostRequests { get; set; }

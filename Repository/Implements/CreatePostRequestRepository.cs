@@ -22,8 +22,8 @@ namespace Repository.Implements
             return context.CreatePostRequests
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Post)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
@@ -33,8 +33,8 @@ namespace Repository.Implements
             return context.CreatePostRequests
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Post)
-                .Include(a => a.User)
-                .Include(a => a.RequestManager).ToList()
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList()
                 .FirstOrDefault(a => a.CreatePostRequestID.Equals(id));
         }
 

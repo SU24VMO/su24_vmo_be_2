@@ -2,7 +2,7 @@
 
 namespace SU24_VMO_API.DTOs.Request.AccountRequest
 {
-    public class UpdateUserRequest
+    public class UpdateMemberRequest
     {
         public string? Email { get; set; } = default!;
         public string? FirstName { get; set; } = default!;

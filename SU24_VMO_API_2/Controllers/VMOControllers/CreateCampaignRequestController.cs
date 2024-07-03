@@ -29,7 +29,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [EnableQuery]
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         public IActionResult GetAllCreateCampaignRequests(int? pageSize, int? pageNo)
         {
             try
@@ -56,7 +56,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Authorize(Roles = "OrganizationManager, Member")]
+        [Authorize(Roles = "OrganizationManager, Volunteer")]
         [Route("create-new")]
 
         public async Task<IActionResult> CreateCampaignRequestAsync(Guid accountId, [FromForm] CreateCampaignRequestRequest request)
@@ -128,7 +128,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         [Route("checking")]
 
         public IActionResult AcceptOrRejectCreateCampaignRequest(UpdateCreateCampaignRequest request)

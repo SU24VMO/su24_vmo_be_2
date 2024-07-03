@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.FluentAPIs
 {
-    public class RequestManagerConfiguration : IEntityTypeConfiguration<RequestManager>
+    public class ModeratorConfiguration : IEntityTypeConfiguration<Moderator>
     {
-        public void Configure(EntityTypeBuilder<RequestManager> builder)
+        public void Configure(EntityTypeBuilder<Moderator> builder)
         {
-            builder.ToTable("RequestManager");
-            builder.HasKey(x => x.RequestManagerID);
+            builder.ToTable("Moderator");
+            builder.HasKey(x => x.ModeratorID);
             builder.Property(x => x.AccountID).IsRequired();
             builder.Property(x => x.FirstName).IsRequired();
             builder.Property(x => x.LastName).IsRequired();
@@ -22,30 +22,30 @@ namespace BusinessObject.FluentAPIs
             builder.HasOne(x => x.Account);
 
             builder.HasMany(x => x.CreateCampaignRequests)
-                .WithOne(x => x.RequestManager)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.CreateOrganizationRequests)
-                .WithOne(x => x.RequestManager)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(x => x.CreateMemberRequests)
-                .WithOne(x => x.RequestManager)
+            builder.HasMany(x => x.CreateVolunteerRequests)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.CreatePostRequests)
-                .WithOne(x => x.RequestManager)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CreateActivityRequests)
-                .WithOne(x => x.RequestManager)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(x => x.CreateOrganizationManagerRequests)
-                .WithOne(x => x.RequestManager)
+                .WithOne(x => x.Moderator)
                 .HasForeignKey(x => x.ApprovedBy)
                 .OnDelete(DeleteBehavior.NoAction);
         }

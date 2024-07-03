@@ -11,7 +11,7 @@ namespace BusinessObject.Models
         public Guid CreateActivityRequestID { get; set; } = default!;
         public Guid ActivityID { get; set; } = default!;
         public Guid? CreateByOM { get; set; } = default!;
-        public Guid? CreateByUser { get; set; } = default!;
+        public Guid? CreateByMember { get; set; } = default!;
         public Guid? ApprovedBy { get; set; } = default!;
         public Guid? ModifiedBy { get; set; } = default!;
 
@@ -25,8 +25,8 @@ namespace BusinessObject.Models
         public bool IsLocked { get; set; } = default!;
 
         public OrganizationManager? OrganizationManager { get; set; }
-        public User? User { get; set; }
+        public Member? Member { get; set; }
         public Activity? Activity { get; set; }
-        public RequestManager? RequestManager { get; set; }
+        public Moderator? Moderator { get; set; }
     }
 }

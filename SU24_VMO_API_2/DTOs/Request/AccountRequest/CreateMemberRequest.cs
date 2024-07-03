@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace SU24_VMO_API.DTOs.Request.AccountRequest
 {
-    public class CreateUserRequest
+    public class CreateMemberRequest
     {
         [EmailAddress]
         [Required]

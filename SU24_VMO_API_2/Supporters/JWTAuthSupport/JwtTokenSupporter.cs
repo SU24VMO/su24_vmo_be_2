@@ -12,27 +12,27 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
     public class JwtTokenSupporter
     {
         IConfiguration config;
-        IUserRepository _userRepository;
+        IMemberRepository _memberRepository;
         IAccountRepository accountRepository;
         IAccountTokenRepository accountTokenRepository;
         IAdminRepository _adminRepository;
         IOrganizationManagerRepository _organizationManagerRepository;
-        IRequestManagerRepository _requestManagerRepository;
+        IModeratorRepository _moderatorRepository;
 
 
-        public JwtTokenSupporter(IConfiguration config, IUserRepository userRepo, IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, 
-            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IRequestManagerRepository requestManagerRepository)
+        public JwtTokenSupporter(IConfiguration config, IMemberRepository memberRepo, IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, 
+            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository)
         {
             this.config = config;
-            this._userRepository = userRepo;
+            _memberRepository = memberRepo;
             this.accountRepository = accountRepository;
             this.accountTokenRepository = accountTokenRepository;
             _adminRepository = adminRepository;
             _organizationManagerRepository = organizationManagerRepository;
-            _requestManagerRepository = requestManagerRepository;
+            _moderatorRepository = moderatorRepository;
         }
 
-        public (string, DateTime?) CreateToken(User user)
+        public (string, DateTime?) CreateToken(Member user)
         {
             var account = accountRepository.GetById(user.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -46,7 +46,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
-                new Claim("user_id", user.UserID.ToString()),
+                new Claim("member_id", user.MemberID.ToString()),
                 new Claim("account_id", user.AccountID.ToString()),
                 new Claim("username", String.IsNullOrEmpty(account!.Username) ? "" : account!.Username),
                 new Claim("firstname", user.FirstName),
@@ -145,7 +145,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         }
 
 
-        public (string, DateTime?) CreateTokenForRequestManager(RequestManager requestManager)
+        public (string, DateTime?) CreateTokenForModerator(Moderator requestManager)
         {
             var account = accountRepository.GetById(requestManager.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -159,7 +159,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
-                new Claim("request_manager_id", requestManager.RequestManagerID.ToString()),
+                new Claim("moderator_id", requestManager.ModeratorID.ToString()),
                 new Claim("account_id", requestManager.AccountID.ToString()),
                 new Claim("username", String.IsNullOrEmpty(account!.Username) ? "" : account!.Username),
                 new Claim("firstname", requestManager.FirstName),
@@ -181,7 +181,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
         //create refresh token for all role
 
-        public (string, string, DateTime?) CreateRefreshToken(User user)
+        public (string, string, DateTime?) CreateRefreshToken(Member user)
         {
             var account = accountRepository.GetById(user.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -195,7 +195,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
-                new Claim("user_id", user.UserID.ToString()),
+                new Claim("member_id", user.MemberID.ToString()),
                 new Claim("account_id", user.AccountID.ToString()),
                 new Claim("username", String.IsNullOrEmpty(account!.Username) ? "" : account!.Username),
                 new Claim("firstname", user.FirstName),
@@ -297,9 +297,9 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
 
 
-        public (string, string, DateTime?) CreateRefreshTokenForRequestManager(RequestManager requestManager)
+        public (string, string, DateTime?) CreateRefreshTokenForModerator(Moderator moderator)
         {
-            var account = accountRepository.GetById(requestManager.AccountID);
+            var account = accountRepository.GetById(moderator.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
             var code = Guid.NewGuid().ToString();
@@ -312,13 +312,13 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
-                new Claim("request_manager_id", requestManager.RequestManagerID.ToString()),
-                new Claim("account_id", requestManager.AccountID.ToString()),
+                new Claim("moderator_id", moderator.ModeratorID.ToString()),
+                new Claim("account_id", moderator.AccountID.ToString()),
                 new Claim("username", String.IsNullOrEmpty(account!.Username) ? "" : account!.Username),
-                new Claim("firstname", requestManager.FirstName),
-                new Claim("lastname", requestManager.LastName),
+                new Claim("firstname", moderator.FirstName),
+                new Claim("lastname", moderator.LastName),
                 new Claim("avatar",  String.IsNullOrEmpty(account!.Avatar) ? "" : account!.Avatar),
-                new Claim("phonenumber", String.IsNullOrEmpty(requestManager.PhoneNumber) ? "" : requestManager.PhoneNumber),
+                new Claim("phonenumber", String.IsNullOrEmpty(moderator.PhoneNumber) ? "" : moderator.PhoneNumber),
                 new Claim("email", account!.Email),
             }),
 
@@ -335,7 +335,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
 
 
-        public User? ValidateToken(string token)
+        public Member? ValidateToken(string token)
         {
             try
             {
@@ -351,10 +351,10 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = jwtToken.Claims.First(claim => claim.Type == "id").Value;
-                var id = Guid.Parse(userId);
-                var user = _userRepository.GetById(id);
-                return user;
+                var memberId = jwtToken.Claims.First(claim => claim.Type == "id").Value;
+                var id = Guid.Parse(memberId);
+                var member = _memberRepository.GetById(id);
+                return member;
             }
             catch (Exception)
             {
@@ -363,7 +363,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         }
 
 
-        public User? ExtractUserFromRequestToken(HttpContext context)
+        public Member? ExtractUserFromRequestToken(HttpContext context)
         {
             var token = context.Request.Headers.Authorization.ToString().Split(" ").Last();
             if (token == null)
@@ -423,13 +423,13 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         return (accessToken, refreshToken);
                     }
 
-                    if (account.Role.Equals(Role.User))
+                    if (account.Role.Equals(Role.Member))
                     {
-                        var user = _userRepository.GetByAccountId(account.AccountID)!;
-                        var (token, expiredAccessDate) = CreateToken(user);
+                        var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                        var (token, expiredAccessDate) = CreateToken(member);
 
                         var accessToken = token;
-                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(user);
+                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(member);
                         //var accountToken = new AccountToken
                         //{
                         //    AccountTokenId = Guid.NewGuid(),
@@ -447,13 +447,13 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         return (accessToken, refreshToken);
                     }
 
-                    if (account.Role.Equals(Role.Member))
+                    if (account.Role.Equals(Role.Volunteer))
                     {
-                        var user = _userRepository.GetByAccountId(account.AccountID)!;
-                        var (token, expiredAccessDate) = CreateToken(user);
+                        var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                        var (token, expiredAccessDate) = CreateToken(member);
 
                         var accessToken = token;
-                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(user);
+                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(member);
                         //var accountToken = new AccountToken
                         //{
                         //    AccountTokenId = Guid.NewGuid(),
@@ -495,13 +495,13 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         return (accessToken, refreshToken);
                     }
 
-                    if (account.Role.Equals(Role.RequestManager))
+                    if (account.Role.Equals(Role.Moderator))
                     {
-                        var requestManager = _requestManagerRepository.GetByAccountID(account.AccountID)!;
-                        var (token, expiredAccessDate) = CreateTokenForRequestManager(requestManager);
+                        var moderator = _moderatorRepository.GetByAccountID(account.AccountID)!;
+                        var (token, expiredAccessDate) = CreateTokenForModerator(moderator);
 
                         var accessToken = token;
-                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshTokenForRequestManager(requestManager);
+                        var (code, refreshToken, expiredRefreshDate) = CreateRefreshTokenForModerator(moderator);
                         //var accountToken = new AccountToken
                         //{
                         //    AccountTokenId = Guid.NewGuid(),

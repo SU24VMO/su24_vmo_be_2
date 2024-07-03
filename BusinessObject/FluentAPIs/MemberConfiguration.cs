@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.FluentAPIs
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class MemberConfiguration : IEntityTypeConfiguration<Member>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Member> builder)
         {
-            builder.ToTable("User");
-            builder.HasKey(x => x.UserID);
+            builder.ToTable("Member");
+            builder.HasKey(x => x.MemberID);
             builder.Property(x => x.AccountID).IsRequired();
             builder.Property(x => x.FirstName).IsRequired();
             builder.Property(x => x.LastName).IsRequired();
@@ -22,18 +22,18 @@ namespace BusinessObject.FluentAPIs
 
             builder.HasOne(x => x.Account);
             builder.HasMany(x => x.CreateCampaignRequests)
-                .WithOne(x => x.User)
-                .HasForeignKey(x => x.CreateByUser)
+                .WithOne(x => x.Member)
+                .HasForeignKey(x => x.CreateByMember)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(x => x.CreateUserVerifiedRequests)
-                .WithOne(x => x.User)
+            builder.HasMany(x => x.CreateMemberVerifiedRequests)
+                .WithOne(x => x.Member)
                 .HasForeignKey(x => x.CreateBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.CreatePostRequests)
-                .WithOne(x => x.User)
-                .HasForeignKey(x => x.CreateByUser)
+                .WithOne(x => x.Member)
+                .HasForeignKey(x => x.CreateByMember)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

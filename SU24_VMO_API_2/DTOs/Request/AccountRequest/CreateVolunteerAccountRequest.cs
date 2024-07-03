@@ -2,9 +2,9 @@
 
 namespace SU24_VMO_API.DTOs.Request.AccountRequest
 {
-    public class CreateMemberAccountRequest
+    public class CreateVolunteerAccountRequest
     {
-        public Guid UserID { get; set; } = default!;
+        public Guid MemberID { get; set; } = default!;
         public string MemberName { get; set; } = default!;
         public DateTime Birthday { get; set; } = default!;
         public string PhoneNumber { get; set; } = default!;

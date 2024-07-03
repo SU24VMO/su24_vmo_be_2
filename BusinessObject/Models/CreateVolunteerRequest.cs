@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.Models
 {
-    public class CreateMemberRequest
+    public class CreateVolunteerRequest
     {
-        public Guid CreateMemberRequestID { get; set; } = default!;
-        public Guid UserID { get; set; } = default!;
+        public Guid CreateVolunteerRequestID { get; set; } = default!;
+        public Guid MemberID { get; set; } = default!;
         public string MemberName { get; set; } = default!;
         public DateTime Birthday { get; set; } = default!;
         public string PhoneNumber { get; set; } = default!;
@@ -35,7 +35,7 @@ namespace BusinessObject.Models
         public bool IsPending { get; set; } = default!;
         public bool IsLocked { get; set; } = default!;
 
-        public User? User { get; set; }
-        public RequestManager? RequestManager { get; set; }
+        public Member? Member { get; set; }
+        public Moderator? Moderator { get; set; }
     }
 }

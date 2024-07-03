@@ -12,26 +12,27 @@ namespace SU24_VMO_API.Services
         private readonly ICreateActivityRequestRepository _repository;
         private readonly IProcessingPhaseRepository _phaseRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
-        private readonly IRequestManagerRepository _requestManagerRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IModeratorRepository _moderatorRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IActivityRepository _activityRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly FirebaseService _firebaseService;
 
-        public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository, IAccountRepository accountRepository,
-            IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository, IUserRepository userRepository, INotificationRepository notificationRepository,
-            IRequestManagerRepository requestManagerRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService)
+        public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository, 
+            IAccountRepository accountRepository, IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository, 
+            IMemberRepository memberRepository, INotificationRepository notificationRepository,
+            IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
             _accountRepository = accountRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _activityRepository = activityRepository;
-            _userRepository = userRepository;
+            _memberRepository = memberRepository;
             _notificationRepository = notificationRepository;
-            _requestManagerRepository = requestManagerRepository;
+            _moderatorRepository = moderatorRepository;
             _activityImageRepository = activityImageRepository;
             _firebaseService = firebaseService;
         }
@@ -122,9 +123,9 @@ namespace SU24_VMO_API.Services
                 return null;
 
             }
-            else if (account.Role == BusinessObject.Enums.Role.Member)
+            else if (account.Role == BusinessObject.Enums.Role.Volunteer)
             {
-                var member = _userRepository.GetByAccountId(accountId)!;
+                var volunteer = _memberRepository.GetByAccountId(accountId)!;
                 var activity = new Activity
                 {
                     ActivityId = Guid.NewGuid(),
@@ -143,7 +144,7 @@ namespace SU24_VMO_API.Services
                     {
                         CreateActivityRequestID = Guid.NewGuid(),
                         ActivityID = activityAdded.ActivityId,
-                        CreateByOM = member.UserID,
+                        CreateByMember = volunteer.MemberID,
                         CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                         IsApproved = false,
                         IsLocked = false,
@@ -189,7 +190,7 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreateActivityRequest(UpdateCreateActivityRequest request)
         {
             var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
-            var requestManager = _requestManagerRepository.GetById(request.RequestManagerId);
+            var moderator = _moderatorRepository.GetById(request.ModeratorId);
             var notification = new Notification
             {
                 NotificationID = Guid.NewGuid(),
@@ -198,7 +199,7 @@ namespace SU24_VMO_API.Services
                 IsSeen = false,
             };
             var activity = new Activity();
-            if (createActivityRequest != null && requestManager != null)
+            if (createActivityRequest != null && moderator != null)
             {
                 if (request.IsAccept == true)
                 {
@@ -210,13 +211,13 @@ namespace SU24_VMO_API.Services
                     createActivityRequest.IsPending = false;
                     createActivityRequest.IsRejected = false;
                     createActivityRequest.IsLocked = true;
-                    createActivityRequest.ApprovedBy = requestManager.RequestManagerID;
-                    createActivityRequest.ModifiedBy = requestManager.AccountID;
+                    createActivityRequest.ApprovedBy = moderator.ModeratorID;
+                    createActivityRequest.ModifiedBy = moderator.AccountID;
                     createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    if (createActivityRequest.CreateByUser != null)
+                    if (createActivityRequest.CreateByMember != null)
                     {
-                        var user = _userRepository.GetById((Guid)createActivityRequest.CreateByUser);
-                        notification.AccountID = user!.AccountID;
+                        var member = _memberRepository.GetById((Guid)createActivityRequest.CreateByMember);
+                        notification.AccountID = member!.AccountID;
                         notification.Content = "Yêu cầu tạo hoạt động của bạn vừa được duyệt! Vui lòng theo dõi thông tin hoạt động đang diễn ra!";
                     }
                     else
@@ -241,12 +242,12 @@ namespace SU24_VMO_API.Services
                     createActivityRequest.IsRejected = true;
                     createActivityRequest.IsLocked = false;
                     createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    createActivityRequest.ModifiedBy = requestManager.AccountID;
+                    createActivityRequest.ModifiedBy = moderator.AccountID;
 
-                    if (createActivityRequest.CreateByUser != null)
+                    if (createActivityRequest.CreateByMember != null)
                     {
-                        var user = _userRepository.GetById((Guid)createActivityRequest.CreateByUser);
-                        notification.AccountID = user!.AccountID;
+                        var member = _memberRepository.GetById((Guid)createActivityRequest.CreateByMember);
+                        notification.AccountID = member!.AccountID;
                         notification.Content = "Yêu cầu tạo hoạt động của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
                     }
                     else

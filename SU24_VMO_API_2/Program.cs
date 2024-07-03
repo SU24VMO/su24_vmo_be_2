@@ -107,14 +107,14 @@ namespace SU24_VMO_API_2
             builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
             builder.Services.AddScoped<IStatementFileRepository, StatementFileRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
             builder.Services.AddScoped<ICampaignTypeRepository, CampaignTypeRepository>();
             builder.Services.AddScoped<IOrganizationManagerRepository, OrganizationManagerRepository>();
             builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-            builder.Services.AddScoped<IRequestManagerRepository, RequestManagerRepository>();
-            builder.Services.AddScoped<ICreateMemberRequestRepository, CreateMemberRequestRepository>();
+            builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
+            builder.Services.AddScoped<ICreateVolunteerRequestRepository, CreateVolunteerRequestRepository>();
             builder.Services.AddScoped<ICreateCampaignRequestRepository, CreateCampaignRequestRepository>();
             builder.Services.AddScoped<IAccountTokenRepository, AccountTokenRepository>();
             builder.Services.AddScoped<IDonatePhaseRepository, DonatePhaseRepository>();
@@ -130,13 +130,13 @@ namespace SU24_VMO_API_2
 
 
             //service
-            builder.Services.AddScoped<UserService, UserService>();
+            builder.Services.AddScoped<MemberService, MemberService>();
             builder.Services.AddScoped<OrganizationManagerService, OrganizationManagerService>();
-            builder.Services.AddScoped<RequestManagerService, RequestManagerService>();
+            builder.Services.AddScoped<ModeratorService, ModeratorService>();
             builder.Services.AddScoped<CampaignTypeService, CampaignTypeService>();
             builder.Services.AddScoped<CampaignService, CampaignService>();
             builder.Services.AddScoped<TransactionService, TransactionService>();
-            builder.Services.AddScoped<CreateMemberRequestService, CreateMemberRequestService>();
+            builder.Services.AddScoped<CreateVolunteerRequestService, CreateVolunteerRequestService>();
             builder.Services.AddScoped<CreateCampaignRequestService, CreateCampaignRequestService>();
             builder.Services.AddScoped<JwtTokenSupporter, JwtTokenSupporter>();
             builder.Services.AddScoped<AccountService, AccountService>();
@@ -239,7 +239,7 @@ namespace SU24_VMO_API_2
             {
                 ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
                 builder.EntitySet<Admin>("Admins");
-                builder.EntitySet<User>("Users");
+                builder.EntitySet<Member>("Members");
 
 
                 return builder.GetEdmModel();

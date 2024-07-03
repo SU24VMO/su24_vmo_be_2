@@ -30,6 +30,6 @@ namespace BusinessObject.Models
         public bool IsLocked { get; set; } = default!;
 
         public OrganizationManager? OrganizationManager { get; set; }
-        public RequestManager? RequestManager { get; set; }
+        public Moderator? Moderator { get; set; }
     }
 }

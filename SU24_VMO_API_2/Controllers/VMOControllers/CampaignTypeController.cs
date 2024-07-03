@@ -105,7 +105,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("update")]
-        [Authorize(Roles = "Admin, RequestManager")]
+        [Authorize(Roles = "Admin, Moderator")]
         public IActionResult UpdateCampaignTypeRequest(UpdateCampaignTypeRequest request)
         {
             try

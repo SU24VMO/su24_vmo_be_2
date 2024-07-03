@@ -10,28 +10,28 @@ using SU24_VMO_API.Services;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
-    [Route("api/create-member-request")]
+    [Route("api/create-volunteer-request")]
     [ApiController]
-    public class CreateMemberRequestController : ControllerBase
+    public class CreateVolunteerRequestController : ControllerBase
     {
-        private readonly CreateMemberRequestService _service;
-        private readonly PaginationService<CreateMemberRequest> _paginationService;
+        private readonly CreateVolunteerRequestService _service;
+        private readonly PaginationService<CreateVolunteerRequest> _paginationService;
 
-        public CreateMemberRequestController(CreateMemberRequestService service, PaginationService<CreateMemberRequest> paginationService)
+        public CreateVolunteerRequestController(CreateVolunteerRequestService service, PaginationService<CreateVolunteerRequest> paginationService)
         {
             _service = service;
             _paginationService = paginationService;
         }
 
         [HttpGet]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         [Route("all")]
 
-        public IActionResult GetAllCreateMemberRequests(int? pageSize, int? pageNo)
+        public IActionResult GetAllCreateVolunteerRequests(int? pageSize, int? pageNo)
         {
             try
             {
-                var requests = _service.GetAllCreateMemberRequests();
+                var requests = _service.GetAllCreateVolunteerRequests();
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
@@ -52,14 +52,14 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Member")]
         [Route("create-new")]
 
-        public IActionResult Create(CreateMemberAccountRequest request)
+        public IActionResult Create(CreateVolunteerAccountRequest request)
         {
             try
             {
-                var requestCreated = _service.CreateMemberRequest(request);
+                var requestCreated = _service.CreateVolunteerRequest(request);
                 if (requestCreated == null)
                 {
                     var response = new ResponseMessage()
@@ -88,14 +88,14 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         [Route("checking")]
 
-        public IActionResult AcceptOrRejectCreateMemberRequest(UpdateCreateMemberAccountRequest request)
+        public IActionResult AcceptOrRejectCreateVolunteerAccountRequest(UpdateCreateVolunteerAccountRequest request)
         {
             try
             {
-                if (_service.AcceptOrRejectCreateMemberAccountRequest(request) == true)
+                if (_service.AcceptOrRejectCreateVolunteerAccountRequest(request) == true)
                 {
                     var response = new ResponseMessage()
                     {

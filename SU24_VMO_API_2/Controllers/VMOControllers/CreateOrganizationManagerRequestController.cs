@@ -25,7 +25,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             _paginationService = paginationService;
         }
         [HttpGet]
-        [Authorize(Roles = "RequestManager, OrganizationManager, Admin")]
+        [Authorize(Roles = "Moderator, OrganizationManager, Admin")]
         [Route("all")]
 
         public IActionResult GetAllCreateOrganizationManagerRequests(int? pageSize, int? pageNo)
@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "RequestManager")]
+        [Authorize(Roles = "Moderator")]
         [Route("checking")]
 
         public IActionResult AcceptOrRejectCreateOrganizationManagerRequest(UpdateCreateOrganizationManagerVerifiedAccountRequest request)

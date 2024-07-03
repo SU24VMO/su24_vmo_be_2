@@ -23,23 +23,23 @@ namespace SU24_VMO_API.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IAccountTokenRepository _accountTokenRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IMemberRepository _memberRepository;
         private readonly IAdminRepository _adminRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
-        private readonly IRequestManagerRepository _requestManagerRepository;
+        private readonly IModeratorRepository _moderatorRepository;
         private readonly JwtTokenSupporter jwtTokenSupporter;
         private readonly FirebaseService firebaseService;
 
 
-        public AccountService(JwtTokenSupporter jwtTokenSupporter, IUserRepository _userRepository,
-            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IRequestManagerRepository requestManagerRepository,
+        public AccountService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository,
+            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository,
             IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService)
         {
             this.jwtTokenSupporter = jwtTokenSupporter;
-            this._userRepository = _userRepository;
+            _memberRepository = memberRepository;
             _adminRepository = adminRepository;
             _organizationManagerRepository = organizationManagerRepository;
-            _requestManagerRepository = requestManagerRepository;
+            _moderatorRepository = moderatorRepository;
             _accountRepository = accountRepository;
             _accountTokenRepository = accountTokenRepository;
             this.firebaseService = firebaseService;
@@ -50,17 +50,17 @@ namespace SU24_VMO_API.Services
             return _accountRepository.GetAll();
         }
 
-        public IEnumerable<Account> GetAllAccountsWithMemberRole()
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole()
         {
-            return _accountRepository.GetAllAccountsWithMemberRole();
+            return _accountRepository.GetAllAccountsWithVolunteerRole();
         }
-        public IEnumerable<Account> GetAllAccountWithUserRole()
+        public IEnumerable<Account> GetAllAccountWithMemberRole()
         {
-            return _accountRepository.GetAllAccountsWithUserRole();
+            return _accountRepository.GetAllAccountWithMemberRole();
         }
-        public IEnumerable<Account> GetAllAccountsWithRequestManagerRole()
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole()
         {
-            return _accountRepository.GetAllAccountsWithRequestManagerRole();
+            return _accountRepository.GetAllAccountsWithModeratorRole();
         }
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole()
         {
@@ -106,48 +106,48 @@ namespace SU24_VMO_API.Services
                 var adminCreated = _adminRepository.Save(admin);
                 return accountCreated;
             }
-            else if (account.Role.Equals(Role.RequestManager))
+            else if (account.Role.Equals(Role.Moderator))
             {
-                var requestmanager = new RequestManager
+                var moderator = new Moderator
                 {
                     AccountID = account.AccountID,
-                    RequestManagerID = Guid.NewGuid(),
+                    ModeratorID = Guid.NewGuid(),
                     FirstName = "",
                     LastName = "",
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
-                var requestManagerCreated = _requestManagerRepository.Save(requestmanager);
+                var moderatorCreated = _moderatorRepository.Save(moderator);
                 return accountCreated;
             }
             else if (account.Role.Equals(Role.Member))
             {
-                var member = new User
+                var member = new Member
                 {
                     AccountID = account.AccountID,
-                    UserID = Guid.NewGuid(),
+                    MemberID = Guid.NewGuid(),
                     Gender = "",
                     FirstName = "",
                     LastName = "",
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
-                var memberCreated = _userRepository.Save(member);
+                var memberCreated = _memberRepository.Save(member);
                 return accountCreated;
             }
-            else if (account.Role.Equals(Role.User))
+            else if (account.Role.Equals(Role.Member))
             {
-                var user = new User
+                var member = new Member
                 {
                     AccountID = account.AccountID,
-                    UserID = Guid.NewGuid(),
+                    MemberID = Guid.NewGuid(),
                     Gender = "",
                     FirstName = "",
                     LastName = "",
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
-                var userCreated = _userRepository.Save(user);
+                var memberCreated = _memberRepository.Save(member);
                 return accountCreated;
             }
             else if (account.Role.Equals(Role.OrganizationManager))
@@ -177,46 +177,46 @@ namespace SU24_VMO_API.Services
             TryValidateUpdateRequest(request);
             var account = _accountRepository.GetById(request.AccountID)!;
 
-            var user = new User();
+            var member = new Member();
             var om = new OrganizationManager();
-            if (account.Role == Role.User || account.Role == Role.Member)
+            if (account.Role == Role.Volunteer || account.Role == Role.Member)
             {
-                user = _userRepository.GetByAccountId(account.AccountID)!;
+                member = _memberRepository.GetByAccountId(account.AccountID)!;
                 if (!String.IsNullOrEmpty(request.FirstName))
                 {
-                    user.FirstName = request.FirstName;
+                    member.FirstName = request.FirstName;
                 }
                 if (!String.IsNullOrEmpty(request.LastName))
                 {
-                    user.LastName = request.LastName;
+                    member.LastName = request.LastName;
                 }
                 if (!String.IsNullOrEmpty(request.PhoneNumber))
                 {
-                    user.PhoneNumber = request.PhoneNumber;
+                    member.PhoneNumber = request.PhoneNumber;
                 }
                 if (!String.IsNullOrEmpty(request.BirthDay.ToString()))
                 {
-                    user.BirthDay = request.BirthDay;
+                    member.BirthDay = request.BirthDay;
                 }
                 if (!String.IsNullOrEmpty(request.Gender))
                 {
-                    user.Gender = request.Gender;
+                    member.Gender = request.Gender;
                 }
                 if (!String.IsNullOrEmpty(request.FacebookUrl))
                 {
-                    user.FacebookUrl = request.FacebookUrl;
+                    member.FacebookUrl = request.FacebookUrl;
                 }
                 if (!String.IsNullOrEmpty(request.YoutubeUrl))
                 {
-                    user.YoutubeUrl = request.YoutubeUrl;
+                    member.YoutubeUrl = request.YoutubeUrl;
                 }
                 if (!String.IsNullOrEmpty(request.TiktokUrl))
                 {
-                    user.TiktokUrl = request.TiktokUrl;
+                    member.TiktokUrl = request.TiktokUrl;
                 }
-                account.ModifiedBy = user.UserID;
+                account.ModifiedBy = member.MemberID;
                 _accountRepository.Update(account);
-                _userRepository.Update(user);
+                _memberRepository.Update(member);
             }
             else if (account.Role == Role.OrganizationManager)
             {
@@ -298,13 +298,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.User))
+                        if (account.Role.Equals(Role.Member))
                         {
-                            var user = _userRepository.GetByAccountId(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(user);
+                            var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(member);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(user);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(member);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -322,13 +322,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.Member))
+                        if (account.Role.Equals(Role.Volunteer))
                         {
-                            var user = _userRepository.GetByAccountId(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(user);
+                            var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(member);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(user);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(member);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -370,13 +370,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.RequestManager))
+                        if (account.Role.Equals(Role.Moderator))
                         {
-                            var requestManager = _requestManagerRepository.GetByAccountID(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateTokenForRequestManager(requestManager);
+                            var moderator = _moderatorRepository.GetByAccountID(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateTokenForModerator(moderator);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshTokenForRequestManager(requestManager);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshTokenForModerator(moderator);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -425,13 +425,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.User))
+                        if (account.Role.Equals(Role.Member))
                         {
-                            var user = _userRepository.GetByAccountId(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(user);
+                            var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(member);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(user);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(member);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -449,13 +449,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.Member))
+                        if (account.Role.Equals(Role.Volunteer))
                         {
-                            var user = _userRepository.GetByAccountId(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(user);
+                            var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateToken(member);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(user);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshToken(member);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -497,13 +497,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
 
-                        if (account.Role.Equals(Role.RequestManager))
+                        if (account.Role.Equals(Role.Moderator))
                         {
-                            var requestManager = _requestManagerRepository.GetByAccountID(account.AccountID)!;
-                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateTokenForRequestManager(requestManager);
+                            var moderator = _moderatorRepository.GetByAccountID(account.AccountID)!;
+                            var (token, expiredAccessDate) = jwtTokenSupporter.CreateTokenForModerator(moderator);
 
                             var accessToken = token;
-                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshTokenForRequestManager(requestManager);
+                            var (code, refreshToken, expiredRefreshDate) = jwtTokenSupporter.CreateRefreshTokenForModerator(moderator);
                             var accountToken = new AccountToken
                             {
                                 AccountTokenId = Guid.NewGuid(),
@@ -613,9 +613,9 @@ namespace SU24_VMO_API.Services
 
             if (!String.IsNullOrEmpty(request.PhoneNumber))
             {
-                if (account.Role == Role.Member || account.Role == Role.User)
+                if (account.Role == Role.Volunteer || account.Role == Role.Member)
                 {
-                    var user = _userRepository.GetByAccountId(request.AccountID)!;
+                    var user = _memberRepository.GetByAccountId(request.AccountID)!;
                     if (user.PhoneNumber != null && user.PhoneNumber.Equals(request.PhoneNumber) && IsPhoneNumberExisted(request.PhoneNumber))
                     {
                         throw new BadRequestException("Phone number already exists!");
@@ -636,7 +636,7 @@ namespace SU24_VMO_API.Services
         // Helper method to check if the phone number exists in the system
         private bool IsPhoneNumberExisted(string phoneNumber)
         {
-            var userWithPhone = _userRepository.GetByPhone(phoneNumber);
+            var userWithPhone = _memberRepository.GetByPhone(phoneNumber);
             if (userWithPhone != null)
             {
                 return true;

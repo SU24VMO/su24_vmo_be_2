@@ -496,12 +496,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("create-by/member/{userId}")]
-        public IActionResult GetAllCampaignByCreateByMemberId(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/volunteer/{memberId}")]
+        public IActionResult GetAllCampaignByCreateByVolunteerId(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByMemberId(userId);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -523,12 +523,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("create-by/member/{userId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByMemberIdWithOptionsPhaseInProcessingPhase(Guid userId, int? pageSize, int? pageNo, string? phase)
+        [Route("create-by/volunteer/{memberId}/{phase}/processing-status")]
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid memberId, int? pageSize, int? pageNo, string? phase)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithOptionsPhaseInProcessingPhase(userId, phase);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(memberId, phase);
 
                 var response = new ResponseMessage()
                 {
@@ -550,40 +550,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("create-by/member/{userId}/donate-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByMemberIdWithDonatePhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/volunteer/{memberId}/donate-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithDonatePhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithDonatePhaseIsProcessing(userId);
-
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"Error: {ex.Message}"
-                };
-                return BadRequest(response);
-            }
-        }
-
-
-
-        [HttpGet]
-        [Route("create-by/member/{userId}/processing-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByMemberIdWithProcessingPhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
-        {
-            try
-            {
-                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithProcessingPhaseIsProcessing(userId);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithDonatePhaseIsProcessing(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -606,12 +578,40 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("create-by/member/{userId}/statement-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByMemberIdWithStatementPhaseIsProcessing(Guid userId, int? pageSize, int? pageNo)
+        [Route("create-by/volunteer/{memberId}/processing-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithProcessingPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByMemberIdWithStatementPhaseIsProcessing(userId);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithProcessingPhaseIsProcessing(memberId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
+        [HttpGet]
+        [Route("create-by/volunteer/{memberId}/statement-phase/processing-status")]
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithStatementPhaseIsProcessing(Guid memberId, int? pageSize, int? pageNo)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithStatementPhaseIsProcessing(memberId);
 
                 var response = new ResponseMessage()
                 {
@@ -657,7 +657,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpPut("update")]
-        [Authorize(Roles = "Member, OrganizationManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager")]
         public IActionResult UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
         {
             try
