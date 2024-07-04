@@ -4,6 +4,7 @@ using MailKit.Search;
 using Net.payOS;
 using Net.payOS.Types;
 using NETCore.MailKit.Core;
+using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request;
@@ -32,6 +33,12 @@ namespace SU24_VMO_API.Services
             _campaignRepository = campaignRepository;
             _accountRepository = accountRepository;
             _donatePhaseService = donatePhaseService;
+        }
+
+
+        public IEnumerable<Transaction>? GetAllTransactions()
+        {
+            return _transactionRepository.GetAll();
         }
 
 

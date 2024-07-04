@@ -22,28 +22,22 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             _paginationService = paginationService;
         }
 
-        [HttpPost]
-        [Route("create-transaction")]
-        public async Task<IActionResult> CreateTransaction(CreateTransactionRequest request)
+
+        [HttpGet]
+        [Route("all")]
+        public IActionResult GetAllTransactions(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
-                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
+                var transactions = _transactionService.GetAllTransactions();
 
-                if (transactionResponse != null)
+                var response = new ResponseMessage()
                 {
-                    var response = new CreateTransactionResponse()
-                    {
-                        OrderID = transactionResponse.OrderID,
-                        QRCode = transactionResponse.QRCode,
-                    };
-                    return Ok(response);
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
+                };
 
-                }
-                else
-                {
-                    return BadRequest("Can not create!");
-                }
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -78,6 +72,78 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return BadRequest(response);
             }
         }
+
+
+        [HttpGet]
+        [Route("check-transaction")]
+
+        public async Task<IActionResult> CheckTransactionStatus(int orderId)
+        {
+            try
+            {
+                var paymentLinkInformation = await _transactionService.CheckTransactionAsync(orderId);
+                if (paymentLinkInformation != null)
+                {
+                    return Ok(new ResponseMessage
+                    {
+                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}",
+                        Data = paymentLinkInformation.status
+                    });
+                }
+                else
+                {
+                    return NotFound(new ResponseMessage
+                    {
+                        Message = "Get fail. Transaction not found!"
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpPost]
+        [Route("create-transaction")]
+        public async Task<IActionResult> CreateTransaction(CreateTransactionRequest request)
+        {
+            try
+            {
+                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
+
+                if (transactionResponse != null)
+                {
+                    var response = new CreateTransactionResponse()
+                    {
+                        OrderID = transactionResponse.OrderID,
+                        QRCode = transactionResponse.QRCode,
+                    };
+                    return Ok(response);
+
+                }
+                else
+                {
+                    return BadRequest("Can not create!");
+                }
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+        
 
 
 
@@ -127,39 +193,6 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
-        [HttpGet]
-        [Route("check-transaction")]
-
-        public async Task<IActionResult> CheckTransactionStatus(int orderId)
-        {
-            try
-            {
-                var paymentLinkInformation = await _transactionService.CheckTransactionAsync(orderId);
-                if (paymentLinkInformation != null)
-                {
-                    return Ok(new ResponseMessage
-                    {
-                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}",
-                        Data = paymentLinkInformation.status
-                    });
-                }
-                else
-                {
-                    return NotFound(new ResponseMessage
-                    {
-                        Message = "Get fail. Transaction not found!"
-                    });
-                }
-
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"Error: {ex.Message}"
-                };
-                return BadRequest(response);
-            }
-        }
+        
     }
 }
