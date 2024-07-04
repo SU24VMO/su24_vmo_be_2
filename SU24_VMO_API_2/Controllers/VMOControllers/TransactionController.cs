@@ -2,9 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS.Types;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using Transaction2 = Net.payOS.Types.Transaction;
+using Transaction = BusinessObject.Models.Transaction;
+
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -86,7 +90,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 {
                     return Ok(new ResponseMessage
                     {
-                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}",
+                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}, Payer name: {paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName}",
                         Data = paymentLinkInformation.status
                     });
                 }

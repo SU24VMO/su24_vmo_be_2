@@ -4,6 +4,7 @@ using MailKit.Search;
 using Net.payOS;
 using Net.payOS.Types;
 using NETCore.MailKit.Core;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
@@ -25,7 +26,7 @@ namespace SU24_VMO_API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly DonatePhaseService _donatePhaseService;
 
-        public TransactionService(ITransactionRepository transactionRepository, ICampaignRepository campaignRepository, IAccountRepository accountRepository, 
+        public TransactionService(ITransactionRepository transactionRepository, ICampaignRepository campaignRepository, IAccountRepository accountRepository,
             DonatePhaseService donatePhaseService)
         {
             payOs = new PayOS(PayOSConstants.ClientId, PayOSConstants.ApiKey, PayOSConstants.CheckSumKey);
@@ -51,22 +52,45 @@ namespace SU24_VMO_API.Services
             {
                 item
             };
-
+            var transaction = new Transaction();
             var description = "Thanh toan chuyen khoan";
-            var transaction = new Transaction
+
+
+            if (createTransactionRequest.IsIncognito)
             {
-                TransactionID = Guid.NewGuid(),
-                CampaignID = createTransactionRequest.CampaignId,
-                TransactionType = TransactionType.Transafer,
-                Amount = createTransactionRequest.Price,
-                Note = createTransactionRequest.Note,
-                PayerName = "",
-                IsIncognito = createTransactionRequest.IsIncognito,
-                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                AccountId = createTransactionRequest.AccountId,
-                TransactionStatus = TransactionStatus.Pending,
-                TransactionQRImageUrl = ""
-            };
+                transaction = new Transaction
+                {
+                    TransactionID = Guid.NewGuid(),
+                    CampaignID = createTransactionRequest.CampaignId,
+                    TransactionType = TransactionType.Transafer,
+                    Amount = createTransactionRequest.Price,
+                    Note = createTransactionRequest.Note,
+                    PayerName = "Người ủng hộ ẩn danh",
+                    IsIncognito = true,
+                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                    AccountId = createTransactionRequest.AccountId,
+                    TransactionStatus = TransactionStatus.Pending,
+                    TransactionQRImageUrl = ""
+                };
+            }
+            else
+            {
+                transaction = new Transaction
+                {
+                    TransactionID = Guid.NewGuid(),
+                    CampaignID = createTransactionRequest.CampaignId,
+                    TransactionType = TransactionType.Transafer,
+                    Amount = createTransactionRequest.Price,
+                    Note = createTransactionRequest.Note,
+                    PayerName = "",
+                    IsIncognito = false,
+                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                    AccountId = createTransactionRequest.AccountId,
+                    TransactionStatus = TransactionStatus.Pending,
+                    TransactionQRImageUrl = ""
+                };
+            }
+
 
 
 
@@ -82,6 +106,17 @@ namespace SU24_VMO_API.Services
                 var qrImage = await bankSupport.CreateQRCodeBaseOnUrlAsync(linkCheckOut);
                 response.OrderID = orderId;
                 response.QRCode = qrImage;
+
+                if (!createTransactionRequest.IsIncognito)
+                {
+                    PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(transaction.OrderId);
+                    if (paymentLinkInfomation != null && paymentLinkInfomation.transactions.FirstOrDefault() != null && !String.IsNullOrEmpty(paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName))
+                    {
+                        transaction.PayerName = paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName!;
+                        _transactionRepository.Update(transaction);
+                    }
+                }
+
             }
             return response;
         }
@@ -109,7 +144,7 @@ namespace SU24_VMO_API.Services
 
                     var campaign = _campaignRepository.GetById(transaction.CampaignID);
                     EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName + " " + request.LastName, campaign!.Name!, transaction.Amount, transaction.CreateDate);
-                    
+
                     _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(campaign.CampaignID, transaction.Amount);
                 }
             }

@@ -22,11 +22,12 @@ namespace SU24_VMO_API.Services
         private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly FirebaseService _firebaseService;
+        private readonly ActivityService _activityService;
 
         public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository)
+            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -38,6 +39,7 @@ namespace SU24_VMO_API.Services
             _statementPhaseRepository = statementPhaseRepository;
             _userRepository = userRepository;
             _organizationManagerRepository = organizationManagerRepository;
+            _activityService = activityService;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -177,6 +179,14 @@ namespace SU24_VMO_API.Services
 
                 campaignResponse.Member = member;
             }
+            var activities = new List<Activity>();
+            if (campaignResponse.ProcessingPhase != null)
+            {
+                activities = _activityService.GetAllActivityWithProcessingPhaseId(campaignResponse.ProcessingPhase.ProcessingPhaseId).ToList();
+                if (activities != null)
+                    campaignResponse.ProcessingPhase.Activities = activities;
+            }
+
             return campaignResponse;
         }
 
@@ -1793,6 +1803,25 @@ namespace SU24_VMO_API.Services
                 }
             }
         }
+
+
+
+        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
+        {
+            var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy);
+            var listCampaignsResponse = new List<CampaignResponse>();
+            foreach (var campaign in listCampaigns)
+            {
+                var response = GetCampaignResponseByCampaignId(campaign.CampaignID);
+                if (response != null)
+                {
+                    listCampaignsResponse.Add(response);
+                }
+            }
+            return listCampaignsResponse;
+        }
+
+
 
 
         public IEnumerable<Campaign> GetAllCampaignsWithActiveStatusByCampaignTypeId(Guid campaignTypeId)

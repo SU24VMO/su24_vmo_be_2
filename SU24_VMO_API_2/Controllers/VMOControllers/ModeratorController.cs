@@ -6,7 +6,7 @@ using SU24_VMO_API.Services;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
-    [Route("api/request-manager")]
+    [Route("api/moderator")]
     [ApiController]
     public class ModeratorController : ControllerBase
     {

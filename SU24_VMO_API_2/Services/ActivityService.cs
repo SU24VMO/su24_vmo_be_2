@@ -152,6 +152,13 @@ namespace SU24_VMO_API.Services
             return activities;
         }
 
+
+        public IEnumerable<Activity> GetAllActivityWithProcessingPhaseId(Guid processingId)
+        {
+            var activies = _activityRepository.GetAll().Where(a => a.ProcessingPhaseId.Equals(processingId));
+            return activies;
+        }
+
         public void UpdateActivity(UpdateActivityRequest request)
         {
             TryValidateUpdateActivityRequest(request);

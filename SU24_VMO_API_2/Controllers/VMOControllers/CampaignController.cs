@@ -136,16 +136,16 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-type/active-status")]
-        public IActionResult GetAllCampaignWithActiveStatusByCampaignTypeId(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName, string? createBy, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, int? pageSize, int? pageNo, string? status, string? campaignName, string? createBy, string? orderBy, string? orderByProperty)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy);
+                var campaigns = _campaignService.GetAllCampaignResponsesByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
