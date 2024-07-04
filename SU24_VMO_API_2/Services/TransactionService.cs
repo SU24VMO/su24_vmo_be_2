@@ -12,6 +12,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Supporters.BankSupporter;
 using SU24_VMO_API.Supporters.EmailSupporter;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using System.Text.RegularExpressions;
 using Transaction = BusinessObject.Models.Transaction;
@@ -39,7 +40,15 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Transaction>? GetAllTransactions()
         {
-            return _transactionRepository.GetAll();
+            var trans = _transactionRepository.GetAll();
+            foreach (var transaction in trans)
+            {
+                if (transaction != null && transaction.Account != null) transaction.Account = null;
+                if (transaction != null && transaction.BankingAccount != null) transaction.BankingAccount = null;
+                if (transaction != null && transaction.Campaign != null && transaction.Campaign.Transactions != null) transaction.Campaign.Transactions = null;
+
+            }
+            return trans;
         }
 
 
@@ -106,17 +115,6 @@ namespace SU24_VMO_API.Services
                 var qrImage = await bankSupport.CreateQRCodeBaseOnUrlAsync(linkCheckOut);
                 response.OrderID = orderId;
                 response.QRCode = qrImage;
-
-                if (!createTransactionRequest.IsIncognito)
-                {
-                    PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(transaction.OrderId);
-                    if (paymentLinkInfomation != null && paymentLinkInfomation.transactions.FirstOrDefault() != null && !String.IsNullOrEmpty(paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName))
-                    {
-                        transaction.PayerName = paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName!;
-                        _transactionRepository.Update(transaction);
-                    }
-                }
-
             }
             return response;
         }
@@ -125,6 +123,14 @@ namespace SU24_VMO_API.Services
         public async Task<PaymentLinkInformation?> CheckTransactionAsync(int orderId)
         {
             PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(orderId);
+            var transaction = _transactionRepository.GetTransactionByOrderId(orderId);
+            if(transaction == null) { throw new NotFoundException("Giao dịch không tìm thấy!"); }
+            if (paymentLinkInfomation != null && paymentLinkInfomation.status.Equals("PAID") && paymentLinkInfomation.transactions.FirstOrDefault() != null && !String.IsNullOrEmpty(paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName))
+            {
+                transaction.PayerName = paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName!;
+                transaction.TransactionStatus = TransactionStatus.Success;
+                _transactionRepository.Update(transaction);
+            }
             return paymentLinkInfomation;
         }
 
@@ -146,6 +152,13 @@ namespace SU24_VMO_API.Services
                     EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName + " " + request.LastName, campaign!.Name!, transaction.Amount, transaction.CreateDate);
 
                     _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(campaign.CampaignID, transaction.Amount);
+
+
+                    if (paymentLinkInfomation != null && paymentLinkInfomation.transactions.FirstOrDefault() != null && !String.IsNullOrEmpty(paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName))
+                    {
+                        transaction.PayerName = paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName!;
+                        _transactionRepository.Update(transaction);
+                    }
                 }
             }
             return paymentLinkInfomation;

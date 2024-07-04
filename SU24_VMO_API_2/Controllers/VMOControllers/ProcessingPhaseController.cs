@@ -372,7 +372,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateProcessingPhase(UpdateProcessingPhaseRequest request)
         {
             try
@@ -430,7 +430,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut("status/update")]
-        [Authorize(Roles = "Member, OrganizationManager, RequestManager")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
         public IActionResult UpdateProcessingPhaseStatus(UpdateProcessingPhaseStatusRequest request)
         {
             try

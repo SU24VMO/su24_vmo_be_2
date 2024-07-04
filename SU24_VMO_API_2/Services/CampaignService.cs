@@ -185,7 +185,18 @@ namespace SU24_VMO_API.Services
                 activities = _activityService.GetAllActivityWithProcessingPhaseId(campaignResponse.ProcessingPhase.ProcessingPhaseId).ToList();
                 if (activities != null)
                     campaignResponse.ProcessingPhase.Activities = activities;
+                if (campaignResponse.ProcessingPhase.Activities != null)
+                    foreach (var activity in campaignResponse.ProcessingPhase.Activities)
+                    {
+                        if (activity.ProcessingPhase != null)
+                        {
+                            activity.ProcessingPhase = null;
+                        }
+                    }
             }
+
+            if (campaignResponse.Transactions != null)
+                campaignResponse.Transactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success).ToList();
 
             return campaignResponse;
         }
