@@ -54,6 +54,8 @@ namespace SU24_VMO_API.Services
                 //}
             }
 
+            response.List = inputList;
+
 
             if (pageSize.HasValue && pageNo.HasValue)
             {
@@ -77,7 +79,7 @@ namespace SU24_VMO_API.Services
                 response.TotalPage = (int)Math.Ceiling((double)response.TotalItem / pageSize.Value);
             }
 
-            response.List = inputList;
+            
 
             return response;
         }
