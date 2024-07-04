@@ -21,7 +21,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllOrganizations(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllOrganizations(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -47,7 +47,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/{organizationName}")]
-        public IActionResult GetAllOrganizationByOrganizationName(string organizationName, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllOrganizationByOrganizationName(string organizationName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -73,7 +73,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/organization-manager/{organizationManagerId}")]
-        public IActionResult GetAllOrganizationByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllOrganizationByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(organizations!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

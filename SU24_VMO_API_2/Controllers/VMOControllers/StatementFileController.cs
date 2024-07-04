@@ -24,7 +24,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllStatementFile(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllStatementFile(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(statementFiles, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(statementFiles, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

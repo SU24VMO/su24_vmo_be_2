@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,9 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer, Moderator")]
 
-        public IActionResult GetAllActivitys(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllActivitys(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(activities, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(activities, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -112,7 +113,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/volunteer/{memberId}")]
 
-        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -121,7 +122,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy)
+                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

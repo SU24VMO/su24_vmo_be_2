@@ -31,6 +31,12 @@ namespace SU24_VMO_API.Services
             _transactionRepository = transactionRepository;
         }
 
+        public IEnumerable<OrganizationManager>? GetAllOrganizationManagers()
+        {
+            return _organizationManagerRepository.GetAll();
+        }
+
+
         public OrganizationManager? CreateOrganizationManager(CreateNewOrganizationManagerRequest request)
         {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
@@ -10,15 +11,18 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class AccountTokenController : ControllerBase
     {
         private readonly AccountTokenService _accountTokenService;
+        private readonly PaginationService<AccountToken> _paginationService;
 
-        public AccountTokenController(AccountTokenService accountTokenService)
+
+        public AccountTokenController(AccountTokenService accountTokenService, PaginationService<AccountToken> paginationService)
         {
             _accountTokenService = accountTokenService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllAccountTokens()
+        public IActionResult GetAllAccountTokens(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -27,7 +31,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = accounts
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

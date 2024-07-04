@@ -27,7 +27,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllAccounts(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllAccounts(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, "Email")
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -54,7 +54,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/role/volunteer")]
-        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -79,7 +79,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/member")]
-        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -104,7 +104,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/moderator")]
-        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -129,7 +129,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/organization-manager")]
-        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

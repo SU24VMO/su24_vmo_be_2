@@ -27,7 +27,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllDonatePhases(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllDonatePhases(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -237,7 +237,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
-        public IActionResult GetDonatePhaseByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetDonatePhaseByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -246,7 +246,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -306,7 +306,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/member/{memberId}")]
-        public IActionResult GetDonatePhaseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetDonatePhaseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -315,7 +315,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(donatePhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

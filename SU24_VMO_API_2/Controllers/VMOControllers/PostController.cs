@@ -28,7 +28,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllPosts(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllPosts(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(posts, pageSize, pageNo, orderBy)
+                    Data = _paginationService2.PaginateList(posts, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -98,7 +98,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/organization-manager/{organizationManagerId}")]
-        public IActionResult GetAllPostsOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo,string? orderBy)
+        public IActionResult GetAllPostsOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -237,7 +237,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/member/{memberId}")]
-        public IActionResult GetAllPostsByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllPostsByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -246,7 +246,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

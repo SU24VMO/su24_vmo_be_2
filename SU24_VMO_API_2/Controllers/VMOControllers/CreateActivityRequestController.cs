@@ -13,16 +13,19 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class CreateActivityRequestController : ControllerBase
     {
         private readonly CreateActivityRequestService _createActivityRequestService;
+        private readonly PaginationService<CreateActivityRequest> _paginationService;
 
-        public CreateActivityRequestController(CreateActivityRequestService createActivityRequestService)
+
+        public CreateActivityRequestController(CreateActivityRequestService createActivityRequestService, PaginationService<CreateActivityRequest> paginationService)
         {
             _createActivityRequestService = createActivityRequestService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
 
-        public IActionResult GetAllCreateActivityRequests()
+        public IActionResult GetAllCreateActivityRequests(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -31,7 +34,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = createActivityRequests
+                    Data = _paginationService.PaginateList(createActivityRequests, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

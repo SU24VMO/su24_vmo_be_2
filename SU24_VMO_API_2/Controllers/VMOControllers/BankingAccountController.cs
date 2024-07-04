@@ -5,6 +5,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using BusinessObject.Models;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -13,17 +14,20 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class BankingAccountController : ControllerBase
     {
         private readonly BankingAccountService _bankingAccountService;
+        private readonly PaginationService<BankingAccount> _paginationService;
 
-        public BankingAccountController(BankingAccountService bankingAccountService)
+
+        public BankingAccountController(BankingAccountService bankingAccountService, PaginationService<BankingAccount> paginationService)
         {
             _bankingAccountService = bankingAccountService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
-        public IActionResult GetAllBankingAccounts()
+        public IActionResult GetAllBankingAccounts(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = bankingAccounts
+                    Data = _paginationService.PaginateList(bankingAccounts!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

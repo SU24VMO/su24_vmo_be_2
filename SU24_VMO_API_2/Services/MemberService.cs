@@ -31,6 +31,13 @@ namespace SU24_VMO_API.Services
             _notificationRepository = notificationRepository;
         }
 
+
+        public IEnumerable<Member>? GetAllMembers()
+        {
+            return _memberRepository.GetAll();
+        }
+
+
         public Member? CreateMember(CreateMemberRequest request)
         {
             TryValidateRegisterRequest(request);

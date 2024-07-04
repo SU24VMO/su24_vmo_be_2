@@ -18,24 +18,40 @@ namespace SU24_VMO_API.Services
                 List = inputList
             };
 
+
+
+
             // Apply sorting based on the orderBy parameter and selector
             if (!string.IsNullOrEmpty(orderByProperty))
             {
-                var propertyInfo = typeof(T).GetProperty(orderByProperty, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                if (propertyInfo != null)
+                // Split the orderByProperty by dot to support nested properties
+                var properties = orderByProperty.Split('.');
+                var param = Expression.Parameter(typeof(T));
+                Expression propertyAccess = param;
+
+                foreach (var property in properties)
                 {
-                    if (!string.IsNullOrEmpty(orderBy))
+                    propertyAccess = Expression.Property(propertyAccess, property);
+                }
+
+                var orderByExpression = Expression.Lambda<Func<T, object>>(Expression.Convert(propertyAccess, typeof(object)), param);
+
+
+                //var propertyInfo = typeof(T).GetProperty(orderByProperty, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                //if (propertyInfo != null)
+                //{
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    if (orderBy.ToLower() == "asc")
                     {
-                        if (orderBy.ToLower() == "asc")
-                        {
-                            inputList = inputList.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
-                        }
-                        else if (orderBy.ToLower() == "desc")
-                        {
-                            inputList = inputList.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList();
-                        }
+                        inputList = inputList.AsQueryable().OrderBy(orderByExpression).ToList();
+                    }
+                    else if (orderBy.ToLower() == "desc")
+                    {
+                        inputList = inputList.AsQueryable().OrderByDescending(orderByExpression).ToList();
                     }
                 }
+                //}
             }
 
 
@@ -60,6 +76,8 @@ namespace SU24_VMO_API.Services
 
                 response.TotalPage = (int)Math.Ceiling((double)response.TotalItem / pageSize.Value);
             }
+
+            response.List = inputList;
 
             return response;
         }

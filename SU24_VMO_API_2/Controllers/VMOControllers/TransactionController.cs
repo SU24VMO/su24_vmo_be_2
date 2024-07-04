@@ -58,7 +58,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("history-transaction/account/{accountId}")]
 
-        public IActionResult GetHistoryTransactionByAccountId(Guid accountId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetHistoryTransactionByAccountId(Guid accountId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return Ok(new ResponseMessage
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
                 });
             }
             catch (Exception ex)

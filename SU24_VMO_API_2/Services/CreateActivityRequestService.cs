@@ -3,6 +3,7 @@ using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 
 namespace SU24_VMO_API.Services
@@ -190,7 +191,9 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreateActivityRequest(UpdateCreateActivityRequest request)
         {
             var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
+            if(createActivityRequest == null) { throw new NotFoundException("Yêu cầu không tìm thấy!"); }
             var moderator = _moderatorRepository.GetById(request.ModeratorId);
+            if(moderator == null) { throw new NotFoundException("Không tìm thấy người duyệt yêu cầu!"); }
             var notification = new Notification
             {
                 NotificationID = Guid.NewGuid(),

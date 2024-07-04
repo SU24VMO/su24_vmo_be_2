@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
+using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request;
@@ -19,6 +20,11 @@ namespace SU24_VMO_API.Services
         {
             _requestManagerRepository = requestManagerRepository;
             _accountRepository = accountRepository;
+        }
+
+        public IEnumerable<Moderator>? GetAllModerators()
+        {
+            return _requestManagerRepository.GetAll();
         }
 
         public Moderator? CreateModerator(CreateNewRequestManagerRequest request)

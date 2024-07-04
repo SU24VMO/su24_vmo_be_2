@@ -32,7 +32,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllProcessingPhases(int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetAllProcessingPhases(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -93,7 +93,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
-        public IActionResult GetProcessingPhaseByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetProcessingPhaseByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -162,7 +162,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/member/{memberId}")]
-        public IActionResult GetProcessingPhaseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetProcessingPhaseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -171,7 +171,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService.PaginateList(processingPhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -232,7 +232,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/member")]
-        public IActionResult GetProcessingPhaseResponseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetProcessingPhaseResponseByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -241,7 +241,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(processingPhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService2.PaginateList(processingPhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -301,7 +301,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager")]
-        public IActionResult GetProcessingPhaseResponseByOmId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy)
+        public IActionResult GetProcessingPhaseResponseByOmId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -310,7 +310,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(processingPhases!, pageSize, pageNo, orderBy)
+                    Data = _paginationService2.PaginateList(processingPhases!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

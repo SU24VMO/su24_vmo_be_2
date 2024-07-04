@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Request;
@@ -13,17 +14,20 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
 
         private readonly ActivityImageService _activityImageService;
+        private readonly PaginationService<ActivityImage> _paginationService;
 
-        public ActivityImageController(ActivityImageService activityImageService)
+
+        public ActivityImageController(ActivityImageService activityImageService, PaginationService<ActivityImage> paginationService)
         {
             _activityImageService = activityImageService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
-        public IActionResult GetAllActivityImages()
+        public IActionResult GetAllActivityImages(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = activityImages
+                    Data = _paginationService.PaginateList(activityImages!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

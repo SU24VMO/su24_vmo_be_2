@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Request;
@@ -13,17 +14,20 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class AchievementController : ControllerBase
     {
         private readonly AchievementService _achievementService;
+        private readonly PaginationService<Achievement> _paginationService;
 
-        public AchievementController(AchievementService achievementService)
+
+        public AchievementController(AchievementService achievementService, PaginationService<Achievement> paginationService)
         {
             _achievementService = achievementService;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "OrganizationManager, Member, Volunteer")]
 
-        public IActionResult GetAllAchievements()
+        public IActionResult GetAllAchievements(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = achievements
+                    Data = _paginationService.PaginateList(achievements!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API.DTOs.Request;
@@ -13,10 +14,13 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     public class CampaignTypeController : ControllerBase
     {
         private readonly CampaignTypeService _campaignTypeService;
+        private readonly PaginationService<CampaignType> _paginationService;
 
-        public CampaignTypeController(CampaignTypeService campaignTypeService)
+
+        public CampaignTypeController(CampaignTypeService campaignTypeService, PaginationService<CampaignType> paginationService)
         {
             _campaignTypeService = campaignTypeService;
+            _paginationService = paginationService;
         }
 
 
@@ -24,7 +28,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("all")]
 
-        public IActionResult GetAllCampaignType() 
+        public IActionResult GetAllCampaignType(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty) 
         {
             try
             {
@@ -33,7 +37,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = campaignTypes
+                    Data = _paginationService.PaginateList(campaignTypes!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
