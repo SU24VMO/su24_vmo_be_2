@@ -26,6 +26,8 @@ namespace BusinessObject.Models
         public List<CreateCampaignRequest>? CreateCampaignRequests { get; set; }
         public List<CreateOrganizationRequest>? CreateOrganizationRequests { get; set; }
         public List<CreatePostRequest>? CreatePostRequests { get; set; }
+        public List<CreateActivityRequest>? CreateActivityRequests { get; set; }
+
 
 
     }

@@ -41,6 +41,10 @@ namespace BusinessObject.FluentAPIs
                 .WithOne(x => x.OrganizationManager)
                 .HasForeignKey(x => x.CreateByOM)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.CreateActivityRequests)
+                .WithOne(x => x.OrganizationManager)
+                .HasForeignKey(x => x.CreateByOM)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -21,8 +21,8 @@ namespace SU24_VMO_API.Services
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly FirebaseService _firebaseService;
 
-        public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository, 
-            IAccountRepository accountRepository, IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository, 
+        public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository,
+            IAccountRepository accountRepository, IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository,
             IMemberRepository memberRepository, INotificationRepository notificationRepository,
             IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService)
         {
@@ -40,7 +40,33 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateActivityRequest> GetAll()
         {
-            return _repository.GetAll();
+            var requests = _repository.GetAll();
+            foreach (var request in requests)
+            {
+                if (request.Moderator != null)
+                {
+                    request.Moderator = null;
+                }
+
+                if(request.OrganizationManager != null)
+                {
+                    request.OrganizationManager.CreateActivityRequests = null;
+                    request.OrganizationManager.CreateCampaignRequests = null;
+                    request.OrganizationManager.CreateOrganizationRequests = null;
+                    request.OrganizationManager.CreatePostRequests = null;
+
+                }
+
+                if (request.Member != null)
+                {
+                    request.Member.CreateActivityRequests = null;
+                    request.Member.CreateMemberVerifiedRequests = null;
+                    request.Member.CreatePostRequests = null;
+                    request.Member.CreateCampaignRequests = null;
+
+                }
+            }
+            return requests;
         }
 
         public CreateActivityRequest? GetById(Guid id)
@@ -191,9 +217,9 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreateActivityRequest(UpdateCreateActivityRequest request)
         {
             var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
-            if(createActivityRequest == null) { throw new NotFoundException("Yêu cầu không tìm thấy!"); }
+            if (createActivityRequest == null) { throw new NotFoundException("Yêu cầu không tìm thấy!"); }
             var moderator = _moderatorRepository.GetById(request.ModeratorId);
-            if(moderator == null) { throw new NotFoundException("Không tìm thấy người duyệt yêu cầu!"); }
+            if (moderator == null) { throw new NotFoundException("Không tìm thấy người duyệt yêu cầu!"); }
             var notification = new Notification
             {
                 NotificationID = Guid.NewGuid(),
