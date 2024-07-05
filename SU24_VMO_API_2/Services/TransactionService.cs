@@ -141,6 +141,17 @@ namespace SU24_VMO_API.Services
             if (paymentLinkInfomation.status.Equals("PAID"))
             {
                 var transaction = _transactionRepository.GetTransactionByOrderId(request.OrderID);
+
+                if (transaction == null)
+                {
+                    throw new NotFoundException("Không tìm thấy giao dịch!");
+                }
+
+                if (transaction != null && transaction.TransactionStatus == TransactionStatus.Success)
+                {
+                    throw new BadRequestException("Giao dịch này đã được kiểm tra, trạng thái giao dịch: thành công! Vui lòng kiểm tra email của bạn!");
+                }
+
                 if (transaction != null)
                 {
                     transaction.PayerName = request.FirstName + " " + request.LastName;
