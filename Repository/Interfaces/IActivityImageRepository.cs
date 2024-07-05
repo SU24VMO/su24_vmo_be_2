@@ -9,5 +9,7 @@ namespace Repository.Interfaces
 {
     public interface IActivityImageRepository : ICrudBaseRepository<ActivityImage, Guid>
     {
+        public IEnumerable<ActivityImage> GetAllActivityImagesByActivityId(Guid activityId);
+
     }
 }

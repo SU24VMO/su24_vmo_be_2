@@ -82,11 +82,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Route("create-new")]
         [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
 
-        public IActionResult CreateActivityImage(CreateActivityImageRequest request)
+        public async Task<IActionResult> CreateActivityImage([FromForm] CreateActivityImageRequest request)
         {
             try
             {
-                var activityImage = _activityImageService.CreateActivityImage(request);
+                var activityImage = await _activityImageService.CreateActivityImage(request);
                 if (activityImage == null)
                 {
                     var response = new ResponseMessage()
@@ -99,7 +99,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 {
                     var response = new ResponseMessage()
                     {
-                        Message = "Create successfully!",
+                        Message = "Đã đăng hình thành công!",
                     };
 
                     return Ok(response);

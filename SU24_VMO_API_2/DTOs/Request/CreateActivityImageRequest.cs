@@ -3,6 +3,6 @@
     public class CreateActivityImageRequest
     {
         public Guid ActivityId { get; set; } = default!;
-        public string Link { get; set; } = default!;
+        public List<IFormFile> Images { get; set; } = default!;
     }
 }

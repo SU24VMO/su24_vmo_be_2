@@ -26,7 +26,6 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
-        [EnableQuery]
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Moderator")]

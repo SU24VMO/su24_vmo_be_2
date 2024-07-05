@@ -24,6 +24,15 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
+        public IEnumerable<ActivityImage> GetAllActivityImagesByActivityId(Guid activityId)
+        {
+            using var context = new VMODBContext();
+            return context.ActivityImages
+                .Where(a => a.ActivityId.Equals(activityId))
+                .Include(a => a.Activity)
+                .OrderByDescending(a => a.CreateDate).ToList();
+        }
+
         public ActivityImage? GetById(Guid id)
         {
             using var context = new VMODBContext();

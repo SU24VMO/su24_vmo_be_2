@@ -10,11 +10,14 @@ namespace SU24_VMO_API.Services
     {
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly IActivityRepository _activityRepository;
+        private readonly FirebaseService _firebaseService;
 
-        public ActivityImageService(IActivityImageRepository activityImageRepository, IActivityRepository activityRepository)
+        public ActivityImageService(IActivityImageRepository activityImageRepository, IActivityRepository activityRepository, 
+            FirebaseService firebaseService)
         {
             _activityImageRepository = activityImageRepository;
             _activityRepository = activityRepository;
+            _firebaseService = firebaseService;
         }
         public IEnumerable<ActivityImage> GetAll()
         {
@@ -26,20 +29,23 @@ namespace SU24_VMO_API.Services
             return _activityImageRepository.GetById(id);
         }
 
-        public ActivityImage? CreateActivityImage(CreateActivityImageRequest request)
+        public async Task<string?> CreateActivityImage(CreateActivityImageRequest request)
         {
             TryValidateCreateActivityImageRequest(request);
-
-            var activityImage = new ActivityImage
+            foreach(var image in request.Images)
             {
-                ActivityImageId = Guid.NewGuid(),
-                ActivityId = request.ActivityId,
-                Link = request.Link,
-                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                IsActive = true
-            };
-            var activityImageCreated = _activityImageRepository.Save(activityImage);
-            return activityImageCreated;
+                var activityImage = new ActivityImage
+                {
+                    ActivityImageId = Guid.NewGuid(),
+                    ActivityId = request.ActivityId,
+                    Link = await _firebaseService.UploadImage(image),
+                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                    IsActive = true
+                };
+                var activityImageCreated = _activityImageRepository.Save(activityImage);
+            }
+
+            return "Đã đăng hình thành công!";
         }
 
         public void UpdateActivityImage(UpdateActivityImageRequest request)
@@ -73,9 +79,9 @@ namespace SU24_VMO_API.Services
             {
                 throw new Exception("Activity not found.");
             }
-            if (!String.IsNullOrEmpty(request.Link))
+            if (request.Images == null)
             {
-                throw new Exception("Description is not empty.");
+                throw new Exception("Hình không được để trống");
             }
         }
 

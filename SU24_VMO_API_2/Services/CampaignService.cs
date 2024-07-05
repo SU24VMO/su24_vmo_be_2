@@ -18,6 +18,7 @@ namespace SU24_VMO_API.Services
         private readonly IMemberRepository _userRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
+        private readonly IActivityImageRepository _activityImageRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IOrganizationRepository _organizationRepository;
@@ -27,7 +28,7 @@ namespace SU24_VMO_API.Services
         public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService)
+            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -40,6 +41,7 @@ namespace SU24_VMO_API.Services
             _userRepository = userRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _activityService = activityService;
+            _activityImageRepository = activityImageRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -193,6 +195,16 @@ namespace SU24_VMO_API.Services
                             activity.ProcessingPhase = null;
                         }
                     }
+                if (activities != null)
+                    foreach (var activity in activities)
+                    {
+                        var activitiesImages = _activityImageRepository.GetAllActivityImagesByActivityId(activity.ActivityId);
+                        if (activitiesImages != null && activity != null)
+                        {
+                            activity.ActivityImages = activitiesImages.ToList();
+                        }
+                    }
+
             }
 
             if (campaignResponse.Transactions != null)
