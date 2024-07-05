@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Services
 
         public async Task<PaymentLinkInformation?> CheckTransactionAsync(int orderId)
         {
-            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(orderId);
+            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInfomation(orderId);
             if (paymentLinkInfomation == null)
             {
                 throw new Exception("Payment link information is null");
@@ -149,7 +149,7 @@ namespace SU24_VMO_API.Services
 
         public async Task<PaymentLinkInformation?> CheckAndSendEmailWithSuccessStatusAsync(CheckTransactionRequest request)
         {
-            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(request.OrderID);
+            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInfomation(request.OrderID);
             if (paymentLinkInfomation.status.Equals("PAID"))
             {
                 var transaction = _transactionRepository.GetTransactionByOrderId(request.OrderID);
