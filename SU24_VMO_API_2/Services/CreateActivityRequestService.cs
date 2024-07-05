@@ -230,7 +230,7 @@ namespace SU24_VMO_API.Services
             var activity = new Activity();
             if (createActivityRequest != null && moderator != null)
             {
-                if (request.IsAccept == true)
+                if (request.IsApproved == true)
                 {
 
                     activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
@@ -241,6 +241,7 @@ namespace SU24_VMO_API.Services
                     createActivityRequest.IsRejected = false;
                     createActivityRequest.IsLocked = true;
                     createActivityRequest.ApprovedBy = moderator.ModeratorID;
+                    createActivityRequest.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
                     createActivityRequest.ModifiedBy = moderator.AccountID;
                     createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     if (createActivityRequest.CreateByMember != null)
