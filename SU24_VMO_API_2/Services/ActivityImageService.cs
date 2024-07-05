@@ -70,11 +70,6 @@ namespace SU24_VMO_API.Services
 
         private void TryValidateCreateActivityImageRequest(CreateActivityImageRequest request)
         {
-            if (!String.IsNullOrEmpty(request.ActivityId.ToString()))
-            {
-                throw new Exception("ActivityId must not empty.");
-            }
-
             if (_activityRepository.GetById(request.ActivityId) == null)
             {
                 throw new Exception("Activity not found.");
