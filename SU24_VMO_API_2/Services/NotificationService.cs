@@ -54,7 +54,7 @@ namespace SU24_VMO_API.Services
         {
             var account = _accountRepository.GetById(accountId);
             if (account == null) { new NotFoundException("Account not found!"); }
-            var notifications = _notificationRepository.GetAllNotificationsByAccountId(accountId).Where(n => n.IsSeen = false);
+            var notifications = _notificationRepository.GetAllNotificationsByAccountId(accountId).Where(n => n.IsSeen == false);
             foreach (var notification in notifications)
             {
                 notification.IsSeen = true;
