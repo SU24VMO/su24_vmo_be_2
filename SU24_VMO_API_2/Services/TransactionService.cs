@@ -123,16 +123,28 @@ namespace SU24_VMO_API.Services
         public async Task<PaymentLinkInformation?> CheckTransactionAsync(int orderId)
         {
             PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(orderId);
-            var transaction = _transactionRepository.GetTransactionByOrderId(orderId);
-            if(transaction == null) { throw new NotFoundException("Giao dịch không tìm thấy!"); }
-            if (paymentLinkInfomation != null && paymentLinkInfomation.status.Equals("PAID") && paymentLinkInfomation.transactions.FirstOrDefault() != null && !String.IsNullOrEmpty(paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName))
+            if (paymentLinkInfomation == null)
             {
-                transaction.PayerName = paymentLinkInfomation.transactions.FirstOrDefault()!.counterAccountName!;
+                throw new Exception("Payment link information is null");
+            }
+
+            var transaction = _transactionRepository.GetTransactionByOrderId(orderId);
+            if (transaction == null)
+            {
+                throw new NotFoundException("Giao dịch không tìm thấy!");
+            }
+
+            var firstTransaction = paymentLinkInfomation.transactions.FirstOrDefault();
+            if (paymentLinkInfomation.status.Equals("PAID") && firstTransaction != null && !string.IsNullOrEmpty(firstTransaction.counterAccountName))
+            {
+                transaction.PayerName = firstTransaction.counterAccountName;
                 transaction.TransactionStatus = TransactionStatus.Success;
                 _transactionRepository.Update(transaction);
             }
+
             return paymentLinkInfomation;
         }
+
 
 
         public async Task<PaymentLinkInformation?> CheckAndSendEmailWithSuccessStatusAsync(CheckTransactionRequest request)
