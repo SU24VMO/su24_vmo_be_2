@@ -6,7 +6,6 @@ using Net.payOS.Types;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
-using Transaction2 = Net.payOS.Types.Transaction;
 using Transaction = BusinessObject.Models.Transaction;
 
 
