@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Net;
+using BusinessObject.Models;
 
 namespace SU24_VMO_API.Supporters.EmailSupporter
 {
@@ -58,7 +59,7 @@ namespace SU24_VMO_API.Supporters.EmailSupporter
         }
 
 
-        public static void SendEmailWithSuccessDonate(string email, string fullname, string campaignName, float amountDonate, DateTime donateTime)
+        public static void SendEmailWithSuccessDonate(string email, string fullname, string campaignName, float amountDonate, DateTime donateTime, Guid campaignId)
         {
             using (MailMessage mm = new MailMessage("vmoautomailer@gmail.com", email))
             {
@@ -76,7 +77,7 @@ namespace SU24_VMO_API.Supporters.EmailSupporter
                 <li>Tài khoản nhận ủng hộ: <b>0946517841</b></li>
                 <li>Chủ tài khoản: <b>CHAU NHAT TRUONG</b></li>
             </ul>
-            <p>Bạn có thể theo dõi danh sách ủng hộ và các thông tin cập nhật về chiến dịch này <a href='#'>[đường dẫn đến chiến dịch đó]</a></p>
+            <p>Bạn có thể theo dõi danh sách ủng hộ và các thông tin cập nhật về chiến dịch này <a href='https://su24-vmo-fe.vercel.app/viewCampaigns/campaignDetail/{campaignId}'>Tại đây</a></p>
             <p>Chúc bạn hạnh phúc và thành công! Hãy đồng hành cùng chúng tôi!</p>
         ";
                 mm.Body = body;

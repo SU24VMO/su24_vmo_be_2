@@ -149,7 +149,7 @@ namespace SU24_VMO_API.Services
 
 
                     var campaign = _campaignRepository.GetById(transaction.CampaignID);
-                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName + " " + request.LastName, campaign!.Name!, transaction.Amount, transaction.CreateDate);
+                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName + " " + request.LastName, campaign!.Name!, transaction.Amount, transaction.CreateDate, campaign.CampaignID);
 
                     _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(campaign.CampaignID, transaction.Amount);
 
