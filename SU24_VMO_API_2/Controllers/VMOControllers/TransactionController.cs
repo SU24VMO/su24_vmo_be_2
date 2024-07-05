@@ -8,7 +8,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
-//using Transaction = BusinessObject.Models.Transaction;
+using Transaction = BusinessObject.Models.Transaction;
 
 
 namespace SU24_VMO_API.Controllers.VMOControllers
@@ -19,12 +19,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
 
         private readonly TransactionService _transactionService;
-        //private readonly PaginationService<Transaction> _paginationService;
+        private readonly PaginationService<Transaction> _paginationService;
 
-        public TransactionController(TransactionService transactionService)
+        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService)
         {
             _transactionService = transactionService;
-            //_paginationService = paginationService;
+            _paginationService = paginationService;
         }
 
 
@@ -39,7 +39,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = transactions
+                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -99,7 +99,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return Ok(new ResponseMessage
                 {
                     Message = "Get successfully!",
-                    Data = transactions
+                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
                 });
             }
             catch (DbUpdateException dbEx)
