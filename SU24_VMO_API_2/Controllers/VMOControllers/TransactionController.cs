@@ -376,7 +376,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var data = await _transactionService.GetData();
+                var data = await _transactionService.GetData(orderId);
 
                 return Ok(new ResponseMessage
                 {

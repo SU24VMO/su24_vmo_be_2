@@ -3,7 +3,9 @@ using BusinessObject.Models;
 using MailKit.Search;
 using Net.payOS;
 using Net.payOS.Types;
+using Net.payOS.Utils;
 using NETCore.MailKit.Core;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Implements;
 using Repository.Interfaces;
@@ -221,9 +223,26 @@ namespace SU24_VMO_API.Services
 
         }
 
-        public async Task<PaymentLinkInformation> GetData()
+        public async Task<string> GetData(int orderId)
         {
-            return await payOs.getPaymentLinkInformation(25);
+            string url = "https://api-merchant.payos.vn/v2/payment-requests/" + orderId;
+            HttpClient httpClient = new HttpClient();
+            JObject responseBodyJson = JObject.Parse(await (await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, url)
+            {
+                Headers =
+            {
+                { "x-client-id", PayOSConstants.ClientId },
+                { "x-api-key", PayOSConstants.ApiKey }
+            }
+            })).Content.ReadAsStringAsync());
+            string code = responseBodyJson["code"]?.ToString();
+            string desc = responseBodyJson["desc"]?.ToString();
+            string data = responseBodyJson["data"]?.ToString();
+
+
+            JObject dataJson = JObject.Parse(data);
+            string paymentLinkResSignature = SignatureControl.CreateSignatureFromObj(dataJson, PayOSConstants.CheckSumKey);
+            return paymentLinkResSignature + " " + responseBodyJson["signature"].ToString();
         }
     }
 }
