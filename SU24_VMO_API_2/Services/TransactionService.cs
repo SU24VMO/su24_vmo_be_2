@@ -242,7 +242,7 @@ namespace SU24_VMO_API.Services
 
             JObject dataJson = JObject.Parse(data);
             string paymentLinkResSignature = SignatureControl.CreateSignatureFromObj(dataJson, PayOSConstants.CheckSumKey);
-            return paymentLinkResSignature + " " + responseBodyJson["signature"].ToString();
+            return data + " " + responseBodyJson["signature"].ToString();
         }
     }
 }
