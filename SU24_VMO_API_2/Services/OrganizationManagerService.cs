@@ -36,6 +36,25 @@ namespace SU24_VMO_API.Services
             return _organizationManagerRepository.GetAll();
         }
 
+        public IEnumerable<OrganizationManager>? GetAllOrganizationManagersByOrganizationManagerName(string organizationManagerName)
+        {
+            var organizationManagers = _organizationManagerRepository.GetAll().Where(m => (m.FirstName.Trim().ToLower() + " " + m.LastName.Trim().ToLower()).Contains(organizationManagerName.ToLower().Trim()));
+            foreach (var organizationManager in organizationManagers)
+            {
+                if (organizationManager.Organizations != null)
+                    organizationManager.Organizations.Clear();
+                if (organizationManager.CreateCampaignRequests != null)
+                    organizationManager.CreateCampaignRequests.Clear();
+                if (organizationManager.CreateActivityRequests != null)
+                    organizationManager.CreateActivityRequests.Clear();
+                if (organizationManager.CreateOrganizationRequests != null)
+                    organizationManager.CreateOrganizationRequests.Clear();
+                if (organizationManager.CreatePostRequests != null)
+                    organizationManager.CreatePostRequests.Clear();
+            }
+            return organizationManagers;
+        }
+
 
         public OrganizationManager? CreateOrganizationManager(CreateNewOrganizationManagerRequest request)
         {
@@ -86,7 +105,7 @@ namespace SU24_VMO_API.Services
             };
 
             var organizationManagerCreated = _organizationManagerRepository.Save(organizationManager);
-            if(organizationManagerCreated != null)
+            if (organizationManagerCreated != null)
             {
                 _notificationRepository.Save(notification);
             }

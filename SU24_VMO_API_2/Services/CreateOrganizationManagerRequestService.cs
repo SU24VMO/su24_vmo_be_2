@@ -32,6 +32,11 @@ namespace SU24_VMO_API.Services
             return _createOrganizationManagerRequestRepository.GetAll();
         }
 
+        public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string organizationManagerName)
+        {
+            return _createOrganizationManagerRequestRepository.GetAll().Where(m => (m.OrganizationManager!.FirstName.Trim().ToLower() + " " + m.OrganizationManager.LastName.Trim().ToLower()).Contains(organizationManagerName.ToLower().Trim()));
+        }
+
         public CreateOrganizationManagerRequest? CreateOrganizationManagerVerifiedRequest(CreateOrganizationManagerVerifiedRequest request)
         {
             //    TryValidateRegisterRequest(request);

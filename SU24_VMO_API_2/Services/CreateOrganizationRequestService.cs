@@ -36,6 +36,11 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
+        public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string organizationName)
+        {
+            return repository.GetAll().Where(m => m.Organization.Name.Trim().ToLower().Contains(organizationName.ToLower().Trim()));
+        }
+
         public CreateOrganizationRequest? GetById(Guid id)
         {
             return repository.GetById(id);

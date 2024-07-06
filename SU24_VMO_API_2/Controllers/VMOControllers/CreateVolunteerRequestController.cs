@@ -50,6 +50,33 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
+        [HttpGet]
+        [Authorize(Roles = "Moderator")]
+        [Route("all/filter/volunteer-name/{volunteerName}")]
+
+        public IActionResult GetAllCreateVolunteerRequestsByVolunteerName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string volunteerName)
+        {
+            try
+            {
+                var requests = _service.GetAllCreateVolunteerRequestsByMemberName(volunteerName);
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo, orderBy, orderByProperty)
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
 
         [HttpPost]
         [Authorize(Roles = "Member")]

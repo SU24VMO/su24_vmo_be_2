@@ -50,6 +50,32 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
+        [Route("all/filter/organization-name/{organizationName}")]
+
+        public IActionResult GetAllCreateOrganizationRequestsByOrganizationName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string organizationName)
+        {
+            try
+            {
+                var requests = _createOrganizationRequestService.GetAllByOrganizationName(organizationName);
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(requests, pageSize, pageNo, orderBy, orderByProperty)
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpPost]
         [Authorize(Roles = "OrganizationManager")]

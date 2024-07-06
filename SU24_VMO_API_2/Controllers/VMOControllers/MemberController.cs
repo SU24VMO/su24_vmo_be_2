@@ -53,6 +53,33 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("all/filter/member-name/{memberName}")]
+
+        public IActionResult GetAllMembersByMemberName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string memberName)
+        {
+            try
+            {
+                var members = _service.GetMembersByMemberName(memberName);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(members!, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpPut("update-information/{memberId}")]
         [Authorize(Roles = "Volunteer, Member")]

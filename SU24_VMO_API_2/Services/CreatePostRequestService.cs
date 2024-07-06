@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Google.Api.Gax.ResourceNames;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
@@ -37,6 +38,11 @@ namespace SU24_VMO_API.Services
         public IEnumerable<CreatePostRequest> GetAll()
         {
             return _repository.GetAll();
+        }
+
+        public IEnumerable<CreatePostRequest> GetAllByPostName(string postTitle)
+        {
+            return _repository.GetAll().Where(m => m.Post.Title.Trim().ToLower().Contains(postTitle.ToLower().Trim()));
         }
 
         public CreatePostRequest? GetById(Guid id)

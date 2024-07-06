@@ -49,6 +49,36 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+
+        [HttpGet]
+        [Route("all/filter/activity-name/{activityName}")]
+
+        public IActionResult GetAllCreateActivityRequestsByActivityTitle(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string activityName)
+        {
+            try
+            {
+                var createActivityRequests = _createActivityRequestService.GetAllByActivityTitle(activityName);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(createActivityRequests, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
+
         [HttpPost]
         [Route("create-new")]
 

@@ -107,6 +107,32 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("all/filter/campaign-name/{campaignName}")]
+        public IActionResult GetCampaignByCampaignId(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string campaignName)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignResponsesByCampaignName(campaignName);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService2.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpGet]
         [Route("all/filter/campaign-type")]

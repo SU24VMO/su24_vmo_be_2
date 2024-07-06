@@ -19,15 +19,15 @@ namespace SU24_VMO_API.Services
 
         private readonly IMemberRepository _memberRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly JwtTokenSupporter jwtTokenSupporter;
+        private readonly JwtTokenSupporter _jwtTokenSupporter;
         private readonly INotificationRepository _notificationRepository;
 
-        public MemberService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository, IAccountRepository accountRepository, 
+        public MemberService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository, IAccountRepository accountRepository,
             INotificationRepository notificationRepository)
         {
-            this.jwtTokenSupporter = jwtTokenSupporter;
+            _jwtTokenSupporter = jwtTokenSupporter;
             _memberRepository = memberRepository;
-            this._accountRepository = accountRepository;
+            _accountRepository = accountRepository;
             _notificationRepository = notificationRepository;
         }
 
@@ -35,6 +35,13 @@ namespace SU24_VMO_API.Services
         public IEnumerable<Member>? GetAllMembers()
         {
             return _memberRepository.GetAll();
+        }
+
+
+        public IEnumerable<Member> GetMembersByMemberName(string memberName)
+        {
+            var members = _memberRepository.GetAll().Where(m => (m.FirstName.Trim().ToLower() + " " + m.LastName.Trim().ToLower()).Contains(memberName.ToLower().Trim()));
+            return members;
         }
 
 
@@ -86,7 +93,7 @@ namespace SU24_VMO_API.Services
 
 
             var accountCreated = _accountRepository.Save(account);
-            if(accountCreated != null)
+            if (accountCreated != null)
             {
                 var userCreated = _memberRepository.Save(member);
                 if (userCreated != null)

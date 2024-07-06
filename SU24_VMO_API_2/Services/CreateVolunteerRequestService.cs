@@ -34,7 +34,7 @@ namespace SU24_VMO_API.Services
 
 
 
-        public IEnumerable<CreateVolunteerRequest>? GetAllCreateVolunteerRequests()
+        public IEnumerable<CreateVolunteerRequest> GetAllCreateVolunteerRequests()
         {
             var requests = _createVolunteerRequestRepository.GetAll();
             foreach (var request in requests)
@@ -66,6 +66,13 @@ namespace SU24_VMO_API.Services
             }
             return requests;
         }
+
+        public IEnumerable<CreateVolunteerRequest>? GetAllCreateVolunteerRequestsByMemberName(string memberName)
+        {
+            return GetAllCreateVolunteerRequests().Where(m => (m.Member!.FirstName.Trim().ToLower() + " " + m.Member.LastName.Trim().ToLower()).Contains(memberName.ToLower().Trim()));
+        }
+
+
 
         public CreateVolunteerRequest? CreateVolunteerRequest(CreateVolunteerAccountRequest request)
         {

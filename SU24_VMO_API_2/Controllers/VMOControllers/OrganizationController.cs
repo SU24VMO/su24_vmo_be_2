@@ -46,7 +46,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("all/filter/{organizationName}")]
+        [Route("all/filter/organization-name/{organizationName}")]
         public IActionResult GetAllOrganizationByOrganizationName(string organizationName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try

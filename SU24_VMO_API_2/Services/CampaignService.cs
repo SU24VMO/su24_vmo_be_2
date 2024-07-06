@@ -2581,6 +2581,131 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public IEnumerable<CampaignResponse?> GetAllCampaignResponsesByCampaignName(string? campaignName)
+        {
+            var campaignResponses = new List<CampaignResponse>();
+            if (!String.IsNullOrEmpty(campaignName))
+            {
+                var campaigns = GetAllCampaigns().Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                foreach (var campaign in campaigns)
+                {
+                    var createcampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
+                    if (createcampaignRequest != null && createcampaignRequest.CreateByMember != null)
+                    {
+                        var member = _userRepository.GetById((Guid)createcampaignRequest.CreateByMember);
+
+                        campaignResponses.Add(new CampaignResponse
+                        {
+                            CampaignID = campaign.CampaignID,
+                            OrganizationID = campaign.OrganizationID,
+                            CampaignTypeID = campaign.CampaignTypeID,
+                            ActualEndDate = campaign.ActualEndDate,
+                            Address = campaign.Address,
+                            ApplicationConfirmForm = campaign.ApplicationConfirmForm,
+                            CampaignType = campaign.CampaignType,
+                            CanBeDonated = campaign.CanBeDonated,
+                            CheckTransparentDate = campaign.CheckTransparentDate,
+                            CreateAt = campaign.CreateAt,
+                            Description = campaign.Description,
+                            DonatePhase = campaign.DonatePhase,
+                            ExpectedEndDate = campaign.ExpectedEndDate,
+                            Image = campaign.Image,
+                            IsActive = campaign.IsActive,
+                            IsComplete = campaign.IsComplete,
+                            IsModify = campaign.IsModify,
+                            IsTransparent = campaign.IsTransparent,
+                            Name = campaign.Name,
+                            Note = campaign.Note,
+                            Organization = campaign.Organization,
+                            ProcessingPhase = campaign.ProcessingPhase,
+                            StartDate = campaign.StartDate,
+                            StatementPhase = campaign.StatementPhase,
+                            TargetAmount = campaign.TargetAmount,
+                            Transactions = campaign.Transactions,
+                            UpdatedAt = campaign.UpdatedAt,
+                            Member = member
+                        });
+                    }
+
+                    if (createcampaignRequest != null && createcampaignRequest.CreateByOM != null)
+                    {
+                        var om = _organizationManagerRepository.GetById((Guid)createcampaignRequest.CreateByOM);
+
+                        campaignResponses.Add(new CampaignResponse
+                        {
+                            CampaignID = campaign.CampaignID,
+                            OrganizationID = campaign.OrganizationID,
+                            CampaignTypeID = campaign.CampaignTypeID,
+                            ActualEndDate = campaign.ActualEndDate,
+                            Address = campaign.Address,
+                            ApplicationConfirmForm = campaign.ApplicationConfirmForm,
+                            CampaignType = campaign.CampaignType,
+                            CanBeDonated = campaign.CanBeDonated,
+                            CheckTransparentDate = campaign.CheckTransparentDate,
+                            CreateAt = campaign.CreateAt,
+                            Description = campaign.Description,
+                            DonatePhase = campaign.DonatePhase,
+                            ExpectedEndDate = campaign.ExpectedEndDate,
+                            Image = campaign.Image,
+                            IsActive = campaign.IsActive,
+                            IsComplete = campaign.IsComplete,
+                            IsModify = campaign.IsModify,
+                            IsTransparent = campaign.IsTransparent,
+                            Name = campaign.Name,
+                            Note = campaign.Note,
+                            Organization = campaign.Organization,
+                            ProcessingPhase = campaign.ProcessingPhase,
+                            StartDate = campaign.StartDate,
+                            StatementPhase = campaign.StatementPhase,
+                            TargetAmount = campaign.TargetAmount,
+                            Transactions = campaign.Transactions,
+                            UpdatedAt = campaign.UpdatedAt,
+                            OrganizationManager = om
+                        });
+                    }
+
+                }
+
+                foreach (var campaignResponse in campaignResponses)
+                {
+                    if (campaignResponse.CampaignType != null)
+                        campaignResponse.CampaignType!.Campaigns = null;
+                    if (campaignResponse.Organization != null)
+                        campaignResponse.Organization.OrganizationManager = null;
+                    if (campaignResponse.Organization != null)
+                        campaignResponse.Organization!.Campaigns = null;
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.Organizations = null;
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.BankingAccounts = null;
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.CreateOrganizationRequests = null;
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.CreateCampaignRequests = null;
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.CreateActivityRequests = null; 
+                    if (campaignResponse.OrganizationManager != null)
+                        campaignResponse.OrganizationManager!.CreatePostRequests = null;
+                    if (campaignResponse.DonatePhase != null)
+                        campaignResponse.DonatePhase!.Campaign = null;
+                    if (campaignResponse.Transactions != null)
+                        campaignResponse.Transactions = null;
+                    if (campaignResponse.Member != null)
+                        campaignResponse.Member!.CreateMemberVerifiedRequests = null;
+                    if (campaignResponse.Member != null)
+                        campaignResponse.Member!.BankingAccounts = null;
+                    if (campaignResponse.Member != null)
+                        campaignResponse.Member!.CreateCampaignRequests = null;
+                    if (campaignResponse.Member != null)
+                        campaignResponse.Member!.CreateActivityRequests = null;
+                    if (campaignResponse.Member != null)
+                        campaignResponse.Member!.CreatePostRequests = null;
+                }
+            }          
+            return campaignResponses;
+        }
+
+
 
         public async Task<Campaign?> CreateCampaign(CreateNewCampaignRequest request)
         {

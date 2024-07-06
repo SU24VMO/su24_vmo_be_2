@@ -82,6 +82,11 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
+        public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string campaignName)
+        {
+            return GetCreateCampaignRequests().Where(c => c.Campaign.Name.Trim().Equals(campaignName));
+        }
+
         public async Task<CreateCampaignRequest?> CreateCampaignRequestAsync(Guid accountId, CreateCampaignRequestRequest request)
         {
             TryValidateRegisterRequest(request);

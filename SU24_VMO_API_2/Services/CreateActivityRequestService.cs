@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Google.Api.Gax.ResourceNames;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
@@ -45,10 +46,27 @@ namespace SU24_VMO_API.Services
             {
                 if (request.Moderator != null)
                 {
-                    request.Moderator = null;
+                    request.Moderator.CreateActivityRequests = null;
+                    request.Moderator.CreateVolunteerRequests = null;
+                    request.Moderator.CreatePostRequests = null;
+                    request.Moderator.CreateCampaignRequests = null;
+                    request.Moderator.CreateOrganizationManagerRequests = null;
+                    request.Moderator.CreateOrganizationRequests = null;
+
+                    if (request.Moderator != null)
+                    {
+                        request.Moderator.Account = _accountRepository.GetById(request.Moderator.AccountID);
+                        if (request.Moderator.Account != null)
+                        {
+                            request.Moderator.Account.BankingAccounts = null;
+                            request.Moderator.Account.Notifications = null;
+                            request.Moderator.Account.AccountTokens = null;
+                            request.Moderator.Account.Transactions = null;
+                        }
+                    }
                 }
 
-                if(request.OrganizationManager != null)
+                if (request.OrganizationManager != null)
                 {
                     request.OrganizationManager.CreateActivityRequests = null;
                     request.OrganizationManager.CreateCampaignRequests = null;
@@ -65,9 +83,20 @@ namespace SU24_VMO_API.Services
                     request.Member.CreateCampaignRequests = null;
 
                 }
+
+                if (request.Activity != null)
+                {
+                    request.Activity.ActivityImages = _activityImageRepository.GetAllActivityImagesByActivityId(request.ActivityID).ToList();
+                }
             }
             return requests;
         }
+
+        public IEnumerable<CreateActivityRequest> GetAllByActivityTitle(string activityTitle)
+        {
+            return GetAll().Where(m => m.Activity.Title.Trim().ToLower().Contains(activityTitle.ToLower().Trim())); ;
+        }
+
 
         public CreateActivityRequest? GetById(Guid id)
         {
