@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Services
 
         public async Task<PaymentLinkInformation?> CheckTransactionAsync(int orderId)
         {
-            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInfomation(orderId);
+            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(orderId);
             if (paymentLinkInfomation == null)
             {
                 throw new Exception("Payment link information is null");
@@ -149,7 +149,7 @@ namespace SU24_VMO_API.Services
 
         public async Task<PaymentLinkInformation?> CheckAndSendEmailWithSuccessStatusAsync(CheckTransactionRequest request)
         {
-            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInfomation(request.OrderID);
+            PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(request.OrderID);
             if (paymentLinkInfomation.status.Equals("PAID"))
             {
                 var transaction = _transactionRepository.GetTransactionByOrderId(request.OrderID);
@@ -219,6 +219,11 @@ namespace SU24_VMO_API.Services
                 throw new Exception("Amount donate must be greater or equal than 2000 dong!");
             }
 
+        }
+
+        public async Task<PaymentLinkInformation> GetData()
+        {
+            return await payOs.getPaymentLinkInformation(25);
         }
     }
 }
