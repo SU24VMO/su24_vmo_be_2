@@ -24,35 +24,13 @@ namespace SU24_VMO_API.Services
             // Apply sorting based on the orderBy parameter and selector
             if (!string.IsNullOrEmpty(orderByProperty))
             {
-                // Split the orderByProperty by dot to support nested properties
-                var properties = orderByProperty.Split('.');
-                var param = Expression.Parameter(typeof(T));
-                Expression propertyAccess = param;
-
-                foreach (var property in properties)
+                var sortedList = ApplySorting(inputList, orderByProperty, orderBy);
+                if (sortedList != null)
                 {
-                    propertyAccess = Expression.Property(propertyAccess, property);
+                    inputList = sortedList;
                 }
-
-                var orderByExpression = Expression.Lambda<Func<T, object>>(Expression.Convert(propertyAccess, typeof(object)), param);
-
-
-                //var propertyInfo = typeof(T).GetProperty(orderByProperty, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                //if (propertyInfo != null)
-                //{
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    if (orderBy.ToLower() == "asc")
-                    {
-                        inputList = inputList.AsQueryable().OrderBy(orderByExpression).ToList();
-                    }
-                    else if (orderBy.ToLower() == "desc")
-                    {
-                        inputList = inputList.AsQueryable().OrderByDescending(orderByExpression).ToList();
-                    }
-                }
-                //}
             }
+
 
             response.List = inputList;
 
@@ -82,6 +60,58 @@ namespace SU24_VMO_API.Services
             
 
             return response;
+        }
+
+        private IEnumerable<T> ApplySorting(IEnumerable<T> inputList, string orderByProperty, string? orderBy)
+        {
+            var properties = orderByProperty.Split('.');
+            var param = Expression.Parameter(typeof(T), "x");
+            Expression propertyAccess = param;
+            // Creating a null check expression
+            Expression nullCheckExpression = null;
+
+            foreach (var property in properties)
+            {
+                var propertyInfo = typeof(T).GetProperty(property);
+                if (propertyInfo != null)
+                {
+                    var propertyAccessTemp = Expression.Property(propertyAccess, property);
+                    var nullCheckTemp = Expression.NotEqual(propertyAccessTemp, Expression.Constant(null, propertyAccessTemp.Type));
+
+                    // Combining null checks for nested properties
+                    nullCheckExpression = nullCheckExpression == null
+                        ? nullCheckTemp
+                        : Expression.AndAlso(nullCheckExpression, nullCheckTemp);
+
+                    propertyAccess = propertyAccessTemp;
+                }
+            }
+
+            // Handling null values by converting the property access to a nullable type
+            var converted = Expression.Convert(propertyAccess, typeof(object));
+
+            var orderByExpression = Expression.Lambda<Func<T, object>>(converted, param);
+
+            // Applying null check filter before sorting
+            if (nullCheckExpression != null)
+            {
+                var nullCheckLambda = Expression.Lambda<Func<T, bool>>(nullCheckExpression, param);
+                inputList = inputList.AsQueryable().Where(nullCheckLambda);
+            }
+
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                if (orderBy.ToLower() == "asc")
+                {
+                    return inputList.AsQueryable().OrderBy(orderByExpression).ToList();
+                }
+                else if (orderBy.ToLower() == "desc")
+                {
+                    return inputList.AsQueryable().OrderByDescending(orderByExpression).ToList();
+                }
+            }
+
+            return inputList;
         }
     }
 }
