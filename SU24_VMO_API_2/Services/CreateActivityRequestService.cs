@@ -92,9 +92,13 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
-        public IEnumerable<CreateActivityRequest> GetAllByActivityTitle(string activityTitle)
+        public IEnumerable<CreateActivityRequest> GetAllByActivityTitle(string? activityTitle)
         {
-            return GetAll().Where(m => m.Activity.Title.Trim().ToLower().Contains(activityTitle.ToLower().Trim())); ;
+            if (!String.IsNullOrEmpty(activityTitle))
+            {
+                return GetAll().Where(m => m.Activity.Title.Trim().ToLower().Contains(activityTitle.ToLower().Trim()));
+            }
+            else return GetAll();
         }
 
 

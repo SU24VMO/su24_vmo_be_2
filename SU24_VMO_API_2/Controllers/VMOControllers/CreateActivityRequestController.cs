@@ -51,9 +51,9 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("all/filter/activity-name/{activityName}")]
+        [Route("all/filter/activity-name")]
 
-        public IActionResult GetAllCreateActivityRequestsByActivityTitle(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string activityName)
+        public IActionResult GetAllCreateActivityRequestsByActivityTitle(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? activityName)
         {
             try
             {

@@ -20,7 +20,7 @@ namespace SU24_VMO_API.Services
         private readonly FirebaseService _firebaseService;
 
         public CreateOrganizationRequestService(ICreateOrganizationRequestRepository repository, IOrganizationRepository organizationRepository,
-            IOrganizationManagerRepository organizationManagerRepository, INotificationRepository notificationRepository, FirebaseService firebaseService, 
+            IOrganizationManagerRepository organizationManagerRepository, INotificationRepository notificationRepository, FirebaseService firebaseService,
             IAccountRepository accountRepository)
         {
             this.repository = repository;
@@ -36,9 +36,11 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
-        public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string organizationName)
+        public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string? organizationName)
         {
-            return repository.GetAll().Where(m => m.Organization.Name.Trim().ToLower().Contains(organizationName.ToLower().Trim()));
+            if (!String.IsNullOrEmpty(organizationName))
+                return repository.GetAll().Where(m => m.Organization.Name.Trim().ToLower().Contains(organizationName.ToLower().Trim()));
+            else return repository.GetAll();
         }
 
         public CreateOrganizationRequest? GetById(Guid id)
@@ -68,7 +70,7 @@ namespace SU24_VMO_API.Services
                 CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
                 IsActive = false,
                 IsModify = false,
-                Category = request.AreaOfActivity              
+                Category = request.AreaOfActivity
             };
 
             var createOrganizationRequest = new CreateOrganizationRequest

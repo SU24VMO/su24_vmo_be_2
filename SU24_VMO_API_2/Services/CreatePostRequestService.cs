@@ -40,9 +40,11 @@ namespace SU24_VMO_API.Services
             return _repository.GetAll();
         }
 
-        public IEnumerable<CreatePostRequest> GetAllByPostName(string postTitle)
+        public IEnumerable<CreatePostRequest> GetAllByPostName(string? postTitle)
         {
-            return _repository.GetAll().Where(m => m.Post.Title.Trim().ToLower().Contains(postTitle.ToLower().Trim()));
+            if (!String.IsNullOrEmpty(postTitle))
+                return _repository.GetAll().Where(m => m.Post.Title.Trim().ToLower().Contains(postTitle.ToLower().Trim()));
+            else return _repository.GetAll();
         }
 
         public CreatePostRequest? GetById(Guid id)

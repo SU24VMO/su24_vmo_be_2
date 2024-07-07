@@ -52,9 +52,9 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Authorize(Roles = "Moderator")]
-        [Route("all/filter/volunteer-name/{volunteerName}")]
+        [Route("all/filter/volunteer-name")]
 
-        public IActionResult GetAllCreateVolunteerRequestsByVolunteerName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string volunteerName)
+        public IActionResult GetAllCreateVolunteerRequestsByVolunteerName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? volunteerName)
         {
             try
             {

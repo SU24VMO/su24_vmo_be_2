@@ -53,9 +53,9 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Authorize(Roles = "Moderator, OrganizationManager, Admin")]
-        [Route("all/filter/organization-manager-name/{organizationManagerName}")]
+        [Route("all/filter/organization-manager-name")]
 
-        public IActionResult GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string organizationManagerName)
+        public IActionResult GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? organizationManagerName)
         {
             try
             {

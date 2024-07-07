@@ -52,9 +52,9 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Authorize(Roles = "Moderator, Volunteer, Member, OrganizationManager, Admin")]
-        [Route("all")]
+        [Route("all/filter/post-title")]
 
-        public IActionResult GetAllCreatePostRequestsByPostName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string postTitle)
+        public IActionResult GetAllCreatePostRequestsByPostName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? postTitle)
         {
             try
             {

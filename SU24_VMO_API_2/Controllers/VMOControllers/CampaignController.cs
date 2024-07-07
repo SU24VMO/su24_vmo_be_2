@@ -108,8 +108,8 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("all/filter/campaign-name/{campaignName}")]
-        public IActionResult GetCampaignByCampaignId(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string campaignName)
+        [Route("all/filter/campaign-name")]
+        public IActionResult GetCampaignByCampaignId(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {

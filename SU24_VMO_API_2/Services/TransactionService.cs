@@ -396,8 +396,6 @@ namespace SU24_VMO_API.Services
                 {
                     if (item.order_code == orderId)
                     {
-
-
                         return item.status;
                     }
                 }

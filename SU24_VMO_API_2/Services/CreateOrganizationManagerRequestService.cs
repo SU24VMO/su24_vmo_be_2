@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
+using Microsoft.Extensions.Localization;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
@@ -47,9 +48,11 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
-        public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string organizationManagerName)
+        public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName)
         {
-            return _createOrganizationManagerRequestRepository.GetAll().Where(m => (m.OrganizationManager!.FirstName.Trim().ToLower() + " " + m.OrganizationManager.LastName.Trim().ToLower()).Contains(organizationManagerName.ToLower().Trim()));
+            if (!String.IsNullOrEmpty(organizationManagerName))
+                return _createOrganizationManagerRequestRepository.GetAll().Where(m => (m.OrganizationManager!.FirstName.Trim().ToLower() + " " + m.OrganizationManager.LastName.Trim().ToLower()).Contains(organizationManagerName.ToLower().Trim()));
+            else return _createOrganizationManagerRequestRepository.GetAll();
         }
 
         public CreateOrganizationManagerRequest? CreateOrganizationManagerVerifiedRequest(CreateOrganizationManagerVerifiedRequest request)
