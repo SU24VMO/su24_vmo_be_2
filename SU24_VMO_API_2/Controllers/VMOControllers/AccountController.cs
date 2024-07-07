@@ -54,11 +54,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/role/volunteer")]
-        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllAccountsWithVolunteerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? name)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithVolunteerRole();
+                var accounts = _accountService.GetAllAccountsWithVolunteerRole(name);
 
                 var response = new ResponseMessage()
                 {
@@ -79,11 +79,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/member")]
-        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllAccountWithMemberRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? name)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountWithMemberRole();
+                var accounts = _accountService.GetAllAccountWithMemberRole(name);
 
                 var response = new ResponseMessage()
                 {
@@ -104,11 +104,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/moderator")]
-        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllAccountsWithModeratorRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? name)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithModeratorRole();
+                var accounts = _accountService.GetAllAccountsWithModeratorRole(name);
 
                 var response = new ResponseMessage()
                 {
@@ -129,11 +129,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
         [HttpGet]
         [Route("all/role/organization-manager")]
-        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllAccountsWithOrganizationManagerRole(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? name)
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithOrganizationManagerRole();
+                var accounts = _accountService.GetAllAccountsWithOrganizationManagerRole(name);
 
                 var response = new ResponseMessage()
                 {

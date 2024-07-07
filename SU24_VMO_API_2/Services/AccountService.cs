@@ -52,21 +52,29 @@ namespace SU24_VMO_API.Services
             return _accountRepository.GetAll();
         }
 
-        public IEnumerable<Account> GetAllAccountsWithVolunteerRole()
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole(string? name)
         {
-            return _accountRepository.GetAllAccountsWithVolunteerRole();
+            if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountsWithVolunteerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+            else return _accountRepository.GetAllAccountsWithVolunteerRole();
         }
-        public IEnumerable<Account> GetAllAccountWithMemberRole()
+        public IEnumerable<Account> GetAllAccountWithMemberRole(string? name)
         {
-            return _accountRepository.GetAllAccountWithMemberRole();
+            if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountWithMemberRole();
+            else return _accountRepository.GetAllAccountWithMemberRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
         }
-        public IEnumerable<Account> GetAllAccountsWithModeratorRole()
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole(string? name)
         {
-            return _accountRepository.GetAllAccountsWithModeratorRole();
+            if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountsWithModeratorRole();
+            else return _accountRepository.GetAllAccountsWithModeratorRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
         }
-        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole()
+        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole(string? name)
         {
-            return _accountRepository.GetAllAccountsWithOrganizationManagerRole();
+            if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountsWithOrganizationManagerRole();
+            else return _accountRepository.GetAllAccountsWithOrganizationManagerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
         }
 
 
