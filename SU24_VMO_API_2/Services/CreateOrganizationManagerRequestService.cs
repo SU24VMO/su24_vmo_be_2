@@ -29,7 +29,22 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequests()
         {
-            return _createOrganizationManagerRequestRepository.GetAll();
+            var requests = _createOrganizationManagerRequestRepository.GetAll();
+            foreach (var request in requests)
+            {
+                if (request.OrganizationManager != null)
+                {
+                    request.OrganizationManager.Account = _accountRepository.GetById(request.OrganizationManager.AccountID);
+                    if (request.OrganizationManager.Account != null)
+                    {
+                        request.OrganizationManager.Account.Notifications = null;
+                        request.OrganizationManager.Account.AccountTokens = null;
+                        request.OrganizationManager.Account.BankingAccounts = null;
+                        request.OrganizationManager.Account.Transactions = null;
+                    }
+                }
+            }
+            return requests;
         }
 
         public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string organizationManagerName)
