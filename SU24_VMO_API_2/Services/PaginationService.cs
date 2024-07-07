@@ -76,7 +76,20 @@ namespace SU24_VMO_API.Services
                 if (propertyInfo != null)
                 {
                     var propertyAccessTemp = Expression.Property(propertyAccess, property);
-                    var nullCheckTemp = Expression.NotEqual(propertyAccessTemp, Expression.Constant(null, propertyAccessTemp.Type));
+                    // Check if property type is a value type and convert to nullable if necessary
+
+                    // Check if property type is a value type and convert to nullable if necessary
+                    Expression nullCheckTemp;
+                    if (propertyAccessTemp.Type.IsValueType && Nullable.GetUnderlyingType(propertyAccessTemp.Type) == null)
+                    {
+                        var nullableType = typeof(Nullable<>).MakeGenericType(propertyAccessTemp.Type);
+                        var converted1 = Expression.Convert(propertyAccessTemp, nullableType);
+                        nullCheckTemp = Expression.NotEqual(converted1, Expression.Constant(null, nullableType));
+                    }
+                    else
+                    {
+                        nullCheckTemp = Expression.NotEqual(propertyAccessTemp, Expression.Constant(null, propertyAccessTemp.Type));
+                    }
 
                     // Combining null checks for nested properties
                     nullCheckExpression = nullCheckExpression == null

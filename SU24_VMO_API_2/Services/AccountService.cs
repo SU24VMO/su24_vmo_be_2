@@ -56,25 +56,31 @@ namespace SU24_VMO_API.Services
         {
             if (!String.IsNullOrEmpty(name))
                 return _accountRepository.GetAllAccountsWithVolunteerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
-            else return _accountRepository.GetAllAccountsWithVolunteerRole();
+            else
+                return _accountRepository.GetAllAccountsWithVolunteerRole();
         }
         public IEnumerable<Account> GetAllAccountWithMemberRole(string? name)
         {
             if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountWithMemberRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+            else
                 return _accountRepository.GetAllAccountWithMemberRole();
-            else return _accountRepository.GetAllAccountWithMemberRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
         }
         public IEnumerable<Account> GetAllAccountsWithModeratorRole(string? name)
         {
             if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountsWithModeratorRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+            else
                 return _accountRepository.GetAllAccountsWithModeratorRole();
-            else return _accountRepository.GetAllAccountsWithModeratorRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+
         }
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole(string? name)
         {
             if (!String.IsNullOrEmpty(name))
+                return _accountRepository.GetAllAccountsWithOrganizationManagerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+            else
                 return _accountRepository.GetAllAccountsWithOrganizationManagerRole();
-            else return _accountRepository.GetAllAccountsWithOrganizationManagerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
+
         }
 
 
