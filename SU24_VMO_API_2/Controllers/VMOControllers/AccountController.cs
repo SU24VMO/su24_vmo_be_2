@@ -155,12 +155,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("{id}")]
-        public IActionResult GetAccountById(Guid accountId)
+        [Route("{accountId}")]
+        public IActionResult GetByAccountIdResponse(Guid accountId)
         {
             try
             {
-                var accounts = _accountService.GetByAccountId(accountId);
+                var accounts = _accountService.GetByAccountIdResponse(accountId);
 
                 var response = new ResponseMessage()
                 {

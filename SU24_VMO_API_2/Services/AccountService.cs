@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
+using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -12,6 +13,7 @@ using SU24_VMO_API.Supporters.JWTAuthSupport;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
+using SU24_VMO_API_2.DTOs.Response;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -72,6 +74,75 @@ namespace SU24_VMO_API.Services
         {
             var account = _accountRepository.GetById(accountId);
             return account;
+        }
+
+        public GetByAccountIdResponse? GetByAccountIdResponse(Guid accountId)
+        {
+            var account = _accountRepository.GetById(accountId);
+            if (account == null) { throw new NotFoundException("Tài khoản không tồn tại!"); }
+            float donatedMoney = 0;
+            int numberOfDonation = 0;
+
+            if (account != null && account.Transactions != null)
+            {
+                foreach (var transaction in account.Transactions)
+                {
+                    if (transaction.TransactionStatus == TransactionStatus.Success)
+                    {
+                        donatedMoney += transaction.Amount;
+                        numberOfDonation++;
+                    }
+                }
+            }
+
+            var response = new GetByAccountIdResponse
+            {
+                AccountID = accountId,
+                Avatar = account!.Avatar,
+                AccountTokens = account.AccountTokens,
+                BankingAccounts = account.BankingAccounts,
+                CreatedAt = account.CreatedAt,
+                DonatedMoney = donatedMoney,
+                Email = account.Email,
+                HashPassword = account.HashPassword,
+                IsActived = account.IsActived,
+                IsBlocked = account.IsBlocked,
+                ModifiedBy = account.ModifiedBy,
+                Notifications = account.Notifications,
+                NumberOfDonations = numberOfDonation,
+                Role = account.Role,
+                SaltPassword = account.SaltPassword,
+                Transactions = account.Transactions,
+                UpdatedAt = account.UpdatedAt,
+                Username = account.Username
+            };
+
+            if (response.Notifications != null)
+            {
+                foreach (var notification in response.Notifications)
+                {
+                    notification.Account = null;
+                }
+            }
+
+            if (response.BankingAccounts != null)
+            {
+                foreach (var bankingAccount in response.BankingAccounts)
+                {
+                    bankingAccount.Account = null;
+                }
+            }
+
+            if (response.Transactions != null)
+            {
+                foreach (var transaction in response.Transactions)
+                {
+                    transaction.Account = null;
+                }
+            }
+
+
+            return response;
         }
 
         public Account? CreateAccount(CreateAccountRequest request)

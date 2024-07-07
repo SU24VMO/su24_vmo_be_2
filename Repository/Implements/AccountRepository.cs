@@ -73,7 +73,10 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .Include(a => a.Notifications).ToList()
+                .Include(a => a.Notifications)
+                .Include(a => a.Transactions)
+                .Include(a => a.BankingAccounts)
+                .ToList()
                 .FirstOrDefault(d => d.AccountID.Equals(id));
         }
 
