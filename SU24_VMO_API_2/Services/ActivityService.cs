@@ -41,6 +41,13 @@ namespace SU24_VMO_API.Services
             return _activityRepository.GetAll();
         }
 
+        public IEnumerable<Activity> GetAllWithActivityTitle(string? title)
+        {
+            if (!String.IsNullOrEmpty(title))
+                return _activityRepository.GetAll().Where(a => a.Title.ToLower().Contains(title.ToLower().Trim()));
+            else return _activityRepository.GetAll();
+        }
+
         public Activity? GetById(Guid id)
         {
             return _activityRepository.GetById(id);
@@ -113,43 +120,84 @@ namespace SU24_VMO_API.Services
             return activities;
         }
 
-        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByOM(Guid omId)
+        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByOM(Guid omId, string? activityTitle)
         {
-            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
-            var activities = new List<ActivityResponse?>();
-            foreach (var request in createActivityRequests)
+            if (!string.IsNullOrEmpty(activityTitle))
             {
-                if (request.Activity != null)
+                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
+                var activities = new List<ActivityResponse?>();
+                foreach (var request in createActivityRequests)
                 {
-                    var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
-                    if (processingPhase != null)
+                    if (request.Activity != null)
                     {
-                        var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
-                        if (campaign != null && campaign.OrganizationID != null)
+                        var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                        if (processingPhase != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)campaign.OrganizationID);
-                            if (organization != null)
+                            var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                            if (campaign != null && campaign.OrganizationID != null)
                             {
-                                activities.Add(new ActivityResponse
+                                var organization = _organizationRepository.GetById((Guid)campaign.OrganizationID);
+                                if (organization != null)
                                 {
-                                    ActivityId = request.ActivityID,
-                                    ActivityImages = request.Activity.ActivityImages,
-                                    Content = request.Activity.Content,
-                                    IsActive = request.Activity.IsActive,
-                                    CreateDate = request.Activity.CreateDate,
-                                    Title = request.Activity.Title,
-                                    ProcessingPhaseId = request.Activity.ProcessingPhaseId,
-                                    ProcessingPhase = request.Activity.ProcessingPhase,
-                                    UpdateDate = request.Activity.UpdateDate,
-                                    CampaignName = campaign.Name,
-                                    OrganizationName = organization.Name,
-                                });
+                                    activities.Add(new ActivityResponse
+                                    {
+                                        ActivityId = request.ActivityID,
+                                        ActivityImages = request.Activity.ActivityImages,
+                                        Content = request.Activity.Content,
+                                        IsActive = request.Activity.IsActive,
+                                        CreateDate = request.Activity.CreateDate,
+                                        Title = request.Activity.Title,
+                                        ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                        ProcessingPhase = request.Activity.ProcessingPhase,
+                                        UpdateDate = request.Activity.UpdateDate,
+                                        CampaignName = campaign.Name,
+                                        OrganizationName = organization.Name,
+                                    });
+                                }
                             }
                         }
                     }
                 }
+                return activities.Where(a => a.Title.ToLower().Contains(activityTitle.Trim().ToLower()));
             }
-            return activities;
+            else
+            {
+                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
+                var activities = new List<ActivityResponse?>();
+                foreach (var request in createActivityRequests)
+                {
+                    if (request.Activity != null)
+                    {
+                        var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                        if (processingPhase != null)
+                        {
+                            var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                            if (campaign != null && campaign.OrganizationID != null)
+                            {
+                                var organization = _organizationRepository.GetById((Guid)campaign.OrganizationID);
+                                if (organization != null)
+                                {
+                                    activities.Add(new ActivityResponse
+                                    {
+                                        ActivityId = request.ActivityID,
+                                        ActivityImages = request.Activity.ActivityImages,
+                                        Content = request.Activity.Content,
+                                        IsActive = request.Activity.IsActive,
+                                        CreateDate = request.Activity.CreateDate,
+                                        Title = request.Activity.Title,
+                                        ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                        ProcessingPhase = request.Activity.ProcessingPhase,
+                                        UpdateDate = request.Activity.UpdateDate,
+                                        CampaignName = campaign.Name,
+                                        OrganizationName = organization.Name,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                return activities;
+            }
         }
 
 

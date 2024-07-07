@@ -36,6 +36,13 @@ namespace SU24_VMO_API.Services
             return _repository.GetAll();
         }
 
+        public IEnumerable<StatementPhase> GetAllStatementPhasesWithCampaignName(string? campaignName)
+        {
+            if (!String.IsNullOrEmpty(campaignName))
+                return _repository.GetAll().Where(d => d.Campaign.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+            else return _repository.GetAll();
+        }
+
         public StatementPhase? GetById(Guid id)
         {
             return _repository.GetById(id);

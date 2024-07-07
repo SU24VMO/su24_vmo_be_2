@@ -46,8 +46,8 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("all/filter/organization-name/{organizationName}")]
-        public IActionResult GetAllOrganizationByOrganizationName(string organizationName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        [Route("all/filter/organization-name")]
+        public IActionResult GetAllOrganizationByOrganizationName(string? organizationName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
@@ -73,11 +73,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/organization-manager/{organizationManagerId}")]
-        public IActionResult GetAllOrganizationByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllOrganizationByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? organizationName)
         {
             try
             {
-                var organizations = _organizationService.GetAllOrganizationsByOrganizationManagerId(organizationManagerId);
+                var organizations = _organizationService.GetAllOrganizationsByOrganizationManagerId(organizationManagerId, organizationName);
 
                 var response = new ResponseMessage()
                 {

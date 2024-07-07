@@ -38,6 +38,13 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
+        public IEnumerable<ProcessingPhase> GetAllProcessingPhasesWithCampaignName(string? campaignName)
+        {
+            if (!String.IsNullOrEmpty(campaignName))
+                return repository.GetAll().Where(d => d.Campaign.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+            else return repository.GetAll();
+        }
+
         public ProcessingPhase? GetById(Guid id)
         {
             return repository.GetById(id);

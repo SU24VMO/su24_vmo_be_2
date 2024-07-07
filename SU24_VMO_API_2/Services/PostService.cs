@@ -29,33 +29,72 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
-        public IEnumerable<PostResponse> GetAllPostsByOrganizationManagerId(Guid organizationManagerId)
+        public IEnumerable<Post> GetAllPostsWithPostTitle(string? title)
         {
-            var posts = repository.GetAllPostByOrganizationManagerId(organizationManagerId);
-            var postReponses = new List<PostResponse>();
+            if (!String.IsNullOrEmpty(title))
+                return repository.GetAll().Where(p => p.Title.ToLower().Contains(title.Trim().ToLower()));
+            else return repository.GetAll();
+        }
 
-            foreach (var post in posts)
+        public IEnumerable<PostResponse> GetAllPostsByOrganizationManagerId(Guid organizationManagerId, string? title)
+        {
+            if (!String.IsNullOrEmpty(title))
             {
-                if (post.CreatePostRequest != null)
+                var posts = repository.GetAllPostByOrganizationManagerId(organizationManagerId);
+                var postReponses = new List<PostResponse>();
+
+                foreach (var post in posts)
                 {
-                    post.CreatePostRequest = null;
+                    if (post.CreatePostRequest != null)
+                    {
+                        post.CreatePostRequest = null;
+                    }
+                    var om = _organizationManagerRepository.GetById(organizationManagerId);
+                    postReponses.Add(new PostResponse
+                    {
+                        PostID = post.PostID,
+                        Content = post.Content,
+                        Cover = post.Cover,
+                        CreateAt = post.CreateAt,
+                        Description = post.Description,
+                        Image = post.Image,
+                        IsActive = post.IsActive,
+                        Title = post.Title,
+                        UpdateAt = post.UpdateAt,
+                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim()
+                    });
                 }
-                var om = _organizationManagerRepository.GetById(organizationManagerId);
-                postReponses.Add(new PostResponse
-                {
-                    PostID = post.PostID,
-                    Content = post.Content,
-                    Cover = post.Cover,
-                    CreateAt = post.CreateAt,
-                    Description = post.Description,
-                    Image = post.Image,
-                    IsActive = post.IsActive,
-                    Title = post.Title,
-                    UpdateAt = post.UpdateAt,
-                    AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim()
-                });
+                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
             }
-            return postReponses;
+            else
+            {
+                var posts = repository.GetAllPostByOrganizationManagerId(organizationManagerId);
+                var postReponses = new List<PostResponse>();
+
+                foreach (var post in posts)
+                {
+                    if (post.CreatePostRequest != null)
+                    {
+                        post.CreatePostRequest = null;
+                    }
+                    var om = _organizationManagerRepository.GetById(organizationManagerId);
+                    postReponses.Add(new PostResponse
+                    {
+                        PostID = post.PostID,
+                        Content = post.Content,
+                        Cover = post.Cover,
+                        CreateAt = post.CreateAt,
+                        Description = post.Description,
+                        Image = post.Image,
+                        IsActive = post.IsActive,
+                        Title = post.Title,
+                        UpdateAt = post.UpdateAt,
+                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim()
+                    });
+                }
+                return postReponses;
+            }
+
         }
 
         public IEnumerable<PostResponse> GetAllPostsByMemberId(Guid memberId)

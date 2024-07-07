@@ -383,11 +383,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(organizationManagerId);
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(organizationManagerId, campaignName);
 
                 var response = new ResponseMessage()
                 {
@@ -411,11 +411,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string phase, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(Guid organizationManagerId, int? pageSize, int? pageNo, string phase, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(organizationManagerId, phase);
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(organizationManagerId, phase, campaignName);
 
                 var response = new ResponseMessage()
                 {

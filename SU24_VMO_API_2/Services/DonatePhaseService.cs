@@ -37,6 +37,12 @@ namespace SU24_VMO_API.Services
         {
             return _repository.GetAll();
         }
+        public IEnumerable<DonatePhase> GetAllDonatePhasesWithCampaignName(string? campaignName)
+        {
+            if (!String.IsNullOrEmpty(campaignName))
+                return _repository.GetAll().Where(d => d.Campaign.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+            else return _repository.GetAll();
+        }
 
         public DonatePhase? GetDonatePhaseById(Guid donatePhaseId)
         {
@@ -66,7 +72,7 @@ namespace SU24_VMO_API.Services
             return listDonatePhase;
         }
 
-        public IEnumerable<DonatePhase?> GetDonatePhaseByMemberId(Guid memberId)    
+        public IEnumerable<DonatePhase?> GetDonatePhaseByMemberId(Guid memberId)
         {
             var member = _memberRepository.GetById(memberId);
             if (member == null) { throw new NotFoundException("Member not found!"); }

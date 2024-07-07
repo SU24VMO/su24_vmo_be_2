@@ -55,6 +55,34 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("all/filter/activity-title")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer, Moderator")]
+
+        public IActionResult GetAllActivitysWithActivityTitle(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? title)
+        {
+            try
+            {
+                var activities = _activityService.GetAllWithActivityTitle(title);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService.PaginateList(activities, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpGet]
         [Route("{id}")]
@@ -86,11 +114,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/organization-manager/{organizationManagerId}")]
 
-        public IActionResult GetAllActivityWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllActivityWhichCreateByOM(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? activityTitle)
         {
             try
             {
-                var activities = _activityService.GetAllActivityWhichCreateByOM(organizationManagerId);
+                var activities = _activityService.GetAllActivityWhichCreateByOM(organizationManagerId, activityTitle);
 
                 var response = new ResponseMessage()
                 {
