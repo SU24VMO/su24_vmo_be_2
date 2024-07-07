@@ -392,20 +392,22 @@ namespace SU24_VMO_API.Services
             listDataPayos = JsonConvert.DeserializeObject<Root>(responseListOrder)!;
             if (listDataPayos != null)
             {
-                foreach (var item in listDataPayos.data.orders)
-                {
-                    if (item.order_code == orderId)
+                if (listDataPayos.data == null) throw new BadRequestException("Danh sách data của payos bị trống");
+                    foreach (var item in listDataPayos.data.orders)
                     {
-                        return item.status;
+                        if (item.order_code == orderId)
+                        {
+                            return item.status;
+                        }
                     }
-                }
             }
             return null;
         }
 
 
-        public async Task<string?> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest request)
+        public async Task<string?> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest? request)
         {
+            if (request == null) throw new BadRequestException("Dữ liệu truyền xuống không được để trống!");
             var status = await CheckTransactionCNTAsync(request.OrderID);
             if (!String.IsNullOrEmpty(status) && status.ToLower().Contains("PAID".ToLower()))
             {
@@ -429,9 +431,9 @@ namespace SU24_VMO_API.Services
 
 
                     var campaign = _campaignRepository.GetById(transaction.CampaignID);
-                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign!.Name!, transaction.Amount, transaction.CreateDate, campaign.CampaignID);
+                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign!= null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
 
-                    _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(campaign.CampaignID, transaction.Amount);
+                    _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(transaction.CampaignID, transaction.Amount);
                     _transactionRepository.Update(transaction);
                 }
             }

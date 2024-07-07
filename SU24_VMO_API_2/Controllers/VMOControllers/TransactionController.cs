@@ -296,7 +296,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpPost]
         [Route("check-transaction/send-email")]
 
-        public async Task<IActionResult> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest request)
+        public async Task<IActionResult> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest? request)
         {
             try
             {
@@ -352,6 +352,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 };
                 // Log the exception details here if necessary
                 return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
             }
             catch (ArgumentNullException argEx)
             {
