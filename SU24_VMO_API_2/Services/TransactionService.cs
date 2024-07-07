@@ -1,10 +1,12 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
 using MailKit.Search;
+using Microsoft.OData.UriParser;
 using Net.payOS;
 using Net.payOS.Types;
 using Net.payOS.Utils;
 using NETCore.MailKit.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Implements;
@@ -16,8 +18,15 @@ using SU24_VMO_API.Supporters.BankSupporter;
 using SU24_VMO_API.Supporters.EmailSupporter;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.DTOs.Response.PayosReponse;
+using SU24_VMO_API_2.DTOs.Response;
+using System;
+using System.Security.Principal;
+using System.Text;
 using System.Text.RegularExpressions;
 using Transaction = BusinessObject.Models.Transaction;
+
 
 namespace SU24_VMO_API.Services
 {
@@ -190,10 +199,121 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Transaction?> GetTransactionByAccountId(Guid accountId)
+        public IEnumerable<TransactionWithCampaignNameResponse?> GetTransactionByAccountId(Guid accountId, string? transactionStatus)
         {
             var transactions = _transactionRepository.GetHistoryTransactionByAccountId(accountId);
-            return transactions;
+
+            var transactionsResponse = new List<TransactionWithCampaignNameResponse>();
+            foreach (var transaction in transactions)
+            {
+                if (transaction != null && transaction.Account != null)
+                {
+                    transaction.Account.Notifications = null;
+                    transaction.Account.Transactions = null;
+                    transaction.Account.BankingAccounts = null;
+                    transaction.Account.AccountTokens = null;
+                }
+
+                if (transaction != null && transaction.Campaign != null)
+                {
+                    transaction.Campaign.Transactions = null;
+                    transaction.Campaign.Organization = null;
+                    transaction.Campaign.DonatePhase = null;
+                    transaction.Campaign.ProcessingPhase = null;
+                    transaction.Campaign.CampaignType = null;
+                    transaction.Campaign.StatementPhase = null;
+
+                }
+
+
+                if (transaction != null && transaction.BankingAccount != null)
+                {
+                    transaction.BankingAccount.Transactions = null;
+                    transaction.BankingAccount.Account = null;
+                }
+                if (!String.IsNullOrEmpty(transactionStatus) && transactionStatus.Equals("PAID"))
+                {
+                    if (transaction != null && transaction.TransactionStatus == TransactionStatus.Success)
+                    {
+                        var campaign = _campaignRepository.GetById(transaction.CampaignID);
+                        transactionsResponse.Add(new TransactionWithCampaignNameResponse
+                        {
+                            TransactionID = transaction.TransactionID,
+                            CreateDate = transaction.CreateDate,
+                            CampaignName = campaign!.Name,
+                            AccountId = accountId,
+                            Amount = transaction.Amount,
+                            BankingAccount = transaction.BankingAccount,
+                            Account = transaction.Account,
+                            BankingAccountID = transaction.BankingAccountID,
+                            Campaign = transaction.Campaign,
+                            CampaignID = transaction.CampaignID,
+                            IsIncognito = transaction.IsIncognito,
+                            Note = transaction.Note,
+                            OrderId = transaction.OrderId,
+                            PayerName = transaction.PayerName,
+                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionStatus = transaction.TransactionStatus,
+                            TransactionType = transaction.TransactionType
+                        });
+                    }
+                }
+                else if (!String.IsNullOrEmpty(transactionStatus) && transactionStatus.Equals("PENDING"))
+                {
+                    if (transaction != null && transaction.TransactionStatus == TransactionStatus.Pending)
+                    {
+                        var campaign = _campaignRepository.GetById(transaction.CampaignID);
+                        transactionsResponse.Add(new TransactionWithCampaignNameResponse
+                        {
+                            TransactionID = transaction.TransactionID,
+                            CreateDate = transaction.CreateDate,
+                            CampaignName = campaign!.Name,
+                            AccountId = accountId,
+                            Amount = transaction.Amount,
+                            BankingAccount = transaction.BankingAccount,
+                            Account = transaction.Account,
+                            BankingAccountID = transaction.BankingAccountID,
+                            Campaign = transaction.Campaign,
+                            CampaignID = transaction.CampaignID,
+                            IsIncognito = transaction.IsIncognito,
+                            Note = transaction.Note,
+                            OrderId = transaction.OrderId,
+                            PayerName = transaction.PayerName,
+                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionStatus = transaction.TransactionStatus,
+                            TransactionType = transaction.TransactionType
+                        });
+                    }
+                }
+                else
+                {
+                    if (transaction != null)
+                    {
+                        var campaign = _campaignRepository.GetById(transaction.CampaignID);
+                        transactionsResponse.Add(new TransactionWithCampaignNameResponse
+                        {
+                            TransactionID = transaction.TransactionID,
+                            CreateDate = transaction.CreateDate,
+                            CampaignName = campaign!.Name,
+                            AccountId = accountId,
+                            Amount = transaction.Amount,
+                            BankingAccount = transaction.BankingAccount,
+                            Account = transaction.Account,
+                            BankingAccountID = transaction.BankingAccountID,
+                            Campaign = transaction.Campaign,
+                            CampaignID = transaction.CampaignID,
+                            IsIncognito = transaction.IsIncognito,
+                            Note = transaction.Note,
+                            OrderId = transaction.OrderId,
+                            PayerName = transaction.PayerName,
+                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionStatus = transaction.TransactionStatus,
+                            TransactionType = transaction.TransactionType
+                        });
+                    }
+                }
+            }
+            return transactionsResponse;
         }
 
 
@@ -243,6 +363,113 @@ namespace SU24_VMO_API.Services
             JObject dataJson = JObject.Parse(data);
             string paymentLinkResSignature = SignatureControl.CreateSignatureFromObj(dataJson, PayOSConstants.CheckSumKey);
             return data + " " + responseBodyJson["signature"].ToString();
+        }
+
+
+        public async Task<string?> CheckTransactionCNTAsync(int orderId)
+        {
+            var transaction = _transactionRepository.GetTransactionByOrderId(orderId);
+            if (transaction == null)
+            {
+                throw new NotFoundException("Giao dịch không tìm thấy!");
+            }
+
+            var account = new RequestAccountLoginCNT
+            {
+                email = "chaunhattruong4747@gmail.com",
+                password = "a80696a59010bd22c5fab52893c3aafd1f228e205fdf548defa51041e167ac7dcfbfe12f23f1ec5a1ae8abdc192ce0466b3d17c626b458d32723c9a3ff3652eb"
+            };
+
+
+            //var json = JsonConvert.SerializeObject(account);
+            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var responseString = await PostAPI("https://api-app.payos.vn/auth/sign-in", "", account);
+            ApiResponse response = new ApiResponse();
+            response = JsonConvert.DeserializeObject<ApiResponse>(responseString)!;
+            var responseListOrder = await GetAPI("https://api-app.payos.vn/organizations/838ab7571bd411ef915f0242ac110002/statistics/payment-link?page=0&pageSize=&typeOrder=", response.Data.Token);
+            Root listDataPayos = new Root();
+            listDataPayos = JsonConvert.DeserializeObject<Root>(responseListOrder)!;
+            if (listDataPayos != null)
+            {
+                foreach (var item in listDataPayos.data.orders)
+                {
+                    if (item.order_code == orderId)
+                    {
+
+
+                        return item.status;
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        public async Task<string?> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest request)
+        {
+            var status = await CheckTransactionCNTAsync(request.OrderID);
+            if (!String.IsNullOrEmpty(status) && status.ToLower().Contains("PAID".ToLower()))
+            {
+                var transaction = _transactionRepository.GetTransactionByOrderId(request.OrderID);
+
+                if (transaction == null)
+                {
+                    throw new NotFoundException("Không tìm thấy giao dịch!");
+                }
+
+                if (transaction != null && transaction.TransactionStatus == TransactionStatus.Success)
+                {
+                    throw new BadRequestException("Giao dịch này đã được kiểm tra, trạng thái giao dịch: thành công! Vui lòng kiểm tra email của bạn!");
+                }
+
+                if (transaction != null)
+                {
+                    transaction.PayerName = request.FirstName.ToUpper() + " " + request.LastName.ToUpper();
+                    transaction.TransactionStatus = TransactionStatus.Success;
+                    _transactionRepository.Update(transaction);
+
+
+                    var campaign = _campaignRepository.GetById(transaction.CampaignID);
+                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign!.Name!, transaction.Amount, transaction.CreateDate, campaign.CampaignID);
+
+                    _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(campaign.CampaignID, transaction.Amount);
+                    _transactionRepository.Update(transaction);
+                }
+            }
+            return status;
+        }
+
+
+
+
+
+        public async Task<string> PostAPI(string url, string token, object obj)
+        {
+            var client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.Method = HttpMethod.Post;
+            request.RequestUri = new Uri(url);
+            //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            //request.Headers.Add("Bearer", token);
+            var json = JsonConvert.SerializeObject(obj);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(url, content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
+        }
+
+        public async Task<string> GetAPI(string url, string token)
+        {
+            var client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.Method = HttpMethod.Get;
+            request.RequestUri = new Uri(url);
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            //request.Headers.Add("Bearer", token);
+            HttpResponseMessage response = await client.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            return responseString;
         }
     }
 }

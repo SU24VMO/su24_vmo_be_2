@@ -8,6 +8,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Response;
 using Transaction = BusinessObject.Models.Transaction;
 
 
@@ -20,11 +21,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         private readonly TransactionService _transactionService;
         private readonly PaginationService<Transaction> _paginationService;
+        private readonly PaginationService<TransactionWithCampaignNameResponse> _paginationService2;
 
-        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService)
+
+        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService, 
+            PaginationService<TransactionWithCampaignNameResponse> paginationService2)
         {
             _transactionService = transactionService;
             _paginationService = paginationService;
+            _paginationService2 = paginationService2;
         }
 
 
@@ -91,15 +96,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("history-transaction/account/{accountId}")]
 
-        public IActionResult GetHistoryTransactionByAccountId(Guid accountId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetHistoryTransactionByAccountId(Guid accountId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? transactionStatus)
         {
             try
             {
-                var transactions = _transactionService.GetTransactionByAccountId(accountId);
+                var transactions = _transactionService.GetTransactionByAccountId(accountId, transactionStatus);
                 return Ok(new ResponseMessage
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = _paginationService2.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
                 });
             }
             catch (DbUpdateException dbEx)
@@ -291,27 +296,27 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpPost]
         [Route("check-transaction/send-email")]
 
-        public async Task<IActionResult> CheckTransactionStatusAndSendEmail(CheckTransactionRequest request)
+        public async Task<IActionResult> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest request)
         {
             try
             {
-                var paymentLinkInformation = await _transactionService.CheckAndSendEmailWithSuccessStatusAsync(request);
-                if (paymentLinkInformation != null)
+                var status = await _transactionService.CheckAndSendEmailWithSuccessStatusCNTAsync(request);
+                if (status != null)
                 {
-                    if (paymentLinkInformation.status.Equals("PAID"))
+                    if (status.ToLower().Contains("PAID".ToLower()))
                     {
                         return Ok(new ResponseMessage
                         {
-                            Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}, Email was sent successfully!",
-                            Data = paymentLinkInformation.status
+                            Message = $"Check successfully! Transaction status: {status}, Email was sent successfully!",
+                            Data = status
                         });
                     }
                     else
                     {
                         return Ok(new ResponseMessage
                         {
-                            Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}",
-                            Data = paymentLinkInformation.status
+                            Message = $"Check successfully! Transaction status: {status}",
+                            Data = status
                         });
                     }
                 }
@@ -383,6 +388,70 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                     Message = $"Check successfully!",
                     Data = data
                 });
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"Database error: {dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {argEx.ParamName} cannot be null."
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpGet]
+        [Route("check-transaction-cnt/{orderId}")]
+        public async Task<IActionResult> CheckTransactionCNT(int orderId)
+        {
+            try
+            {
+                var transactionResponse = await _transactionService.CheckTransactionCNTAsync(orderId);
+
+                if (transactionResponse != null)
+                {
+                    var response = transactionResponse;
+                    return Ok(response);
+
+                }
+                else
+                {
+                    return BadRequest("Can not create!");
+                }
             }
             catch (DbUpdateException dbEx)
             {
