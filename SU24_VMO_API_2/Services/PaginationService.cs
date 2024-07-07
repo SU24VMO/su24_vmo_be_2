@@ -1,4 +1,6 @@
-﻿using SU24_VMO_API.DTOs.Response;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.OData.ModelBuilder.Capabilities.V1;
+using SU24_VMO_API.DTOs.Response;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,7 +27,8 @@ namespace SU24_VMO_API.Services
             if (!string.IsNullOrEmpty(orderByProperty))
             {
                 var sortedList = ApplySorting(inputList, orderByProperty, orderBy);
-                if (sortedList != null)
+
+                if (sortedList != null && !sortedList.IsNullOrEmpty())
                 {
                     inputList = sortedList;
                 }
@@ -76,7 +79,6 @@ namespace SU24_VMO_API.Services
                 if (propertyInfo != null)
                 {
                     var propertyAccessTemp = Expression.Property(propertyAccess, property);
-                    // Check if property type is a value type and convert to nullable if necessary
 
                     // Check if property type is a value type and convert to nullable if necessary
                     Expression nullCheckTemp;
