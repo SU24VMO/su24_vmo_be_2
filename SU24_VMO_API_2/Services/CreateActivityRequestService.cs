@@ -162,7 +162,7 @@ namespace SU24_VMO_API.Services
                     };
 
 
-                    if (request.ActivityImages != null && activityAdded != null)
+                    if (request.ActivityImages != null)
                         foreach (var item in request.ActivityImages)
                         {
                             var activityImage = new ActivityImage
