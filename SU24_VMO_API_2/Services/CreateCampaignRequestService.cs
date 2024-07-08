@@ -85,7 +85,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
-                return GetCreateCampaignRequests().Where(c => c.Campaign.Name.Trim().Equals(campaignName));
+                return GetCreateCampaignRequests().Where(c => c.Campaign.Name.ToLower().Contains(campaignName.ToLower()));
             else return GetCreateCampaignRequests();
         }
 

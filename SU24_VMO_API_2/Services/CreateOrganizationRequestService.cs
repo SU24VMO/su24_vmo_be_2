@@ -39,7 +39,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string? organizationName)
         {
             if (!String.IsNullOrEmpty(organizationName))
-                return repository.GetAll().Where(m => m.Organization.Name.Trim().ToLower().Contains(organizationName.ToLower().Trim()));
+                return repository.GetAll().Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName.ToLower().Trim()));
             else return repository.GetAll();
         }
 
