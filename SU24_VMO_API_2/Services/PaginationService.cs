@@ -31,7 +31,7 @@ namespace SU24_VMO_API.Services
 
                 if (sortedList != null && sortedList.Any())
                 {
-                    if (inputList.Count() == sortedList.Count())
+                    //if (inputList.Count() == sortedList.Count())
                         inputList = sortedList;
                 }
             }
