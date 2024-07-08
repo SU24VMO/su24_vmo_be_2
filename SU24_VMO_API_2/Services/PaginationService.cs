@@ -28,7 +28,7 @@ namespace SU24_VMO_API.Services
             {
                 var sortedList = ApplySorting(inputList, orderByProperty, orderBy);
 
-                if (sortedList != null && !sortedList.IsNullOrEmpty())
+                if (sortedList != null && sortedList.Any())
                 {
                     inputList = sortedList;
                 }
@@ -60,7 +60,7 @@ namespace SU24_VMO_API.Services
                 response.TotalPage = (int)Math.Ceiling((double)response.TotalItem / pageSize.Value);
             }
 
-            
+
 
             return response;
         }
@@ -75,7 +75,7 @@ namespace SU24_VMO_API.Services
 
             foreach (var property in properties)
             {
-                var propertyInfo = typeof(T).GetProperty(property);
+                var propertyInfo = propertyAccess.Type.GetProperty(property);
                 if (propertyInfo != null)
                 {
                     var propertyAccessTemp = Expression.Property(propertyAccess, property);
@@ -85,8 +85,8 @@ namespace SU24_VMO_API.Services
                     if (propertyAccessTemp.Type.IsValueType && Nullable.GetUnderlyingType(propertyAccessTemp.Type) == null)
                     {
                         var nullableType = typeof(Nullable<>).MakeGenericType(propertyAccessTemp.Type);
-                        var converted1 = Expression.Convert(propertyAccessTemp, nullableType);
-                        nullCheckTemp = Expression.NotEqual(converted1, Expression.Constant(null, nullableType));
+                        var converted = Expression.Convert(propertyAccessTemp, nullableType);
+                        nullCheckTemp = Expression.NotEqual(converted, Expression.Constant(null, nullableType));
                     }
                     else
                     {
@@ -103,9 +103,9 @@ namespace SU24_VMO_API.Services
             }
 
             // Handling null values by converting the property access to a nullable type
-            var converted = Expression.Convert(propertyAccess, typeof(object));
+            var convertedPropertyAccess = Expression.Convert(propertyAccess, typeof(object));
 
-            var orderByExpression = Expression.Lambda<Func<T, object>>(converted, param);
+            var orderByExpression = Expression.Lambda<Func<T, object>>(convertedPropertyAccess, param);
 
             // Applying null check filter before sorting
             if (nullCheckExpression != null)
@@ -114,19 +114,27 @@ namespace SU24_VMO_API.Services
                 inputList = inputList.AsQueryable().Where(nullCheckLambda);
             }
 
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                if (orderBy.ToLower() == "asc")
-                {
-                    return inputList.AsQueryable().OrderBy(orderByExpression).ToList();
-                }
-                else if (orderBy.ToLower() == "desc")
-                {
-                    return inputList.AsQueryable().OrderByDescending(orderByExpression).ToList();
-                }
-            }
+            // Determine the default orderBy direction (asc if not specified)
 
-            return inputList;
+            bool isDescending = orderBy != null && orderBy.ToLower() == "desc";
+            // Use custom comparer to handle null values during sorting
+
+            var sortedList = isDescending
+                    ? inputList.OrderByDescending(orderByExpression.Compile(), new CustomComparer())
+                    : inputList.OrderBy(orderByExpression.Compile(), new CustomComparer());
+            return sortedList.ToList();
+        }
+
+        private class CustomComparer : IComparer<object>
+        {
+            public int Compare(object x, object y)
+            {
+                if (x == null && y == null) return 0;
+                if (x == null) return 1;
+                if (y == null) return -1;
+                return Comparer<object>.Default.Compare(x, y);
+
+            }
         }
     }
 }
