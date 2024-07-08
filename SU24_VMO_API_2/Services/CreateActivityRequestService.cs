@@ -41,7 +41,7 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateActivityRequest> GetAll()
         {
-            var requests = _repository.GetAll();
+            var requests = _repository.GetAll();           
             foreach (var request in requests)
             {
                 if (request.Moderator != null)
