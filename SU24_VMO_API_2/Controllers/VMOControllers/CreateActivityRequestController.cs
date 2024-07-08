@@ -57,7 +57,10 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var createActivityRequests = _createActivityRequestService.GetAllByActivityTitle(activityName);
+                // Decode the activityName if it's URL encoded
+                string decodedActivityName = Uri.UnescapeDataString(activityName ?? string.Empty);
+
+                var createActivityRequests = _createActivityRequestService.GetAllByActivityTitle(decodedActivityName);
 
                 var response = new ResponseMessage()
                 {
