@@ -15,6 +15,7 @@ using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -807,6 +808,11 @@ namespace SU24_VMO_API.Services
                     }
                 }
             }
+        }
+
+        public ClaimsPrincipal GetClaimsPrincipal(string token)
+        {
+            return jwtTokenSupporter.GetPrincipalFromExpiredToken(token);
         }
 
         // Helper method to check if the phone number exists in the system

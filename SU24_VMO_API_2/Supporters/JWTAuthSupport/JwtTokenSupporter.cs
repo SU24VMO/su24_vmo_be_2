@@ -37,7 +37,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             var account = accountRepository.GetById(user.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
             var code = Guid.NewGuid().ToString();
-            var key = Encoding.UTF8.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.UTF8.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
@@ -64,7 +65,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
                 Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddMinutes(15),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) { CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false } }
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return (tokenHandler.WriteToken(token), tokenDescriptor.Expires);
@@ -76,7 +77,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             var account = accountRepository.GetById(admin.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
             var code = Guid.NewGuid().ToString();
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
@@ -110,7 +112,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             var account = accountRepository.GetById(organizationManager.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
             var code = Guid.NewGuid().ToString();
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
@@ -149,8 +152,9 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             var account = accountRepository.GetById(requestManager.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var code = Guid.NewGuid().ToString();   
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var code = Guid.NewGuid().ToString();
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
@@ -185,7 +189,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             var account = accountRepository.GetById(user.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.UTF8.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var code = Guid.NewGuid().ToString();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -224,7 +229,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             var account = accountRepository.GetById(admin.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var code = Guid.NewGuid().ToString();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -258,7 +264,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             var account = accountRepository.GetById(organizationManager.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var code = Guid.NewGuid().ToString();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -301,7 +308,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             var account = accountRepository.GetById(moderator.AccountID);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+            var key = GetValidBase64Key(config["Jwt:Key"]!);
             var code = Guid.NewGuid().ToString();
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -340,7 +348,8 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+                //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+                var key = GetValidBase64Key(config["Jwt:Key"]!);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -379,15 +388,18 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         {
             try
             {
-                var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+                //var key = Encoding.ASCII.GetBytes(config["Jwt:Key"]!);
+                var key = GetValidBase64Key(config["Jwt:Key"]!);
                 var claimPrinciple = new JwtSecurityTokenHandler().ValidateToken(
                          refreshTokenCheck,
                          new TokenValidationParameters
                          {
                              IssuerSigningKey = new SymmetricSecurityKey(key),
-                             ValidateIssuer = false,
-                             ValidateAudience = false,
-                             ValidateLifetime = false,
+                             ValidateIssuer = true,
+                             ValidateAudience = true,
+                             ValidateLifetime = true,
+                             ValidIssuer = config["Jwt:Issuer"],
+                             ValidAudience = config["Jwt:Audience"],
                              ValidateIssuerSigningKey = true,
                              ClockSkew = TimeSpan.Zero
                          },
@@ -406,19 +418,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                         var accessToken = token;
                         var (code, refreshToken, expiredRefreshDate) = CreateRefreshTokenForAdmin(admin);
-                        //var accountToken = new AccountToken
-                        //{
-                        //    AccountTokenId = Guid.NewGuid(),
-                        //    AccountID = account.AccountID,
-                        //    AccessToken = accessToken,
-                        //    CodeRefreshToken = code,
-                        //    RefreshToken = refreshToken,
-                        //    CreatedDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        //    ExpiredDateAccessToken = expiredAccessDate,
-                        //    ExpiredDateRefreshToken = expiredRefreshDate
-                        //};
-                        //_accountTokenRepository.Save(accountToken);
-                        //_accountRepository.Update(account);
+                        var accountTokenWhenRefresh = new AccountToken
+                        {
+                            AccountTokenId = Guid.NewGuid(),
+                            AccountID = account.AccountID,
+                            AccessToken = accessToken,
+                            CodeRefreshToken = code,
+                            RefreshToken = refreshToken,
+                            CreatedDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            ExpiredDateAccessToken = expiredAccessDate,
+                            ExpiredDateRefreshToken = expiredRefreshDate
+                        };
+                        accountTokenRepository.Save(accountTokenWhenRefresh);
+                        accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
                         return (accessToken, refreshToken);
                     }
@@ -430,19 +442,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                         var accessToken = token;
                         var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(member);
-                        //var accountToken = new AccountToken
-                        //{
-                        //    AccountTokenId = Guid.NewGuid(),
-                        //    AccountID = account.AccountID,
-                        //    AccessToken = accessToken,
-                        //    CodeRefreshToken = code,
-                        //    RefreshToken = refreshToken,
-                        //    CreatedDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        //    ExpiredDateAccessToken = expiredAccessDate,
-                        //    ExpiredDateRefreshToken = expiredRefreshDate
-                        //};
-                        //_accountTokenRepository.Save(accountToken);
-                        //_accountRepository.Update(account);
+                        var accountTokenWhenRefresh = new AccountToken
+                        {
+                            AccountTokenId = Guid.NewGuid(),
+                            AccountID = account.AccountID,
+                            AccessToken = accessToken,
+                            CodeRefreshToken = code,
+                            RefreshToken = refreshToken,
+                            CreatedDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            ExpiredDateAccessToken = expiredAccessDate,
+                            ExpiredDateRefreshToken = expiredRefreshDate
+                        };
+                        accountTokenRepository.Save(accountTokenWhenRefresh);
+                        accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
                         return (accessToken, refreshToken);
                     }
@@ -454,19 +466,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                         var accessToken = token;
                         var (code, refreshToken, expiredRefreshDate) = CreateRefreshToken(member);
-                        //var accountToken = new AccountToken
-                        //{
-                        //    AccountTokenId = Guid.NewGuid(),
-                        //    AccountID = account.AccountID,
-                        //    AccessToken = accessToken,
-                        //    CodeRefreshToken = code,
-                        //    RefreshToken = refreshToken,
-                        //    CreatedDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        //    ExpiredDateAccessToken = expiredAccessDate,
-                        //    ExpiredDateRefreshToken = expiredRefreshDate
-                        //};
-                        //_accountTokenRepository.Save(accountToken);
-                        //_accountRepository.Update(account);
+                        var accountTokenWhenRefresh = new AccountToken
+                        {
+                            AccountTokenId = Guid.NewGuid(),
+                            AccountID = account.AccountID,
+                            AccessToken = accessToken,
+                            CodeRefreshToken = code,
+                            RefreshToken = refreshToken,
+                            CreatedDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            ExpiredDateAccessToken = expiredAccessDate,
+                            ExpiredDateRefreshToken = expiredRefreshDate
+                        };
+                        accountTokenRepository.Save(accountTokenWhenRefresh);
+                        accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
                         return (accessToken, refreshToken);
                     }
@@ -478,19 +490,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                         var accessToken = token;
                         var (code, refreshToken, expiredRefreshDate) = CreateRefreshTokenForOrganizationManager(organizationManager);
-                        //var accountToken = new AccountToken
-                        //{
-                        //    AccountTokenId = Guid.NewGuid(),
-                        //    AccountID = account.AccountID,
-                        //    AccessToken = accessToken,
-                        //    CodeRefreshToken = code,
-                        //    RefreshToken = refreshToken,
-                        //    CreatedDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        //    ExpiredDateAccessToken = expiredAccessDate,
-                        //    ExpiredDateRefreshToken = expiredRefreshDate
-                        //};
-                        //_accountTokenRepository.Save(accountToken);
-                        //_accountRepository.Update(account);
+                        var accountTokenWhenRefresh = new AccountToken
+                        {
+                            AccountTokenId = Guid.NewGuid(),
+                            AccountID = account.AccountID,
+                            AccessToken = accessToken,
+                            CodeRefreshToken = code,
+                            RefreshToken = refreshToken,
+                            CreatedDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            ExpiredDateAccessToken = expiredAccessDate,
+                            ExpiredDateRefreshToken = expiredRefreshDate
+                        };
+                        accountTokenRepository.Save(accountTokenWhenRefresh);
+                        accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
                         return (accessToken, refreshToken);
                     }
@@ -502,19 +514,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                         var accessToken = token;
                         var (code, refreshToken, expiredRefreshDate) = CreateRefreshTokenForModerator(moderator);
-                        //var accountToken = new AccountToken
-                        //{
-                        //    AccountTokenId = Guid.NewGuid(),
-                        //    AccountID = account.AccountID,
-                        //    AccessToken = accessToken,
-                        //    CodeRefreshToken = code,
-                        //    RefreshToken = refreshToken,
-                        //    CreatedDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        //    ExpiredDateAccessToken = expiredAccessDate,
-                        //    ExpiredDateRefreshToken = expiredRefreshDate
-                        //};
-                        //_accountTokenRepository.Save(accountToken);
-                        //_accountRepository.Update(account);
+                        var accountTokenWhenRefresh = new AccountToken
+                        {
+                            AccountTokenId = Guid.NewGuid(),
+                            AccountID = account.AccountID,
+                            AccessToken = accessToken,
+                            CodeRefreshToken = code,
+                            RefreshToken = refreshToken,
+                            CreatedDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            ExpiredDateAccessToken = expiredAccessDate,
+                            ExpiredDateRefreshToken = expiredRefreshDate
+                        };
+                        accountTokenRepository.Save(accountTokenWhenRefresh);
+                        accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
                         return (accessToken, refreshToken);
                     }
@@ -526,5 +538,43 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 return (null, null);
             }
         }
+
+        private byte[] GetValidBase64Key(string base64Key)
+        {
+            try
+            {
+                return Encoding.UTF8.GetBytes(base64Key);
+            }
+            catch (FormatException)
+            {
+                throw new Exception("The JWT key in the configuration is not a valid Base64 string.");
+            }
+        }
+
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false, // You might want to validate the audience and issuer as well
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)),
+                ValidateLifetime = false // Here we are saying that we don't care about the token's expiration date
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
     }
 }
