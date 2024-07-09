@@ -5,6 +5,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
+using System.Text;
 
 namespace SU24_VMO_API.Services
 {
@@ -89,6 +90,7 @@ namespace SU24_VMO_API.Services
         {
             if (!string.IsNullOrEmpty(activityTitle))
             {
+                string normalizedActivityTitle = activityTitle.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
                 var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
@@ -98,6 +100,8 @@ namespace SU24_VMO_API.Services
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
                         if (processingPhase != null)
                         {
+                            processingPhase.Campaign = null;
+                            processingPhase.Activities = null;
                             var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
                             if (campaign != null && campaign.OrganizationID == null)
                             {
@@ -119,7 +123,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLower().Contains(activityTitle.Trim().ToLower()));
+                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle));
             }
             else
             {
@@ -132,6 +136,8 @@ namespace SU24_VMO_API.Services
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
                         if (processingPhase != null)
                         {
+                            processingPhase.Campaign = null;
+                            processingPhase.Activities = null;
                             var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
                             if (campaign != null && campaign.OrganizationID == null)
                             {
@@ -161,6 +167,7 @@ namespace SU24_VMO_API.Services
         {
             if (!string.IsNullOrEmpty(activityTitle))
             {
+                string normalizedActivityTitle = activityTitle.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
                 var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
@@ -170,6 +177,8 @@ namespace SU24_VMO_API.Services
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
                         if (processingPhase != null)
                         {
+                            processingPhase.Campaign = null;
+                            processingPhase.Activities = null;
                             var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
                             if (campaign != null && campaign.OrganizationID != null)
                             {
@@ -185,7 +194,7 @@ namespace SU24_VMO_API.Services
                                         CreateDate = request.Activity.CreateDate,
                                         Title = request.Activity.Title,
                                         ProcessingPhaseId = request.Activity.ProcessingPhaseId,
-                                        ProcessingPhase = request.Activity.ProcessingPhase,
+                                        ProcessingPhase = processingPhase,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,
@@ -195,7 +204,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLower().Contains(activityTitle.Trim().ToLower()));
+                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle));
             }
             else
             {
@@ -208,6 +217,8 @@ namespace SU24_VMO_API.Services
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
                         if (processingPhase != null)
                         {
+                            processingPhase.Campaign = null;
+                            processingPhase.Activities = null;
                             var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
                             if (campaign != null && campaign.OrganizationID != null)
                             {
@@ -223,7 +234,7 @@ namespace SU24_VMO_API.Services
                                         CreateDate = request.Activity.CreateDate,
                                         Title = request.Activity.Title,
                                         ProcessingPhaseId = request.Activity.ProcessingPhaseId,
-                                        ProcessingPhase = request.Activity.ProcessingPhase,
+                                        ProcessingPhase = processingPhase,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,

@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
+using System.Text;
 
 namespace SU24_VMO_API.Services
 {
@@ -2042,6 +2043,7 @@ namespace SU24_VMO_API.Services
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
+                string normalizedCampaignName = campaignName.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
                 if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("donate-phase".ToLower()))
                 {
                     var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId);
@@ -2080,7 +2082,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("processing-phase".ToLower()))
                 {
@@ -2120,7 +2122,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("statement-phase".ToLower()))
                 {
@@ -2160,7 +2162,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else
                 {
@@ -2302,6 +2304,7 @@ namespace SU24_VMO_API.Services
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
+                string normalizedCampaignName = campaignName.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
                 if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("donate-phase".ToLower()))
                 {
                     var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId);
@@ -2365,7 +2368,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("processing-phase".ToLower()))
                 {
@@ -2429,7 +2432,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else if (!String.IsNullOrEmpty(status) && status.ToLower().Equals("statement-phase".ToLower()))
                 {
@@ -2493,7 +2496,7 @@ namespace SU24_VMO_API.Services
                         if (campaign.StatementPhase != null)
                             campaign.StatementPhase.Campaign = null;
                     }
-                    return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                    return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
                 else
                 {
