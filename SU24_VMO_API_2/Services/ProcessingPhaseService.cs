@@ -5,6 +5,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
+using System.Text;
 
 namespace SU24_VMO_API.Services
 {
@@ -41,7 +42,11 @@ namespace SU24_VMO_API.Services
         public IEnumerable<ProcessingPhase> GetAllProcessingPhasesWithCampaignName(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
-                return repository.GetAll().Where(d => d.Campaign.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+            {
+                string normalizedCampaignName = campaignName.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
+                return repository.GetAll().Where(a => a.Campaign.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
+            }
+
             else return repository.GetAll();
         }
 
