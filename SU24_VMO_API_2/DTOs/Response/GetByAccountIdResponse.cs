@@ -25,6 +25,8 @@ namespace SU24_VMO_API_2.DTOs.Response
         public string? LinkFacebook { get; set; } = default!;
         public string? LinkYoutube { get; set; } = default!;
         public string? LinkTiktok { get; set; } = default!;
+        public int? NumberOfActiveCampaign {  get; set; } = default!;
+        public List<Campaign?> Campaigns { get; set; } = default!;
         public List<Notification>? Notifications { get; set; }
         public List<AccountToken>? AccountTokens { get; set; }
         public List<BankingAccount>? BankingAccounts { get; set; }

@@ -14,6 +14,7 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using SU24_VMO_API_2.DTOs.Response;
+using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -30,13 +31,15 @@ namespace SU24_VMO_API.Services
         private readonly IAdminRepository _adminRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IModeratorRepository _moderatorRepository;
+        private readonly CampaignService _campaignService;
         private readonly JwtTokenSupporter jwtTokenSupporter;
         private readonly FirebaseService firebaseService;
 
 
         public AccountService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository,
             IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository,
-            IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService)
+            IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService, 
+            CampaignService campaignService)
         {
             this.jwtTokenSupporter = jwtTokenSupporter;
             _memberRepository = memberRepository;
@@ -46,6 +49,7 @@ namespace SU24_VMO_API.Services
             _accountRepository = accountRepository;
             _accountTokenRepository = accountTokenRepository;
             this.firebaseService = firebaseService;
+            _campaignService = campaignService;
         }
 
         public IEnumerable<Account> GetAll()
@@ -97,6 +101,7 @@ namespace SU24_VMO_API.Services
             if (account == null) { throw new NotFoundException("Tài khoản không tồn tại!"); }
             float donatedMoney = 0;
             int numberOfDonation = 0;
+            int numberOfActiveCampaign = 0;
 
             if (account != null && account.Transactions != null)
             {
@@ -166,7 +171,11 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = member.FacebookUrl;
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
+
+                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList().Where(c => c.IsActive == true).Count();
                 }
+
             }
             if (account.Role == Role.Volunteer)
             {
@@ -178,6 +187,9 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = member.FacebookUrl;
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
+
+                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList().Where(c => c.IsActive == true).Count();
                 }
             }
             if (account.Role == Role.OrganizationManager)
@@ -190,6 +202,10 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = om.FacebookUrl;
                     response.LinkYoutube = om.YoutubeUrl;
                     response.LinkTiktok = om.TiktokUrl;
+
+
+                    response.Campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList().Where(c => c.IsActive == true).Count();
                 }
             }
 
