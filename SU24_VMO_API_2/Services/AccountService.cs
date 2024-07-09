@@ -38,7 +38,7 @@ namespace SU24_VMO_API.Services
 
         public AccountService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository,
             IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository,
-            IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService, 
+            IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService,
             CampaignService campaignService)
         {
             this.jwtTokenSupporter = jwtTokenSupporter;
@@ -172,8 +172,8 @@ namespace SU24_VMO_API.Services
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
 
-                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
                 }
 
             }
@@ -188,8 +188,8 @@ namespace SU24_VMO_API.Services
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
 
-                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
                 }
             }
             if (account.Role == Role.OrganizationManager)

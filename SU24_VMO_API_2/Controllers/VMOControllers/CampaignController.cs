@@ -524,11 +524,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}")]
-        public IActionResult GetAllCampaignByCreateByVolunteerId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignByCreateByVolunteerId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(memberId);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(memberId, campaignName);
 
                 var response = new ResponseMessage()
                 {
@@ -551,11 +551,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("create-by/volunteer/{memberId}/{phase}/processing-status")]
-        public IActionResult GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid memberId, int? pageSize, int? pageNo, string? phase, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid memberId, int? pageSize, int? pageNo, string? phase, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(memberId, phase);
+                var campaigns = _campaignService.GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(memberId, phase, campaignName);
 
                 var response = new ResponseMessage()
                 {

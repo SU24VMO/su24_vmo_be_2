@@ -85,39 +85,76 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByVolunteer(Guid memberId)
+        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByVolunteer(Guid memberId, string? activityTitle)
         {
-            var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
-            var activities = new List<ActivityResponse?>();
-            foreach (var request in createActivityRequests)
+            if (!string.IsNullOrEmpty(activityTitle))
             {
-                if (request.Activity != null)
+                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
+                var activities = new List<ActivityResponse?>();
+                foreach (var request in createActivityRequests)
                 {
-                    var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
-                    if (processingPhase != null)
+                    if (request.Activity != null)
                     {
-                        var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
-                        if (campaign != null && campaign.OrganizationID == null)
+                        var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                        if (processingPhase != null)
                         {
-                            activities.Add(new ActivityResponse
+                            var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                            if (campaign != null && campaign.OrganizationID == null)
                             {
-                                ActivityId = request.ActivityID,
-                                ActivityImages = request.Activity.ActivityImages,
-                                Content = request.Activity.Content,
-                                IsActive = request.Activity.IsActive,
-                                CreateDate = request.Activity.CreateDate,
-                                Title = request.Activity.Title,
-                                ProcessingPhaseId = request.Activity.ProcessingPhaseId,
-                                ProcessingPhase = request.Activity.ProcessingPhase,
-                                UpdateDate = request.Activity.UpdateDate,
-                                CampaignName = campaign.Name,
-                                OrganizationName = null,
-                            });
+                                activities.Add(new ActivityResponse
+                                {
+                                    ActivityId = request.ActivityID,
+                                    ActivityImages = request.Activity.ActivityImages,
+                                    Content = request.Activity.Content,
+                                    IsActive = request.Activity.IsActive,
+                                    CreateDate = request.Activity.CreateDate,
+                                    Title = request.Activity.Title,
+                                    ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                    ProcessingPhase = request.Activity.ProcessingPhase,
+                                    UpdateDate = request.Activity.UpdateDate,
+                                    CampaignName = campaign.Name,
+                                    OrganizationName = null,
+                                });
+                            }
                         }
                     }
                 }
+                return activities.Where(a => a.Title.ToLower().Contains(activityTitle.Trim().ToLower()));
             }
-            return activities;
+            else
+            {
+                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
+                var activities = new List<ActivityResponse?>();
+                foreach (var request in createActivityRequests)
+                {
+                    if (request.Activity != null)
+                    {
+                        var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
+                        if (processingPhase != null)
+                        {
+                            var campaign = _campaignRepository.GetById(processingPhase.CampaignId);
+                            if (campaign != null && campaign.OrganizationID == null)
+                            {
+                                activities.Add(new ActivityResponse
+                                {
+                                    ActivityId = request.ActivityID,
+                                    ActivityImages = request.Activity.ActivityImages,
+                                    Content = request.Activity.Content,
+                                    IsActive = request.Activity.IsActive,
+                                    CreateDate = request.Activity.CreateDate,
+                                    Title = request.Activity.Title,
+                                    ProcessingPhaseId = request.Activity.ProcessingPhaseId,
+                                    ProcessingPhase = request.Activity.ProcessingPhase,
+                                    UpdateDate = request.Activity.UpdateDate,
+                                    CampaignName = campaign.Name,
+                                    OrganizationName = null,
+                                });
+                            }
+                        }
+                    }
+                }
+                return activities;
+            }
         }
 
         public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByOM(Guid omId, string? activityTitle)

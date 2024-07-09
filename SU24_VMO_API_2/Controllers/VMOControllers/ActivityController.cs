@@ -141,11 +141,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [HttpGet]
         [Route("create-by/volunteer/{memberId}")]
 
-        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllActivityWhichCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? activityTitle)
         {
             try
             {
-                var activities = _activityService.GetAllActivityWhichCreateByVolunteer(memberId);
+                var activities = _activityService.GetAllActivityWhichCreateByVolunteer(memberId, activityTitle);
 
                 var response = new ResponseMessage()
                 {
