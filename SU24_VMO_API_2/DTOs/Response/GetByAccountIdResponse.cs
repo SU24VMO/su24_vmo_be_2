@@ -20,6 +20,11 @@ namespace SU24_VMO_API_2.DTOs.Response
         public Guid? ModifiedBy { get; set; } = default!;
         public float? DonatedMoney { get; set; } = default!;
         public int? NumberOfDonations { get; set; } = default!;
+        public string? FirstName { get; set; } = default!;
+        public string? LastName { get; set; } = default!;
+        public string? LinkFacebook { get; set; } = default!;
+        public string? LinkYoutube { get; set; } = default!;
+        public string? LinkTiktok { get; set; } = default!;
         public List<Notification>? Notifications { get; set; }
         public List<AccountToken>? AccountTokens { get; set; }
         public List<BankingAccount>? BankingAccounts { get; set; }

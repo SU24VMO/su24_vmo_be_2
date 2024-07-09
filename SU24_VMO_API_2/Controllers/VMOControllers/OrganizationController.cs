@@ -45,6 +45,35 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+
+
+        [HttpGet]
+        [Route("{organizationId}")]
+        public IActionResult GetByOrganizationIdResponse(Guid organizationId)
+        {
+            try
+            {
+                var organization = _organizationService.GetOrganizationByOrganizationId(organizationId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = organization
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+
         [HttpGet]
         [Route("all/filter/organization-name")]
         public IActionResult GetAllOrganizationByOrganizationName(string? organizationName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)

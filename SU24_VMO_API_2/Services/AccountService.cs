@@ -155,6 +155,62 @@ namespace SU24_VMO_API.Services
                 }
             }
 
+            if (account.Role == Role.Member)
+            {
+                var member = _memberRepository.GetByAccountId(accountId);
+                if (member != null)
+                {
+                    response.FirstName = member.FirstName;
+                    response.LastName = member.LastName;
+                    response.LinkFacebook = member.FacebookUrl;
+                    response.LinkYoutube = member.YoutubeUrl;
+                    response.LinkTiktok = member.TiktokUrl;
+                }
+            }
+            if (account.Role == Role.Volunteer)
+            {
+                var member = _memberRepository.GetByAccountId(accountId);
+                if (member != null)
+                {
+                    response.FirstName = member.FirstName;
+                    response.LastName = member.LastName;
+                    response.LinkFacebook = member.FacebookUrl;
+                    response.LinkYoutube = member.YoutubeUrl;
+                    response.LinkTiktok = member.TiktokUrl;
+                }
+            }
+            if (account.Role == Role.OrganizationManager)
+            {
+                var om = _organizationManagerRepository.GetByAccountID(accountId);
+                if (om != null)
+                {
+                    response.FirstName = om.FirstName;
+                    response.LastName = om.LastName;
+                    response.LinkFacebook = om.FacebookUrl;
+                    response.LinkYoutube = om.YoutubeUrl;
+                    response.LinkTiktok = om.TiktokUrl;
+                }
+            }
+
+            if (account.Role == Role.Moderator)
+            {
+                var moderator = _moderatorRepository.GetByAccountID(accountId);
+                if (moderator != null)
+                {
+                    response.FirstName = moderator.FirstName;
+                    response.LastName = moderator.LastName;
+                }
+            }
+
+            if (account.Role == Role.Admin)
+            {
+                var admin = _adminRepository.GetByAccountID(accountId);
+                if (admin != null)
+                {
+                    response.FirstName = admin.FirstName;
+                    response.LastName = admin.LastName;
+                }
+            }
 
             return response;
         }

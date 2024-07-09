@@ -50,6 +50,12 @@ namespace SU24_VMO_API.Services
             return organizations;
         }
 
+
+        public Organization? GetOrganizationByOrganizationId(Guid organizationId)
+        {
+            return GetAllOrganizations().FirstOrDefault(o => o.OrganizationID.Equals(organizationId));
+        }
+
         public IEnumerable<Organization> GetAllOrganizationsByOrganizationName(string? organizationName)
         {
             if (!String.IsNullOrEmpty(organizationName))
