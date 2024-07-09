@@ -26,7 +26,15 @@ namespace SU24_VMO_API.Services
             {
                 if (organization.Campaigns != null)
                 {
-                    organization.Campaigns.Clear();
+                    foreach (var campaign in organization.Campaigns)
+                    {
+                        campaign.Transactions = null;
+                        campaign.Organization = null;
+                        campaign.CampaignType = null;
+                        campaign.ProcessingPhase = null;
+                        campaign.DonatePhase = null;
+                        campaign.StatementPhase = null;
+                    }
                 }
                 if (organization.Achievements != null)
                 {
@@ -65,7 +73,15 @@ namespace SU24_VMO_API.Services
                 {
                     if (organization.Campaigns != null)
                     {
-                        organization.Campaigns.Clear();
+                        foreach(var campaign in organization.Campaigns)
+                        {
+                            campaign.Transactions = null;
+                            campaign.Organization = null;
+                            campaign.CampaignType = null;
+                            campaign.ProcessingPhase = null;
+                            campaign.DonatePhase = null;
+                            campaign.StatementPhase = null;
+                        }  
                     }
                     if (organization.Achievements != null)
                     {
