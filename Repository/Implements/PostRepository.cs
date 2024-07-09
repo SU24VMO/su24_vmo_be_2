@@ -38,7 +38,15 @@ namespace Repository.Implements
         }
         public IEnumerable<Post> GetAllPostsByMemberId(Guid userId)
         {
-            throw new NotImplementedException();
+            using var context = new VMODBContext();
+            var createPostRequests = context.CreatePostRequests.Include(a => a.Post).Where(a => a.CreateByMember.Equals(userId)).ToList();
+            var posts = new List<Post>();
+            foreach (var post in createPostRequests)
+            {
+                if (post.Post != null)
+                    posts.Add(post.Post!);
+            }
+            return posts.OrderByDescending(a => a.CreateAt);
         }
 
         public Post? GetById(Guid id)

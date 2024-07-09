@@ -308,12 +308,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("all/member/{memberId}")]
-        public IActionResult GetAllPostsByMemberId(Guid memberId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        [Route("all/volunteer/{volunteerId}")]
+        public IActionResult GetAllPostsByMemberId(Guid volunteerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? title)
         {
             try
             {
-                var posts = _postService.GetAllPostsByMemberId(memberId);
+                var posts = _postService.GetAllPostsByMemberId(volunteerId, title);
 
                 var response = new ResponseMessage()
                 {

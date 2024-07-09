@@ -97,34 +97,67 @@ namespace SU24_VMO_API.Services
 
         }
 
-        public IEnumerable<PostResponse> GetAllPostsByMemberId(Guid memberId)
+        public IEnumerable<PostResponse> GetAllPostsByMemberId(Guid memberId, string? title)
         {
-            var posts = repository.GetAllPostsByMemberId(memberId);
-            var postReponses = new List<PostResponse>();
-
-
-            foreach (var post in posts)
+            if (!String.IsNullOrEmpty(title))
             {
-                if (post.CreatePostRequest != null)
+                var posts = repository.GetAllPostsByMemberId(memberId);
+                var postReponses = new List<PostResponse>();
+
+
+                foreach (var post in posts)
                 {
-                    post.CreatePostRequest = null;
+                    if (post.CreatePostRequest != null)
+                    {
+                        post.CreatePostRequest = null;
+                    }
+                    var member = _memberRepository.GetById(memberId);
+                    postReponses.Add(new PostResponse
+                    {
+                        PostID = post.PostID,
+                        Content = post.Content,
+                        Cover = post.Cover,
+                        CreateAt = post.CreateAt,
+                        Description = post.Description,
+                        Image = post.Image,
+                        IsActive = post.IsActive,
+                        Title = post.Title,
+                        UpdateAt = post.UpdateAt,
+                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
+                    });
                 }
-                var member = _memberRepository.GetById(memberId);
-                postReponses.Add(new PostResponse
-                {
-                    PostID = post.PostID,
-                    Content = post.Content,
-                    Cover = post.Cover,
-                    CreateAt = post.CreateAt,
-                    Description = post.Description,
-                    Image = post.Image,
-                    IsActive = post.IsActive,
-                    Title = post.Title,
-                    UpdateAt = post.UpdateAt,
-                    AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
-                });
+                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
+
             }
-            return postReponses;
+            else
+            {
+                var posts = repository.GetAllPostsByMemberId(memberId);
+                var postReponses = new List<PostResponse>();
+
+
+                foreach (var post in posts)
+                {
+                    if (post.CreatePostRequest != null)
+                    {
+                        post.CreatePostRequest = null;
+                    }
+                    var member = _memberRepository.GetById(memberId);
+                    postReponses.Add(new PostResponse
+                    {
+                        PostID = post.PostID,
+                        Content = post.Content,
+                        Cover = post.Cover,
+                        CreateAt = post.CreateAt,
+                        Description = post.Description,
+                        Image = post.Image,
+                        IsActive = post.IsActive,
+                        Title = post.Title,
+                        UpdateAt = post.UpdateAt,
+                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
+                    });
+                }
+                return postReponses;
+            }
         }
 
         public PostResponse? GetById(Guid id)
