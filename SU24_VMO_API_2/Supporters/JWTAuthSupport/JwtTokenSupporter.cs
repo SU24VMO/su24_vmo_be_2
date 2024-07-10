@@ -20,7 +20,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         IModeratorRepository _moderatorRepository;
 
 
-        public JwtTokenSupporter(IConfiguration config, IMemberRepository memberRepo, IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, 
+        public JwtTokenSupporter(IConfiguration config, IMemberRepository memberRepo, IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository,
             IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository)
         {
             this.config = config;
@@ -44,7 +44,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
                 new Claim("member_id", user.MemberID.ToString()),
@@ -84,7 +84,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
                 new Claim("admin_id", admin.AdminID.ToString()),
@@ -119,7 +119,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
                 new Claim("organization_manager_id", organizationManager.OrganizationManagerID.ToString()),
@@ -160,7 +160,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.SerialNumber, code),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim("moderator_id", requestManager.ModeratorID.ToString()),
@@ -197,7 +197,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
                 new Claim("member_id", user.MemberID.ToString()),
@@ -237,7 +237,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim("admin_id", admin.AdminID.ToString()),
@@ -272,7 +272,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim("organization_manager_id", organizationManager.OrganizationManagerID.ToString()),
@@ -317,7 +317,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 Subject = new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, config["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString()),
                 new Claim(ClaimTypes.SerialNumber, code), // id cho refresh token
                 new Claim(ClaimTypes.Role, account!.Role.ToString()),
                 new Claim("moderator_id", moderator.ModeratorID.ToString()),
