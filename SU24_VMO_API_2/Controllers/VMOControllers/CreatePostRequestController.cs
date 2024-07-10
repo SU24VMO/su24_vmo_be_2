@@ -79,7 +79,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Authorize(Roles = "OrganizationManager")]
+        [Authorize(Roles = "OrganizationManager, Volunteer")]
         [Route("create-new")]
 
         public async Task<IActionResult> CreateCreatePostRequestAsync([FromForm] CreatePostRequestRequest request)

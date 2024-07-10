@@ -5,6 +5,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
 using System.Text.RegularExpressions;
@@ -80,6 +81,53 @@ namespace SU24_VMO_API.Services
         {
             TryValidateRegisterRequest(request);
             if (_memberRepository.GetById(request.MemberID) == null) return null;
+
+            //validation cho email
+            var createVolunteerRequestExisted = _createVolunteerRequestRepository.GetCreateVolunteerRequestsWithEmail(request.Email);
+            if (createVolunteerRequestExisted != null && createVolunteerRequestExisted.Count() > 0)
+            {
+                var listRequestPending = createVolunteerRequestExisted.Where(c => c.IsPending == true);
+                if (listRequestPending.Count() > 0)
+                {
+                    throw new BadRequestException("Đơn tạo tài khoản tình nguyện viên cho tài khoản với email này có vẻ như đã được tạo, vui lòng đợi hệ thống phản hồi!");
+                }
+
+                var listRequestApproved = createVolunteerRequestExisted.Where(c => c.IsApproved == true && c.CreateBy.Equals(request.MemberID));
+                if (listRequestApproved.Count() > 0)
+                {
+                    throw new BadRequestException("Tài khoản này hiện đã trở thành tài khoản tình nguyện viên!");
+                }
+            }
+
+
+            if (createVolunteerRequestExisted != null && createVolunteerRequestExisted.Count() > 0 && createVolunteerRequestExisted.Where(c => c.IsApproved == true).Count() > 0)
+            {
+                throw new BadRequestException("Email này hiện đã được sử dụng! Vui lòng sử dụng email khác!");
+            }
+
+            //validation cho phone number
+            var createVolunteerRequestExistedWithPhoneNumber = _createVolunteerRequestRepository.GetCreateVolunteerRequestsWithPhoneNumber(request.PhoneNumber);
+            if (createVolunteerRequestExistedWithPhoneNumber != null && createVolunteerRequestExistedWithPhoneNumber.Count() > 0)
+            {
+                var listRequestPending = createVolunteerRequestExistedWithPhoneNumber.Where(c => c.IsPending == true);
+                if (listRequestPending.Count() > 0)
+                {
+                    throw new BadRequestException("Đơn tạo tài khoản tình nguyện viên cho tài khoản với số điện thoại này có vẻ như đã được tạo, vui lòng đợi hệ thống phản hồi!");
+                }
+
+                var listRequestApproved = createVolunteerRequestExistedWithPhoneNumber.Where(c => c.IsApproved == true && c.CreateBy.Equals(request.MemberID));
+                if (listRequestApproved.Count() > 0)
+                {
+                    throw new BadRequestException("Tài khoản này hiện đã trở thành tài khoản tình nguyện viên!");
+                }
+            }
+
+
+            if (createVolunteerRequestExistedWithPhoneNumber != null && createVolunteerRequestExistedWithPhoneNumber.Count() > 0 && createVolunteerRequestExistedWithPhoneNumber.Where(c => c.IsApproved == true).Count() > 0)
+            {
+                throw new BadRequestException("Số điện thoại này hiện đã được sử dụng! Vui lòng sử dụng số điện thoại khác!");
+            }
+
             //PasswordUtils.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             var createVolunteerRequest = new CreateVolunteerRequest

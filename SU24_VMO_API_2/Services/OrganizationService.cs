@@ -12,11 +12,14 @@ namespace SU24_VMO_API.Services
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public OrganizationService(IOrganizationRepository organizationRepository, IOrganizationManagerRepository organizationManagerRepository)
+        public OrganizationService(IOrganizationRepository organizationRepository, IOrganizationManagerRepository organizationManagerRepository,
+            IAccountRepository accountRepository)
         {
             _organizationRepository = organizationRepository;
             _organizationManagerRepository = organizationManagerRepository;
+            _accountRepository = accountRepository;
         }
 
         public IEnumerable<Organization> GetAllOrganizations()
@@ -47,6 +50,16 @@ namespace SU24_VMO_API.Services
 
                 if (organization.OrganizationManager != null)
                 {
+                    var account = _accountRepository.GetById(organization.OrganizationManager.AccountID);
+                    if(account != null)
+                    {
+                        account.Notifications = null;
+                        account.BankingAccounts = null;
+                        account.AccountTokens = null;
+                        account.Transactions = null;
+                    }
+                    organization.OrganizationManager.Account = account;
+
                     if (organization.OrganizationManager.CreateCampaignRequests != null)
                         organization.OrganizationManager.CreateCampaignRequests.Clear();
                     if (organization.OrganizationManager.CreateOrganizationRequests != null)
@@ -73,7 +86,7 @@ namespace SU24_VMO_API.Services
                 {
                     if (organization.Campaigns != null)
                     {
-                        foreach(var campaign in organization.Campaigns)
+                        foreach (var campaign in organization.Campaigns)
                         {
                             campaign.Transactions = null;
                             campaign.Organization = null;
@@ -81,7 +94,7 @@ namespace SU24_VMO_API.Services
                             campaign.ProcessingPhase = null;
                             campaign.DonatePhase = null;
                             campaign.StatementPhase = null;
-                        }  
+                        }
                     }
                     if (organization.Achievements != null)
                     {

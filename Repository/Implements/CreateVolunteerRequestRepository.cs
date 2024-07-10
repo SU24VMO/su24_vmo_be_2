@@ -34,6 +34,26 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.CreateVolunteerRequestID.Equals(id));
         }
 
+        public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithEmail(string email)
+        {
+            using var context = new VMODBContext();
+            return context.CreateVolunteerRequests
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(c => c.Email.ToLower().Equals(email.ToLower()));
+        }
+
+        public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithPhoneNumber(string phoneNumber)
+        {
+            using var context = new VMODBContext();
+            return context.CreateVolunteerRequests
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(c => c.PhoneNumber.ToLower().Equals(phoneNumber.ToLower()));
+        }
+
         public CreateVolunteerRequest? Save(CreateVolunteerRequest entity)
         {
             try

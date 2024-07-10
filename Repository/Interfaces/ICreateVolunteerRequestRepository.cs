@@ -9,6 +9,8 @@ namespace Repository.Interfaces
 {
     public interface ICreateVolunteerRequestRepository : ICrudBaseRepository<CreateVolunteerRequest, Guid>
     {
+        public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithEmail(string email);
+        public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithPhoneNumber(string phoneNumber);
 
     }
 }
