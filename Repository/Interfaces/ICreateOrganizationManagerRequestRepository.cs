@@ -9,5 +9,7 @@ namespace Repository.Interfaces
 {
     public interface ICreateOrganizationManagerRequestRepository : ICrudBaseRepository<CreateOrganizationManagerRequest, Guid>
     {
+        public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithEmail(string email);
+        public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithPhoneNumber(string phoneNumber);
     }
 }

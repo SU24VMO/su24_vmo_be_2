@@ -58,8 +58,55 @@ namespace SU24_VMO_API.Services
         public CreateOrganizationManagerRequest? CreateOrganizationManagerVerifiedRequest(CreateOrganizationManagerVerifiedRequest request)
         {
             //    TryValidateRegisterRequest(request);
-            if (_organizationManagerRepository.GetById(request.OrganizationManagerID) == null) return null;
+            var om = _organizationManagerRepository.GetById(request.OrganizationManagerID);
+            if (om == null) throw new NotFoundException("Không tìm thấy quản lý tổ chức!");
             //    //PasswordUtils.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            //validation cho email
+            var createOMRequestExisted = _createOrganizationManagerRequestRepository.GetCreateOrganizationManagerRequestsWithEmail(request.Email);
+            if (createOMRequestExisted != null && createOMRequestExisted.Count() > 0)
+            {
+                var listRequestPending = createOMRequestExisted.Where(c => c.IsPending == true);
+                if (listRequestPending.Count() > 0)
+                {
+                    throw new BadRequestException("Đơn tạo tài khoản quản lý tổ chức xác thực cho tài khoản với email này có vẻ như đã được tạo, vui lòng đợi hệ thống phản hồi!");
+                }
+
+                var listRequestApproved = createOMRequestExisted.Where(c => c.IsApproved == true && c.CreateBy.Equals(om.OrganizationManagerID));
+                if (listRequestApproved.Count() > 0)
+                {
+                    throw new BadRequestException("Tài khoản này hiện đã trở thành tài khoản quản lý tổ chức xác thực!");
+                }
+            }
+
+
+            if (createOMRequestExisted != null && createOMRequestExisted.Count() > 0 && createOMRequestExisted.Where(c => c.IsApproved == true).Count() > 0)
+            {
+                throw new BadRequestException("Email này hiện đã được sử dụng! Vui lòng sử dụng email khác!");
+            }
+
+            //validation cho phone number
+            var createOMRequestExistedWithPhoneNumber = _createOrganizationManagerRequestRepository.GetCreateOrganizationManagerRequestsWithPhoneNumber(request.PhoneNumber);
+            if (createOMRequestExistedWithPhoneNumber != null && createOMRequestExistedWithPhoneNumber.Count() > 0)
+            {
+                var listRequestPending = createOMRequestExistedWithPhoneNumber.Where(c => c.IsPending == true);
+                if (listRequestPending.Count() > 0)
+                {
+                    throw new BadRequestException("Đơn tạo tài khoản quản lý tổ chức xác thực cho tài khoản với số điện thoại này có vẻ như đã được tạo, vui lòng đợi hệ thống phản hồi!");
+                }
+
+                var listRequestApproved = createOMRequestExistedWithPhoneNumber.Where(c => c.IsApproved == true && c.CreateBy.Equals(om.OrganizationManagerID));
+                if (listRequestApproved.Count() > 0)
+                {
+                    throw new BadRequestException("Tài khoản này hiện đã trở thành tài khoản quản lý tổ chức xác thực!");
+                }
+            }
+
+
+            if (createOMRequestExistedWithPhoneNumber != null && createOMRequestExistedWithPhoneNumber.Count() > 0 && createOMRequestExistedWithPhoneNumber.Where(c => c.IsApproved == true).Count() > 0)
+            {
+                throw new BadRequestException("Số điện thoại này hiện đã được sử dụng! Vui lòng sử dụng số điện thoại khác!");
+            }
 
             var createOrganizationVerifiedRequest = new CreateOrganizationManagerRequest
             {

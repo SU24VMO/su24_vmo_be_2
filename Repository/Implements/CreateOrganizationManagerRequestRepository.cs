@@ -34,6 +34,26 @@ namespace Repository.Implements
                     FirstOrDefault(a => a.CreateOrganizationManagerRequestID.Equals(id));
         }
 
+        public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithEmail(string email)
+        {
+            using var context = new VMODBContext();
+            return context.CreateOrganizationManagerRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(c => c.Email.ToLower().Equals(email.ToLower()));
+        }
+
+        public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithPhoneNumber(string phoneNumber)
+        {
+            using var context = new VMODBContext();
+            return context.CreateOrganizationManagerRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(c => c.PhoneNumber.ToLower().Equals(phoneNumber.ToLower()));
+        }
+
         public CreateOrganizationManagerRequest? Save(CreateOrganizationManagerRequest entity)
         {
             using var context = new VMODBContext();
