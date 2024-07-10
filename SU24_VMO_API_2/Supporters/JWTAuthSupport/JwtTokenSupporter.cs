@@ -217,11 +217,11 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                 }),
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
-                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
+                //Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return (code, tokenHandler.WriteToken(token), tokenDescriptor.Expires);
+            return (code, tokenHandler.WriteToken(token), /*tokenDescriptor.Expires*/ null);
         }
 
 
@@ -252,11 +252,11 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
-                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
+                //Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return (code, tokenHandler.WriteToken(token), tokenDescriptor.Expires);
+            return (code, tokenHandler.WriteToken(token), /*tokenDescriptor.Expires*/ null);
         }
 
 
@@ -293,11 +293,11 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
-                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
+                //Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return (code, tokenHandler.WriteToken(token), tokenDescriptor.Expires);
+            return (code, tokenHandler.WriteToken(token), /*tokenDescriptor.Expires*/ null);
         }
 
 
@@ -332,11 +332,11 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
-                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
+                //Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return (code, tokenHandler.WriteToken(token), tokenDescriptor.Expires);
+            return (code, tokenHandler.WriteToken(token), /*tokenDescriptor.Expires*/ null);
         }
 
 
@@ -397,7 +397,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                              IssuerSigningKey = new SymmetricSecurityKey(key),
                              ValidateIssuer = true,
                              ValidateAudience = true,
-                             ValidateLifetime = true,
+                             ValidateLifetime = false,
                              ValidIssuer = config["Jwt:Issuer"],
                              ValidAudience = config["Jwt:Audience"],
                              ValidateIssuerSigningKey = true,
