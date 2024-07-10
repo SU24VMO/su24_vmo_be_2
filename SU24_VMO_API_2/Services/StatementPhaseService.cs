@@ -150,7 +150,7 @@ namespace SU24_VMO_API.Services
                 }
                 else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                    var member = _userRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),
@@ -186,7 +186,7 @@ namespace SU24_VMO_API.Services
                 }
                 else if (createCampaignRequest.CreateByMember != null)
                 {
-                    var member = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                    var member = _userRepository.GetById((Guid)createCampaignRequest.CreateByMember);
                     var notificationCreated = _notificationRepository.Save(new Notification
                     {
                         NotificationID = Guid.NewGuid(),
