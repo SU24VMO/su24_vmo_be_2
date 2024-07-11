@@ -84,7 +84,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpPost]
         [Route("upload")]
-        public async Task<IActionResult> UploadStatementFileAsync(CreateStatementFileRequest request)
+        public async Task<IActionResult> UploadStatementFileAsync([FromForm] CreateStatementFileRequest request)
         {
             try
             {

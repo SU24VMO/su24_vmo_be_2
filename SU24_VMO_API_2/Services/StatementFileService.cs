@@ -38,36 +38,40 @@ namespace SU24_VMO_API.Services
             return _statementFileRepository.GetById(id);
         }
 
-        public async Task<StatementFile?> UploadStatementFileAsync(CreateStatementFileRequest request)
+        public async Task<List<StatementFile>> UploadStatementFileAsync(CreateStatementFileRequest request)
         {
             var statementPhase = _statementPhaseRepository.GetById(request.StatementPhaseId);
             if (statementPhase == null) throw new NotFoundException("Statement Phase not found!");
             var account = _accountRepository.GetById(request.AccountId);
             if (account == null) throw new NotFoundException("Account not found!");
+            var listStatementFile = new List<StatementFile>();
 
-            var statementFile = new StatementFile
+            foreach (var statementFile in request.StatementFile)
             {
-                StatementFileId = Guid.NewGuid(),
-                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                StatementPhaseId = statementPhase.StatementPhaseId,
-                CreateBy = account.AccountID,
-                Link = await _firebaseService.UploadImage(request.StatementFile)
-            };
-            var statementFileCreated = _statementFileRepository.Save(statementFile);
-            if(statementFileCreated != null)
-            {
-                var notification = new Notification
+                var statementFileCreate = new StatementFile
                 {
-                    NotificationID = Guid.NewGuid(),
-                    NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                    StatementFileId = Guid.NewGuid(),
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                    IsSeen = false,
-                    AccountID = account.AccountID,
-                    Content = "Bạn vừa tải lên thành công bản sao kê!"
+                    StatementPhaseId = statementPhase.StatementPhaseId,
+                    CreateBy = request.AccountId,
+                    Link = await _firebaseService.UploadImage(statementFile)
                 };
-                _notificationRepository.Save(notification);
+
+                var statementFileCreated = _statementFileRepository.Save(statementFileCreate);
+                listStatementFile.Add(statementFileCreate);
             }
-            return statementFileCreated;
+
+            var notification = new Notification
+            {
+                NotificationID = Guid.NewGuid(),
+                NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                IsSeen = false,
+                AccountID = account.AccountID,
+                Content = "Bạn vừa tải lên thành công bản sao kê!",
+            };
+            _notificationRepository.Save(notification);
+            return listStatementFile;
         }
 
         public void Update(StatementFile entity)
