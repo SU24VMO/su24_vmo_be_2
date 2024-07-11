@@ -49,18 +49,130 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Transaction>? GetAllTransactions()
+        public IEnumerable<Transaction> GetAllTransactions()
         {
             var trans = _transactionRepository.GetAll();
             foreach (var transaction in trans)
             {
-                if (transaction != null && transaction.Account != null) transaction.Account = null;
+                if (transaction != null && transaction.Account != null)
+                {
+                    transaction.Account.BankingAccounts = null;
+                    transaction.Account.AccountTokens = null;
+                    transaction.Account.Notifications = null;
+                    transaction.Account.Transactions = null;
+                }
                 if (transaction != null && transaction.BankingAccount != null) transaction.BankingAccount = null;
                 if (transaction != null && transaction.Campaign != null && transaction.Campaign.Transactions != null) transaction.Campaign.Transactions = null;
 
             }
             return trans;
         }
+
+
+        public IEnumerable<TransactionResponse> GetAllNumberRecentlyTransactions(int? numberOfTransaction)
+        {
+            if (numberOfTransaction != null)
+            {
+                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success)
+                .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
+                .Take((int)numberOfTransaction) // Take the top 6 transactions
+                .ToList(); // Convert to a list if needed;
+                var transReponse = new List<TransactionResponse>();
+                if (trans != null)
+                {
+                    foreach (var tran in trans)
+                    {
+                        transReponse.Add(new TransactionResponse
+                        {
+                            AccountId = tran.AccountId,
+                            Amount = tran.Amount,
+                            Avatar = tran.Account != null ? tran.Account.Avatar : "Không có ảnh đại diện",
+                            BankingAccountID = tran.BankingAccountID,
+                            CampaignID = tran.CampaignID,
+                            CreateDate = tran.CreateDate,
+                            IsIncognito = tran.IsIncognito,
+                            OrderId = tran.OrderId,
+                            Note = tran.Note,
+                            TransactionID = tran.TransactionID,
+                            PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
+                            TransactionQRImageUrl = tran.TransactionQRImageUrl,
+                            TransactionType = tran.TransactionType,
+                            TransactionStatus = tran.TransactionStatus,
+                            DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
+                            DonateStatus = "Vừa ủng hộ"
+                        });
+                    }
+                }
+                return transReponse;
+            }
+            else
+            {
+                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success)
+                .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
+                .Take(6) // Take the top 6 transactions
+                .ToList(); // Convert to a list if needed;
+                var transReponse = new List<TransactionResponse>();
+                if (trans != null)
+                {
+                    foreach (var tran in trans)
+                    {
+                        transReponse.Add(new TransactionResponse
+                        {
+                            AccountId = tran.AccountId,
+                            Amount = tran.Amount,
+                            Avatar = tran.Account != null ? tran.Account.Avatar : "Không có ảnh đại diện",
+                            BankingAccountID = tran.BankingAccountID,
+                            CampaignID = tran.CampaignID,
+                            CreateDate = tran.CreateDate,
+                            IsIncognito = tran.IsIncognito,
+                            OrderId = tran.OrderId,
+                            Note = tran.Note,
+                            TransactionID = tran.TransactionID,
+                            PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
+                            TransactionQRImageUrl = tran.TransactionQRImageUrl,
+                            TransactionType = tran.TransactionType,
+                            TransactionStatus = tran.TransactionStatus,
+                            DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
+                            DonateStatus = "Vừa ủng hộ"
+                        });
+                    }
+                }
+                return transReponse;
+            }
+
+        }
+
+        public static string CalculateDonationPeriod(DateTime createDate)
+        {
+            var timeSpan = TimeHelper.GetTime(DateTime.Now) - createDate;
+            if (timeSpan.TotalSeconds < 60)
+            {
+                return "Vừa mới đây";
+            }
+            if (timeSpan.TotalMinutes < 60)
+            {
+                return $"{(int)timeSpan.TotalMinutes} phút trước";
+            }
+            if (timeSpan.TotalHours < 24)
+            {
+                return $"{(int)timeSpan.TotalHours} giờ trước";
+            }
+            if (timeSpan.TotalDays < 7)
+            {
+                return $"{(int)timeSpan.TotalDays} ngày trước";
+            }
+            if (timeSpan.TotalDays < 30)
+            {
+                return $"{(int)timeSpan.TotalDays / 7} tuần trước";
+            }
+            if (timeSpan.TotalDays < 365)
+            {
+                return $"{(int)timeSpan.TotalDays / 30} tháng trước";
+            }
+            return $"{(int)timeSpan.TotalDays / 365} năm trước";
+        }
+
+
 
 
         public async Task<CreateTransactionResponse?> CreateTransactionAsync(CreateTransactionRequest createTransactionRequest)
@@ -393,13 +505,13 @@ namespace SU24_VMO_API.Services
             if (listDataPayos != null)
             {
                 if (listDataPayos.data == null) throw new BadRequestException("Danh sách data của payos bị trống");
-                    foreach (var item in listDataPayos.data.orders)
+                foreach (var item in listDataPayos.data.orders)
+                {
+                    if (item.order_code == orderId)
                     {
-                        if (item.order_code == orderId)
-                        {
-                            return item.status;
-                        }
+                        return item.status;
                     }
+                }
             }
             return null;
         }
@@ -431,7 +543,7 @@ namespace SU24_VMO_API.Services
 
 
                     var campaign = _campaignRepository.GetById(transaction.CampaignID);
-                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign!= null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
+                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
 
                     _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(transaction.CampaignID, transaction.Amount);
                     _transactionRepository.Update(transaction);

@@ -6,6 +6,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.Constants;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.EmailSupporter;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.JWTAuthSupport;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
@@ -113,6 +114,16 @@ namespace SU24_VMO_API.Services
                 return null;
             }
             return EmailSupporter.SendEmailForResetPassword(email);
+        }
+
+        public async Task<string?> SendOTPWhenCreateNewUser(string email)
+        {
+            //var account = _accountRepository.GetByEmail(email);
+            //if (account != null)
+            //{
+            //    throw new BadRequestException("Email was existed!");
+            //}
+            return await EmailSupporter.SendOTPForCreateNewUser(email);
         }
 
 

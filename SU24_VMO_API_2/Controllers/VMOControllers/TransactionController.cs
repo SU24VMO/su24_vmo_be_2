@@ -22,14 +22,17 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         private readonly TransactionService _transactionService;
         private readonly PaginationService<Transaction> _paginationService;
         private readonly PaginationService<TransactionWithCampaignNameResponse> _paginationService2;
+        private readonly PaginationService<TransactionResponse> _paginationService3;
 
 
-        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService, 
-            PaginationService<TransactionWithCampaignNameResponse> paginationService2)
+
+        public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService,
+            PaginationService<TransactionWithCampaignNameResponse> paginationService2, PaginationService<TransactionResponse> paginationService3)
         {
             _transactionService = transactionService;
             _paginationService = paginationService;
             _paginationService2 = paginationService2;
+            _paginationService3 = paginationService3;
         }
 
 
@@ -92,6 +95,68 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return StatusCode(500, response); // Internal Server Error
             }
         }
+
+
+        [HttpGet]
+        [Route("all/recently-transaction")]
+        public IActionResult GetAllNumberRecentlyTransactions(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, int? numberOfTransaction)
+        {
+            try
+            {
+                var transactions = _transactionService.GetAllNumberRecentlyTransactions(numberOfTransaction);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService3.PaginateList(transactions!, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"Database error: {dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {argEx.ParamName} cannot be null."
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
 
         [HttpGet]
         [Route("history-transaction/account/{accountId}")]
@@ -160,11 +225,15 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 var paymentLinkInformation = await _transactionService.CheckTransactionAsync(orderId);
+                var name = "TÊN NGƯỜI ỦNG HỘ ĐANG ĐƯỢC CHỜ XỬ LÝ";
                 if (paymentLinkInformation != null)
                 {
+                    var payerName = (paymentLinkInformation.transactions != null && paymentLinkInformation.transactions.FirstOrDefault() != null)
+                            ? paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName
+                            : name;
                     return Ok(new ResponseMessage
                     {
-                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}, Payer name: {paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName}",
+                        Message = $"Check successfully! Transaction status: {paymentLinkInformation.status}, Payer name: {payerName}",
                         Data = paymentLinkInformation.status
                     });
                 }
