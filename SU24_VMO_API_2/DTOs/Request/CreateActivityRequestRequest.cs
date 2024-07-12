@@ -6,7 +6,7 @@
         public string Title { get; set; } = default!;
         public string Content { get; set; } = default!;
         public Guid AccountId { get; set; } = default!;
-        public IFormFile[]? ActivityImages { get; set; } = default!;
+        public List<IFormFile>? ActivityImages { get; set; } = default!;
 
     }
 }

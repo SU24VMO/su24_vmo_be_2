@@ -8,7 +8,7 @@ namespace SU24_VMO_API.DTOs.Request
         [Required]
         public Guid StatementPhaseId { get; set; } = default!;
         [Required]
-        public IFormFile[] StatementFile { get; set; } = default!;
+        public List<IFormFile> StatementFile { get; set; } = default!;
         [Required]
         public Guid AccountId { get; set; } = default!;
     }
