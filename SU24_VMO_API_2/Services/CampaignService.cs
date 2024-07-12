@@ -25,11 +25,13 @@ namespace SU24_VMO_API.Services
         private readonly IOrganizationRepository _organizationRepository;
         private readonly FirebaseService _firebaseService;
         private readonly ActivityService _activityService;
+        private readonly StatementFileService _statementFileService;
 
         public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository)
+            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
+            StatementFileService statementFileService)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -43,6 +45,7 @@ namespace SU24_VMO_API.Services
             _organizationManagerRepository = organizationManagerRepository;
             _activityService = activityService;
             _activityImageRepository = activityImageRepository;
+            _statementFileService = statementFileService;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -127,8 +130,17 @@ namespace SU24_VMO_API.Services
 
             if (campaign != null && campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
             if (campaign != null && campaign.ProcessingPhase != null) campaign.ProcessingPhase.Campaign = null;
-            if (campaign != null && campaign.StatementPhase != null) campaign.StatementPhase.Campaign = null;
-
+            if (campaign != null && campaign.StatementPhase != null)
+            {
+                campaign.StatementPhase.Campaign = null;
+                var statementFiles = _statementFileService.GetAll()
+                    .Where(s => s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                foreach (var statementFile in statementFiles)
+                {
+                    statementFile.StatementPhase = null;
+                }
+                campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+            }
             if (campaign != null)
             {
                 campaignResponse = new CampaignResponse
