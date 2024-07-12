@@ -1842,7 +1842,7 @@ namespace SU24_VMO_API.Services
                     listCampaignsResponse.Add(response);
                 }
             }
-            return listCampaignsResponse;
+            return listCampaignsResponse.Where(c => c.DonatePhase != null && c.DonatePhase.IsProcessing == true);
         }
 
 
