@@ -114,6 +114,7 @@ namespace SU24_VMO_API.Services
                 OrganizationManagerID = request.OrganizationManagerID,
                 Name = request.Name,
                 Address = request.Address,
+                Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 PersonalTaxCode = request.PersonalTaxCode,
                 CitizenIdentification = request.CitizenIdentification,

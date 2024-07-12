@@ -235,11 +235,19 @@ namespace SU24_VMO_API.Services
                 donatePhase.CurrentMoney = currentValue.ToString();
                 donatePhase.Percent = percent;
 
-                if (currentValue == double.Parse(campaign.TargetAmount))
+                if (currentValue >= double.Parse(campaign.TargetAmount))
                 {
                     campaign.CanBeDonated = false;
                     donatePhase.IsEnd = true;
+                    donatePhase.IsLocked = true;
                     donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                    var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId);
+                    if (processingPhase != null)
+                    {
+                        processingPhase.IsProcessing = true;
+                        _processingPhaseRepository.Update(processingPhase);
+                    }
                     _campaignRepository.Update(campaign);
                 }
                 _repository.Update(donatePhase);
