@@ -148,7 +148,7 @@ namespace SU24_VMO_API.Controllers
         {
             try
             {
-                var result = await _memberService.SendOTPWhenCreateNewUser(request.Email);
+                var result = await _memberService.SendOTPWhenCreateNewUser(request);
                 var response = new ResponseMessage()
                 {
                     Message = "Send successfully!",

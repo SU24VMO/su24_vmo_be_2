@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
 using Microsoft.AspNetCore.Authentication.Google;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.Constants;
@@ -116,14 +117,10 @@ namespace SU24_VMO_API.Services
             return EmailSupporter.SendEmailForResetPassword(email);
         }
 
-        public async Task<string?> SendOTPWhenCreateNewUser(string email)
+        public async Task<string?> SendOTPWhenCreateNewUser(CreateMemberRequest request)
         {
-            //var account = _accountRepository.GetByEmail(email);
-            //if (account != null)
-            //{
-            //    throw new BadRequestException("Email was existed!");
-            //}
-            return await EmailSupporter.SendOTPForCreateNewUser(email);
+            TryValidateRegisterRequest(request);
+            return await EmailSupporter.SendOTPForCreateNewUser(request.Email);
         }
 
 
