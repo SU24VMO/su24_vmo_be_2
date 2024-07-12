@@ -289,7 +289,10 @@ namespace SU24_VMO_API.Services
 
                 if (transaction != null)
                 {
-                    transaction.PayerName = request.FirstName + " " + request.LastName;
+                    if (!transaction.IsIncognito)
+                    {
+                        transaction.PayerName = request.FirstName + " " + request.LastName;
+                    }
                     transaction.TransactionStatus = TransactionStatus.Success;
                     _transactionRepository.Update(transaction);
 
@@ -537,7 +540,10 @@ namespace SU24_VMO_API.Services
 
                 if (transaction != null)
                 {
-                    transaction.PayerName = request.FirstName.ToUpper() + " " + request.LastName.ToUpper();
+                    if (!transaction.IsIncognito)
+                    {
+                        transaction.PayerName = request.FirstName.ToUpper() + " " + request.LastName.ToUpper();
+                    }
                     transaction.TransactionStatus = TransactionStatus.Success;
                     _transactionRepository.Update(transaction);
 
