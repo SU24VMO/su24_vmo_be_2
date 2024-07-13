@@ -202,6 +202,8 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                 {
                     statementPhase = campaign.StatementPhase;
+                    statementPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     statementPhase.IsProcessing = true;
                     statementPhase.IsLocked = false;
                     statementPhase.IsEnd = false;
@@ -249,6 +251,8 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                 {
                     statementPhase = campaign.StatementPhase;
+                    statementPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     statementPhase.IsProcessing = false;
                     statementPhase.IsLocked = false;
                     statementPhase.IsEnd = false;
