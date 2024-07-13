@@ -11,6 +11,7 @@ namespace SU24_VMO_API.Services
     public class StatementPhaseService
     {
         private readonly IStatementPhaseRepository _repository;
+        private readonly IStatementFileRepository _statementFileRepository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly IMemberRepository _userRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
@@ -20,7 +21,8 @@ namespace SU24_VMO_API.Services
 
         public StatementPhaseService(IStatementPhaseRepository repository, ICampaignRepository campaignRepository,
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationManagerRepository organizationManagerRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IMemberRepository userRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IMemberRepository userRepository,
+            IStatementFileRepository statementFileRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -29,6 +31,7 @@ namespace SU24_VMO_API.Services
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
             _userRepository = userRepository;
+            _statementFileRepository = statementFileRepository;
         }
 
         public IEnumerable<StatementPhase> GetAll()
@@ -67,7 +70,16 @@ namespace SU24_VMO_API.Services
             {
                 var statementPhase = _repository.GetStatementPhaseByCampaignId(item.CampaignID);
                 if (statementPhase != null)
+                {
                     listStatementPhase.Add(statementPhase);
+                    var statementFiles = _statementFileRepository.GetAll().Where(s => s.StatementPhaseId.Equals(statementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    statementPhase.StatementFiles = statementFiles.ToList();
+                }
+
             }
             return listStatementPhase;
         }
@@ -90,7 +102,15 @@ namespace SU24_VMO_API.Services
             {
                 var statementPhase = _repository.GetStatementPhaseByCampaignId(item.CampaignID);
                 if (statementPhase != null)
+                {
                     listStatementPhase.Add(statementPhase);
+                    var statementFiles = _statementFileRepository.GetAll().Where(s => s.StatementPhaseId.Equals(statementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    statementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return listStatementPhase;
         }

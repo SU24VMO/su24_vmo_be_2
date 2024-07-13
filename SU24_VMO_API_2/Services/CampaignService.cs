@@ -22,6 +22,7 @@ namespace SU24_VMO_API.Services
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly IStatementPhaseRepository _statementPhaseRepository;
+        private readonly IStatementFileRepository _statementFileRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly FirebaseService _firebaseService;
         private readonly ActivityService _activityService;
@@ -31,7 +32,7 @@ namespace SU24_VMO_API.Services
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
-            StatementFileService statementFileService)
+            StatementFileService statementFileService, IStatementFileRepository statementFileRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -46,6 +47,7 @@ namespace SU24_VMO_API.Services
             _activityService = activityService;
             _activityImageRepository = activityImageRepository;
             _statementFileService = statementFileService;
+            _statementFileRepository = statementFileRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -397,7 +399,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -1872,7 +1883,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -1907,7 +1927,16 @@ namespace SU24_VMO_API.Services
                     if (campaign.ProcessingPhase != null)
                         campaign.ProcessingPhase.Campaign = null;
                     if (campaign.StatementPhase != null)
+                    {
                         campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
                 }
                 return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
             }
@@ -1939,7 +1968,16 @@ namespace SU24_VMO_API.Services
                     if (campaign.ProcessingPhase != null)
                         campaign.ProcessingPhase.Campaign = null;
                     if (campaign.StatementPhase != null)
+                    {
                         campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
                 }
                 return campaigns;
             }
@@ -1974,7 +2012,16 @@ namespace SU24_VMO_API.Services
                     if (campaign.ProcessingPhase != null)
                         campaign.ProcessingPhase.Campaign = null;
                     if (campaign.StatementPhase != null)
+                    {
                         campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
                 }
                 return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
             }
@@ -2001,7 +2048,16 @@ namespace SU24_VMO_API.Services
                     if (campaign.ProcessingPhase != null)
                         campaign.ProcessingPhase.Campaign = null;
                     if (campaign.StatementPhase != null)
+                    {
                         campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
                 }
                 return campaigns;
             }
@@ -2045,7 +2101,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -2092,7 +2157,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2132,7 +2206,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2172,7 +2255,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2219,7 +2311,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2259,7 +2360,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2299,7 +2409,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2378,7 +2497,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2442,7 +2570,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2506,7 +2643,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
                 }
@@ -2578,7 +2724,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2642,7 +2797,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2706,7 +2870,16 @@ namespace SU24_VMO_API.Services
                         if (campaign.ProcessingPhase != null)
                             campaign.ProcessingPhase.Campaign = null;
                         if (campaign.StatementPhase != null)
+                        {
                             campaign.StatementPhase.Campaign = null;
+                            var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                                s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                            foreach (var statementFile in statementFiles)
+                            {
+                                statementFile.StatementPhase = null;
+                            }
+                            campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
                     }
                     return campaigns;
                 }
@@ -2777,7 +2950,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -2819,7 +3001,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -2885,7 +3076,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
@@ -2929,7 +3129,16 @@ namespace SU24_VMO_API.Services
                 if (campaign.ProcessingPhase != null)
                     campaign.ProcessingPhase.Campaign = null;
                 if (campaign.StatementPhase != null)
+                {
                     campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
