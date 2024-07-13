@@ -3200,6 +3200,17 @@ namespace SU24_VMO_API.Services
                     campaign.Organization.OrganizationManager = null;
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
+                if (campaign.StatementPhase != null)
+                {
+                    campaign.StatementPhase.Campaign = null;
+                    var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                        s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                    foreach (var statementFile in statementFiles)
+                    {
+                        statementFile.StatementPhase = null;
+                    }
+                    campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
             }
             return campaigns;
         }
