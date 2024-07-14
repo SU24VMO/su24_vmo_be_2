@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "Member")]
         [Route("create-new")]
 
-        public IActionResult Create(CreateVolunteerAccountRequest request)
+        public IActionResult CreateVolunteerRequest(CreateVolunteerAccountRequest request)
         {
             try
             {

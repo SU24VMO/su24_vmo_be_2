@@ -8,6 +8,8 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
 using System.Text;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -55,7 +57,7 @@ namespace SU24_VMO_API.Services
             var campaign = _campaignRepository.GetById(campaignId);
             if (campaign == null)
             {
-                throw new Exception("Campaign not found!");
+                throw new NotFoundException("Campaign not found!");
             }
 
             if (!String.IsNullOrEmpty(request.Name))
@@ -110,6 +112,27 @@ namespace SU24_VMO_API.Services
         }
         public void UpdateCampaign(Campaign campaign)
         {
+            _campaignRepository.Update(campaign);
+
+        }
+
+        public void UpdateStatusCampaign(UpdateCampaignStatusRequest request)
+        {
+            var campaign = _campaignRepository.GetById(campaignId);
+            if (campaign == null)
+            {
+                throw new NotFoundException("Campaign not found!");
+            }
+
+            if (request.IsEnd)
+            {
+                campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+                campaign.IsActive = false;
+                campaign.IsModify = true;
+                campaign.IsComplete = true;
+                campaign.CanBeDonated = false;
+            }
             _campaignRepository.Update(campaign);
 
         }

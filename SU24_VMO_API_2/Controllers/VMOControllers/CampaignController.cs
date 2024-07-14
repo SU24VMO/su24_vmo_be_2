@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
+using SU24_VMO_API_2.DTOs.Request;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Collections.Generic;
 
@@ -690,6 +691,29 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 _campaignService.UpdateCampaignRequest(campaignId, request);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("update/status")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
+        public IActionResult UpdateStatusCampaign(UpdateCampaignStatusRequest request)
+        {
+            try
+            {
+                _campaignService.UpdateStatusCampaign(request);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",

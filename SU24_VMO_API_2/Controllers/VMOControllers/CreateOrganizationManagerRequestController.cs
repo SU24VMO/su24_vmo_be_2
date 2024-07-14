@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager")]
         [Route("create-new")]
 
-        public IActionResult Create(CreateOrganizationManagerVerifiedRequest request)
+        public IActionResult CreateOrganizationManagerVerifiedRequest(CreateOrganizationManagerVerifiedRequest request)
         {
             try
             {
