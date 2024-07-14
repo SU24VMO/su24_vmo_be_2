@@ -118,7 +118,7 @@ namespace SU24_VMO_API.Services
 
         public void UpdateStatusCampaign(UpdateCampaignStatusRequest request)
         {
-            var campaign = _campaignRepository.GetById(campaignId);
+            var campaign = _campaignRepository.GetById(request.CampaignId);
             if (campaign == null)
             {
                 throw new NotFoundException("Campaign not found!");

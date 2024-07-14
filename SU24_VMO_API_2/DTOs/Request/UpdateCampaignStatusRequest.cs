@@ -2,7 +2,7 @@
 {
     public class UpdateCampaignStatusRequest
     {
-        public string? CampaignId { get; set; } = default!;
+        public Guid CampaignId { get; set; } = default!;
         public bool IsEnd { get; set; } = default!;
     }
 }
