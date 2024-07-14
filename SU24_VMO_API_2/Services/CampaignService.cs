@@ -60,9 +60,28 @@ namespace SU24_VMO_API.Services
                 throw new NotFoundException("Campaign not found!");
             }
 
+            var campaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaignId);
+            if (campaignRequest != null)
+            {
+                if (campaignRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin của chiến dịch này không thể chỉnh sửa!");
+            }
+
+            if (request.OrganizationID != null)
+            {
+                var organization = _organizationRepository.GetById((Guid)request.OrganizationID);
+                if (organization == null) throw new NotFoundException("Tổ chức không tồn tại!");
+                campaign.OrganizationID = request.OrganizationID;
+            }
+
             if (!String.IsNullOrEmpty(request.Name))
             {
                 campaign.Name = request.Name;
+            }
+            if (request.StartDate != null)
+            {
+                campaign.StartDate = request.StartDate;
             }
 
             if (!String.IsNullOrEmpty(request.Address))
