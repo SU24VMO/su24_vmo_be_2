@@ -19,6 +19,7 @@ namespace SU24_VMO_API.Services
         private readonly ICampaignTypeRepository _campaignTypeRepository;
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly IMemberRepository _userRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IActivityImageRepository _activityImageRepository;
@@ -34,7 +35,7 @@ namespace SU24_VMO_API.Services
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
-            StatementFileService statementFileService, IStatementFileRepository statementFileRepository)
+            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -50,6 +51,7 @@ namespace SU24_VMO_API.Services
             _activityImageRepository = activityImageRepository;
             _statementFileService = statementFileService;
             _statementFileRepository = statementFileRepository;
+            _accountRepository = accountRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -141,6 +143,13 @@ namespace SU24_VMO_API.Services
             if (campaign == null)
             {
                 throw new NotFoundException("Campaign not found!");
+            }
+            var campaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(request.CampaignId);
+            if (campaignRequest != null)
+            {
+                if (campaignRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin của chiến dịch này không thể chỉnh sửa!");
             }
 
             if (request.IsEnd)

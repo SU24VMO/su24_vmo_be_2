@@ -1,10 +1,13 @@
 ﻿using BusinessObject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Request;
 using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
@@ -373,6 +376,53 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 };
                 // Log the exception details here if necessary
                 return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpPut("update")]
+        [Authorize(Roles = "Volunteer, OrganizationManager")]
+        public IActionResult UpdatePostRequest(Guid postId, [FromForm] UpdatePostRequest request)
+        {
+            try
+            {
+                _postService.UpdateUpdatePostRequest(postId, request);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("update/status")]
+        [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
+        public IActionResult UpdateStatusPost(UpdatePostStatusRequest request)
+        {
+            try
+            {
+                _postService.UpdatePostStatusRequest(request);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
             }
         }
     }

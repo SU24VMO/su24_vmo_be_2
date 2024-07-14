@@ -66,5 +66,16 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public CreatePostRequest GetCreatePostRequestByPostId(Guid postId)
+        {
+            using var context = new VMODBContext();
+            return context.CreatePostRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Post)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList()
+                .FirstOrDefault(a => a.PostID.Equals(postId));
+        }
     }
 }

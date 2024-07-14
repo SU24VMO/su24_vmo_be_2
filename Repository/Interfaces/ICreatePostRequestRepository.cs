@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface ICreatePostRequestRepository : ICrudBaseRepository<CreatePostRequest, Guid>
     {
+        public CreatePostRequest GetCreatePostRequestByPostId(Guid postId);
     }
 }

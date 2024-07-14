@@ -1,9 +1,12 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
+using Microsoft.AspNetCore.Mvc;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
@@ -13,15 +16,20 @@ namespace SU24_VMO_API.Services
         private readonly IPostRepository repository;
         private readonly IMemberRepository _memberRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly ICreatePostRequestRepository _createPostRequestRepository;
         private readonly FirebaseService _firebaseService;
 
         public PostService(IPostRepository repository, FirebaseService firebaseService, IMemberRepository memberRepository,
-            IOrganizationManagerRepository organizationManagerRepository)
+            IOrganizationManagerRepository organizationManagerRepository, ICreatePostRequestRepository createPostRequestRepository,
+            IAccountRepository accountRepository)
         {
             this.repository = repository;
             _firebaseService = firebaseService;
             _memberRepository = memberRepository;
             _organizationManagerRepository = organizationManagerRepository;
+            _createPostRequestRepository = createPostRequestRepository;
+            _accountRepository = accountRepository;
         }
 
         public IEnumerable<Post> GetAllPosts()
@@ -205,11 +213,17 @@ namespace SU24_VMO_API.Services
             return repository.Save(post);
         }
 
-        public async void UpdateUpdatePostRequest(UpdatePostRequest request)
+        public async void UpdateUpdatePostRequest(Guid postId, UpdatePostRequest request)
         {
-            var post = repository.GetById(request.PostId);
+            var post = repository.GetById(postId);
             if (post != null)
             {
+                var postRequest = _createPostRequestRepository.GetCreatePostRequestByPostId(postId);
+                if (postRequest != null)
+                {
+                    if (postRequest.IsApproved) throw new BadRequestException("Bài viết này hiện đã được duyệt, vì vậy mọi thông tin của bài viết này không thể chỉnh sửa!");
+                }
+
                 if (request.Cover != null)
                 {
                     post.Cover = await _firebaseService.UploadImage(request.Cover);
@@ -226,6 +240,28 @@ namespace SU24_VMO_API.Services
                 {
                     post.Image = await _firebaseService.UploadImage(request.Image);
                 }
+                if (!String.IsNullOrEmpty(request.Description))
+                {
+                    post.Description = request.Description;
+                }
+                repository.Update(post);
+            }
+        }
+
+        public void UpdatePostStatusRequest(UpdatePostStatusRequest request)
+        {
+            var post = repository.GetById(request.PostId);
+            if (post != null)
+            {
+                var account = _accountRepository.GetById(request.AccountId);
+                if (account.Role != Role.Moderator)
+                {
+                    throw new BadRequestException("Tài khoản không được phép sử dụng tính năng này!");
+                }
+
+                if (!request.IsActive)
+                    post.IsActive = false;
+                post.UpdateAt = TimeHelper.GetTime(DateTime.UtcNow);
                 repository.Update(post);
             }
         }
