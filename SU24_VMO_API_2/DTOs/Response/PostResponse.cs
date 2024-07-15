@@ -1,4 +1,6 @@
-﻿namespace SU24_VMO_API_2.DTOs.Response
+﻿using BusinessObject.Models;
+
+namespace SU24_VMO_API_2.DTOs.Response
 {
     public class PostResponse
     {
@@ -12,5 +14,7 @@
         public bool IsActive { get; set; } = default!;
         public DateTime CreateAt { get; set; } = default!;
         public DateTime? UpdateAt { get; set; } = default!;
+        public CreatePostRequest? CreatePostRequest { get; set; }
+
     }
 }

@@ -120,6 +120,7 @@ namespace SU24_VMO_API.Services
                                     UpdateDate = request.Activity.UpdateDate,
                                     CampaignName = campaign.Name,
                                     OrganizationName = null,
+                                    CreateActivityRequest = request
                                 });
                             }
                         }
@@ -156,6 +157,7 @@ namespace SU24_VMO_API.Services
                                     UpdateDate = request.Activity.UpdateDate,
                                     CampaignName = campaign.Name,
                                     OrganizationName = null,
+                                    CreateActivityRequest = request
                                 });
                             }
                         }
@@ -200,6 +202,7 @@ namespace SU24_VMO_API.Services
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,
+                                        CreateActivityRequest = request
                                     });
                                 }
                             }
@@ -240,6 +243,7 @@ namespace SU24_VMO_API.Services
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,
+                                        CreateActivityRequest = request
                                     });
                                 }
                             }

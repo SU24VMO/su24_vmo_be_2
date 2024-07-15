@@ -38,6 +38,7 @@ namespace BusinessObject.Models
         public DonatePhase? DonatePhase { get; set; }
         public ProcessingPhase? ProcessingPhase { get; set; }
         public StatementPhase? StatementPhase { get; set; }
+        public CreateCampaignRequest? CreateCampaignRequest { get; set; }
 
         public List<Transaction>? Transactions { get; set; }
 

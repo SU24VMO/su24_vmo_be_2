@@ -2036,6 +2036,19 @@ namespace SU24_VMO_API.Services
                         }
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
+
+                    var request =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
+                    if (request != null)
+                    {
+                        request.Campaign = null;
+                        request.OrganizationManager = null;
+                        request.Member = null;
+                        request.Moderator = null;
+                        campaign.CreateCampaignRequest = request;
+                    }
+
+                    
                 }
                 return campaigns;
             }
@@ -2115,6 +2128,16 @@ namespace SU24_VMO_API.Services
                             statementFile.StatementPhase = null;
                         }
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
+                    var request =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
+                    if (request != null)
+                    {
+                        request.Campaign = null;
+                        request.OrganizationManager = null;
+                        request.Member = null;
+                        request.Moderator = null;
+                        campaign.CreateCampaignRequest = request;
                     }
                 }
                 return campaigns;

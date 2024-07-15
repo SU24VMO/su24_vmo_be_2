@@ -57,6 +57,15 @@ namespace SU24_VMO_API.Services
                     {
                         post.CreatePostRequest = null;
                     }
+
+                    var request = post.CreatePostRequest;
+                    if (request != null)
+                    {
+                        request.Post = null;
+                        request.OrganizationManager = null;
+                        request.Moderator = null;
+                        request.Member = null;
+                    }
                     var om = _organizationManagerRepository.GetById(organizationManagerId);
                     postReponses.Add(new PostResponse
                     {
@@ -69,7 +78,9 @@ namespace SU24_VMO_API.Services
                         IsActive = post.IsActive,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
-                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim()
+                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim(),
+                        CreatePostRequest = request
+                        
                     });
                 }
                 return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
@@ -85,6 +96,15 @@ namespace SU24_VMO_API.Services
                     {
                         post.CreatePostRequest = null;
                     }
+
+                    var request = post.CreatePostRequest;
+                    if (request != null)
+                    {
+                        request.Post = null;
+                        request.OrganizationManager = null;
+                        request.Moderator = null;
+                        request.Member = null;
+                    }
                     var om = _organizationManagerRepository.GetById(organizationManagerId);
                     postReponses.Add(new PostResponse
                     {
@@ -97,7 +117,8 @@ namespace SU24_VMO_API.Services
                         IsActive = post.IsActive,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
-                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim()
+                        AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim(),
+                        CreatePostRequest = request
                     });
                 }
                 return postReponses;
@@ -119,6 +140,16 @@ namespace SU24_VMO_API.Services
                     {
                         post.CreatePostRequest = null;
                     }
+
+                    var request = post.CreatePostRequest;
+                    if (request != null)
+                    {
+                        request.Post = null;
+                        request.OrganizationManager = null;
+                        request.Moderator = null;
+                        request.Member = null;
+                    }
+
                     var member = _memberRepository.GetById(memberId);
                     postReponses.Add(new PostResponse
                     {
@@ -131,7 +162,8 @@ namespace SU24_VMO_API.Services
                         IsActive = post.IsActive,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
-                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
+                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim(),
+                        CreatePostRequest = request
                     });
                 }
                 return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
@@ -149,6 +181,15 @@ namespace SU24_VMO_API.Services
                     {
                         post.CreatePostRequest = null;
                     }
+
+                    var request = post.CreatePostRequest;
+                    if (request != null)
+                    {
+                        request.Post = null;
+                        request.OrganizationManager = null;
+                        request.Moderator = null;
+                        request.Member = null;
+                    }
                     var member = _memberRepository.GetById(memberId);
                     postReponses.Add(new PostResponse
                     {
@@ -161,7 +202,8 @@ namespace SU24_VMO_API.Services
                         IsActive = post.IsActive,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
-                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim()
+                        AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim(),
+                        CreatePostRequest = request
                     });
                 }
                 return postReponses;

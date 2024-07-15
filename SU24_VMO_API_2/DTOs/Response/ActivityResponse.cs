@@ -15,6 +15,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public bool IsActive { get; set; } = default!;
 
         public ProcessingPhase? ProcessingPhase { get; set; }
+        public CreateActivityRequest? CreateActivityRequest { get; set; }
         public List<ActivityImage>? ActivityImages { get; set; }
     }
 }
