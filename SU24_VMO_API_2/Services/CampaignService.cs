@@ -161,6 +161,13 @@ namespace SU24_VMO_API.Services
                 campaign.IsComplete = true;
                 campaign.CanBeDonated = false;
             }
+            else
+            {
+                campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+                campaign.IsActive = true;
+                campaign.IsModify = true;
+                campaign.IsComplete = false;
+            }
             _campaignRepository.Update(campaign);
 
         }

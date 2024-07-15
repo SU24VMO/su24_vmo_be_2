@@ -2,9 +2,8 @@
 {
     public class UpdateOrganizationRequest
     {
-        public Guid OrganizationID { get; set; } = default!;
         public string? Name { get; set; } = default!;
-        public string? Logo { get; set; } = default!;
+        public IFormFile? Logo { get; set; } = default!;
         public string? Description { get; set; } = default!;
         public string? Website { get; set; } = default!;
         public string? Tax { get; set; } = default!;

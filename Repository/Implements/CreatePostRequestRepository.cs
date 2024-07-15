@@ -67,7 +67,7 @@ namespace Repository.Implements
             }
         }
 
-        public CreatePostRequest GetCreatePostRequestByPostId(Guid postId)
+        public CreatePostRequest? GetCreatePostRequestByPostId(Guid postId)
         {
             using var context = new VMODBContext();
             return context.CreatePostRequests

@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface ICreateOrganizationRequestRepository : ICrudBaseRepository<CreateOrganizationRequest, Guid>
     {
+        public CreateOrganizationRequest GetCreateOrganizationRequestByOrganizationId(Guid organizationId);
     }
 }

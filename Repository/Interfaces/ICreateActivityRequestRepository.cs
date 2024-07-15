@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface ICreateActivityRequestRepository : ICrudBaseRepository<CreateActivityRequest, Guid>
     {
+        public CreateActivityRequest? GetCreateActivityRequestByActivityId(Guid activityId);
     }
 }

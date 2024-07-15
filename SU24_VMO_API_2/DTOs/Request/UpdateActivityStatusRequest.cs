@@ -2,10 +2,10 @@
 
 namespace SU24_VMO_API_2.DTOs.Request
 {
-    public class UpdatePostStatusRequest
+    public class UpdateActivityStatusRequest
     {
         [Required]
-        public Guid PostId { get; set; } = default!;
+        public Guid ActivityId { get; set; } = default!;
         public bool IsActive { get; set; } = default!;
     }
 }

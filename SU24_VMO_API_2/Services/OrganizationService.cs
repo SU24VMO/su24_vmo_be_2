@@ -1,10 +1,13 @@
 ﻿using BusinessObject.Models;
+using HtmlAgilityPack;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.X509;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -12,14 +15,18 @@ namespace SU24_VMO_API.Services
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly ICreateOrganizationRequestRepository _createOrganizationRequestRepository;
+        private readonly FirebaseService _firebaseService;
         private readonly IAccountRepository _accountRepository;
 
         public OrganizationService(IOrganizationRepository organizationRepository, IOrganizationManagerRepository organizationManagerRepository,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository, FirebaseService firebaseService, ICreateOrganizationRequestRepository createOrganizationRequestRepository)
         {
             _organizationRepository = organizationRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _accountRepository = accountRepository;
+            _firebaseService = firebaseService;
+            _createOrganizationRequestRepository = createOrganizationRequestRepository;
         }
 
         public IEnumerable<Organization> GetAllOrganizations()
@@ -51,7 +58,7 @@ namespace SU24_VMO_API.Services
                 if (organization.OrganizationManager != null)
                 {
                     var account = _accountRepository.GetById(organization.OrganizationManager.AccountID);
-                    if(account != null)
+                    if (account != null)
                     {
                         account.Notifications = null;
                         account.BankingAccounts = null;
@@ -220,17 +227,27 @@ namespace SU24_VMO_API.Services
             return _organizationRepository.Save(organization);
         }
 
-        public void UpdateOrganizationRequest(UpdateOrganizationRequest request)
+        public async void UpdateOrganizationRequest(Guid organizationId, UpdateOrganizationRequest request)
         {
-            var organization = _organizationRepository.GetById(request.OrganizationID);
-            if (organization == null) { return; }
+            var organization = _organizationRepository.GetById(organizationId);
+            if (organization == null)
+            {
+                throw new NotFoundException("Không tìm thấy tổ chức này!");
+            }
+
+            var organizationRequest =
+                _createOrganizationRequestRepository.GetCreateOrganizationRequestByOrganizationId(organizationId);
+            if (organizationRequest != null)
+            {
+                if (organizationRequest.IsApproved) throw new BadRequestException("Tổ chức này hiện đã được duyệt, vì vậy mọi thông tin của tổ chức này không thể chỉnh sửa!");
+            }
             if (!String.IsNullOrEmpty(request.Name))
             {
                 organization.Name = request.Name;
             }
-            if (!String.IsNullOrEmpty(request.Logo))
+            if (request.Logo != null)
             {
-                organization.Logo = request.Logo;
+                organization.Logo = await _firebaseService.UploadImage(request.Logo);
             }
             if (!String.IsNullOrEmpty(request.Description))
             {
@@ -264,6 +281,24 @@ namespace SU24_VMO_API.Services
             {
                 organization.Note = request.Note;
             }
+            _organizationRepository.Update(organization);
+        }
+
+
+        public void UpdateOrganizationStatusRequest(UpdateOrganizationStatusRequest request)
+        {
+            var organization = _organizationRepository.GetById(request.OrganizationId);
+            if (organization == null)
+            {
+                throw new NotFoundException("Không tìm thấy tổ chức này!");
+            }
+
+            if (!request.IsActive)
+            {
+                organization.IsActive = false;
+            }
+            else organization.IsActive = true;
+            organization.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
             _organizationRepository.Update(organization);
         }
     }

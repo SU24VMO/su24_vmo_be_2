@@ -6,6 +6,8 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Text;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -255,10 +257,20 @@ namespace SU24_VMO_API.Services
             return activies;
         }
 
-        public void UpdateActivity(UpdateActivityRequest request)
+        public async void UpdateActivity(Guid activityId, UpdateActivityRequest request)
         {
-            TryValidateUpdateActivityRequest(request);
-            var activity = _activityRepository.GetById(request.ActivityId)!;
+            TryValidateUpdateActivityRequest(activityId, request);
+            var activity = _activityRepository.GetById(activityId)!;
+
+            var activityRequest = _createActivityRequestRepository.GetCreateActivityRequestByActivityId(activityId);
+            if (activityRequest != null)
+            {
+                if (activityRequest.IsApproved)
+                {
+                    throw new BadRequestException(
+                        "Hoạt động này hiện đã được duyệt, vì vậy mọi thông tin của hoạt động này không thể chỉnh sửa!");
+                }
+            }
             if (!String.IsNullOrEmpty(activity.Title))
             {
                 activity.Title = request.Title!.Trim();
@@ -267,6 +279,46 @@ namespace SU24_VMO_API.Services
             {
                 activity.Content = request.Content!.Trim();
             }
+
+            if (request.ActivityImages != null)
+            {
+                foreach (var image in request.ActivityImages)
+                {
+                    var activityImages = _activityImageRepository.GetAllActivityImagesByActivityId(activityId);
+                    foreach (var imageExisted in activityImages)
+                    {
+                        _activityImageRepository.DeleteById(imageExisted.ActivityImageId);
+                    }
+
+                    var activityImageCreate = _activityImageRepository.Save(new ActivityImage
+                    {
+                        ActivityId = activityId,
+                        ActivityImageId = Guid.NewGuid(),
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsActive = true,
+                        Link = await _firebaseService.UploadImage(image)
+                    });
+                }
+            }
+            activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+            _activityRepository.Update(activity);
+        }
+
+
+        public void UpdateStatusActivity(UpdateActivityStatusRequest request)
+        {
+            var activity = _activityRepository.GetById(request.ActivityId)!;
+            if (activity == null)
+            {
+                throw new NotFoundException("Không tìm thấy họt động này!");
+            }
+
+            if (!request.IsActive)
+            {
+                activity.IsActive = false;
+            }
+            else activity.IsActive = true;
+            
             activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
             _activityRepository.Update(activity);
         }
@@ -293,16 +345,16 @@ namespace SU24_VMO_API.Services
         }
 
 
-        private void TryValidateUpdateActivityRequest(UpdateActivityRequest request)
+        private void TryValidateUpdateActivityRequest(Guid activityId,UpdateActivityRequest request)
         {
-            if (!String.IsNullOrEmpty(request.ActivityId.ToString()))
+            if (!String.IsNullOrEmpty(activityId.ToString()))
             {
-                throw new Exception("ActivityId must not empty.");
+                throw new BadRequestException("Không được để trống trường này.");
             }
 
-            if (_activityRepository.GetById(request.ActivityId) == null)
+            if (_activityRepository.GetById(activityId) == null)
             {
-                throw new Exception("Activity not found.");
+                throw new NotFoundException("Không tìm thấy họt động này!");
             }
 
         }

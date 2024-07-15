@@ -63,5 +63,15 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public CreateOrganizationRequest? GetCreateOrganizationRequestByOrganizationId(Guid organizationId)
+        {
+            using var context = new VMODBContext();
+            return context.CreateOrganizationRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .Include(a => a.Organization).ToList()
+                .FirstOrDefault(a => a.OrganizationID.Equals(organizationId));
+        }
     }
 }

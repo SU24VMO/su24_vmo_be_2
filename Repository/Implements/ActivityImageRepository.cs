@@ -13,7 +13,13 @@ namespace Repository.Implements
     {
         public void DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            using var context = new VMODBContext();
+            var activityImage = context.ActivityImages.FirstOrDefault(ac => ac.ActivityImageId.Equals(id));
+            if (activityImage != null)
+            {
+                context.ActivityImages.Remove(activityImage);
+                context.SaveChanges();
+            }
         }
 
         public IEnumerable<ActivityImage> GetAll()

@@ -251,19 +251,16 @@ namespace SU24_VMO_API.Services
         public void UpdatePostStatusRequest(UpdatePostStatusRequest request)
         {
             var post = repository.GetById(request.PostId);
-            if (post != null)
+            if (post == null)
             {
-                var account = _accountRepository.GetById(request.AccountId);
-                if (account.Role != Role.Moderator)
-                {
-                    throw new BadRequestException("Tài khoản không được phép sử dụng tính năng này!");
-                }
-
-                if (!request.IsActive)
-                    post.IsActive = false;
-                post.UpdateAt = TimeHelper.GetTime(DateTime.UtcNow);
-                repository.Update(post);
+                throw new NotFoundException("Không tìm thấy bài viết này!");
             }
+
+            if (!request.IsActive)
+                post.IsActive = false;
+            else post.IsActive = true;
+            post.UpdateAt = TimeHelper.GetTime(DateTime.UtcNow);
+            repository.Update(post);
         }
     }
 }

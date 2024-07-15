@@ -66,5 +66,16 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public CreateActivityRequest? GetCreateActivityRequestByActivityId(Guid activityId)
+        {
+            using var context = new VMODBContext();
+            return context.CreateActivityRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Include(a => a.Activity).ToList()
+                .FirstOrDefault(a => a.ActivityID.Equals(activityId));
+        }
     }
 }
