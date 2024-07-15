@@ -1,9 +1,14 @@
 ﻿using BusinessObject.Enums;
 using BusinessObject.Models;
+using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
+using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -11,8 +16,11 @@ namespace SU24_VMO_API.Services
     {
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly ICampaignRepository _campaignRepository;
+        private readonly ICampaignTypeRepository _campaignTypeRepository;
         private readonly IMemberRepository _memberRepository;
+        private readonly IBankingAccountRepository _bankingAccountRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
@@ -24,7 +32,8 @@ namespace SU24_VMO_API.Services
         public CreateCampaignRequestService(ICreateCampaignRequestRepository createCampaignRequestRepository, FirebaseService firebaseService,
             IMemberRepository memberRepository, IAccountRepository accountRepository, CampaignService campaignService, INotificationRepository notificationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IOrganizationManagerRepository organizationManagerRepository, ICampaignRepository campaignRepository)
+            IOrganizationManagerRepository organizationManagerRepository, ICampaignRepository campaignRepository, ICampaignTypeRepository campaignTypeRepository,
+            IOrganizationRepository organizationRepository, IBankingAccountRepository bankingAccountRepository)
         {
             _createCampaignRequestRepository = createCampaignRequestRepository;
             _firebaseService = firebaseService;
@@ -37,6 +46,9 @@ namespace SU24_VMO_API.Services
             _statementPhaseRepository = statementPhaseRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _campaignRepository = campaignRepository;
+            _campaignTypeRepository = campaignTypeRepository;
+            _organizationRepository = organizationRepository;
+            _bankingAccountRepository = bankingAccountRepository;
         }
 
 
@@ -146,6 +158,7 @@ namespace SU24_VMO_API.Services
                     var bankingAccount = new BankingAccount
                     {
                         BankingAccountID = Guid.NewGuid(),
+                        CampaignId = campaign.CampaignID,
                         BankingName = request.BankingName!,
                         AccountNumber = request.BankingAccountNumber!,
                         AccountName = request.AccountName,
@@ -232,6 +245,7 @@ namespace SU24_VMO_API.Services
                     var bankingAccount = new BankingAccount
                     {
                         BankingAccountID = Guid.NewGuid(),
+                        CampaignId = campaign.CampaignID,
                         BankingName = request.BankingName!,
                         AccountNumber = request.BankingAccountNumber!,
                         AccountName = request.AccountName,
@@ -279,6 +293,88 @@ namespace SU24_VMO_API.Services
             }
 
 
+        }
+
+
+        public async void UpdateCreateCampaignRequest(Guid createCampaignRequestId, UpdateCreateCampaignRequestRequest updateRequest)
+        {
+            TryValidateUpdateCreateCampaignRequest(updateRequest);
+            var requestExisted = _createCampaignRequestRepository.GetById(createCampaignRequestId);
+            if (requestExisted == null) throw new NotFoundException("Đơn tạo này không tìm thấy!");
+            if (requestExisted.IsApproved) throw new BadRequestException("Chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin về chiến dịch này hiện không thể chỉnh sửa!");
+            var campaignExisted = _campaignRepository.GetById(requestExisted.CampaignID);
+            if (campaignExisted == null) throw new NotFoundException("Chiến dịch này không tìm thấy!");
+
+            if (!String.IsNullOrEmpty(updateRequest.Description))
+            {
+                campaignExisted.Description = updateRequest.Description;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Address))
+            {
+                campaignExisted.Address = updateRequest.Address;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Name))
+            {
+                campaignExisted.Name = updateRequest.Name;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.TargetAmount))
+            {
+                campaignExisted.TargetAmount = updateRequest.TargetAmount;
+            }
+            if (updateRequest.CampaignTypeId != null)
+            {
+                var campaignType = _campaignTypeRepository.GetById((Guid)updateRequest.CampaignTypeId);
+                if (campaignType == null) throw new NotFoundException("Loại hình chiến dịch này không tìm thấy!");
+                campaignExisted.CampaignTypeID = (Guid)updateRequest.CampaignTypeId;
+            }
+            if (updateRequest.StartDate != null)
+            {
+                campaignExisted.StartDate = (DateTime)updateRequest.StartDate;
+            }
+            if (updateRequest.ExpectedEndDate != null)
+            {
+                campaignExisted.ExpectedEndDate = (DateTime)updateRequest.ExpectedEndDate;
+            }
+            if (updateRequest.OrganizationId != null)
+            {
+                var organization = _organizationRepository.GetById((Guid)updateRequest.OrganizationId);
+                if (organization == null) throw new NotFoundException("Tổ chức này không tồn tại!");
+                campaignExisted.OrganizationID = (Guid)updateRequest.OrganizationId;
+            }
+            if (updateRequest.ApplicationConfirmForm != null)
+            {
+                campaignExisted.ApplicationConfirmForm = await _firebaseService.UploadImage(updateRequest.ApplicationConfirmForm);
+            }
+            if (updateRequest.ImageCampaign != null)
+            {
+                campaignExisted.Image = await _firebaseService.UploadImage(updateRequest.ImageCampaign);
+            }
+
+            campaignExisted.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+            _campaignRepository.Update(campaignExisted);
+
+            var bankingAccount =
+                _bankingAccountRepository.GetBankingAccountByCampaignId(campaignExisted.CampaignID)!;
+            if (!String.IsNullOrEmpty(updateRequest.BankingName))
+            {
+                bankingAccount.BankingName = updateRequest.BankingName;
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.AccountName))
+            {
+                bankingAccount.AccountName = updateRequest.AccountName;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.BankingAccountNumber))
+            {
+                bankingAccount.AccountNumber = updateRequest.BankingAccountNumber;
+            }
+            if (updateRequest.QRCode != null)
+            {
+                bankingAccount.QRCode = await _firebaseService.UploadImage(updateRequest.QRCode);
+            }
+
+            bankingAccount.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+            _bankingAccountRepository.Update(bankingAccount);
         }
 
 
@@ -519,6 +615,37 @@ namespace SU24_VMO_API.Services
 
 
         private void TryValidateRegisterRequest(CreateCampaignRequestRequest request)
+        {
+            string currentDateString = TimeHelper.GetTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+            DateTime currentDate = DateTime.ParseExact(currentDateString, "yyyy-MM-dd", null);
+
+            if (request.StartDate < currentDate)
+            {
+                throw new Exception("Start date must be greater than the current time!");
+            }
+
+            if (request.ExpectedEndDate < currentDate)
+            {
+                throw new Exception("End date must be greater than the current time!");
+            }
+
+            if (request.StartDate > request.ExpectedEndDate)
+            {
+                throw new Exception("End date must be greater than start date!");
+            }
+
+            if (!long.TryParse(request.TargetAmount, out long targetAmount))
+            {
+                throw new Exception("Target amount must be a valid number.");
+            }
+
+            if (targetAmount < 0)
+            {
+                throw new Exception("Target amount must be greater than or equal to 0.");
+            }
+        }
+
+        private void TryValidateUpdateCreateCampaignRequest(UpdateCreateCampaignRequestRequest request)
         {
             string currentDateString = TimeHelper.GetTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
             DateTime currentDate = DateTime.ParseExact(currentDateString, "yyyy-MM-dd", null);

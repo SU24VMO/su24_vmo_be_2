@@ -27,6 +27,7 @@ namespace BusinessObject.FluentAPIs
 
             builder.Property(x => x.OrderId)
                     .IsRequired()
+                    .HasAnnotation("SqlServer:Identity", "100, 1")
                     .ValueGeneratedOnAdd();
         }
     }

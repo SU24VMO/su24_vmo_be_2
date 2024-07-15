@@ -16,6 +16,7 @@ namespace BusinessObject.FluentAPIs
             builder.ToTable("BankingAccount");
             builder.HasKey(x => x.BankingAccountID);
             builder.Property(x => x.BankingName).IsRequired();
+            builder.Property(x => x.CampaignId).IsRequired();
             builder.Property(x => x.AccountNumber).IsRequired();
             builder.Property(x => x.AccountName).IsRequired();
             builder.Property(x => x.QRCode).IsRequired();
@@ -28,6 +29,8 @@ namespace BusinessObject.FluentAPIs
                .WithOne(x => x.BankingAccount)
                .HasForeignKey(x => x.BankingAccountID)
                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(x => x.Campaign);
         }
     }
 }

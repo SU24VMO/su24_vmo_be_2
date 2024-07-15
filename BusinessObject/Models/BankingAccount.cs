@@ -10,6 +10,7 @@ namespace BusinessObject.Models
     public class BankingAccount
     {
         public Guid BankingAccountID { get; set; } = default!;
+        public Guid CampaignId { get; set; } = default!;
         public string BankingName { get; set; } = default!;
         public string AccountNumber { get; set; } = default!;
         public string AccountName { get; set; } = default!;
@@ -19,6 +20,7 @@ namespace BusinessObject.Models
         public Guid AccountId { get; set; } = default!;
         public bool IsAvailable { get; set; } = default!;
         public Account? Account { get; set; }
+        public Campaign? Campaign { get; set; }
         public List<Transaction>? Transactions { get; set; }
     }
 }

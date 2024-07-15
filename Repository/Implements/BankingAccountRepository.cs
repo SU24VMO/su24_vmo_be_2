@@ -62,5 +62,23 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public IEnumerable<BankingAccount> GetBankingAccountsByAccountId(Guid accountId)
+        {
+            using var context = new VMODBContext();
+            return context.BankingAccounts
+                .OrderByDescending(a => a.CreatedAt)
+                .Where(b => b.AccountId.Equals(accountId))
+                .ToList();
+        }
+
+        public BankingAccount? GetBankingAccountByCampaignId(Guid campaignId)
+        {
+            using var context = new VMODBContext();
+            return context.BankingAccounts
+                .Include(a => a.Account)
+                .Include(a => a.Transactions).ToList()
+                .FirstOrDefault(b => b.CampaignId.Equals(campaignId));
+        }
     }
 }

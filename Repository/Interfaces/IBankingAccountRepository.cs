@@ -9,5 +9,7 @@ namespace Repository.Interfaces
 {
     public interface IBankingAccountRepository : ICrudBaseRepository<BankingAccount, Guid>
     {
+        public IEnumerable<BankingAccount> GetBankingAccountsByAccountId(Guid accountId);
+        public BankingAccount? GetBankingAccountByCampaignId(Guid campaignId);
     }
 }
