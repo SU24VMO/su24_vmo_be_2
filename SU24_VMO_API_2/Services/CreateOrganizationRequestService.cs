@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -50,9 +51,6 @@ namespace SU24_VMO_API.Services
 
         public async Task<CreateOrganizationRequest?> CreateOrganizationRequest(Guid organizationManagerID, CreateOrganizationRequestRequest request)
         {
-            //TryValidateCreateOrganizationRequest(request);
-            //var organization = _organizationRepository.GetById(request.OrganizationID);
-            //if (organization == null) { throw new Exception("Organization not found"); }
             var organizationManager = _organizationManagerRepository.GetById(organizationManagerID);
             if (organizationManager == null) { throw new NotFoundException("Organization Manager not found!"); }
             var organization = new Organization
@@ -70,6 +68,7 @@ namespace SU24_VMO_API.Services
                 CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
                 IsActive = false,
                 IsModify = false,
+                IsDisable = false,
                 Category = request.AreaOfActivity
             };
 
@@ -111,6 +110,74 @@ namespace SU24_VMO_API.Services
         }
 
 
+
+        public async void UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId, UpdateCreateOrganizationRequestRequest updateRequest)
+        {
+            var requestExisted = repository.GetById(createOrganizationRequestRequestId);
+            if (requestExisted == null) throw new NotFoundException("Đơn duyệt tạo tổ chức không tìm thấy!");
+            if (requestExisted.IsApproved) throw new BadRequestException("Đơn tạo tổ chức này hiện đã được duyệt, vì vậy mọi thông tin của đơn này hiện không thể chỉnh sửa!");
+            var organization = _organizationRepository.GetById(requestExisted.OrganizationID);
+            if (organization == null) throw new NotFoundException("Tổ chức không tìm thấy!");
+
+            if (!String.IsNullOrEmpty(updateRequest.Address))
+            {
+                requestExisted.Address = updateRequest.Address;
+                organization.Location = updateRequest.Address;
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.AchievementLink))
+            {
+                requestExisted.AchievementLink = updateRequest.AchievementLink;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.AreaOfActivity))
+            {
+                requestExisted.AreaOfActivity = updateRequest.AreaOfActivity;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.AuthorizationDocuments))
+            {
+                requestExisted.AuthorizationDocuments = updateRequest.AuthorizationDocuments;
+                organization.OperatingLicense = updateRequest.AuthorizationDocuments;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.OrganizationManagerEmail))
+            {
+                requestExisted.OrganizationManagerEmail = updateRequest.OrganizationManagerEmail;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.OrganizationName))
+            {
+                requestExisted.OrganizationName = updateRequest.OrganizationName;
+                organization.Name = updateRequest.OrganizationName;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.OrganizationTaxCode))
+            {
+                requestExisted.OrganizationTaxCode = updateRequest.OrganizationTaxCode;
+                organization.Tax = updateRequest.OrganizationTaxCode;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.PlanInformation))
+            {
+                requestExisted.PlanInformation = updateRequest.PlanInformation;
+                organization.Description = updateRequest.PlanInformation;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.SocialMediaLink))
+            {
+                requestExisted.SocialMediaLink = updateRequest.SocialMediaLink;
+                organization.Website = updateRequest.SocialMediaLink;
+            }
+            if (updateRequest.FoundingDate != null)
+            {
+                requestExisted.FoundingDate = updateRequest.FoundingDate;
+                organization.FoundingDate = updateRequest.FoundingDate;
+            }
+
+            if (updateRequest.Logo != null)
+            {
+                organization.Logo = await _firebaseService.UploadImage(updateRequest.Logo);
+            }
+
+            _organizationRepository.Update(organization);
+            repository.Update(requestExisted);
+        }
+
+
         public bool AcceptOrRejectCreateOrganizationRequest(AcceptOrRejectCreateOrganizationRequestRequest acceptOrRejectCreateOrganizationRequestRequest)
         {
             TryValidateAcceptOrRejectCreateOrganizationRequest(acceptOrRejectCreateOrganizationRequestRequest);
@@ -148,6 +215,7 @@ namespace SU24_VMO_API.Services
                 notification.Content = "Yêu cầu tạo tổ chức của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
                 organization.IsActive = true;
                 organization.IsModify = true;
+                organization.IsDisable = false;
             }
             else
             {
@@ -158,6 +226,9 @@ namespace SU24_VMO_API.Services
                 request.IsRejected = true;
                 result = true;
                 notification.Content = "Yêu cầu tạo tổ chức của bạn chưa được công nhận, hãy cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
+                organization.IsActive = false;
+                organization.IsModify = true;
+                organization.IsDisable = true;
             }
 
 

@@ -8,6 +8,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
+using SU24_VMO_API_2.DTOs.Request;
 using System.Text.RegularExpressions;
 
 
@@ -152,6 +153,7 @@ namespace SU24_VMO_API.Services
                 IsPending = true,
                 IsRejected = false,
                 IsLocked = false,
+                IsDisable = false
             };
 
             var volunteer = _memberRepository.GetById(request.MemberID);
@@ -176,6 +178,77 @@ namespace SU24_VMO_API.Services
             }
 
             return createVolunteerRequestCreated;
+        }
+
+        public void UpdateCreateVolunteerRequest(Guid createVolunteerRequestId, UpdateCreateVolunteerRequestRequest request)
+        {
+            var requestExisted =
+                _createVolunteerRequestRepository.GetById(createVolunteerRequestId);
+            if (requestExisted == null)
+            {
+                throw new NotFoundException("Đơn duyệt này không tìm thấy!");
+            }
+
+            if (requestExisted.IsApproved)
+            {
+                throw new BadRequestException("Đơn tạo tài khoản thành viên xác thực này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
+            }
+
+            if (!String.IsNullOrEmpty(request.SocialMediaLink))
+            {
+                requestExisted.SocialMediaLink = request.SocialMediaLink;
+            }
+
+            if (!String.IsNullOrEmpty(request.CitizenIdentification))
+            {
+                requestExisted.CitizenIdentification = request.CitizenIdentification;
+            }
+
+            if (!String.IsNullOrEmpty(request.Email))
+            {
+                requestExisted.Email = request.Email;
+            }
+            if (!String.IsNullOrEmpty(request.PhoneNumber))
+            {
+                requestExisted.PhoneNumber = request.PhoneNumber;
+            }
+            if (!String.IsNullOrEmpty(request.AchievementLink))
+            {
+                requestExisted.AchievementLink = request.AchievementLink;
+            }
+            if (!String.IsNullOrEmpty(request.DetailDescriptionLink))
+            {
+                requestExisted.DetailDescriptionLink = request.DetailDescriptionLink;
+            }
+
+            if (!String.IsNullOrEmpty(request.ClubName))
+            {
+                requestExisted.ClubName = request.ClubName;
+            }
+            if (!String.IsNullOrEmpty(request.MemberAddress))
+            {
+                requestExisted.MemberAddress = request.MemberAddress;
+            }
+            if (!String.IsNullOrEmpty(request.MemberName))
+            {
+                requestExisted.MemberName = request.MemberName;
+            }
+            if (request.IsAcceptTermOfUse != null)
+            {
+                requestExisted.IsAcceptTermOfUse = (bool)request.IsAcceptTermOfUse;
+            }
+            if (request.Birthday != null)
+            {
+                requestExisted.Birthday = (DateTime)request.Birthday;
+            }
+            if (request.RoleInClub != null)
+            {
+                requestExisted.RoleInClub = request.RoleInClub;
+            }
+
+            requestExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+            _createVolunteerRequestRepository.Update(requestExisted);
         }
 
         public bool AcceptOrRejectCreateVolunteerAccountRequest(UpdateCreateVolunteerAccountRequest updateVolunteerAccountRequest)
@@ -213,6 +286,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = false;
+                request.IsDisable = false;
                 result = true;
                 account!.Role = Role.Volunteer;
                 notification.AccountID = account!.AccountID;
@@ -229,6 +303,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = true;
+                request.IsDisable = true;
                 result = true;
                 account!.Role = Role.Member;
                 notification.AccountID = account!.AccountID;

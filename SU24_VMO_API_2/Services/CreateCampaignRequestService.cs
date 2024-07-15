@@ -148,6 +148,7 @@ namespace SU24_VMO_API.Services
                         IsActive = false,
                         IsModify = false,
                         IsComplete = false,
+                        IsDisable = false,
                     };
 
                     var qrImageLink = "";
@@ -235,6 +236,7 @@ namespace SU24_VMO_API.Services
                         IsActive = false,
                         IsModify = false,
                         IsComplete = false,
+                        IsDisable = false,
                     };
 
                     var qrImageLink = "";
@@ -301,7 +303,7 @@ namespace SU24_VMO_API.Services
             TryValidateUpdateCreateCampaignRequest(updateRequest);
             var requestExisted = _createCampaignRequestRepository.GetById(createCampaignRequestId);
             if (requestExisted == null) throw new NotFoundException("Đơn tạo này không tìm thấy!");
-            if (requestExisted.IsApproved) throw new BadRequestException("Chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin về chiến dịch này hiện không thể chỉnh sửa!");
+            if (requestExisted.IsApproved) throw new BadRequestException("Đơn tạo chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
             var campaignExisted = _campaignRepository.GetById(requestExisted.CampaignID);
             if (campaignExisted == null) throw new NotFoundException("Chiến dịch này không tìm thấy!");
 
@@ -408,6 +410,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = true;
                     campaign.IsTransparent = true;
+                    campaign.IsDisable = false;
 
                     request.IsApproved = true;
                     request.IsPending = false;
@@ -481,6 +484,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = false;
                     campaign.IsTransparent = false;
+                    campaign.IsDisable = true;
 
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
@@ -502,6 +506,8 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = true;
                     campaign.IsTransparent = true;
+                    campaign.IsDisable = false;
+
 
 
                     request.ApprovedBy = updateCampaignRequest.ModeratorId;
@@ -576,6 +582,8 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = false;
                     campaign.IsTransparent = false;
+                    campaign.IsDisable = true;
+
 
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;

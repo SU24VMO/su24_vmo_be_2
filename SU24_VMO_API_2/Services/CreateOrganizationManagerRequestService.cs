@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.Services
 {
@@ -125,6 +126,7 @@ namespace SU24_VMO_API.Services
                 IsPending = true,
                 IsRejected = false,
                 IsLocked = false,
+                IsDisable = false,
             };
 
             var organizationManager = _organizationManagerRepository.GetById(request.OrganizationManagerID);
@@ -149,6 +151,54 @@ namespace SU24_VMO_API.Services
             }
 
             return createOrganizationVerifiedRequestCreated;
+        }
+
+
+        public void UpdateCreateOrganizationManagerVerifiedRequest(Guid createOrganizationManagerVerifiedRequestId, UpdateCreateOrganizationManagerVerifiedRequest request)
+        {
+            var requestExisted =
+                _createOrganizationManagerRequestRepository.GetById(createOrganizationManagerVerifiedRequestId);
+            if (requestExisted == null)
+            {
+                throw new NotFoundException("Đơn duyệt này không tìm thấy!");
+            }
+
+            if (requestExisted.IsApproved)
+            {
+                throw new BadRequestException("Đơn tạo quản lý tổ chức xác thực này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
+            }
+
+            if (!String.IsNullOrEmpty(request.Address))
+            {
+                requestExisted.Address = request.Address;
+            }
+
+            if (!String.IsNullOrEmpty(request.CitizenIdentification))
+            {
+                requestExisted.CitizenIdentification = request.CitizenIdentification;
+            }
+
+            if (!String.IsNullOrEmpty(request.Email))
+            {
+                requestExisted.Email = request.Email;
+            }
+            if (!String.IsNullOrEmpty(request.Name))
+            {
+                requestExisted.Name = request.Name;
+            }
+            if (!String.IsNullOrEmpty(request.PersonalTaxCode))
+            {
+                requestExisted.PersonalTaxCode = request.PersonalTaxCode;
+            }
+            if (!String.IsNullOrEmpty(request.PhoneNumber))
+            {
+                requestExisted.PhoneNumber = request.PhoneNumber;
+            }
+            
+            request.IsAcceptTermOfUse = requestExisted.IsAcceptTermOfUse;
+            requestExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+            _createOrganizationManagerRequestRepository.Update(requestExisted);
         }
 
 
@@ -187,6 +237,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = false;
+                request.IsDisable = false;
                 result = true;
                 notification.Content = "Yêu cầu trở thành tài khoản quản lý được xác minh của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
             }
@@ -200,6 +251,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = true;
+                request.IsDisable = true;
                 result = true;
                 notification.Content = "Yêu cầu trở thành tài khoản quản lý được xác minh của bạn chưa được công nhận, hãy cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
             }

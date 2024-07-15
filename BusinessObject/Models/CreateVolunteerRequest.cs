@@ -31,6 +31,7 @@ namespace BusinessObject.Models
         public Guid? ModifiedBy { get; set; } = default!;
 
         public bool IsAcceptTermOfUse { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
         public bool IsApproved { get; set; } = default!;
         public bool IsRejected { get; set; } = default!;
         public bool IsPending { get; set; } = default!;

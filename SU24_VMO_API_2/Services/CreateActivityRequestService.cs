@@ -1,11 +1,12 @@
 ﻿using BusinessObject.Models;
-using Google.Api.Gax.ResourceNames;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.DTOs.Response.PayosReponse;
 
 namespace SU24_VMO_API.Services
 {
@@ -41,7 +42,7 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateActivityRequest> GetAll()
         {
-            var requests = _repository.GetAll();           
+            var requests = _repository.GetAll();
             foreach (var request in requests)
             {
                 if (request.Moderator != null)
@@ -131,6 +132,7 @@ namespace SU24_VMO_API.Services
                     ProcessingPhaseId = request.ProcessingPhaseId,
                     Content = request.Content,
                     Title = request.Title,
+                    IsDisable = false,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsActive = false,
                 };
@@ -192,6 +194,7 @@ namespace SU24_VMO_API.Services
                     ProcessingPhaseId = request.ProcessingPhaseId,
                     Content = request.Content,
                     Title = request.Title,
+                    IsDisable = false,
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     IsActive = false,
                 };
@@ -247,6 +250,65 @@ namespace SU24_VMO_API.Services
             }
         }
 
+
+
+        public async void UpdateCreateActivityRequestRequest(Guid createActivityRequestId, UpdateCreateActivityRequestRequest updateRequest)
+        {
+            var requestExisted = _repository.GetById(createActivityRequestId);
+            if (requestExisted == null)
+            {
+                throw new NotFoundException("Đơn tạo yêu cầu cho hoạt động này không tồn tại!");
+            }
+
+            var activityExisted = _activityRepository.GetById(requestExisted.ActivityID);
+            if (activityExisted == null)
+            {
+                throw new NotFoundException("Không tìm thấy hoạt động này!");
+            }
+
+            if (requestExisted.IsApproved)
+            {
+                throw new BadRequestException("Đơn tạo hoạt động này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.Content))
+            {
+                activityExisted.Content = updateRequest.Content;
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.Title))
+            {
+                activityExisted.Title = updateRequest.Title;
+            }
+
+            if (updateRequest.ActivityImages != null)
+            {
+                var activityImagesExisted =
+                    _activityImageRepository.GetAllActivityImagesByActivityId(activityExisted.ActivityId);
+                foreach (var imageExisted in activityImagesExisted)
+                {
+                    _activityImageRepository.DeleteById(imageExisted.ActivityImageId);
+                }
+
+                foreach (var updateRequestImage in updateRequest.ActivityImages)
+                {
+                    var activityImage = new ActivityImage
+                    {
+                        ActivityImageId = Guid.NewGuid(),
+                        ActivityId = activityExisted.ActivityId,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Link = await _firebaseService.UploadImage(updateRequestImage),
+                        IsActive = true,
+                    };
+                    _activityImageRepository.Save(activityImage);
+                }
+
+            }
+            _activityRepository.Update(activityExisted);
+        }
+
+
+
         public void AcceptOrRejectCreateActivityRequest(UpdateCreateActivityRequest request)
         {
             var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
@@ -268,6 +330,7 @@ namespace SU24_VMO_API.Services
 
                     activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
                     activity.IsActive = true;
+                    activity.IsDisable = false;
 
                     createActivityRequest.IsApproved = true;
                     createActivityRequest.IsPending = false;
@@ -299,6 +362,7 @@ namespace SU24_VMO_API.Services
                 {
                     activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
                     activity.IsActive = false;
+                    activity.IsDisable = true;
 
                     createActivityRequest.IsApproved = false;
                     createActivityRequest.IsPending = false;

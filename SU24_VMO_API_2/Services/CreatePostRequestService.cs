@@ -5,6 +5,7 @@ using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
+using SU24_VMO_API_2.DTOs.Request;
 using System.Security.Principal;
 
 namespace SU24_VMO_API.Services
@@ -62,6 +63,7 @@ namespace SU24_VMO_API.Services
                 Title = request.Title,
                 Content = request.Content,
                 IsActive = false,
+                IsDisable = false,
                 Image = await _firebaseService.UploadImage(request.Image),
                 Description = request.Description,
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
@@ -128,6 +130,48 @@ namespace SU24_VMO_API.Services
 
         }
 
+
+
+        public async void UpdateCreatePostRequestRequest(Guid createPostRequestId, UpdateCreatePostRequestRequest updateRequest)
+        {
+            var requestExisted = _repository.GetById(createPostRequestId);
+            if (requestExisted == null)
+            {
+                throw new NotFoundException("Đơn tạo này không tìm thấy!");
+            }
+
+            if (requestExisted.IsApproved) throw new BadRequestException("Đơn tạo bài viết này hiện đã được duyệt, vì vậy mọi thông tin của đơn này hiện không thể chỉnh sửa!");
+
+            var post = _postRepository.GetById(requestExisted.PostID);
+            if (post == null) throw new NotFoundException("Không tìm thấy bài viết này!");
+            if (!String.IsNullOrEmpty(updateRequest.Description))
+            {
+                post.Description = updateRequest.Description;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Content))
+            {
+                post.Content = updateRequest.Content;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Title))
+            {
+                post.Title = updateRequest.Title;
+            }
+
+            if (updateRequest.Image != null)
+            {
+                post.Image = await _firebaseService.UploadImage(updateRequest.Image);
+            }
+            if (updateRequest.Cover != null)
+            {
+                post.Cover = await _firebaseService.UploadImage(updateRequest.Cover);
+            }
+
+            _postRepository.Update(post);
+
+        }
+
+
+
         public void AcceptOrRejectCreatePostRequest(UpdateCreatePostRequest request)
         {
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
@@ -159,6 +203,7 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = false;
                     post.IsActive = true;
+                    post.IsDisable = false;
                     if (createPostRequest.CreateByOM != null)
                     {
                         om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;
@@ -180,6 +225,7 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = true;
                     post.IsActive = false;
+                    post.IsDisable = true;
                     if (createPostRequest.CreateByOM != null)
                     {
                         om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;

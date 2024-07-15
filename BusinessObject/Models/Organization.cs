@@ -23,6 +23,7 @@ namespace BusinessObject.Models
         public DateTime? UpdatedAt { get; set; }
         public bool? IsActive { get; set; } = default!;
         public bool? IsModify { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
         public string? Category { get; set; } = default!;
         public string? Note { get; set; } = default!;
         public OrganizationManager? OrganizationManager { get; set; }

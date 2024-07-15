@@ -15,6 +15,7 @@ namespace BusinessObject.Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool IsActive { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
 
         public ProcessingPhase? ProcessingPhase { get; set; }
         public List<ActivityImage>? ActivityImages { get; set; }
