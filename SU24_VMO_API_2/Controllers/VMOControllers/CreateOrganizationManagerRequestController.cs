@@ -85,6 +85,33 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("{createOrganizationManagerRequestId}")]
+        [Authorize(Roles = "OrganizationManager, Volunteer, Moderator, Member, Admin")]
+        public IActionResult GetCreateOrganizationManagerRequestById(Guid createOrganizationManagerRequestId)
+        {
+            try
+            {
+                var request = _service.GetCreateOrganizationManagerRequestById(createOrganizationManagerRequestId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = request
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Moderator, OrganizationManager, Admin")]

@@ -69,6 +69,11 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
+        public CreateVolunteerRequest? GetCreateVolunteerRequestById(Guid createVolunteerRequestId)
+        {
+            return GetAllCreateVolunteerRequests().FirstOrDefault(c => c.CreateVolunteerRequestID.Equals(createVolunteerRequestId));
+        }
+
         public IEnumerable<CreateVolunteerRequest>? GetAllCreateVolunteerRequestsByMemberName(string? memberName)
         {
             if (!String.IsNullOrEmpty(memberName))

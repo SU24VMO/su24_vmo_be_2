@@ -48,6 +48,11 @@ namespace SU24_VMO_API.Services
             }
             return requests;
         }
+        public CreateOrganizationManagerRequest? GetCreateOrganizationManagerRequestById(Guid createOrganizationManagerRequestId)
+        {
+            return GetAllCreateOrganizationManagerRequests().FirstOrDefault(c =>
+                c.CreateOrganizationManagerRequestID.Equals(createOrganizationManagerRequestId));
+        }
 
         public IEnumerable<CreateOrganizationManagerRequest>? GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName)
         {
@@ -194,7 +199,7 @@ namespace SU24_VMO_API.Services
             {
                 requestExisted.PhoneNumber = request.PhoneNumber;
             }
-            
+
             request.IsAcceptTermOfUse = requestExisted.IsAcceptTermOfUse;
             requestExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
 

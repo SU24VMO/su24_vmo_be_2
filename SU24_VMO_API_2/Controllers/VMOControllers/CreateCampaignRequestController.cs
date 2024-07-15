@@ -54,10 +54,37 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpGet]
+        [Route("{createCampaignRequestId}")]
+        [Authorize(Roles = "OrganizationManager, Volunteer, Moderator, Member, Admin")]
+        public IActionResult GetCreateCampaignRequestById(Guid createCampaignRequestId)
+        {
+            try
+            {
+                var request = _service.GetCreateCampaignRequestById(createCampaignRequestId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = request
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"Error: {ex.Message}"
+                };
+                return BadRequest(response);
+            }
+        }
+
 
         [HttpGet]
         [Route("all/filter/campaign-name")]
-        [Authorize(Roles = "Moderator")]
+        [Authorize(Roles = "OrganizationManager, Volunteer, Moderator")]
         public IActionResult GetCreateCampaignRequestsByCampaignName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try

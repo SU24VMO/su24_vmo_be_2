@@ -94,6 +94,11 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
+        public CreateCampaignRequest? GetCreateCampaignRequestById(Guid createCampaignRequestId)
+        {
+            return GetCreateCampaignRequests().FirstOrDefault(c => c.CreateCampaignRequestID.Equals(createCampaignRequestId));
+        }
+
         public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
