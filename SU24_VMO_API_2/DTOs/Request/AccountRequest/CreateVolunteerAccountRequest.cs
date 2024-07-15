@@ -10,6 +10,7 @@ namespace SU24_VMO_API.DTOs.Request.AccountRequest
         public string PhoneNumber { get; set; } = default!;
         public string Email { get; set; } = default!;
         public string? SocialMediaLink { get; set; } = default!;
+        public string? CitizenIdentification { get; set; } = default!;
         public string MemberAddress { get; set; } = default!;
         public RoleInClub? RoleInClub { get; set; } = default!;
         public string? ClubName { get; set; } = default! ;

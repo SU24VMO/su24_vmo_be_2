@@ -142,6 +142,7 @@ namespace SU24_VMO_API.Services
                 MemberAddress = request.MemberAddress,
                 RoleInClub = request.RoleInClub,
                 ClubName = request.ClubName,
+                CitizenIdentification = request.CitizenIdentification,
                 DetailDescriptionLink = request.DetailDescriptionLink,
                 AchievementLink = request.AchievementLink,
                 CreateBy = request.MemberID,
