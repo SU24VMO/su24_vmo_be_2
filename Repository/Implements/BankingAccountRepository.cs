@@ -75,10 +75,14 @@ namespace Repository.Implements
         public BankingAccount? GetBankingAccountByCampaignId(Guid campaignId)
         {
             using var context = new VMODBContext();
+            var campaign = context.Campaigns
+                .Include(a => a.Transactions).ToList()
+                .FirstOrDefault(b => b.CampaignID.Equals(campaignId));
+            if (campaign == null) return null;
             return context.BankingAccounts
                 .Include(a => a.Account)
                 .Include(a => a.Transactions).ToList()
-                .FirstOrDefault(b => b.CampaignId.Equals(campaignId));
+                .FirstOrDefault(b => b.BankingAccountID.Equals(campaign.BankingAccountID));
         }
     }
 }

@@ -12,18 +12,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(VMODBContext))]
-    [Migration("20240620054928_FixNullableWebsite")]
-    partial class FixNullableWebsite
+    [Migration("20240716143820_Initialize")]
+    partial class Initialize
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "6.0.31")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("BusinessObject.Models.Account", b =>
                 {
@@ -164,6 +163,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("ProcessingPhaseId")
                         .HasColumnType("uniqueidentifier");
 
@@ -265,6 +267,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MemberID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("OrganizationManagerID")
                         .HasColumnType("uniqueidentifier");
 
@@ -275,16 +280,13 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("BankingAccountID");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("OrganizationManagerID");
+                    b.HasIndex("MemberID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("OrganizationManagerID");
 
                     b.ToTable("BankingAccount", (string)null);
                 });
@@ -304,6 +306,9 @@ namespace BusinessObject.Migrations
 
                     b.Property<string>("ApplicationConfirmForm")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("BankingAccountID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CampaignTypeID")
                         .HasColumnType("uniqueidentifier");
@@ -334,6 +339,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsModify")
                         .HasColumnType("bit");
 
@@ -361,6 +369,8 @@ namespace BusinessObject.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("CampaignID");
+
+                    b.HasIndex("BankingAccountID");
 
                     b.HasIndex("CampaignTypeID");
 
@@ -405,10 +415,10 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime?>("ApprovedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreateByOM")
+                    b.Property<Guid?>("CreateByMember")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CreateByUser")
+                    b.Property<Guid?>("CreateByOM")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
@@ -429,14 +439,8 @@ namespace BusinessObject.Migrations
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrganizationManagerID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UserID")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CreateActivityRequestID");
 
@@ -444,9 +448,9 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("ApprovedBy");
 
-                    b.HasIndex("OrganizationManagerID");
+                    b.HasIndex("CreateByMember");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("CreateByOM");
 
                     b.ToTable("CreateActivityRequest", (string)null);
                 });
@@ -466,10 +470,10 @@ namespace BusinessObject.Migrations
                     b.Property<Guid>("CampaignID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CreateByOM")
+                    b.Property<Guid?>("CreateByMember")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CreateByUser")
+                    b.Property<Guid?>("CreateByOM")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
@@ -497,98 +501,14 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("ApprovedBy");
 
-                    b.HasIndex("CampaignID");
+                    b.HasIndex("CampaignID")
+                        .IsUnique();
+
+                    b.HasIndex("CreateByMember");
 
                     b.HasIndex("CreateByOM");
 
-                    b.HasIndex("CreateByUser");
-
                     b.ToTable("CreateCampaignRequest", (string)null);
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.CreateMemberRequest", b =>
-                {
-                    b.Property<Guid>("CreateMemberRequestID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AchievementLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("ApprovedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ApprovedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClubName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CreateBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DetailDescriptionLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAcceptTermOfUse")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsLocked")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPending")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRejected")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MemberAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MemberName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RoleInClub")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SocialMediaLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CreateMemberRequestID");
-
-                    b.HasIndex("ApprovedBy");
-
-                    b.HasIndex("CreateBy");
-
-                    b.ToTable("CreateMemberRequest", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObject.Models.CreateOrganizationManagerRequest", b =>
@@ -615,10 +535,17 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAcceptTermOfUse")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsLocked")
@@ -643,6 +570,7 @@ namespace BusinessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -732,7 +660,8 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("CreateBy");
 
-                    b.HasIndex("OrganizationID");
+                    b.HasIndex("OrganizationID")
+                        .IsUnique();
 
                     b.ToTable("CreateOrganizationRequest", (string)null);
                 });
@@ -749,10 +678,10 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime?>("ApprovedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreateByOM")
+                    b.Property<Guid?>("CreateByMember")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CreateByUser")
+                    b.Property<Guid?>("CreateByOM")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
@@ -783,14 +712,105 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("ApprovedBy");
 
-                    b.HasIndex("CreateByOM");
+                    b.HasIndex("CreateByMember");
 
-                    b.HasIndex("CreateByUser");
+                    b.HasIndex("CreateByOM");
 
                     b.HasIndex("PostID")
                         .IsUnique();
 
                     b.ToTable("CreatePostRequest", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.CreateVolunteerRequest", b =>
+                {
+                    b.Property<Guid>("CreateVolunteerRequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AchievementLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ApprovedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ApprovedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CitizenIdentification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClubName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreateBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DetailDescriptionLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAcceptTermOfUse")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPending")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRejected")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MemberAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("MemberID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MemberName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleInClub")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SocialMediaLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CreateVolunteerRequestID");
+
+                    b.HasIndex("ApprovedBy");
+
+                    b.HasIndex("CreateBy");
+
+                    b.ToTable("CreateVolunteerRequest", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObject.Models.DonatePhase", b =>
@@ -815,6 +835,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsEnd")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsProcessing")
                         .HasColumnType("bit");
 
@@ -828,6 +851,9 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UpdateBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
@@ -837,6 +863,79 @@ namespace BusinessObject.Migrations
                         .IsUnique();
 
                     b.ToTable("DonatePhase", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Member", b =>
+                {
+                    b.Property<Guid>("MemberID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FacebookUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TiktokUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YoutubeUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MemberID");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("Member", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Moderator", b =>
+                {
+                    b.Property<Guid>("ModeratorID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ModeratorID");
+
+                    b.HasIndex("AccountID");
+
+                    b.ToTable("Moderator", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Notification", b =>
@@ -889,6 +988,9 @@ namespace BusinessObject.Migrations
 
                     b.Property<bool?>("IsActive")
                         .IsRequired()
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisable")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsModify")
@@ -995,9 +1097,18 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1029,6 +1140,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsEnd")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsProcessing")
                         .HasColumnType("bit");
 
@@ -1038,6 +1152,9 @@ namespace BusinessObject.Migrations
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdateBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -1050,38 +1167,13 @@ namespace BusinessObject.Migrations
                     b.ToTable("ProcessingPhase", (string)null);
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.RequestManager", b =>
-                {
-                    b.Property<Guid>("RequestManagerID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RequestManagerID");
-
-                    b.HasIndex("AccountID");
-
-                    b.ToTable("RequestManager", (string)null);
-                });
-
             modelBuilder.Entity("BusinessObject.Models.StatementFile", b =>
                 {
                     b.Property<Guid>("StatementFileId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreateBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
@@ -1122,6 +1214,9 @@ namespace BusinessObject.Migrations
                     b.Property<bool>("IsEnd")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsProcessing")
                         .HasColumnType("bit");
 
@@ -1131,6 +1226,9 @@ namespace BusinessObject.Migrations
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdateBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -1173,9 +1271,10 @@ namespace BusinessObject.Migrations
 
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:Identity", "100, 1");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
 
                     b.Property<string>("PayerName")
                         .IsRequired()
@@ -1200,53 +1299,6 @@ namespace BusinessObject.Migrations
                     b.HasIndex("CampaignID");
 
                     b.ToTable("Transaction", (string)null);
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.User", b =>
-                {
-                    b.Property<Guid>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("BirthDay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FacebookUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TiktokUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("YoutubeUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserID");
-
-                    b.HasIndex("AccountID");
-
-                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObject.Models.AccountToken", b =>
@@ -1312,19 +1364,25 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Models.Member", null)
+                        .WithMany("BankingAccounts")
+                        .HasForeignKey("MemberID");
+
                     b.HasOne("BusinessObject.Models.OrganizationManager", null)
                         .WithMany("BankingAccounts")
                         .HasForeignKey("OrganizationManagerID");
-
-                    b.HasOne("BusinessObject.Models.User", null)
-                        .WithMany("BankingAccounts")
-                        .HasForeignKey("UserID");
 
                     b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Campaign", b =>
                 {
+                    b.HasOne("BusinessObject.Models.BankingAccount", "BankingAccount")
+                        .WithMany("Campaigns")
+                        .HasForeignKey("BankingAccountID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("BusinessObject.Models.CampaignType", "CampaignType")
                         .WithMany("Campaigns")
                         .HasForeignKey("CampaignTypeID")
@@ -1335,6 +1393,8 @@ namespace BusinessObject.Migrations
                         .WithMany("Campaigns")
                         .HasForeignKey("OrganizationID")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("BankingAccount");
 
                     b.Navigation("CampaignType");
 
@@ -1349,81 +1409,65 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
                         .WithMany("CreateActivityRequests")
                         .HasForeignKey("ApprovedBy")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BusinessObject.Models.OrganizationManager", "OrganizationManager")
-                        .WithMany()
-                        .HasForeignKey("OrganizationManagerID");
+                    b.HasOne("BusinessObject.Models.Member", "Member")
+                        .WithMany("CreateActivityRequests")
+                        .HasForeignKey("CreateByMember")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BusinessObject.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
+                    b.HasOne("BusinessObject.Models.OrganizationManager", "OrganizationManager")
+                        .WithMany("CreateActivityRequests")
+                        .HasForeignKey("CreateByOM")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Activity");
 
+                    b.Navigation("Member");
+
+                    b.Navigation("Moderator");
+
                     b.Navigation("OrganizationManager");
-
-                    b.Navigation("RequestManager");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.CreateCampaignRequest", b =>
                 {
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
                         .WithMany("CreateCampaignRequests")
                         .HasForeignKey("ApprovedBy")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusinessObject.Models.Campaign", "Campaign")
-                        .WithMany()
-                        .HasForeignKey("CampaignID")
+                        .WithOne("CreateCampaignRequest")
+                        .HasForeignKey("BusinessObject.Models.CreateCampaignRequest", "CampaignID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.Member", "Member")
+                        .WithMany("CreateCampaignRequests")
+                        .HasForeignKey("CreateByMember")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusinessObject.Models.OrganizationManager", "OrganizationManager")
                         .WithMany("CreateCampaignRequests")
                         .HasForeignKey("CreateByOM")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BusinessObject.Models.User", "User")
-                        .WithMany("CreateCampaignRequests")
-                        .HasForeignKey("CreateByUser")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.Navigation("Campaign");
 
+                    b.Navigation("Member");
+
+                    b.Navigation("Moderator");
+
                     b.Navigation("OrganizationManager");
-
-                    b.Navigation("RequestManager");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.CreateMemberRequest", b =>
-                {
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
-                        .WithMany("CreateMemberRequests")
-                        .HasForeignKey("ApprovedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("BusinessObject.Models.User", "User")
-                        .WithMany("CreateUserVerifiedRequests")
-                        .HasForeignKey("CreateBy")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("RequestManager");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.CreateOrganizationManagerRequest", b =>
                 {
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
                         .WithMany("CreateOrganizationManagerRequests")
                         .HasForeignKey("ApprovedBy")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1434,14 +1478,14 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrganizationManager");
+                    b.Navigation("Moderator");
 
-                    b.Navigation("RequestManager");
+                    b.Navigation("OrganizationManager");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.CreateOrganizationRequest", b =>
                 {
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
                         .WithMany("CreateOrganizationRequests")
                         .HasForeignKey("ApprovedBy")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1453,36 +1497,34 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Models.Organization", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationID")
+                        .WithOne("CreateOrganizationRequest")
+                        .HasForeignKey("BusinessObject.Models.CreateOrganizationRequest", "OrganizationID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Moderator");
 
                     b.Navigation("Organization");
 
                     b.Navigation("OrganizationManager");
-
-                    b.Navigation("RequestManager");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.CreatePostRequest", b =>
                 {
-                    b.HasOne("BusinessObject.Models.RequestManager", "RequestManager")
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
                         .WithMany("CreatePostRequests")
                         .HasForeignKey("ApprovedBy")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BusinessObject.Models.Member", "Member")
+                        .WithMany("CreatePostRequests")
+                        .HasForeignKey("CreateByMember")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusinessObject.Models.OrganizationManager", "OrganizationManager")
                         .WithMany("CreatePostRequests")
                         .HasForeignKey("CreateByOM")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BusinessObject.Models.User", "User")
-                        .WithMany("CreatePostRequests")
-                        .HasForeignKey("CreateByUser")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusinessObject.Models.Post", "Post")
                         .WithOne("CreatePostRequest")
@@ -1490,13 +1532,31 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Member");
+
+                    b.Navigation("Moderator");
+
                     b.Navigation("OrganizationManager");
 
                     b.Navigation("Post");
+                });
 
-                    b.Navigation("RequestManager");
+            modelBuilder.Entity("BusinessObject.Models.CreateVolunteerRequest", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Moderator", "Moderator")
+                        .WithMany("CreateVolunteerRequests")
+                        .HasForeignKey("ApprovedBy")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("User");
+                    b.HasOne("BusinessObject.Models.Member", "Member")
+                        .WithMany("CreateMemberVerifiedRequests")
+                        .HasForeignKey("CreateBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Moderator");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.DonatePhase", b =>
@@ -1508,6 +1568,28 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.Navigation("Campaign");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Member", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Moderator", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Notification", b =>
@@ -1552,17 +1634,6 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.Navigation("Campaign");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.RequestManager", b =>
-                {
-                    b.HasOne("BusinessObject.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.StatementFile", b =>
@@ -1613,17 +1684,6 @@ namespace BusinessObject.Migrations
                     b.Navigation("Campaign");
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.User", b =>
-                {
-                    b.HasOne("BusinessObject.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("BusinessObject.Models.Account", b =>
                 {
                     b.Navigation("AccountTokens");
@@ -1642,11 +1702,15 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.BankingAccount", b =>
                 {
+                    b.Navigation("Campaigns");
+
                     b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Campaign", b =>
                 {
+                    b.Navigation("CreateCampaignRequest");
+
                     b.Navigation("DonatePhase");
 
                     b.Navigation("ProcessingPhase");
@@ -1661,16 +1725,48 @@ namespace BusinessObject.Migrations
                     b.Navigation("Campaigns");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Member", b =>
+                {
+                    b.Navigation("BankingAccounts");
+
+                    b.Navigation("CreateActivityRequests");
+
+                    b.Navigation("CreateCampaignRequests");
+
+                    b.Navigation("CreateMemberVerifiedRequests");
+
+                    b.Navigation("CreatePostRequests");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Moderator", b =>
+                {
+                    b.Navigation("CreateActivityRequests");
+
+                    b.Navigation("CreateCampaignRequests");
+
+                    b.Navigation("CreateOrganizationManagerRequests");
+
+                    b.Navigation("CreateOrganizationRequests");
+
+                    b.Navigation("CreatePostRequests");
+
+                    b.Navigation("CreateVolunteerRequests");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Organization", b =>
                 {
                     b.Navigation("Achievements");
 
                     b.Navigation("Campaigns");
+
+                    b.Navigation("CreateOrganizationRequest");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.OrganizationManager", b =>
                 {
                     b.Navigation("BankingAccounts");
+
+                    b.Navigation("CreateActivityRequests");
 
                     b.Navigation("CreateCampaignRequests");
 
@@ -1691,35 +1787,9 @@ namespace BusinessObject.Migrations
                     b.Navigation("Activities");
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.RequestManager", b =>
-                {
-                    b.Navigation("CreateActivityRequests");
-
-                    b.Navigation("CreateCampaignRequests");
-
-                    b.Navigation("CreateMemberRequests");
-
-                    b.Navigation("CreateOrganizationManagerRequests");
-
-                    b.Navigation("CreateOrganizationRequests");
-
-                    b.Navigation("CreatePostRequests");
-                });
-
             modelBuilder.Entity("BusinessObject.Models.StatementPhase", b =>
                 {
                     b.Navigation("StatementFiles");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.User", b =>
-                {
-                    b.Navigation("BankingAccounts");
-
-                    b.Navigation("CreateCampaignRequests");
-
-                    b.Navigation("CreatePostRequests");
-
-                    b.Navigation("CreateUserVerifiedRequests");
                 });
 #pragma warning restore 612, 618
         }

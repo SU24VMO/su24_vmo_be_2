@@ -34,6 +34,10 @@ namespace BusinessObject.FluentAPIs
                 .WithOne(x => x.Campaign)
                 .HasForeignKey(x => x.CampaignID)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.BankingAccount)
+                .WithMany(x => x.Campaigns)
+                .HasForeignKey(x => x.BankingAccountID)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             // Ignore these navigation properties

@@ -259,9 +259,6 @@ namespace BusinessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CampaignId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -285,8 +282,6 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("CampaignId");
-
                     b.HasIndex("MemberID");
 
                     b.HasIndex("OrganizationManagerID");
@@ -309,6 +304,9 @@ namespace BusinessObject.Migrations
 
                     b.Property<string>("ApplicationConfirmForm")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("BankingAccountID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CampaignTypeID")
                         .HasColumnType("uniqueidentifier");
@@ -369,6 +367,8 @@ namespace BusinessObject.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("CampaignID");
+
+                    b.HasIndex("BankingAccountID");
 
                     b.HasIndex("CampaignTypeID");
 
@@ -499,7 +499,8 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("ApprovedBy");
 
-                    b.HasIndex("CampaignID");
+                    b.HasIndex("CampaignID")
+                        .IsUnique();
 
                     b.HasIndex("CreateByMember");
 
@@ -657,7 +658,8 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("CreateBy");
 
-                    b.HasIndex("OrganizationID");
+                    b.HasIndex("OrganizationID")
+                        .IsUnique();
 
                     b.ToTable("CreateOrganizationRequest", (string)null);
                 });
@@ -1360,12 +1362,6 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Models.Campaign", "Campaign")
-                        .WithMany()
-                        .HasForeignKey("CampaignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BusinessObject.Models.Member", null)
                         .WithMany("BankingAccounts")
                         .HasForeignKey("MemberID");
@@ -1375,12 +1371,16 @@ namespace BusinessObject.Migrations
                         .HasForeignKey("OrganizationManagerID");
 
                     b.Navigation("Account");
-
-                    b.Navigation("Campaign");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Campaign", b =>
                 {
+                    b.HasOne("BusinessObject.Models.BankingAccount", "BankingAccount")
+                        .WithMany("Campaigns")
+                        .HasForeignKey("BankingAccountID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("BusinessObject.Models.CampaignType", "CampaignType")
                         .WithMany("Campaigns")
                         .HasForeignKey("CampaignTypeID")
@@ -1391,6 +1391,8 @@ namespace BusinessObject.Migrations
                         .WithMany("Campaigns")
                         .HasForeignKey("OrganizationID")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("BankingAccount");
 
                     b.Navigation("CampaignType");
 
@@ -1437,8 +1439,8 @@ namespace BusinessObject.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BusinessObject.Models.Campaign", "Campaign")
-                        .WithMany()
-                        .HasForeignKey("CampaignID")
+                        .WithOne("CreateCampaignRequest")
+                        .HasForeignKey("BusinessObject.Models.CreateCampaignRequest", "CampaignID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1493,8 +1495,8 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Models.Organization", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationID")
+                        .WithOne("CreateOrganizationRequest")
+                        .HasForeignKey("BusinessObject.Models.CreateOrganizationRequest", "OrganizationID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1698,11 +1700,15 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.BankingAccount", b =>
                 {
+                    b.Navigation("Campaigns");
+
                     b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Campaign", b =>
                 {
+                    b.Navigation("CreateCampaignRequest");
+
                     b.Navigation("DonatePhase");
 
                     b.Navigation("ProcessingPhase");
@@ -1750,6 +1756,8 @@ namespace BusinessObject.Migrations
                     b.Navigation("Achievements");
 
                     b.Navigation("Campaigns");
+
+                    b.Navigation("CreateOrganizationRequest");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.OrganizationManager", b =>

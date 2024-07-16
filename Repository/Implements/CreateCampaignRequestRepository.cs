@@ -99,6 +99,20 @@ namespace Repository.Implements
             {
                 var campaign = entity.Campaign;
                 var existingCampaign = context.Campaigns.FirstOrDefault(c => c.CampaignID == campaign!.CampaignID);
+                // Check if the banking account already exists
+                var bankingAccountExisted = context.BankingAccounts
+                    .FirstOrDefault(b => b.AccountNumber.Equals(bankingAccount.AccountNumber));
+                if (bankingAccountExisted == null)
+                {
+                    // Add the new banking account
+                    //bankingAccount.Account = null;
+                    context.BankingAccounts.Add(bankingAccount);
+                }
+                else
+                {
+                    campaign!.BankingAccountID = bankingAccountExisted.BankingAccountID;
+                }
+
                 if (existingCampaign == null)
                 {
                     // Add the new campaign
@@ -112,31 +126,7 @@ namespace Repository.Implements
 
 
 
-                // Check if the banking account already exists
-                var bankingAccountExisted = context.BankingAccounts
-                    .FirstOrDefault(b => b.AccountNumber.Equals(bankingAccount.AccountNumber));
-                if (bankingAccountExisted == null)
-                {
-                    // Add the new banking account
-                    //bankingAccount.Account = null;
-                    context.BankingAccounts.Add(bankingAccount);
-                }
-                else
-                {
-                    // Update existing banking account if necessary, without modifying the key
-
-                    bankingAccountExisted.BankingName = bankingAccount.BankingName;
-
-                    bankingAccountExisted.AccountName = bankingAccount.AccountName;
-
-                    bankingAccountExisted.CreatedAt = bankingAccount.CreatedAt;
-
-                    bankingAccountExisted.IsAvailable = bankingAccount.IsAvailable;
-
-                    bankingAccountExisted.QRCode = bankingAccount.QRCode;
-
-                    // No need to set AccountId or BankingAccountID as they should remain unchanged
-                }
+                
 
                 // Add the CreateCampaignRequest
                 entity.Member = null;

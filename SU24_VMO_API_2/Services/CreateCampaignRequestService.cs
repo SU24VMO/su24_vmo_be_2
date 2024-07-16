@@ -104,7 +104,7 @@ namespace SU24_VMO_API.Services
                 {
                     bankingAccount.Transactions = null;
                     bankingAccount.Account = null;
-                    bankingAccount.Campaign = null;
+                    bankingAccount.Campaigns = null;
                 }
 
                 if (request.Campaign != null)
@@ -180,7 +180,6 @@ namespace SU24_VMO_API.Services
                     var bankingAccount = new BankingAccount
                     {
                         BankingAccountID = Guid.NewGuid(),
-                        CampaignId = campaign.CampaignID,
                         BankingName = request.BankingName!,
                         AccountNumber = request.BankingAccountNumber!,
                         AccountName = request.AccountName,
@@ -189,6 +188,8 @@ namespace SU24_VMO_API.Services
                         IsAvailable = true,
                         QRCode = qrImageLink
                     };
+
+                    campaign.BankingAccountID = bankingAccount.BankingAccountID;
 
                     var member = _memberRepository.GetByAccountId(accountId);
 
@@ -268,7 +269,6 @@ namespace SU24_VMO_API.Services
                     var bankingAccount = new BankingAccount
                     {
                         BankingAccountID = Guid.NewGuid(),
-                        CampaignId = campaign.CampaignID,
                         BankingName = request.BankingName!,
                         AccountNumber = request.BankingAccountNumber!,
                         AccountName = request.AccountName,
@@ -277,6 +277,8 @@ namespace SU24_VMO_API.Services
                         IsAvailable = true,
                         QRCode = qrImageLink
                     };
+
+                    campaign.BankingAccountID = bankingAccount.BankingAccountID;
 
                     var createCampaignRequest = new CreateCampaignRequest
                     {

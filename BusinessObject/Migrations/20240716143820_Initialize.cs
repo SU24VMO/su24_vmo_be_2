@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BusinessObject.Migrations
 {
-    /// <inheritdoc />
     public partial class Initialize : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -56,6 +54,9 @@ namespace BusinessObject.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -102,6 +103,54 @@ namespace BusinessObject.Migrations
                     table.PrimaryKey("PK_Admin", x => x.AdminID);
                     table.ForeignKey(
                         name: "FK_Admin_Account_AccountID",
+                        column: x => x.AccountID,
+                        principalTable: "Account",
+                        principalColumn: "AccountID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Member",
+                columns: table => new
+                {
+                    MemberID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDay = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    YoutubeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TiktokUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Member", x => x.MemberID);
+                    table.ForeignKey(
+                        name: "FK_Member_Account_AccountID",
+                        column: x => x.AccountID,
+                        principalTable: "Account",
+                        principalColumn: "AccountID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Moderator",
+                columns: table => new
+                {
+                    ModeratorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Moderator", x => x.ModeratorID);
+                    table.ForeignKey(
+                        name: "FK_Moderator_Account_AccountID",
                         column: x => x.AccountID,
                         principalTable: "Account",
                         principalColumn: "AccountID",
@@ -157,121 +206,48 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequestManager",
+                name: "CreateVolunteerRequest",
                 columns: table => new
                 {
-                    RequestManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AccountID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreateVolunteerRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RequestManager", x => x.RequestManagerID);
-                    table.ForeignKey(
-                        name: "FK_RequestManager_Account_AccountID",
-                        column: x => x.AccountID,
-                        principalTable: "Account",
-                        principalColumn: "AccountID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AccountID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDay = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FacebookUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    YoutubeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TiktokUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsVerified = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserID);
-                    table.ForeignKey(
-                        name: "FK_User_Account_AccountID",
-                        column: x => x.AccountID,
-                        principalTable: "Account",
-                        principalColumn: "AccountID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Organization",
-                columns: table => new
-                {
-                    OrganizationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Logo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Website = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tax = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FoundingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OperatingLicense = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsModify = table.Column<bool>(type: "bit", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Organization", x => x.OrganizationID);
-                    table.ForeignKey(
-                        name: "FK_Organization_OrganizationManager_OrganizationManagerID",
-                        column: x => x.OrganizationManagerID,
-                        principalTable: "OrganizationManager",
-                        principalColumn: "OrganizationManagerID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CreateOrganizationManagerRequest",
-                columns: table => new
-                {
-                    CreateOrganizationManagerRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SocialMediaLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CitizenIdentification = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PersonalTaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MemberAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleInClub = table.Column<int>(type: "int", nullable: true),
+                    ClubName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DetailDescriptionLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AchievementLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsAcceptTermOfUse = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
-                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
-                    RequestManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CreateOrganizationManagerRequest", x => x.CreateOrganizationManagerRequestID);
+                    table.PrimaryKey("PK_CreateVolunteerRequest", x => x.CreateVolunteerRequestID);
                     table.ForeignKey(
-                        name: "FK_CreateOrganizationManagerRequest_OrganizationManager_OrganizationManagerID",
-                        column: x => x.OrganizationManagerID,
-                        principalTable: "OrganizationManager",
-                        principalColumn: "OrganizationManagerID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_CreateVolunteerRequest_Member_CreateBy",
+                        column: x => x.CreateBy,
+                        principalTable: "Member",
+                        principalColumn: "MemberID");
                     table.ForeignKey(
-                        name: "FK_CreateOrganizationManagerRequest_RequestManager_RequestManagerID",
-                        column: x => x.RequestManagerID,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
+                        name: "FK_CreateVolunteerRequest_Moderator_ApprovedBy",
+                        column: x => x.ApprovedBy,
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
                 });
 
             migrationBuilder.CreateTable(
@@ -287,8 +263,8 @@ namespace BusinessObject.Migrations
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    MemberID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -299,39 +275,37 @@ namespace BusinessObject.Migrations
                         principalTable: "Account",
                         principalColumn: "AccountID");
                     table.ForeignKey(
+                        name: "FK_BankingAccount_Member_MemberID",
+                        column: x => x.MemberID,
+                        principalTable: "Member",
+                        principalColumn: "MemberID");
+                    table.ForeignKey(
                         name: "FK_BankingAccount_OrganizationManager_OrganizationManagerID",
                         column: x => x.OrganizationManagerID,
                         principalTable: "OrganizationManager",
                         principalColumn: "OrganizationManagerID");
-                    table.ForeignKey(
-                        name: "FK_BankingAccount_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateTable(
-                name: "CreateMemberRequest",
+                name: "CreateOrganizationManagerRequest",
                 columns: table => new
                 {
-                    CreateMemberRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MemberName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreateOrganizationManagerRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SocialMediaLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MemberAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleInClub = table.Column<int>(type: "int", nullable: true),
-                    ClubName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DetailDescriptionLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AchievementLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CitizenIdentification = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonalTaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsAcceptTermOfUse = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
@@ -339,17 +313,18 @@ namespace BusinessObject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CreateMemberRequest", x => x.CreateMemberRequestID);
+                    table.PrimaryKey("PK_CreateOrganizationManagerRequest", x => x.CreateOrganizationManagerRequestID);
                     table.ForeignKey(
-                        name: "FK_CreateMemberRequest_RequestManager_ApprovedBy",
+                        name: "FK_CreateOrganizationManagerRequest_Moderator_ApprovedBy",
                         column: x => x.ApprovedBy,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
                     table.ForeignKey(
-                        name: "FK_CreateMemberRequest_User_CreateBy",
-                        column: x => x.CreateBy,
-                        principalTable: "User",
-                        principalColumn: "UserID");
+                        name: "FK_CreateOrganizationManagerRequest_OrganizationManager_OrganizationManagerID",
+                        column: x => x.OrganizationManagerID,
+                        principalTable: "OrganizationManager",
+                        principalColumn: "OrganizationManagerID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -358,12 +333,13 @@ namespace BusinessObject.Migrations
                 {
                     CreatePostRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreateByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreateByOM = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreateByMember = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreateByOM = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
@@ -372,6 +348,16 @@ namespace BusinessObject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CreatePostRequest", x => x.CreatePostRequestID);
+                    table.ForeignKey(
+                        name: "FK_CreatePostRequest_Member_CreateByMember",
+                        column: x => x.CreateByMember,
+                        principalTable: "Member",
+                        principalColumn: "MemberID");
+                    table.ForeignKey(
+                        name: "FK_CreatePostRequest_Moderator_ApprovedBy",
+                        column: x => x.ApprovedBy,
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
                     table.ForeignKey(
                         name: "FK_CreatePostRequest_OrganizationManager_CreateByOM",
                         column: x => x.CreateByOM,
@@ -383,16 +369,38 @@ namespace BusinessObject.Migrations
                         principalTable: "Post",
                         principalColumn: "PostID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organization",
+                columns: table => new
+                {
+                    OrganizationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Logo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tax = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FoundingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OperatingLicense = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsModify = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organization", x => x.OrganizationID);
                     table.ForeignKey(
-                        name: "FK_CreatePostRequest_RequestManager_ApprovedBy",
-                        column: x => x.ApprovedBy,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
-                    table.ForeignKey(
-                        name: "FK_CreatePostRequest_User_CreateByUser",
-                        column: x => x.CreateByUser,
-                        principalTable: "User",
-                        principalColumn: "UserID");
+                        name: "FK_Organization_OrganizationManager_OrganizationManagerID",
+                        column: x => x.OrganizationManagerID,
+                        principalTable: "OrganizationManager",
+                        principalColumn: "OrganizationManagerID");
                 });
 
             migrationBuilder.CreateTable(
@@ -423,6 +431,7 @@ namespace BusinessObject.Migrations
                     CampaignID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrganizationID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CampaignTypeID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BankingAccountID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -438,6 +447,7 @@ namespace BusinessObject.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsModify = table.Column<bool>(type: "bit", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false),
                     CanBeDonated = table.Column<bool>(type: "bit", nullable: false),
                     CheckTransparentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -445,6 +455,11 @@ namespace BusinessObject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Campaign", x => x.CampaignID);
+                    table.ForeignKey(
+                        name: "FK_Campaign_BankingAccount_BankingAccountID",
+                        column: x => x.BankingAccountID,
+                        principalTable: "BankingAccount",
+                        principalColumn: "BankingAccountID");
                     table.ForeignKey(
                         name: "FK_Campaign_CampaignType_CampaignTypeID",
                         column: x => x.CampaignTypeID,
@@ -465,18 +480,20 @@ namespace BusinessObject.Migrations
                     OrganizationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrganizationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrganizationManagerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrganizationManagerTaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrganizationTaxCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FoundingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SocialMediaLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AreaOfActivity = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PlanInformation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AchievementLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorizationDocuments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
@@ -486,10 +503,10 @@ namespace BusinessObject.Migrations
                 {
                     table.PrimaryKey("PK_CreateOrganizationRequest", x => x.CreateOrganizationRequestID);
                     table.ForeignKey(
-                        name: "FK_CreateOrganizationRequest_OrganizationManager_CreateBy",
-                        column: x => x.CreateBy,
-                        principalTable: "OrganizationManager",
-                        principalColumn: "OrganizationManagerID");
+                        name: "FK_CreateOrganizationRequest_Moderator_ApprovedBy",
+                        column: x => x.ApprovedBy,
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
                     table.ForeignKey(
                         name: "FK_CreateOrganizationRequest_Organization_OrganizationID",
                         column: x => x.OrganizationID,
@@ -497,10 +514,10 @@ namespace BusinessObject.Migrations
                         principalColumn: "OrganizationID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CreateOrganizationRequest_RequestManager_ApprovedBy",
-                        column: x => x.ApprovedBy,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
+                        name: "FK_CreateOrganizationRequest_OrganizationManager_CreateBy",
+                        column: x => x.CreateBy,
+                        principalTable: "OrganizationManager",
+                        principalColumn: "OrganizationManagerID");
                 });
 
             migrationBuilder.CreateTable(
@@ -509,12 +526,13 @@ namespace BusinessObject.Migrations
                 {
                     CreateCampaignRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CampaignID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreateByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreateByMember = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateByOM = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
@@ -530,20 +548,20 @@ namespace BusinessObject.Migrations
                         principalColumn: "CampaignID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_CreateCampaignRequest_Member_CreateByMember",
+                        column: x => x.CreateByMember,
+                        principalTable: "Member",
+                        principalColumn: "MemberID");
+                    table.ForeignKey(
+                        name: "FK_CreateCampaignRequest_Moderator_ApprovedBy",
+                        column: x => x.ApprovedBy,
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
+                    table.ForeignKey(
                         name: "FK_CreateCampaignRequest_OrganizationManager_CreateByOM",
                         column: x => x.CreateByOM,
                         principalTable: "OrganizationManager",
                         principalColumn: "OrganizationManagerID");
-                    table.ForeignKey(
-                        name: "FK_CreateCampaignRequest_RequestManager_ApprovedBy",
-                        column: x => x.ApprovedBy,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
-                    table.ForeignKey(
-                        name: "FK_CreateCampaignRequest_User_CreateByUser",
-                        column: x => x.CreateByUser,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateTable(
@@ -558,6 +576,8 @@ namespace BusinessObject.Migrations
                     CurrentMoney = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Percent = table.Column<double>(type: "float", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
                     IsProcessing = table.Column<bool>(type: "bit", nullable: false),
                     IsEnd = table.Column<bool>(type: "bit", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -585,6 +605,8 @@ namespace BusinessObject.Migrations
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsProcessing = table.Column<bool>(type: "bit", nullable: false),
                     IsEnd = table.Column<bool>(type: "bit", nullable: false),
+                    UpdateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -610,6 +632,8 @@ namespace BusinessObject.Migrations
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsProcessing = table.Column<bool>(type: "bit", nullable: false),
                     IsEnd = table.Column<bool>(type: "bit", nullable: false),
+                    UpdateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -672,7 +696,8 @@ namespace BusinessObject.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDisable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -692,7 +717,8 @@ namespace BusinessObject.Migrations
                     StatementPhaseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreateBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -732,18 +758,16 @@ namespace BusinessObject.Migrations
                     CreateActivityRequestID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ActivityID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreateByOM = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreateByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreateByMember = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     IsRejected = table.Column<bool>(type: "bit", nullable: false),
                     IsPending = table.Column<bool>(type: "bit", nullable: false),
-                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
-                    OrganizationManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RequestManagerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -755,20 +779,20 @@ namespace BusinessObject.Migrations
                         principalColumn: "ActivityId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CreateActivityRequest_OrganizationManager_OrganizationManagerID",
-                        column: x => x.OrganizationManagerID,
+                        name: "FK_CreateActivityRequest_Member_CreateByMember",
+                        column: x => x.CreateByMember,
+                        principalTable: "Member",
+                        principalColumn: "MemberID");
+                    table.ForeignKey(
+                        name: "FK_CreateActivityRequest_Moderator_ApprovedBy",
+                        column: x => x.ApprovedBy,
+                        principalTable: "Moderator",
+                        principalColumn: "ModeratorID");
+                    table.ForeignKey(
+                        name: "FK_CreateActivityRequest_OrganizationManager_CreateByOM",
+                        column: x => x.CreateByOM,
                         principalTable: "OrganizationManager",
                         principalColumn: "OrganizationManagerID");
-                    table.ForeignKey(
-                        name: "FK_CreateActivityRequest_RequestManager_RequestManagerID",
-                        column: x => x.RequestManagerID,
-                        principalTable: "RequestManager",
-                        principalColumn: "RequestManagerID");
-                    table.ForeignKey(
-                        name: "FK_CreateActivityRequest_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "UserID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -815,14 +839,19 @@ namespace BusinessObject.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BankingAccount_MemberID",
+                table: "BankingAccount",
+                column: "MemberID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BankingAccount_OrganizationManagerID",
                 table: "BankingAccount",
                 column: "OrganizationManagerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankingAccount_UserID",
-                table: "BankingAccount",
-                column: "UserID");
+                name: "IX_Campaign_BankingAccountID",
+                table: "Campaign",
+                column: "BankingAccountID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Campaign_CampaignTypeID",
@@ -840,19 +869,19 @@ namespace BusinessObject.Migrations
                 column: "ActivityID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CreateActivityRequest_OrganizationManagerID",
+                name: "IX_CreateActivityRequest_ApprovedBy",
                 table: "CreateActivityRequest",
-                column: "OrganizationManagerID");
+                column: "ApprovedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CreateActivityRequest_RequestManagerID",
+                name: "IX_CreateActivityRequest_CreateByMember",
                 table: "CreateActivityRequest",
-                column: "RequestManagerID");
+                column: "CreateByMember");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CreateActivityRequest_UserID",
+                name: "IX_CreateActivityRequest_CreateByOM",
                 table: "CreateActivityRequest",
-                column: "UserID");
+                column: "CreateByOM");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreateCampaignRequest_ApprovedBy",
@@ -862,7 +891,13 @@ namespace BusinessObject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CreateCampaignRequest_CampaignID",
                 table: "CreateCampaignRequest",
-                column: "CampaignID");
+                column: "CampaignID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CreateCampaignRequest_CreateByMember",
+                table: "CreateCampaignRequest",
+                column: "CreateByMember");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreateCampaignRequest_CreateByOM",
@@ -870,29 +905,14 @@ namespace BusinessObject.Migrations
                 column: "CreateByOM");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CreateCampaignRequest_CreateByUser",
-                table: "CreateCampaignRequest",
-                column: "CreateByUser");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CreateMemberRequest_ApprovedBy",
-                table: "CreateMemberRequest",
+                name: "IX_CreateOrganizationManagerRequest_ApprovedBy",
+                table: "CreateOrganizationManagerRequest",
                 column: "ApprovedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CreateMemberRequest_CreateBy",
-                table: "CreateMemberRequest",
-                column: "CreateBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreateOrganizationManagerRequest_OrganizationManagerID",
                 table: "CreateOrganizationManagerRequest",
                 column: "OrganizationManagerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CreateOrganizationManagerRequest_RequestManagerID",
-                table: "CreateOrganizationManagerRequest",
-                column: "RequestManagerID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreateOrganizationRequest_ApprovedBy",
@@ -907,7 +927,8 @@ namespace BusinessObject.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CreateOrganizationRequest_OrganizationID",
                 table: "CreateOrganizationRequest",
-                column: "OrganizationID");
+                column: "OrganizationID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreatePostRequest_ApprovedBy",
@@ -915,14 +936,14 @@ namespace BusinessObject.Migrations
                 column: "ApprovedBy");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CreatePostRequest_CreateByMember",
+                table: "CreatePostRequest",
+                column: "CreateByMember");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CreatePostRequest_CreateByOM",
                 table: "CreatePostRequest",
                 column: "CreateByOM");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CreatePostRequest_CreateByUser",
-                table: "CreatePostRequest",
-                column: "CreateByUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreatePostRequest_PostID",
@@ -931,10 +952,30 @@ namespace BusinessObject.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CreateVolunteerRequest_ApprovedBy",
+                table: "CreateVolunteerRequest",
+                column: "ApprovedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CreateVolunteerRequest_CreateBy",
+                table: "CreateVolunteerRequest",
+                column: "CreateBy");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DonatePhase_CampaignId",
                 table: "DonatePhase",
                 column: "CampaignId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Member_AccountID",
+                table: "Member",
+                column: "AccountID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Moderator_AccountID",
+                table: "Moderator",
+                column: "AccountID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_AccountID",
@@ -956,11 +997,6 @@ namespace BusinessObject.Migrations
                 table: "ProcessingPhase",
                 column: "CampaignId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RequestManager_AccountID",
-                table: "RequestManager",
-                column: "AccountID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StatementFile_StatementPhaseId",
@@ -987,14 +1023,8 @@ namespace BusinessObject.Migrations
                 name: "IX_Transaction_CampaignID",
                 table: "Transaction",
                 column: "CampaignID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_AccountID",
-                table: "User",
-                column: "AccountID");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -1016,9 +1046,6 @@ namespace BusinessObject.Migrations
                 name: "CreateCampaignRequest");
 
             migrationBuilder.DropTable(
-                name: "CreateMemberRequest");
-
-            migrationBuilder.DropTable(
                 name: "CreateOrganizationManagerRequest");
 
             migrationBuilder.DropTable(
@@ -1026,6 +1053,9 @@ namespace BusinessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "CreatePostRequest");
+
+            migrationBuilder.DropTable(
+                name: "CreateVolunteerRequest");
 
             migrationBuilder.DropTable(
                 name: "DonatePhase");
@@ -1046,28 +1076,28 @@ namespace BusinessObject.Migrations
                 name: "Post");
 
             migrationBuilder.DropTable(
-                name: "RequestManager");
+                name: "Moderator");
 
             migrationBuilder.DropTable(
                 name: "StatementPhase");
 
             migrationBuilder.DropTable(
-                name: "BankingAccount");
-
-            migrationBuilder.DropTable(
                 name: "ProcessingPhase");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Campaign");
 
             migrationBuilder.DropTable(
-                name: "Campaign");
+                name: "BankingAccount");
 
             migrationBuilder.DropTable(
                 name: "CampaignType");
 
             migrationBuilder.DropTable(
                 name: "Organization");
+
+            migrationBuilder.DropTable(
+                name: "Member");
 
             migrationBuilder.DropTable(
                 name: "OrganizationManager");

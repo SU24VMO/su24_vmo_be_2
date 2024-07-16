@@ -12,6 +12,7 @@ namespace BusinessObject.Models
         public Guid CampaignID { get; set; } = default!;
         public Guid? OrganizationID { get; set; } = default!;
         public Guid CampaignTypeID { get; set; } = default!;
+        public Guid BankingAccountID { get; set; } = default!;
         public string Address { get; set; } = default!;
         public string? Name { get; set; } = default!;
         public string? Description { get; set; } = default!;
