@@ -302,7 +302,6 @@ namespace SU24_VMO_API.Services
                     };
                     _activityImageRepository.Save(activityImage);
                 }
-
             }
             _activityRepository.Update(activityExisted);
             return true;

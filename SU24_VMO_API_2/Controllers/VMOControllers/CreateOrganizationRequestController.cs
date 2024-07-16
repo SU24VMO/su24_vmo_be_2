@@ -346,7 +346,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager, Moderator")]
         [Route("update/organization-information")]
 
-        public async Task<IActionResult> UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId, UpdateCreateOrganizationRequestRequest updateRequest)
+        public async Task<IActionResult> UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId,[FromForm] UpdateCreateOrganizationRequestRequest updateRequest)
         {
             try
             {
