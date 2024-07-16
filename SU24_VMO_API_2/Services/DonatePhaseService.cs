@@ -239,6 +239,7 @@ namespace SU24_VMO_API.Services
                 {
                     campaign.CanBeDonated = false;
                     donatePhase.IsEnd = true;
+                    donatePhase.IsProcessing = false;
                     donatePhase.IsLocked = true;
                     donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
 
