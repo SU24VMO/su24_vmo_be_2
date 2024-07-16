@@ -252,7 +252,7 @@ namespace SU24_VMO_API.Services
 
 
 
-        public async void UpdateCreateActivityRequestRequest(Guid createActivityRequestId, UpdateCreateActivityRequestRequest updateRequest)
+        public async Task<bool> UpdateCreateActivityRequestRequest(Guid createActivityRequestId, UpdateCreateActivityRequestRequest updateRequest)
         {
             var requestExisted = _repository.GetById(createActivityRequestId);
             if (requestExisted == null)
@@ -305,6 +305,7 @@ namespace SU24_VMO_API.Services
 
             }
             _activityRepository.Update(activityExisted);
+            return true;
         }
 
 

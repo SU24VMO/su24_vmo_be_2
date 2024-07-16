@@ -111,7 +111,7 @@ namespace SU24_VMO_API.Services
 
 
 
-        public async void UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId, UpdateCreateOrganizationRequestRequest updateRequest)
+        public async Task<bool> UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId, UpdateCreateOrganizationRequestRequest updateRequest)
         {
             var requestExisted = repository.GetById(createOrganizationRequestRequestId);
             if (requestExisted == null) throw new NotFoundException("Đơn duyệt tạo tổ chức không tìm thấy!");
@@ -175,6 +175,7 @@ namespace SU24_VMO_API.Services
 
             _organizationRepository.Update(organization);
             repository.Update(requestExisted);
+            return true;
         }
 
 

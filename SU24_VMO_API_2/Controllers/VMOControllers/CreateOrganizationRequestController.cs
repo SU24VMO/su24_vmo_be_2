@@ -350,7 +350,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                _createOrganizationRequestService.UpdateCreateOrganizationRequestRequest(createOrganizationRequestRequestId, updateRequest);
+                await _createOrganizationRequestService.UpdateCreateOrganizationRequestRequest(createOrganizationRequestRequestId, updateRequest);
 
                 var response = new ResponseMessage()
                 {

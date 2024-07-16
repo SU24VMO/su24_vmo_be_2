@@ -354,7 +354,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                _createActivityRequestService.UpdateCreateActivityRequestRequest(createActivityRequestId, request);
+                await _createActivityRequestService.UpdateCreateActivityRequestRequest(createActivityRequestId, request);
 
                 var response = new ResponseMessage()
                 {

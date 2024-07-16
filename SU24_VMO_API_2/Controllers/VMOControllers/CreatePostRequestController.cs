@@ -243,7 +243,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                _createPostRequestService.UpdateCreatePostRequestRequest(createPostRequestId, updateRequest);
+                await _createPostRequestService.UpdateCreatePostRequestRequest(createPostRequestId, updateRequest);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",

@@ -132,7 +132,7 @@ namespace SU24_VMO_API.Services
 
 
 
-        public async void UpdateCreatePostRequestRequest(Guid createPostRequestId, UpdateCreatePostRequestRequest updateRequest)
+        public async Task<bool> UpdateCreatePostRequestRequest(Guid createPostRequestId, UpdateCreatePostRequestRequest updateRequest)
         {
             var requestExisted = _repository.GetById(createPostRequestId);
             if (requestExisted == null)
@@ -167,7 +167,7 @@ namespace SU24_VMO_API.Services
             }
 
             _postRepository.Update(post);
-
+            return true;
         }
 
 
