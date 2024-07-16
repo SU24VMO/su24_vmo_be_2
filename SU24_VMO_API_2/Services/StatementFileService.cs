@@ -41,9 +41,9 @@ namespace SU24_VMO_API.Services
         public async Task<List<StatementFile>> UploadStatementFileAsync(CreateStatementFileRequest request)
         {
             var statementPhase = _statementPhaseRepository.GetById(request.StatementPhaseId);
-            if (statementPhase == null) throw new NotFoundException("Statement Phase not found!");
+            if (statementPhase == null) throw new NotFoundException("Giai đoạn sao kê không tìm thấy!");
             var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) throw new NotFoundException("Account not found!");
+            if (account == null) throw new NotFoundException("Tài khoản không tìm thấy!");
             var listStatementFile = new List<StatementFile>();
 
             foreach (var statementFile in request.StatementFile)

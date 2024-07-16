@@ -52,7 +52,7 @@ namespace SU24_VMO_API.Services
         public async Task<CreateOrganizationRequest?> CreateOrganizationRequest(Guid organizationManagerID, CreateOrganizationRequestRequest request)
         {
             var organizationManager = _organizationManagerRepository.GetById(organizationManagerID);
-            if (organizationManager == null) { throw new NotFoundException("Organization Manager not found!"); }
+            if (organizationManager == null) { throw new NotFoundException("Quản lý tổ chức không tìm thấy!"); }
             var organization = new Organization
             {
                 OrganizationID = Guid.NewGuid(),
@@ -183,7 +183,7 @@ namespace SU24_VMO_API.Services
         {
             TryValidateAcceptOrRejectCreateOrganizationRequest(acceptOrRejectCreateOrganizationRequestRequest);
             var request = repository.GetById((Guid)acceptOrRejectCreateOrganizationRequestRequest.CreateOrganizationRequestID!);
-            if (request == null) { throw new NotFoundException("Request not found!"); }
+            if (request == null) { throw new NotFoundException("Yêu cầu không tìm thấy!"); }
             var organizationManager = _organizationManagerRepository.GetById(request.CreateBy);
             var organization = _organizationRepository.GetById(request.OrganizationID)!;
             var account = _accountRepository.GetById(organizationManager!.AccountID);
@@ -248,7 +248,7 @@ namespace SU24_VMO_API.Services
             }
             if (String.IsNullOrEmpty(request.IsApproved.ToString()))
             {
-                throw new Exception("Status must not be null or empty!");
+                throw new Exception("Trạng thái không được để trống!");
             }
         }
 
@@ -322,7 +322,7 @@ namespace SU24_VMO_API.Services
             }
             if (repository.GetById(request.CreateOrganizationRequestID) == null)
             {
-                throw new Exception("Request not existed!");
+                throw new Exception("Yêu cầu không tồn tại!");
             }
         }
     }

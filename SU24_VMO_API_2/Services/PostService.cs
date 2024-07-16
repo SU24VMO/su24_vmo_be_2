@@ -193,7 +193,7 @@ namespace SU24_VMO_API.Services
         public PostResponse? GetById(Guid id)
         {
             var post = repository.GetById(id);
-            if (post == null) { throw new NotFoundException("Post not found!"); }
+            if (post == null) { throw new NotFoundException("Bài viết không tìm thấy!"); }
             var postResponse = new PostResponse
             {
                 PostID = post.PostID,
@@ -218,7 +218,7 @@ namespace SU24_VMO_API.Services
                 postResponse.AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim();
                 return postResponse;
             }
-            else throw new BadRequestException("Post existed but can not found request of this post to append name of the author!");
+            else throw new BadRequestException("Bài viết đã tồn tại nhưng không thể tìm thấy yêu cầu thêm tên tác giả cho bài viết này!");
         }
 
         public async Task<Post?> CreateNewPost(CreateNewPost request)

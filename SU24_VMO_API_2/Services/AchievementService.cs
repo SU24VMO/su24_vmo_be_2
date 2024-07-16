@@ -59,7 +59,7 @@ namespace SU24_VMO_API.Services
         public void Update(UpdateAchievementRequest request)
         {
             var achievement = _achievementRepository.GetById(request.AchievementID);
-            if (achievement == null) { throw new Exception("Achievement not found!");}
+            if (achievement == null) { throw new Exception("Không tìm thấy thành tựu này!");}
             if (!String.IsNullOrEmpty(request.Description))
             {
                 achievement.Description = request.Description;
@@ -80,20 +80,20 @@ namespace SU24_VMO_API.Services
         {
             if (!String.IsNullOrEmpty(request.OrganizationID.ToString()))
             {
-                throw new Exception("OrganizationID is not empty.");
+                throw new Exception("Tổ chức không được để trống.");
             }
 
             if (_organizationRepository.GetById(request.OrganizationID) == null)
             {
-                throw new Exception("Organization not found.");
+                throw new Exception("Tổ chức không tìm thấy.");
             }
             if (!String.IsNullOrEmpty(request.Description))
             {
-                throw new Exception("Description is not empty.");
+                throw new Exception("Mô tả không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.Title))
             {
-                throw new Exception("Title is not empty.");
+                throw new Exception("Tiêu đề không được để trống.");
             }
         }
     }

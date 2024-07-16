@@ -398,12 +398,12 @@ namespace SU24_VMO_API.Services
         {
             if (_phaseRepository.GetById(request.ProcessingPhaseId) == null)
             {
-                throw new Exception("Processing phase not found!");
+                throw new Exception("Giai đoạn giải ngân không tìm thấy!");
             }
 
             if (_accountRepository.GetById(request.AccountId) == null)
             {
-                throw new Exception("Account not found!");
+                throw new Exception("Tài khoản không tìm thấy!");
             }
         }
     }

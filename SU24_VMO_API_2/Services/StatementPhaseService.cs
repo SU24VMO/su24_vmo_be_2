@@ -55,7 +55,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<StatementPhase?> GetStatementPhaseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
-            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tìm thấy!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
 
             var campaign = new List<Campaign>();
@@ -87,7 +87,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<StatementPhase?> GetStatementPhaseByMemberId(Guid userId)
         {
             var user = _userRepository.GetById(userId);
-            if (user == null) { throw new NotFoundException("User not found!"); }
+            if (user == null) { throw new NotFoundException("Người dùng không tìm thấy!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember.Equals(userId));
 
             var campaign = new List<Campaign>();
@@ -140,9 +140,9 @@ namespace SU24_VMO_API.Services
         public void UpdateStatementPhaseStatus(UpdateStatementPhaseStatusRequest request)
         {
             var statementPhase = _repository.GetById(request.StatementPhaseId);
-            if (statementPhase == null) { throw new NotFoundException("Statement phase not found!"); }
+            if (statementPhase == null) { throw new NotFoundException("Giai đoạn sao kê không tìm thấy!"); }
             var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) { throw new NotFoundException("Account not found!"); }
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
             var campaign = _campaignRepository.GetById(statementPhase.CampaignId)!;
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
             if (request.IsEnd == true)
@@ -224,9 +224,9 @@ namespace SU24_VMO_API.Services
         public void UpdateStatementPhase(UpdateStatementPhaseRequest request)
         {
             var statementPhase = _repository.GetById(request.StatementPhaseId);
-            if (statementPhase == null) { throw new NotFoundException("Statement phase not found!"); }
+            if (statementPhase == null) { throw new NotFoundException("Giai đoạn sao kê không tìm thấy!"); }
 
-            if (statementPhase.IsLocked) throw new BadRequestException("This phase was locked!");
+            if (statementPhase.IsLocked) throw new BadRequestException("Giai đoạn này hiện không thể chỉnh sửa!");
 
             if (!String.IsNullOrEmpty(request.Name))
             {

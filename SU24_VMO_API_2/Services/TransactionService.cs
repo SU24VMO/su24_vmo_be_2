@@ -248,7 +248,7 @@ namespace SU24_VMO_API.Services
             PaymentLinkInformation paymentLinkInfomation = await payOs.getPaymentLinkInformation(orderId);
             if (paymentLinkInfomation == null)
             {
-                throw new Exception("Payment link information is null");
+                throw new Exception("Link thông tin thanh toán bị trống");
             }
 
             var transaction = _transactionRepository.GetTransactionByOrderId(orderId);
@@ -438,22 +438,22 @@ namespace SU24_VMO_API.Services
             var campaign = _campaignRepository.GetById(createTransactionRequest.CampaignId);
             if (campaign == null)
             {
-                throw new Exception("Campaign not found!");
+                throw new Exception("Chiến dịch này không tìm thấy!");
             }
 
             var account = _accountRepository.GetById(createTransactionRequest.AccountId);
             if (account == null)
             {
-                throw new Exception("Account not found!");
+                throw new Exception("Tài khoản không tìm thấy!");
             }
 
-            if (createTransactionRequest.Note == null)
+            if (!String.IsNullOrEmpty(createTransactionRequest.Note))
             {
-                throw new Exception("Note can not be null!");
+                throw new Exception("Chú thích không được để trống!");
             }
             if (createTransactionRequest.Price < 2000)
             {
-                throw new Exception("Amount donate must be greater or equal than 2000 dong!");
+                throw new Exception("Số tiền quyên góp phải lớn hơn hoặc bằng 2000 đồng!");
             }
 
         }

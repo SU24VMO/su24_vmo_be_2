@@ -329,11 +329,11 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
             {
-                throw new Exception("Phone is not a valid phone");
+                throw new Exception("Số điện thoại không hợp lệ");
             }
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new Exception("Email is not valid.");
+                throw new Exception("Email không hợp lệ.");
             }
         }
 
@@ -346,7 +346,7 @@ namespace SU24_VMO_API.Services
             }
             if (String.IsNullOrEmpty(request.IsApproved.ToString()))
             {
-                throw new Exception("Status must not be null or empty!");
+                throw new Exception("Trạng thái không được để trống!");
             }
         }
 

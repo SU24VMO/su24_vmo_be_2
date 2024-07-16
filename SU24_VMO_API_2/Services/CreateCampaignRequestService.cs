@@ -641,7 +641,7 @@ namespace SU24_VMO_API.Services
             }
             if (String.IsNullOrEmpty(request.IsApproved.ToString()))
             {
-                throw new Exception("Status must not be null or empty!");
+                throw new Exception("Trạng thái không được để trống!");
             }
         }
 
@@ -653,27 +653,27 @@ namespace SU24_VMO_API.Services
 
             if (request.StartDate < currentDate)
             {
-                throw new Exception("Start date must be greater than the current time!");
+                throw new Exception("Ngày bắt đầu phải lớn hơn ngày hiện tại!");
             }
 
             if (request.ExpectedEndDate < currentDate)
             {
-                throw new Exception("End date must be greater than the current time!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày hiện tại!");
             }
 
             if (request.StartDate > request.ExpectedEndDate)
             {
-                throw new Exception("End date must be greater than start date!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày bắt đầu!");
             }
 
             if (!long.TryParse(request.TargetAmount, out long targetAmount))
             {
-                throw new Exception("Target amount must be a valid number.");
+                throw new Exception("Số tiền mục tiêu định dạng không hợp lệ.");
             }
 
             if (targetAmount < 0)
             {
-                throw new Exception("Target amount must be greater than or equal to 0.");
+                throw new Exception("Số tiền mục tiêu phải lớn hơn hoặc bằng 0.");
             }
         }
 
@@ -684,27 +684,27 @@ namespace SU24_VMO_API.Services
 
             if (request.StartDate < currentDate)
             {
-                throw new Exception("Start date must be greater than the current time!");
+                throw new Exception("Ngày bắt đầu phải lớn hơn ngày hiện tại!");
             }
 
             if (request.ExpectedEndDate < currentDate)
             {
-                throw new Exception("End date must be greater than the current time!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày hiện tại!");
             }
 
             if (request.StartDate > request.ExpectedEndDate)
             {
-                throw new Exception("End date must be greater than start date!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày bắt đầu!");
             }
 
             if (!long.TryParse(request.TargetAmount, out long targetAmount))
             {
-                throw new Exception("Target amount must be a valid number.");
+                throw new Exception("Số tiền mục tiêu định dạng không hợp lệ.");
             }
 
             if (targetAmount < 0)
             {
-                throw new Exception("Target amount must be greater than or equal to 0.");
+                throw new Exception("Số tiền mục tiêu phải lớn hơn hoặc bằng 0.");
             }
         }
     }

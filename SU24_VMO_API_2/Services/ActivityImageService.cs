@@ -72,7 +72,7 @@ namespace SU24_VMO_API.Services
         {
             if (_activityRepository.GetById(request.ActivityId) == null)
             {
-                throw new Exception("Activity not found.");
+                throw new Exception("Hoạt động không tìm thấy.");
             }
             if (request.Images == null)
             {
@@ -90,11 +90,11 @@ namespace SU24_VMO_API.Services
 
             if (_activityImageRepository.GetById(request.ActivityImageId) == null)
             {
-                throw new Exception("Activity image not found.");
+                throw new Exception("Ảnh không tìm thấy.");
             }
             if (!String.IsNullOrEmpty(request.Link))
             {
-                throw new Exception("Link is not empty.");
+                throw new Exception("Đường dẫn không được để trống!.");
             }
         }
     }

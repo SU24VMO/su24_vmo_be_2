@@ -336,15 +336,15 @@ namespace SU24_VMO_API.Services
 
             if (_processingPhaseRepository.GetById(request.ProcessingPhaseId) == null)
             {
-                throw new Exception("Processing phase not found.");
+                throw new Exception("Giai đoạn giải ngân không tìm thấy!.");
             }
             if (!String.IsNullOrEmpty(request.Content))
             {
-                throw new Exception("Content is not empty.");
+                throw new Exception("Nội dung không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.Title))
             {
-                throw new Exception("Title is not empty.");
+                throw new Exception("Tiêu đề không được để trống.");
             }
         }
 

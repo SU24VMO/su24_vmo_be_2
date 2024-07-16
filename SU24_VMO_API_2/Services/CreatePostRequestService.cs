@@ -69,7 +69,7 @@ namespace SU24_VMO_API.Services
                 CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
             };
             var postCreated = _postRepository.Save(post);
-            if (postCreated == null) { throw new Exception("Create post request fail!"); }
+            if (postCreated == null) { throw new Exception("Tạo đơn thất bại!"); }
 
             //them request tao bai post sau
 
@@ -86,7 +86,7 @@ namespace SU24_VMO_API.Services
             };
 
 
-            if (account == null) { throw new NotFoundException("Account not found!"); }
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
             if (account.Role == BusinessObject.Enums.Role.Volunteer)
             {
                 var volunteer = _memberRepository.GetByAccountId(request.AccountId)!;
@@ -125,7 +125,7 @@ namespace SU24_VMO_API.Services
             }
             else
             {
-                throw new UnauthorizedAccessException("Role of this account is not accept!");
+                throw new UnauthorizedAccessException("Người dùng hiện tại không thể thực hiện chức năng này!");
             }
 
         }
@@ -175,9 +175,9 @@ namespace SU24_VMO_API.Services
         public void AcceptOrRejectCreatePostRequest(UpdateCreatePostRequest request)
         {
             var createPostRequest = _repository.GetById(request.CreatePostRequestId);
-            if (createPostRequest == null) { throw new NotFoundException("Create post request not found!"); }
+            if (createPostRequest == null) { throw new NotFoundException("Đơn tạo bài viết này không tìm thấy!"); }
             var moderator = _moderatorRepository.GetById(request.ModeratorId);
-            if (moderator == null) { throw new NotFoundException("Request manager not found!"); }
+            if (moderator == null) { throw new NotFoundException("Kiểm duyệt viên không tìm thấy!"); }
 
             var om = new OrganizationManager();
             var user = new Member();

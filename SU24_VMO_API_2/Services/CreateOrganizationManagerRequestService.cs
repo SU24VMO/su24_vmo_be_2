@@ -211,7 +211,7 @@ namespace SU24_VMO_API.Services
         {
             TryValidateUpdateCreateOrganizationManagerRequest(updateCreateOrganizationManagerVerifiedAccount);
             var request = _createOrganizationManagerRequestRepository.GetById((Guid)updateCreateOrganizationManagerVerifiedAccount.CreateOrganizationManagerRequestID!);
-            if (request == null) { throw new NotFoundException("Request not found!"); }
+            if (request == null) { throw new NotFoundException("Không tìm thấy yêu cầu này!"); }
             var organizationManager = _organizationManagerRepository.GetById(request.CreateBy);
             var account = _accountRepository.GetById(organizationManager!.AccountID);
             var result = false;
@@ -278,7 +278,7 @@ namespace SU24_VMO_API.Services
             }
             if (String.IsNullOrEmpty(request.IsApproved.ToString()))
             {
-                throw new Exception("Status must not be null or empty!");
+                throw new Exception("Trạng thái không được để trống!");
             }
         }
     }

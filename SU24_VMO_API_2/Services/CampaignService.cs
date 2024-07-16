@@ -142,7 +142,7 @@ namespace SU24_VMO_API.Services
             var campaign = _campaignRepository.GetById(request.CampaignId);
             if (campaign == null)
             {
-                throw new NotFoundException("Campaign not found!");
+                throw new NotFoundException("Không tìm thấy chiến dịch này!");
             }
             var campaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(request.CampaignId);
             if (campaignRequest != null)
@@ -2351,7 +2351,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException("Phase is invalid!");
+                    throw new InvalidOperationException("Giai đoạn này không hợp lệ!");
                 }
             }
             else
@@ -2505,7 +2505,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException("Phase is invalid!");
+                    throw new InvalidOperationException("Giai đoạn này không hợp lệ!");
                 }
             }
 
@@ -2739,7 +2739,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException("Phase is invalid!");
+                    throw new InvalidOperationException("Giai đoạn này không hợp lệ!");
                 }
             }
             else
@@ -2966,7 +2966,7 @@ namespace SU24_VMO_API.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException("Phase is invalid!");
+                    throw new InvalidOperationException("Giai đoạn này không hợp lệ!");
                 }
             }
         }
@@ -3605,58 +3605,54 @@ namespace SU24_VMO_API.Services
 
             if (_campaignTypeRepository.GetById(request.CampaignTypeId) == null)
             {
-                throw new Exception("CampaignType not found.");
+                throw new Exception("Loại chiến dịch không tìm thấy.");
             }
             if (!String.IsNullOrEmpty(request.Name))
             {
-                throw new Exception("Name is not empty.");
+                throw new Exception("Tên chiến dịch không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.Address))
             {
-                throw new Exception("Address is not empty.");
+                throw new Exception("Địa chỉ không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.Description))
             {
-                throw new Exception("Description is not empty.");
+                throw new Exception("Mô tả không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.StartDate.ToString()))
             {
-                throw new Exception("StartDate is not empty.");
+                throw new Exception("Ngày bắt đầu không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.TargetAmount))
             {
-                throw new Exception("TargetAmount is not empty.");
+                throw new Exception("Số tiền mục tiêu không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.ApplicationConfirmForm))
             {
-                throw new Exception("ApplicationConfirmForm is not empty.");
-            }
-            if (!String.IsNullOrEmpty(request.TargetAmount))
-            {
-                throw new Exception("TargetAmount is not empty.");
+                throw new Exception("Đơn xác nhận không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.AccountName))
             {
-                throw new Exception("AccountName is not empty.");
+                throw new Exception("Tên tài khoản không được để trống.");
             }
             if (request.StartDate < TimeHelper.GetTime(DateTime.UtcNow))
             {
-                throw new Exception("Start date must greater than current time!");
+                throw new Exception("Ngày bắt đầu phải lớn hơn ngày hiện tại!");
             }
 
             if (request.ExpectedEndDate < TimeHelper.GetTime(DateTime.UtcNow))
             {
-                throw new Exception("End date must greater than current time!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày hiện tại!");
             }
 
             if (request.StartDate > request.ExpectedEndDate)
             {
-                throw new Exception("End date must greater than start date!");
+                throw new Exception("Ngày kết thúc phải lớn hơn ngày bắt đầu!");
             }
 
             if (Convert.ToInt64(request.TargetAmount) < 0)
             {
-                throw new Exception("Target amount must greater or equal than 0.");
+                throw new Exception("Số tiền mục tiêu phải lớn hơn hoặc bằng 0.");
             }
         }
 

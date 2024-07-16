@@ -52,7 +52,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<DonatePhase?> GetDonatePhaseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
-            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tìm thấy!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
 
             var campaign = new List<Campaign>();
@@ -75,7 +75,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<DonatePhase?> GetDonatePhaseByMemberId(Guid memberId)
         {
             var member = _memberRepository.GetById(memberId);
-            if (member == null) { throw new NotFoundException("Member not found!"); }
+            if (member == null) { throw new NotFoundException("Thành viên không tìm thấy!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember.Equals(memberId));
 
             var campaign = new List<Campaign>();
@@ -100,7 +100,7 @@ namespace SU24_VMO_API.Services
         public DonatePhase? GetPercentDonatePhaseOfCampaignByCampaignId(Guid campaignId)
         {
             var campaign = _campaignRepository.GetById(campaignId);
-            if (campaign == null) { throw new NotFoundException("Campaign not found!"); }
+            if (campaign == null) { throw new NotFoundException("Chiến dịch không tìm thấy!"); }
             var donatePhase = campaign.DonatePhase;
             return donatePhase;
         }
@@ -108,9 +108,9 @@ namespace SU24_VMO_API.Services
         public void UpdateDonatePhaseStatus(UpdateDonatePhaseStatusRequest request)
         {
             var donatePhase = _repository.GetById(request.DonatePhaseId);
-            if (donatePhase == null) { throw new NotFoundException("Donate phase not found!"); }
+            if (donatePhase == null) { throw new NotFoundException("Giai đoạn quyên góp không tìm thấy!"); }
             var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) { throw new NotFoundException("Account not found!"); }
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
 
             var campaign = _campaignRepository.GetById(donatePhase.CampaignId)!;
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
@@ -263,9 +263,9 @@ namespace SU24_VMO_API.Services
         public void Update(UpdateDonatePhaseRequest request)
         {
             var donatePhase = _repository.GetById(request.DonatePhaseId);
-            if (donatePhase == null) { throw new NotFoundException("Donate phase not found!"); }
+            if (donatePhase == null) { throw new NotFoundException("Giai đoạn quyên góp không tìm thấy!"); }
 
-            if (donatePhase.IsLocked) throw new BadRequestException("This phase was locked!");
+            if (donatePhase.IsLocked) throw new BadRequestException("Giai đoạn này đã bị khóa!");
 
             if (!String.IsNullOrEmpty(request.Name))
             {

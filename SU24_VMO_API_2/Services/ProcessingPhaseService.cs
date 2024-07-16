@@ -59,7 +59,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<ProcessingPhase?> GetProcessingPhaseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
-            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM != null && r.CreateByOM.Equals(omId));
 
             var campaign = new List<Campaign>();
@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<ProcessingPhase?> GetProcessingPhaseByMemberId(Guid memberId)
         {
             var member = _memberRepository.GetById(memberId);
-            if (member == null) { throw new NotFoundException("Member not found!"); }
+            if (member == null) { throw new NotFoundException("Thành viên không tồn tại!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember != null && r.CreateByMember.Equals(memberId));
 
             var campaign = new List<Campaign>();
@@ -106,7 +106,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
-            if (om == null) { throw new NotFoundException("Organizaiton manager not found!"); }
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM.Equals(omId));
 
             var campaign = new List<Campaign>();
@@ -135,7 +135,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByMemberId(Guid memberId)
         {
             var member = _memberRepository.GetById(memberId);
-            if (member == null) { throw new NotFoundException("Member not found!"); }
+            if (member == null) { throw new NotFoundException("Thành viên không tồn tại!"); }
             var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember.Equals(memberId));
 
             var campaign = new List<Campaign>();
@@ -184,9 +184,9 @@ namespace SU24_VMO_API.Services
         public void UpdateProcessingPhaseStatus(UpdateProcessingPhaseStatusRequest request)
         {
             var processingPhase = repository.GetById(request.ProcessingPhaseId);
-            if (processingPhase == null) { throw new NotFoundException("Processing phase not found!"); }
+            if (processingPhase == null) { throw new NotFoundException("Không tìm thấy giai đoạn giải ngân!"); }
             var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) { throw new NotFoundException("Account not found!"); }
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
             var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
             if (request.IsEnd == true)
@@ -295,9 +295,9 @@ namespace SU24_VMO_API.Services
         public void Update(UpdateProcessingPhaseRequest request)
         {
             var processingPhase = repository.GetById(request.ProcessingPhaseId);
-            if (processingPhase == null) { throw new NotFoundException("Processing phase not found!"); }
+            if (processingPhase == null) { throw new NotFoundException("Không tìm thấy giai đoạn giải ngân!"); }
 
-            if (processingPhase.IsLocked) throw new BadRequestException("This phase was locked!");
+            if (processingPhase.IsLocked) throw new BadRequestException("Giai đoạn này hiện không thể chỉnh sửa!");
 
             if (!String.IsNullOrEmpty(request.Name))
             {

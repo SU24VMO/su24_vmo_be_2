@@ -171,9 +171,13 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = member.FacebookUrl;
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
+                    response.IsVerified = false;
 
                     response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
                     response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    if(member.IsVerified)
+                        response.IsVerified = true;
+
                 }
 
             }
@@ -187,9 +191,12 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = member.FacebookUrl;
                     response.LinkYoutube = member.YoutubeUrl;
                     response.LinkTiktok = member.TiktokUrl;
+                    response.IsVerified = false;
 
                     response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
                     response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    if (member.IsVerified)
+                        response.IsVerified = true;
                 }
             }
             if (account.Role == Role.OrganizationManager)
@@ -202,10 +209,13 @@ namespace SU24_VMO_API.Services
                     response.LinkFacebook = om.FacebookUrl;
                     response.LinkYoutube = om.YoutubeUrl;
                     response.LinkTiktok = om.TiktokUrl;
+                    response.IsVerified = false;
 
 
                     response.Campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList();
                     response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList().Where(c => c.IsActive == true).Count();
+                    if (om.IsVerified)
+                        response.IsVerified = true;
                 }
             }
 
@@ -765,7 +775,7 @@ namespace SU24_VMO_API.Services
         public bool? CheckPassword(CheckPasswordRequest request)
         {
             var account = _accountRepository.GetByEmail(request.Email.Trim());
-            if (account == null) throw new NotFoundException("Email is not valid.");
+            if (account == null) throw new NotFoundException("Email không hợp lệ.");
             if (PasswordUtils.VerifyPasswordHash(request.OldPassword, account.HashPassword, account.SaltPassword))
             {
                 return true;
@@ -777,7 +787,7 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new BadRequestException("Email is not valid.");
+                throw new BadRequestException("Email không hợp lệ.");
             }
         }
 
@@ -785,15 +795,15 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new BadRequestException("Email is not valid.");
+                throw new BadRequestException("Email không hợp lệ.");
             }
             if (_accountRepository.GetByEmail(request.Email) != null)
             {
-                throw new BadRequestException("Email was existed!");
+                throw new BadRequestException("Email đã tồn tại!");
             }
             if (_accountRepository.GetByUsername(request.Username) != null)
             {
-                throw new BadRequestException("Username was existed!");
+                throw new BadRequestException("Tên người dùng đã tồn tại!");
             }
         }
         private void TryValidateUpdateRequest(UpdateAccountRequest request)
@@ -801,7 +811,7 @@ namespace SU24_VMO_API.Services
             var account = _accountRepository.GetById(request.AccountID);
             if (account == null)
             {
-                throw new NotFoundException("Account does not exist!");
+                throw new NotFoundException("Tài khoản không tồn tại!");
             }
 
             if (!String.IsNullOrEmpty(request.PhoneNumber))
@@ -811,7 +821,7 @@ namespace SU24_VMO_API.Services
                     var user = _memberRepository.GetByAccountId(request.AccountID)!;
                     if (user.PhoneNumber != null && user.PhoneNumber.Equals(request.PhoneNumber) && IsPhoneNumberExisted(request.PhoneNumber))
                     {
-                        throw new BadRequestException("Phone number already exists!");
+                        throw new BadRequestException("Số điện thoại đã tồn tại!");
                     }
                 }
 
@@ -820,7 +830,7 @@ namespace SU24_VMO_API.Services
                     var om = _organizationManagerRepository.GetByAccountID(request.AccountID)!;
                     if (om.PhoneNumber != null && om.PhoneNumber.Equals(request.PhoneNumber) && IsPhoneNumberExisted(request.PhoneNumber))
                     {
-                        throw new BadRequestException("Phone number already exists!");
+                        throw new BadRequestException("Số điện thoại đã tồn tại!");
                     }
                 }
             }

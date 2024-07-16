@@ -83,23 +83,23 @@ namespace SU24_VMO_API.Services
 
             if (_accountRepository.GetById(request.AccountId) == null)
             {
-                throw new Exception("Account not found.");
+                throw new Exception("Không tìm thấy tài khoản này.");
             }
             if (!String.IsNullOrEmpty(request.AccountNumber))
             {
-                throw new Exception("AccountNumber is not empty.");
+                throw new Exception("Số tài khoản không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.AccountName))
             {
-                throw new Exception("AccountName is not empty.");
+                throw new Exception("Tên tài khoản không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.BankingName))
             {
-                throw new Exception("BankingName is not empty.");
+                throw new Exception("Tên ngân hàng không được để trống.");
             }
             if (!String.IsNullOrEmpty(request.QRCode))
             {
-                throw new Exception("QRCode is not empty.");
+                throw new Exception("QRCode không được để trống.");
             }
         }
 
@@ -112,7 +112,7 @@ namespace SU24_VMO_API.Services
 
             if (_bankingAccountRepository.GetById(request.BankingAccountID) == null)
             {
-                throw new Exception("BankingAccount not found.");
+                throw new Exception("Không tìm thấy tài khoản ngân hàng.");
             }
         }
     }

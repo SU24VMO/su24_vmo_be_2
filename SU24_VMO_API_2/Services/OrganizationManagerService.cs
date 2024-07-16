@@ -117,32 +117,32 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
             {
-                throw new Exception("Phone is not a valid phone");
+                throw new Exception("Số điện thoại không hợp lệ");
             }
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new Exception("Email is not valid.");
+                throw new Exception("Email không hợp lệ.");
             }
 
             if (string.IsNullOrEmpty(request.FirstName))
             {
-                throw new Exception("Firstname must not be null or empty");
+                throw new Exception("Họ không được để trống");
             }
             if (string.IsNullOrEmpty(request.LastName))
             {
-                throw new Exception("Lastname must not be null or empty");
+                throw new Exception("Tên không được để trống");
             }
             if (string.IsNullOrEmpty(request.Gender))
             {
-                throw new Exception("Gender must not be null or empty");
+                throw new Exception("Giới tính không được để trống");
             }
             if (_accountRepository.GetByUsername(request.Username) != null)
             {
-                throw new Exception("Username was existed!");
+                throw new Exception("Tên người dùng đã tồn tại!");
             }
             if (_organizationManagerRepository.GetByPhone(request.PhoneNumber) != null)
             {
-                throw new Exception("Phone number was existed!");
+                throw new Exception("Số điện thoại đã tồn tại!");
             }
         }
     }

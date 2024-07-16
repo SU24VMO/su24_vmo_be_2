@@ -16,6 +16,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsActived { get; set; } = default!;
+        public bool? IsVerified { get; set; } = default!;
         public bool IsBlocked { get; set; } = default!;
         public Guid? ModifiedBy { get; set; } = default!;
         public float? DonatedMoney { get; set; } = default!;

@@ -53,7 +53,7 @@ namespace SU24_VMO_API.Services
         public bool? UpdateIsSeenNotification(Guid accountId)
         {
             var account = _accountRepository.GetById(accountId);
-            if (account == null) { new NotFoundException("Account not found!"); }
+            if (account == null) { new NotFoundException("Tài khoản không tồn tại!"); }
             var notifications = _notificationRepository.GetAllNotificationsByAccountId(accountId).Where(n => n.IsSeen == false);
             foreach (var notification in notifications)
             {
@@ -68,7 +68,7 @@ namespace SU24_VMO_API.Services
             var account = _accountRepository.GetById(request.AccountID);
             if (account == null)
             {
-                throw new Exception("Account not found!.");
+                throw new Exception("Tài khoản không tồn tại!.");
             }
         }
     }
