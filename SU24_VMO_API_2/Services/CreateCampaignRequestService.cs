@@ -319,7 +319,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public async void UpdateCreateCampaignRequest(Guid createCampaignRequestId, UpdateCreateCampaignRequestRequest updateRequest)
+        public async Task<bool> UpdateCreateCampaignRequest(Guid createCampaignRequestId, UpdateCreateCampaignRequestRequest updateRequest)
         {
             TryValidateUpdateCreateCampaignRequest(updateRequest);
             var requestExisted = _createCampaignRequestRepository.GetById(createCampaignRequestId);
@@ -398,6 +398,7 @@ namespace SU24_VMO_API.Services
 
             bankingAccount.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
             _bankingAccountRepository.Update(bankingAccount);
+            return true;
         }
 
 

@@ -262,7 +262,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                _service.UpdateCreateCampaignRequest(createCampaignRequestId, updateRequest);
+                await _service.UpdateCreateCampaignRequest(createCampaignRequestId, updateRequest);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",
