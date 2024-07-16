@@ -3,6 +3,6 @@
     public class UpdateCampaignStatusRequest
     {
         public Guid CampaignId { get; set; } = default!;
-        public bool IsEnd { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
     }
 }

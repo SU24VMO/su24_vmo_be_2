@@ -40,8 +40,39 @@ namespace SU24_VMO_API.Services
         public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string? organizationName)
         {
             if (!String.IsNullOrEmpty(organizationName))
-                return repository.GetAll().Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName.ToLower().Trim()));
-            else return repository.GetAll();
+            {
+                var requests = repository.GetAll().Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName.ToLower().Trim()));
+                foreach (var request in requests)
+                {
+                    var organization = _organizationRepository.GetById(request.OrganizationID);
+                    if (organization != null)
+                    {
+                        organization.CreateOrganizationRequest = null;
+                        organization.OrganizationManager = null;
+                        organization.Achievements = null;
+                        organization.Campaigns = null;
+                    }
+                    request.Organization = organization;
+                }
+                return requests;
+            }
+            else
+            {
+                var requests = repository.GetAll();
+                foreach (var request in requests)
+                {
+                    var organization = _organizationRepository.GetById(request.OrganizationID);
+                    if (organization != null)
+                    {
+                        organization.CreateOrganizationRequest = null;
+                        organization.OrganizationManager = null;
+                        organization.Achievements = null;
+                        organization.Campaigns = null;
+                    }
+                    request.Organization = organization;
+                }
+                return requests;
+            }
         }
 
         public CreateOrganizationRequest? GetById(Guid id)

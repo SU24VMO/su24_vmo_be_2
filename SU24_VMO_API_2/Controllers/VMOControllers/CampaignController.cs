@@ -48,13 +48,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -74,13 +126,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -100,13 +204,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -126,13 +282,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -153,13 +361,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -179,13 +439,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -206,13 +518,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -233,13 +597,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -261,13 +677,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -289,13 +757,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -316,13 +836,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -343,13 +915,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -372,13 +996,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -400,13 +1076,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -428,13 +1156,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -458,13 +1238,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -486,13 +1318,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -514,13 +1398,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -541,13 +1477,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -568,13 +1556,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -595,13 +1635,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -623,13 +1715,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -651,13 +1795,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -676,13 +1872,65 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
                 return Ok(response);
             }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
             catch (Exception ex)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
-                return BadRequest(response);
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
             }
         }
 
@@ -705,7 +1953,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage();
                 if (dbEx.InnerException != null)
                 {
-                    response.Message = $"Database error: {dbEx.InnerException.Message}";
+                    response.Message = $"{dbEx.InnerException.Message}";
                 }
                 else
                 {
@@ -718,16 +1966,25 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
                 // Log the exception details here if necessary
                 return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
             }
             catch (ArgumentNullException argEx)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {argEx.ParamName} cannot be null."
+                    Message = $"{argEx.ParamName}"
                 };
                 // Log the exception details here if necessary
                 return BadRequest(response);
@@ -736,7 +1993,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {unauEx.Message}"
+                    Message = $"{unauEx.Message}"
                 };
                 // Log the exception details here if necessary
                 return StatusCode(403, response); // Internal Server Error
@@ -745,7 +2002,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"An unexpected error occurred: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
                 // Log the exception details here if necessary
                 return StatusCode(500, response); // Internal Server Error
@@ -771,7 +2028,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 var response = new ResponseMessage();
                 if (dbEx.InnerException != null)
                 {
-                    response.Message = $"Database error: {dbEx.InnerException.Message}";
+                    response.Message = $"{dbEx.InnerException.Message}";
                 }
                 else
                 {
@@ -784,16 +2041,25 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
                 // Log the exception details here if necessary
                 return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
             }
             catch (ArgumentNullException argEx)
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {argEx.ParamName} cannot be null."
+                    Message = $"{argEx.ParamName}"
                 };
                 // Log the exception details here if necessary
                 return BadRequest(response);
@@ -802,7 +2068,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"Error: {unauEx.Message}"
+                    Message = $"{unauEx.Message}"
                 };
                 // Log the exception details here if necessary
                 return StatusCode(403, response); // Internal Server Error
@@ -811,7 +2077,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             {
                 var response = new ResponseMessage()
                 {
-                    Message = $"An unexpected error occurred: {ex.Message}"
+                    Message = $"{ex.Message}"
                 };
                 // Log the exception details here if necessary
                 return StatusCode(500, response); // Internal Server Error

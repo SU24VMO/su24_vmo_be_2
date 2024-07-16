@@ -278,9 +278,19 @@ namespace SU24_VMO_API.Services
                 throw new NotFoundException("Không tìm thấy bài viết này!");
             }
 
-            if (!request.IsActive)
+            var postRequest = _createPostRequestRepository.GetCreatePostRequestByPostId(request.PostId);
+            if (postRequest != null)
+            {
+                if (postRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Bài viết này hiện đã được duyệt, vì vậy mọi thông tin của bài viết này không thể chỉnh sửa!");
+            }
+
+            if (request.IsDisable)
+            {
                 post.IsActive = false;
-            else post.IsActive = true;
+                post.IsDisable = true;
+            }
             post.UpdateAt = TimeHelper.GetTime(DateTime.UtcNow);
             repository.Update(post);
         }

@@ -393,7 +393,6 @@ namespace SU24_VMO_API.Services
         }
 
 
-
         private void TryValidateRegisterRequest(CreateActivityRequestRequest request)
         {
             if (_phaseRepository.GetById(request.ProcessingPhaseId) == null)

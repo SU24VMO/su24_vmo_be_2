@@ -329,11 +329,16 @@ namespace SU24_VMO_API.Services
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
             {
-                throw new Exception("Số điện thoại không hợp lệ");
+                throw new BadRequestException("Số điện thoại không hợp lệ");
             }
             if (new Regex(RegexCollector.EmailRegex).IsMatch(request.Email) == false)
             {
-                throw new Exception("Email không hợp lệ.");
+                throw new BadRequestException("Email không hợp lệ.");
+            }
+
+            if (_createVolunteerRequestRepository.GetCreateVolunteerRequestsWithEmail(request.Email) != null)
+            {
+                throw new BadRequestException("Email đã tồn tại.");
             }
         }
 
@@ -342,11 +347,11 @@ namespace SU24_VMO_API.Services
         {
             if (String.IsNullOrEmpty(request.CreateVolunteerRequestID.ToString()))
             {
-                throw new Exception("Id must not be null or empty!");
+                throw new BadRequestException("Id must not be null or empty!");
             }
             if (String.IsNullOrEmpty(request.IsApproved.ToString()))
             {
-                throw new Exception("Trạng thái không được để trống!");
+                throw new BadRequestException("Trạng thái không được để trống!");
             }
         }
 

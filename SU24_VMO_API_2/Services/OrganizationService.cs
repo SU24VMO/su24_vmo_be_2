@@ -314,11 +314,21 @@ namespace SU24_VMO_API.Services
                 throw new NotFoundException("Không tìm thấy tổ chức này!");
             }
 
-            if (!request.IsActive)
+            var organizationManagerRequest =
+                _createOrganizationRequestRepository.GetCreateOrganizationRequestByOrganizationId(
+                    request.OrganizationId);
+            if (organizationManagerRequest != null)
+            {
+                if(organizationManagerRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Tổ chức này hiện đã được duyệt, vì vậy mọi thông tin của tổ chức này không thể chỉnh sửa!");
+            }
+
+            if (request.IsDisable)
             {
                 organization.IsActive = false;
+                organization.IsDisable = true;
             }
-            else organization.IsActive = true;
             organization.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
             _organizationRepository.Update(organization);
         }

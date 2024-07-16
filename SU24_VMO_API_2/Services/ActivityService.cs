@@ -309,7 +309,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public void UpdateStatusActivity(UpdateActivityStatusRequest request)
+        public void UpdateStatusActivity(UpdateActivityDisable request)
         {
             var activity = _activityRepository.GetById(request.ActivityId)!;
             if (activity == null)
@@ -317,11 +317,19 @@ namespace SU24_VMO_API.Services
                 throw new NotFoundException("Không tìm thấy họt động này!");
             }
 
-            if (!request.IsActive)
+            var activityRequest = _createActivityRequestRepository.GetCreateActivityRequestByActivityId(request.ActivityId);
+            if (activityRequest != null)
+            {
+                if(activityRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Hoạt động này hiện đã được duyệt, vì vậy mọi thông tin của hoạt động này không thể chỉnh sửa!");
+            }
+
+            if (request.IsDisable)
             {
                 activity.IsActive = false;
+                activity.IsDisable = true;
             }
-            else activity.IsActive = true;
             
             activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
             _activityRepository.Update(activity);

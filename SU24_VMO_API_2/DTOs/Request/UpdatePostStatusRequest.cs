@@ -6,6 +6,6 @@ namespace SU24_VMO_API_2.DTOs.Request
     {
         [Required]
         public Guid PostId { get; set; } = default!;
-        public bool IsActive { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
     }
 }

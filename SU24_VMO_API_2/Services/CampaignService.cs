@@ -152,21 +152,10 @@ namespace SU24_VMO_API.Services
                         "Chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin của chiến dịch này không thể chỉnh sửa!");
             }
 
-            if (request.IsEnd)
+            if (request.IsDisable)
             {
-                campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                campaign.IsDisable = true;
                 campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
-                campaign.IsActive = false;
-                campaign.IsModify = true;
-                campaign.IsComplete = true;
-                campaign.CanBeDonated = false;
-            }
-            else
-            {
-                campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
-                campaign.IsActive = true;
-                campaign.IsModify = true;
-                campaign.IsComplete = false;
             }
             _campaignRepository.Update(campaign);
 
