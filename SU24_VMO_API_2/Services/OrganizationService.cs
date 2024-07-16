@@ -158,6 +158,17 @@ namespace SU24_VMO_API.Services
                             organization.OrganizationManager.CreatePostRequests.Clear();
                     }
 
+                    var createOrganizationRequest =
+                        _createOrganizationRequestRepository.GetCreateOrganizationRequestByOrganizationId(organization
+                            .OrganizationID);
+                    if (createOrganizationRequest != null)
+                    {
+                        createOrganizationRequest.Organization = null;
+                        createOrganizationRequest.OrganizationManager = null;
+                        createOrganizationRequest.Moderator = null;
+                        organization.CreateOrganizationRequest = createOrganizationRequest;
+                    }
+
 
                 }
                 return organizations.Where(o => o.Name.ToLower().Contains(organizationName.Trim().ToLower()));
@@ -190,6 +201,16 @@ namespace SU24_VMO_API.Services
                             organization.OrganizationManager.CreatePostRequests.Clear();
                     }
 
+                    var createOrganizationRequest =
+                        _createOrganizationRequestRepository.GetCreateOrganizationRequestByOrganizationId(organization
+                            .OrganizationID);
+                    if (createOrganizationRequest != null)
+                    {
+                        createOrganizationRequest.Organization = null;
+                        createOrganizationRequest.OrganizationManager = null;
+                        createOrganizationRequest.Moderator = null;
+                        organization.CreateOrganizationRequest = createOrganizationRequest;
+                    }
 
                 }
                 return organizations;

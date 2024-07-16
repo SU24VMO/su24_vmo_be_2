@@ -35,6 +35,7 @@ namespace BusinessObject.Models
 
         public Organization? Organization { get; set; }
         public CampaignType? CampaignType { get; set; }
+        public BankingAccount? BankingAccount { get; set; }
         public DonatePhase? DonatePhase { get; set; }
         public ProcessingPhase? ProcessingPhase { get; set; }
         public StatementPhase? StatementPhase { get; set; }

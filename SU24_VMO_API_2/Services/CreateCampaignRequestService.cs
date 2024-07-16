@@ -96,7 +96,23 @@ namespace SU24_VMO_API.Services
 
         public CreateCampaignRequest? GetCreateCampaignRequestById(Guid createCampaignRequestId)
         {
-            return GetCreateCampaignRequests().FirstOrDefault(c => c.CreateCampaignRequestID.Equals(createCampaignRequestId));
+            var request = GetCreateCampaignRequests().FirstOrDefault(c => c.CreateCampaignRequestID.Equals(createCampaignRequestId));
+            if (request != null)
+            {
+                var bankingAccount = _bankingAccountRepository.GetBankingAccountByCampaignId(request.CampaignID);
+                if (bankingAccount != null)
+                {
+                    bankingAccount.Transactions = null;
+                    bankingAccount.Account = null;
+                    bankingAccount.Campaign = null;
+                }
+
+                if (request.Campaign != null)
+                {
+                    request.Campaign.BankingAccount = bankingAccount;
+                }
+            }
+            return request;
         }
 
         public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string? campaignName)

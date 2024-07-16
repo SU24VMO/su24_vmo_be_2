@@ -53,12 +53,7 @@ namespace SU24_VMO_API.Services
 
                 foreach (var post in posts)
                 {
-                    if (post.CreatePostRequest != null)
-                    {
-                        post.CreatePostRequest = null;
-                    }
-
-                    var request = post.CreatePostRequest;
+                    var request = _createPostRequestRepository.GetCreatePostRequestByPostId(post.PostID);
                     if (request != null)
                     {
                         request.Post = null;
@@ -92,12 +87,7 @@ namespace SU24_VMO_API.Services
 
                 foreach (var post in posts)
                 {
-                    if (post.CreatePostRequest != null)
-                    {
-                        post.CreatePostRequest = null;
-                    }
-
-                    var request = post.CreatePostRequest;
+                    var request = _createPostRequestRepository.GetCreatePostRequestByPostId(post.PostID);
                     if (request != null)
                     {
                         request.Post = null;
@@ -136,12 +126,7 @@ namespace SU24_VMO_API.Services
 
                 foreach (var post in posts)
                 {
-                    if (post.CreatePostRequest != null)
-                    {
-                        post.CreatePostRequest = null;
-                    }
-
-                    var request = post.CreatePostRequest;
+                    var request = _createPostRequestRepository.GetCreatePostRequestByPostId(post.PostID);
                     if (request != null)
                     {
                         request.Post = null;
@@ -177,12 +162,7 @@ namespace SU24_VMO_API.Services
 
                 foreach (var post in posts)
                 {
-                    if (post.CreatePostRequest != null)
-                    {
-                        post.CreatePostRequest = null;
-                    }
-
-                    var request = post.CreatePostRequest;
+                    var request = _createPostRequestRepository.GetCreatePostRequestByPostId(post.PostID);
                     if (request != null)
                     {
                         request.Post = null;
