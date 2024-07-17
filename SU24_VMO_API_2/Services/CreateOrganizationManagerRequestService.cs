@@ -270,6 +270,28 @@ namespace SU24_VMO_API.Services
             return result;
         }
 
+        public void UpdateStatusCreateOrganizationManagerVerifiedRequest(UpdateStatusCreateOrganizationManagerVerifiedRequest request)
+        {
+            var createRequest = _createOrganizationManagerRequestRepository.GetById(request.CreateOrganizationManagerRequestID);
+            if (createRequest == null)
+            {
+                throw new NotFoundException("Đơn này không tìm thấy!");
+            }
+
+            if (createRequest != null)
+            {
+                if (createRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Đơn này đã được duyệt! Vì vậy mọi thông tin của đơn này hiện không thể chỉnh sửa!");
+
+                if (request.IsDisable)
+                {
+                    createRequest.IsDisable = true;
+                }
+
+            }
+        }
+
         private void TryValidateUpdateCreateOrganizationManagerRequest(UpdateCreateOrganizationManagerVerifiedAccountRequest request)
         {
             if (String.IsNullOrEmpty(request.CreateOrganizationManagerRequestID.ToString()))

@@ -325,6 +325,31 @@ namespace SU24_VMO_API.Services
         }
 
 
+
+
+        public void UpdateStatusCreateVolunteerAccountRequest(UpdateStatusCreateVolunteerAccountRequest request)
+        {
+            var createRequest = _createVolunteerRequestRepository.GetById(request.CreateVolunteerRequestID);
+            if (createRequest == null)
+            {
+                throw new NotFoundException("Đơn này không tìm thấy!");
+            }
+
+            if (createRequest != null)
+            {
+                if (createRequest.IsApproved)
+                    throw new BadRequestException(
+                        "Đơn này đã được duyệt! Vì vậy mọi thông tin của đơn này hiện không thể chỉnh sửa!");
+
+                if (request.IsDisable)
+                {
+                    createRequest.IsDisable = true;
+                }
+
+            }
+        }
+
+
         private void TryValidateRegisterRequest(CreateVolunteerAccountRequest request)
         {
             if (new Regex(RegexCollector.PhoneRegex).IsMatch(request.PhoneNumber) == false)
