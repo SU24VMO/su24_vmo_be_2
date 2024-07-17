@@ -34,7 +34,20 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<CreateOrganizationRequest> GetAll()
         {
-            return repository.GetAll();
+            var requests = repository.GetAll();
+            foreach (var request in requests)
+            {
+                var organization = _organizationRepository.GetById(request.OrganizationID);
+                if (organization != null)
+                {
+                    organization.CreateOrganizationRequest = null;
+                    organization.OrganizationManager = null;
+                    organization.Achievements = null;
+                    organization.Campaigns = null;
+                }
+                request.Organization = organization;
+            }
+            return requests;
         }
 
         public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string? organizationName)
