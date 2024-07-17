@@ -447,10 +447,6 @@ namespace SU24_VMO_API.Services
                 throw new Exception("Tài khoản không tìm thấy!");
             }
 
-            if (!String.IsNullOrEmpty(createTransactionRequest.Note))
-            {
-                throw new Exception("Chú thích không được để trống!");
-            }
             if (createTransactionRequest.Price < 2000)
             {
                 throw new Exception("Số tiền quyên góp phải lớn hơn hoặc bằng 2000 đồng!");
