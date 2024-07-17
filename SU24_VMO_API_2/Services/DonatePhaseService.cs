@@ -247,6 +247,8 @@ namespace SU24_VMO_API.Services
                     if (processingPhase != null)
                     {
                         processingPhase.IsProcessing = true;
+                        processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        processingPhase.IsLocked = false;
                         _processingPhaseRepository.Update(processingPhase);
                     }
                     _campaignRepository.Update(campaign);
