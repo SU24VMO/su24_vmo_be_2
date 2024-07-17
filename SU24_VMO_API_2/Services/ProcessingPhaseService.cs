@@ -196,6 +196,8 @@ namespace SU24_VMO_API.Services
                 processingPhase.IsProcessing = false;
                 processingPhase.IsLocked = true;
                 processingPhase.UpdateBy = request.AccountId;
+                processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+
 
 
                 var statementPhase = new StatementPhase();
@@ -251,7 +253,6 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                 {
                     statementPhase = campaign.StatementPhase;
-                    statementPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
                     statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     statementPhase.IsProcessing = false;
                     statementPhase.IsLocked = false;

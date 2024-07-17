@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Org.BouncyCastle.Asn1.Cms;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
@@ -121,11 +122,13 @@ namespace SU24_VMO_API.Services
                 donatePhase.IsProcessing = false;
                 donatePhase.IsLocked = true;
                 donatePhase.UpdateBy = request.AccountId;
+                donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
 
                 var processingPhase = new ProcessingPhase();
                 if (campaign.ProcessingPhase != null)
                 {
                     processingPhase = campaign.ProcessingPhase;
+                    processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
                     processingPhase.IsProcessing = true;
                     processingPhase.IsLocked = false;
                     processingPhase.IsEnd = false;

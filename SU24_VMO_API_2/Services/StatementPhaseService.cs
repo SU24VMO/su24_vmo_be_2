@@ -152,6 +152,7 @@ namespace SU24_VMO_API.Services
                 statementPhase.IsProcessing = false;
                 statementPhase.IsLocked = true;
                 statementPhase.UpdateBy = request.AccountId;
+                statementPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
                 _repository.Update(statementPhase);
                 campaign.IsComplete = true;
                 campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
