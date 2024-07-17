@@ -154,6 +154,7 @@ namespace SU24_VMO_API.Services
                 statementPhase.UpdateBy = request.AccountId;
                 _repository.Update(statementPhase);
                 campaign.IsComplete = true;
+                campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
                 _campaignRepository.Update(campaign);
                 if (createCampaignRequest.CreateByOM != null)
                 {
@@ -190,6 +191,7 @@ namespace SU24_VMO_API.Services
                 statementPhase.UpdateBy = request.AccountId;
                 _repository.Update(statementPhase);
                 campaign.IsComplete = false;
+                campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
                 _campaignRepository.Update(campaign);
                 if (createCampaignRequest.CreateByOM != null)
                 {
