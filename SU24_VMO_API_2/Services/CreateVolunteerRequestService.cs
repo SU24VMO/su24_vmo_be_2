@@ -335,11 +335,6 @@ namespace SU24_VMO_API.Services
             {
                 throw new BadRequestException("Email không hợp lệ.");
             }
-
-            if (_createVolunteerRequestRepository.GetCreateVolunteerRequestsWithEmail(request.Email) != null)
-            {
-                throw new BadRequestException("Email đã tồn tại.");
-            }
         }
 
 
