@@ -613,7 +613,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPost]
-        [Route("create-transaction")]
+        [Route("upload-transaction")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadImageTransactionByAdmin([FromForm] CreateTransactionWithUploadImage request)
         {
