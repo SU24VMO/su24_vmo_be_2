@@ -324,6 +324,7 @@ namespace SU24_VMO_API.Services
                     campaignsResponse.Add(new CampaignWithBankingAccountResponse
                     {
                         CampaignID = campaign.CampaignID,
+                        BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
                         BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
@@ -346,6 +347,7 @@ namespace SU24_VMO_API.Services
                     campaignsResponse.Add(new CampaignWithBankingAccountResponse
                     {
                         CampaignID = campaign.CampaignID,
+                        BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
                         BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",

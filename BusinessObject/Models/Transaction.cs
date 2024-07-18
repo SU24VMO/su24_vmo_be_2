@@ -24,7 +24,7 @@ namespace BusinessObject.Models
         public Guid AccountId { get; set; }
         public Guid? BankingAccountID { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
-        public string TransactionQRImageUrl { get; set; } = default!;
+        public string TransactionImageUrl { get; set; } = default!;
         public BankingAccount? BankingAccount { get; set; }
         public Account? Account { get; set; }
         public Campaign? Campaign { get; set; }

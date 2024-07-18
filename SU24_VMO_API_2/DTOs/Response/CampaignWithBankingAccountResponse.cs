@@ -3,6 +3,7 @@
     public class CampaignWithBankingAccountResponse
     {
         public Guid CampaignID { get; set; } = default!;
+        public Guid? BankingAccountId { get; set; } = default!;
         public string? Name { get; set; } = default!;
         public string? QRCode { get; set; } = default!;
         public string? AccountName { get; set; } = default!;

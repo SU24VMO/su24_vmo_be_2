@@ -9,7 +9,7 @@ namespace BusinessObject.Enums
 {
     public enum TransactionType
     {
-        Transafer = 0,
+        Transfer = 0,
         Receive = 1
     }
 }

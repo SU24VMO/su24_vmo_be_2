@@ -17,7 +17,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public Guid AccountId { get; set; }
         public Guid? BankingAccountID { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
-        public string TransactionQRImageUrl { get; set; } = default!;
+        public string TransactionImageUrl { get; set; } = default!;
         public string? CampaignName { get; set; } = default!;
         public BankingAccount? BankingAccount { get; set; }
         public Account? Account { get; set; }

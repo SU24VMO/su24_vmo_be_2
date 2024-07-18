@@ -25,6 +25,7 @@ using System;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
+using Org.BouncyCastle.Asn1.Cms;
 using Transaction = BusinessObject.Models.Transaction;
 
 
@@ -36,16 +37,20 @@ namespace SU24_VMO_API.Services
         private readonly ITransactionRepository _transactionRepository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IBankingAccountRepository _bankingAccountRepository;
+        private readonly FirebaseService _firebaseService;
         private readonly DonatePhaseService _donatePhaseService;
 
         public TransactionService(ITransactionRepository transactionRepository, ICampaignRepository campaignRepository, IAccountRepository accountRepository,
-            DonatePhaseService donatePhaseService)
+            DonatePhaseService donatePhaseService, IBankingAccountRepository bankingAccountRepository, FirebaseService firebaseService)
         {
             payOs = new PayOS(PayOSConstants.ClientId, PayOSConstants.ApiKey, PayOSConstants.CheckSumKey);
             _transactionRepository = transactionRepository;
             _campaignRepository = campaignRepository;
             _accountRepository = accountRepository;
             _donatePhaseService = donatePhaseService;
+            _bankingAccountRepository = bankingAccountRepository;
+            _firebaseService = firebaseService;
         }
 
 
@@ -95,7 +100,7 @@ namespace SU24_VMO_API.Services
                             Note = tran.Note,
                             TransactionID = tran.TransactionID,
                             PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
-                            TransactionQRImageUrl = tran.TransactionQRImageUrl,
+                            TransactionImageUrl = tran.TransactionImageUrl,
                             TransactionType = tran.TransactionType,
                             TransactionStatus = tran.TransactionStatus,
                             DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
@@ -129,7 +134,7 @@ namespace SU24_VMO_API.Services
                             Note = tran.Note,
                             TransactionID = tran.TransactionID,
                             PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
-                            TransactionQRImageUrl = tran.TransactionQRImageUrl,
+                            TransactionImageUrl = tran.TransactionImageUrl,
                             TransactionType = tran.TransactionType,
                             TransactionStatus = tran.TransactionStatus,
                             DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
@@ -194,7 +199,7 @@ namespace SU24_VMO_API.Services
                 {
                     TransactionID = Guid.NewGuid(),
                     CampaignID = createTransactionRequest.CampaignId,
-                    TransactionType = TransactionType.Transafer,
+                    TransactionType = TransactionType.Receive,
                     Amount = createTransactionRequest.Price,
                     Note = createTransactionRequest.Note,
                     PayerName = "Người ủng hộ ẩn danh",
@@ -202,7 +207,7 @@ namespace SU24_VMO_API.Services
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     AccountId = createTransactionRequest.AccountId,
                     TransactionStatus = TransactionStatus.Pending,
-                    TransactionQRImageUrl = ""
+                    TransactionImageUrl = ""
                 };
             }
             else
@@ -211,7 +216,7 @@ namespace SU24_VMO_API.Services
                 {
                     TransactionID = Guid.NewGuid(),
                     CampaignID = createTransactionRequest.CampaignId,
-                    TransactionType = TransactionType.Transafer,
+                    TransactionType = TransactionType.Receive,
                     Amount = createTransactionRequest.Price,
                     Note = createTransactionRequest.Note,
                     PayerName = "",
@@ -219,7 +224,7 @@ namespace SU24_VMO_API.Services
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     AccountId = createTransactionRequest.AccountId,
                     TransactionStatus = TransactionStatus.Pending,
-                    TransactionQRImageUrl = ""
+                    TransactionImageUrl = ""
                 };
             }
 
@@ -367,7 +372,7 @@ namespace SU24_VMO_API.Services
                             Note = transaction.Note,
                             OrderId = transaction.OrderId,
                             PayerName = transaction.PayerName,
-                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
                             TransactionStatus = transaction.TransactionStatus,
                             TransactionType = transaction.TransactionType
                         });
@@ -394,7 +399,7 @@ namespace SU24_VMO_API.Services
                             Note = transaction.Note,
                             OrderId = transaction.OrderId,
                             PayerName = transaction.PayerName,
-                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
                             TransactionStatus = transaction.TransactionStatus,
                             TransactionType = transaction.TransactionType
                         });
@@ -421,7 +426,7 @@ namespace SU24_VMO_API.Services
                             Note = transaction.Note,
                             OrderId = transaction.OrderId,
                             PayerName = transaction.PayerName,
-                            TransactionQRImageUrl = transaction.TransactionQRImageUrl,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
                             TransactionStatus = transaction.TransactionStatus,
                             TransactionType = transaction.TransactionType
                         });
@@ -552,6 +557,41 @@ namespace SU24_VMO_API.Services
                 }
             }
             return status;
+        }
+
+        public async Task<Transaction?> UploadImageTransactionByAdmin(CreateTransactionWithUploadImage request)
+        {
+            var account = _accountRepository.GetById(request.AccountId);
+            if (account == null)
+            {
+                throw new NotFoundException("Người dùng không tìm thấy!");
+            }
+            var campaign = _campaignRepository.GetById(request.CampaignId);
+            if (campaign == null)
+            {
+                throw new NotFoundException("Chiến dịch không tìm thấy!");
+            }
+            var bankingAccount = _bankingAccountRepository.GetById(request.BankingAccountId);
+            if (bankingAccount == null)
+            {
+                throw new NotFoundException("Tài khoản ngân hàng không tìm thấy!");
+            }
+            var transaction = new Transaction
+            {
+                TransactionID = Guid.NewGuid(),
+                TransactionStatus = TransactionStatus.Success,
+                AccountId = request.AccountId,
+                BankingAccountID = request.BankingAccountId,
+                CampaignID = request.CampaignId,
+                TransactionType = TransactionType.Transfer,
+                Amount = request.Amount,
+                Note = "Chuyển tiền giải ngân",
+                PayerName = "ADMIN",
+                IsIncognito = false,
+                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                TransactionImageUrl = await _firebaseService.UploadImage(request.TransactionImage)
+            };
+            return _transactionRepository.Save(transaction);
         }
 
 

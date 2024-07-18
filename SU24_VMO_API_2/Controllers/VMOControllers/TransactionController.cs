@@ -8,6 +8,7 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
+using SU24_VMO_API_2.DTOs.Request;
 using SU24_VMO_API_2.DTOs.Response;
 using Transaction = BusinessObject.Models.Transaction;
 
@@ -363,192 +364,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
-        [HttpPost]
-        [Route("create-transaction")]
-        public async Task<IActionResult> CreateTransaction(CreateTransactionRequest request)
-        {
-            try
-            {
-                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
 
-                if (transactionResponse != null)
-                {
-                    var response = new CreateTransactionResponse()
-                    {
-                        OrderID = transactionResponse.OrderID,
-                        QRCode = transactionResponse.QRCode,
-                    };
-                    return Ok(response);
-
-                }
-                else
-                {
-                    return BadRequest("Can not create!");
-                }
-            }
-            catch (DbUpdateException dbEx)
-            {
-                // Handle database update exceptions
-                var response = new ResponseMessage();
-                if (dbEx.InnerException != null)
-                {
-                    response.Message = $"{dbEx.InnerException.Message}";
-                }
-                else
-                {
-                    response.Message = "Database update error.";
-                }
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (NotFoundException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return NotFound(response);
-            }
-            catch (BadRequestException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (ArgumentNullException argEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{argEx.ParamName}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (UnauthorizedAccessException unauEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{unauEx.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(403, response); // Internal Server Error
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(500, response); // Internal Server Error
-            }
-        }
-
-
-
-
-
-        [HttpPost]
-        [Route("check-transaction/send-email")]
-
-        public async Task<IActionResult> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest? request)
-        {
-            try
-            {
-                var status = await _transactionService.CheckAndSendEmailWithSuccessStatusCNTAsync(request);
-                if (status != null)
-                {
-                    if (status.ToLower().Contains("PAID".ToLower()))
-                    {
-                        return Ok(new ResponseMessage
-                        {
-                            Message = $"Check successfully! Transaction status: {status}, Email was sent successfully!",
-                            Data = status
-                        });
-                    }
-                    else
-                    {
-                        return Ok(new ResponseMessage
-                        {
-                            Message = $"Check successfully! Transaction status: {status}",
-                            Data = status
-                        });
-                    }
-                }
-                else
-                {
-                    return NotFound(new ResponseMessage
-                    {
-                        Message = "Get fail. Transaction not found!"
-                    });
-                }
-
-            }
-            catch (DbUpdateException dbEx)
-            {
-                // Handle database update exceptions
-                var response = new ResponseMessage();
-                if (dbEx.InnerException != null)
-                {
-                    response.Message = $"{dbEx.InnerException.Message}";
-                }
-                else
-                {
-                    response.Message = "Database update error.";
-                }
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (NotFoundException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return NotFound(response);
-            }
-            catch (BadRequestException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (ArgumentNullException argEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{argEx.ParamName}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (UnauthorizedAccessException unauEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{unauEx.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(403, response); // Internal Server Error
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(500, response); // Internal Server Error
-            }
-        }
 
 
         [HttpGet]
@@ -709,6 +525,277 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return StatusCode(500, response); // Internal Server Error
             }
         }
+
+        [HttpPost]
+        [Route("create-transaction")]
+        public async Task<IActionResult> CreateTransaction(CreateTransactionRequest request)
+        {
+            try
+            {
+                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
+
+                if (transactionResponse != null)
+                {
+                    var response = new CreateTransactionResponse()
+                    {
+                        OrderID = transactionResponse.OrderID,
+                        QRCode = transactionResponse.QRCode,
+                    };
+                    return Ok(response);
+
+                }
+                else
+                {
+                    return BadRequest("Can not create!");
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpPost]
+        [Route("create-transaction")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UploadImageTransactionByAdmin([FromForm] CreateTransactionWithUploadImage request)
+        {
+            try
+            {
+                var transactionResponse = await _transactionService.UploadImageTransactionByAdmin(request);
+
+                if (transactionResponse != null)
+                {
+                    var response = new ResponseMessage()
+                    {
+                        Data = transactionResponse,
+                        Message = "Create successfully!",
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return BadRequest("Can not create!");
+                }
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpPost]
+        [Route("check-transaction/send-email")]
+
+        public async Task<IActionResult> CheckAndSendEmailWithSuccessStatusCNTAsync(CheckTransactionRequest? request)
+        {
+            try
+            {
+                var status = await _transactionService.CheckAndSendEmailWithSuccessStatusCNTAsync(request);
+                if (status != null)
+                {
+                    if (status.ToLower().Contains("PAID".ToLower()))
+                    {
+                        return Ok(new ResponseMessage
+                        {
+                            Message = $"Check successfully! Transaction status: {status}, Email was sent successfully!",
+                            Data = status
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new ResponseMessage
+                        {
+                            Message = $"Check successfully! Transaction status: {status}",
+                            Data = status
+                        });
+                    }
+                }
+                else
+                {
+                    return NotFound(new ResponseMessage
+                    {
+                        Message = "Get fail. Transaction not found!"
+                    });
+                }
+
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
 
 
     }
