@@ -7,6 +7,10 @@
         public string? QRCode { get; set; } = default!;
         public string? AccountName { get; set; } = default!;
         public string? BankingName { get; set; } = default!;
+        public string? BankingAccountNumber { get; set; } = default!;
+        public bool IsActive { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
+        public bool IsComplete { get; set; } = default!;
 
     }
 }

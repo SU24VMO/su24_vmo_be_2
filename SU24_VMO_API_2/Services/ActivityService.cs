@@ -115,6 +115,7 @@ namespace SU24_VMO_API.Services
                                     IsActive = request.Activity.IsActive,
                                     CreateDate = request.Activity.CreateDate,
                                     Title = request.Activity.Title,
+                                    IsDisable = request.Activity.IsDisable,
                                     ProcessingPhaseId = request.Activity.ProcessingPhaseId,
                                     ProcessingPhase = processingPhase,
                                     UpdateDate = request.Activity.UpdateDate,
@@ -126,7 +127,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle));
+                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false);
             }
             else
             {
@@ -152,6 +153,7 @@ namespace SU24_VMO_API.Services
                                     IsActive = request.Activity.IsActive,
                                     CreateDate = request.Activity.CreateDate,
                                     Title = request.Activity.Title,
+                                    IsDisable = request.Activity.IsDisable,
                                     ProcessingPhaseId = request.Activity.ProcessingPhaseId,
                                     ProcessingPhase = processingPhase,
                                     UpdateDate = request.Activity.UpdateDate,
@@ -163,7 +165,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities;
+                return activities.Where(c => c.IsDisable == false);
             }
         }
 
@@ -199,6 +201,7 @@ namespace SU24_VMO_API.Services
                                         Title = request.Activity.Title,
                                         ProcessingPhaseId = request.Activity.ProcessingPhaseId,
                                         ProcessingPhase = processingPhase,
+                                        IsDisable = request.Activity.IsDisable,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,
@@ -209,7 +212,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle));
+                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false);
             }
             else
             {
@@ -240,6 +243,7 @@ namespace SU24_VMO_API.Services
                                         Title = request.Activity.Title,
                                         ProcessingPhaseId = request.Activity.ProcessingPhaseId,
                                         ProcessingPhase = processingPhase,
+                                        IsDisable = request.Activity.IsDisable,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
                                         OrganizationName = organization.Name,
@@ -250,7 +254,7 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities;
+                return activities.Where(a => a.IsDisable == false);
             }
         }
 

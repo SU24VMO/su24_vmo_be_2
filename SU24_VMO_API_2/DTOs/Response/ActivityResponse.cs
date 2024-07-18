@@ -13,6 +13,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool IsActive { get; set; } = default!;
+        public bool IsDisable { get; set; } = default!;
 
         public ProcessingPhase? ProcessingPhase { get; set; }
         public CreateActivityRequest? CreateActivityRequest { get; set; }

@@ -71,6 +71,7 @@ namespace SU24_VMO_API.Services
                         Description = post.Description,
                         Image = post.Image,
                         IsActive = post.IsActive,
+                        IsDisable = post.IsDisable,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
                         AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim(),
@@ -78,7 +79,7 @@ namespace SU24_VMO_API.Services
                         
                     });
                 }
-                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
+                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false);
             }
             else
             {
@@ -111,7 +112,7 @@ namespace SU24_VMO_API.Services
                         CreatePostRequest = request
                     });
                 }
-                return postReponses;
+                return postReponses.Where(p => p.IsDisable == false);
             }
 
         }
@@ -145,13 +146,14 @@ namespace SU24_VMO_API.Services
                         Description = post.Description,
                         Image = post.Image,
                         IsActive = post.IsActive,
+                        IsDisable = post.IsDisable,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
                         AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim(),
                         CreatePostRequest = request
                     });
                 }
-                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()));
+                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false);
 
             }
             else
@@ -180,13 +182,14 @@ namespace SU24_VMO_API.Services
                         Description = post.Description,
                         Image = post.Image,
                         IsActive = post.IsActive,
+                        IsDisable = post.IsDisable,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
                         AuthorName = member!.FirstName.Trim() + " " + member!.LastName.Trim(),
                         CreatePostRequest = request
                     });
                 }
-                return postReponses;
+                return postReponses.Where(p => p.IsDisable == false);
             }
         }
 

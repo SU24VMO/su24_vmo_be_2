@@ -273,11 +273,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/banking-account")]
-        public IActionResult GetAllCampaignsWithBankingAccountWithActiveStatus(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetAllCampaignsWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsWithBankingAccountWithActiveStatus();
+                var campaigns = _campaignService.GetAllCampaignsWithBankingAccountWithActiveStatus(campaignName);
 
                 var response = new ResponseMessage()
                 {

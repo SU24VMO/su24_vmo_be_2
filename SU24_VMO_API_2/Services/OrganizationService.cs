@@ -171,7 +171,7 @@ namespace SU24_VMO_API.Services
 
 
                 }
-                return organizations.Where(o => o.Name.ToLower().Contains(organizationName.Trim().ToLower()));
+                return organizations.Where(o => o.Name.ToLower().Contains(organizationName.Trim().ToLower()) && o.IsDisable == false);
             }
             else
             {
@@ -213,7 +213,7 @@ namespace SU24_VMO_API.Services
                     }
 
                 }
-                return organizations;
+                return organizations.Where(o => o.IsDisable == false);
             }
 
         }

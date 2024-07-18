@@ -312,23 +312,52 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
-        public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsWithBankingAccountWithActiveStatus()
+        public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsWithBankingAccountWithActiveStatus(string? campaignName)
         {
-            var campaigns = GetAllCampaignsWithActiveStatus();
-            var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
-            foreach (var campaign in campaigns)
+            if (!String.IsNullOrEmpty(campaignName))
             {
-                var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
-                campaignsResponse.Add(new CampaignWithBankingAccountResponse
+                var campaigns = GetAllCampaignsWithActiveStatus();
+                var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
+                foreach (var campaign in campaigns)
                 {
-                    CampaignID = campaign.CampaignID,
-                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
-                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                    Name = campaign.Name
-                });
+                    var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
+                    campaignsResponse.Add(new CampaignWithBankingAccountResponse
+                    {
+                        CampaignID = campaign.CampaignID,
+                        BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
+                        AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                        QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "Không có số tài khoản ngân hàng",
+                        Name = campaign.Name,
+                        IsDisable = campaign.IsDisable,
+                        IsActive = campaign.IsActive,
+                        IsComplete = campaign.IsComplete
+                    });
+                }
+                return campaignsResponse.Where(c => c.Name.ToLower().Trim().Contains(campaignName.ToLower().Trim()));
             }
-            return campaignsResponse;
+            else
+            {
+                var campaigns = GetAllCampaignsWithActiveStatus();
+                var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
+                foreach (var campaign in campaigns)
+                {
+                    var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
+                    campaignsResponse.Add(new CampaignWithBankingAccountResponse
+                    {
+                        CampaignID = campaign.CampaignID,
+                        BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
+                        AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                        QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "Không có số tài khoản ngân hàng",
+                        Name = campaign.Name,
+                        IsDisable = campaign.IsDisable,
+                        IsActive = campaign.IsActive,
+                        IsComplete = campaign.IsComplete
+                    });
+                }
+                return campaignsResponse;
+            }
         }
 
         public IEnumerable<Campaign> GetAllCampaignsWithUnActiveStatus()
@@ -2009,7 +2038,7 @@ namespace SU24_VMO_API.Services
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
             }
             else
             {
@@ -2063,7 +2092,7 @@ namespace SU24_VMO_API.Services
 
 
                 }
-                return campaigns;
+                return campaigns.Where(c => c.IsDisable == false);
             }
 
         }
@@ -2107,7 +2136,7 @@ namespace SU24_VMO_API.Services
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()));
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
             }
             else
             {
@@ -2153,7 +2182,7 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
                 }
-                return campaigns;
+                return campaigns.Where(c => c.IsDisable == false);
             }
         }
 
