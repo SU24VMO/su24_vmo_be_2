@@ -21,6 +21,7 @@ namespace SU24_VMO_API.Services
         private readonly IMemberRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IBankingAccountRepository _bankingAccountRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IActivityImageRepository _activityImageRepository;
@@ -36,7 +37,8 @@ namespace SU24_VMO_API.Services
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
-            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository)
+            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository, 
+            ITransactionRepository transactionRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -54,6 +56,7 @@ namespace SU24_VMO_API.Services
             _statementFileRepository = statementFileRepository;
             _accountRepository = accountRepository;
             _bankingAccountRepository = bankingAccountRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -321,6 +324,11 @@ namespace SU24_VMO_API.Services
                 foreach (var campaign in campaigns)
                 {
                     var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
+
+                    var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID)!;
+                    var transaction =
+                        _transactionRepository.GetTransactionByCampaignIdWithTypeIsTransfer(campaign.CampaignID);
+
                     campaignsResponse.Add(new CampaignWithBankingAccountResponse
                     {
                         CampaignID = campaign.CampaignID,
@@ -328,7 +336,10 @@ namespace SU24_VMO_API.Services
                         BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "Không có số tài khoản ngân hàng",
+                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                        Amount = donatePhase.CurrentMoney,
+                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                        TransactionImage = transaction != null ? transaction.TransactionImageUrl : null,
                         Name = campaign.Name,
                         IsDisable = campaign.IsDisable,
                         IsActive = campaign.IsActive,
@@ -344,6 +355,11 @@ namespace SU24_VMO_API.Services
                 foreach (var campaign in campaigns)
                 {
                     var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
+
+                    var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID)!;
+                    var transaction =
+                        _transactionRepository.GetTransactionByCampaignIdWithTypeIsTransfer(campaign.CampaignID);
+
                     campaignsResponse.Add(new CampaignWithBankingAccountResponse
                     {
                         CampaignID = campaign.CampaignID,
@@ -352,6 +368,9 @@ namespace SU24_VMO_API.Services
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
                         BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "Không có số tài khoản ngân hàng",
+                        Amount = donatePhase.CurrentMoney,
+                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                        TransactionImage = transaction != null ? transaction.TransactionImageUrl : null,
                         Name = campaign.Name,
                         IsDisable = campaign.IsDisable,
                         IsActive = campaign.IsActive,

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.Enums;
 
 namespace Repository.Implements
 {
@@ -42,6 +43,16 @@ namespace Repository.Implements
                 .Include(a => a.Account)
                 .Include(a => a.BankingAccount)
                 .Include(a => a.Campaign).ToList().Where(t => t.AccountId.Equals(accountId));
+        }
+
+        public Transaction? GetTransactionByCampaignIdWithTypeIsTransfer(Guid campaignId)
+        {
+            using var context = new VMODBContext();
+            return context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).ToList()
+                .FirstOrDefault(d => d.CampaignID.Equals(campaignId) && d.TransactionType == TransactionType.Transfer);
         }
 
         public Transaction? GetTransactionByOrderId(int orderId)
