@@ -21,6 +21,7 @@ namespace SU24_VMO_API.Services
         private readonly IMemberRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
+        private readonly IBankingAccountRepository _bankingAccountRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
@@ -35,7 +36,7 @@ namespace SU24_VMO_API.Services
             ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
-            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository)
+            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -52,6 +53,7 @@ namespace SU24_VMO_API.Services
             _statementFileService = statementFileService;
             _statementFileRepository = statementFileRepository;
             _accountRepository = accountRepository;
+            _bankingAccountRepository = bankingAccountRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -310,6 +312,25 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
+        public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsWithBankingAccountWithActiveStatus()
+        {
+            var campaigns = GetAllCampaignsWithActiveStatus();
+            var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
+            foreach (var campaign in campaigns)
+            {
+                var bankingAccount = _bankingAccountRepository.GetById(campaign.BankingAccountID);
+                campaignsResponse.Add(new CampaignWithBankingAccountResponse
+                {
+                    CampaignID = campaign.CampaignID,
+                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
+                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                    Name = campaign.Name
+                });
+            }
+            return campaignsResponse;
+        }
+
         public IEnumerable<Campaign> GetAllCampaignsWithUnActiveStatus()
         {
             var campaigns = _campaignRepository.GetAll().Where(c => c.IsActive == false);
@@ -326,6 +347,9 @@ namespace SU24_VMO_API.Services
             }
             return campaigns;
         }
+
+
+
 
         public IEnumerable<Campaign> GetAllCampaignsWithActiveStatus()
         {
@@ -2037,7 +2061,7 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
 
-                    
+
                 }
                 return campaigns;
             }
