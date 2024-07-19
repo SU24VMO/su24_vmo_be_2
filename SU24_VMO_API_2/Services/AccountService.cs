@@ -15,6 +15,7 @@ using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -28,6 +29,7 @@ namespace SU24_VMO_API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IAccountTokenRepository _accountTokenRepository;
         private readonly IMemberRepository _memberRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IAdminRepository _adminRepository;
         private readonly IOrganizationManagerRepository _organizationManagerRepository;
         private readonly IModeratorRepository _moderatorRepository;
@@ -39,7 +41,7 @@ namespace SU24_VMO_API.Services
         public AccountService(JwtTokenSupporter jwtTokenSupporter, IMemberRepository memberRepository,
             IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository,
             IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository, FirebaseService firebaseService,
-            CampaignService campaignService)
+            CampaignService campaignService, ITransactionRepository transactionRepository)
         {
             this.jwtTokenSupporter = jwtTokenSupporter;
             _memberRepository = memberRepository;
@@ -50,11 +52,39 @@ namespace SU24_VMO_API.Services
             _accountTokenRepository = accountTokenRepository;
             this.firebaseService = firebaseService;
             _campaignService = campaignService;
+            _transactionRepository = transactionRepository;
         }
 
         public IEnumerable<Account> GetAll()
         {
             return _accountRepository.GetAll();
+        }
+
+
+        public int CalculateNumberOfAccountDonate()
+        {
+            var accounts = _accountRepository.GetAll();
+            int count = 0;
+            foreach (var account in accounts)
+            {
+                var transactions = _transactionRepository.GetHistoryTransactionByAccountId(account.AccountID);
+                if (transactions != null && transactions.Any())
+                {
+                    var transactionsSuccess = transactions.Where(t =>
+                        t.TransactionType == TransactionType.Receive &&
+                        t.TransactionStatus == TransactionStatus.Success);
+                    if (transactionsSuccess.Any())
+                        count++;
+                }
+            }
+            return count;
+        }
+
+        public int CalculateNumberOfAccountUser()
+        {
+            var accounts = _accountRepository.GetAll();
+            int count = accounts.Count();
+            return count;
         }
 
         public IEnumerable<Account> GetAllAccountsWithVolunteerRole(string? name)

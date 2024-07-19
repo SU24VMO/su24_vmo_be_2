@@ -315,6 +315,22 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
+        public int CalculateNumberOfCampaignActive()
+        {
+            var campaignRequests = _createCampaignRequestRepository.GetAll().Where(o => o.IsApproved);
+            int count = 0;
+            foreach (var request in campaignRequests)
+            {
+                var campaign = _campaignRepository.GetById(request.CampaignID);
+                if (campaign != null)
+                {
+                    if (campaign.IsActive == true)
+                        count++;
+                }
+            }
+            return count;
+        }
+
         public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsWithBankingAccountWithActiveStatus(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))

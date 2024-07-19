@@ -78,6 +78,22 @@ namespace SU24_VMO_API.Services
             return organizations;
         }
 
+        public int CalculateNumberOfOrganizationActive()
+        {
+            var organizationRequests = _createOrganizationRequestRepository.GetAll().Where(o => o.IsApproved);
+            int count = 0;
+            foreach (var request in organizationRequests)
+            {
+                var organization = _organizationRepository.GetById(request.OrganizationID);
+                if (organization != null)
+                {
+                    if (organization.IsActive == true)
+                        count++;
+                }
+            }
+            return count;
+        }
+
 
         public Organization? GetOrganizationByOrganizationId(Guid organizationId)
         {
@@ -319,7 +335,7 @@ namespace SU24_VMO_API.Services
                     request.OrganizationId);
             if (organizationManagerRequest != null)
             {
-                if(organizationManagerRequest.IsApproved)
+                if (organizationManagerRequest.IsApproved)
                     throw new BadRequestException(
                         "Tổ chức này hiện đã được duyệt, vì vậy mọi thông tin của tổ chức này không thể chỉnh sửa!");
             }

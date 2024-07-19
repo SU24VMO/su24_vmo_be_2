@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Models;
 using Org.BouncyCastle.Asn1.Cms;
+using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
@@ -43,6 +44,22 @@ namespace SU24_VMO_API.Services
             if (!String.IsNullOrEmpty(campaignName))
                 return _repository.GetAll().Where(d => d.Campaign.Name.ToLower().Contains(campaignName.ToLower().Trim()));
             else return _repository.GetAll();
+        }
+
+
+        public int CalculateAmountNumberOfActiveCampaign()
+        {
+            var donatePhases = _repository.GetAll().Where(o => o.IsEnd);
+            int count = 0;
+            foreach (var phase in donatePhases)
+            {
+                var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(phase.CampaignId);
+                if (createCampaignRequest != null && createCampaignRequest.IsApproved)
+                {
+                    count = count + Convert.ToInt32(phase.CurrentMoney);
+                }
+            }
+            return count;
         }
 
         public DonatePhase? GetDonatePhaseById(Guid donatePhaseId)

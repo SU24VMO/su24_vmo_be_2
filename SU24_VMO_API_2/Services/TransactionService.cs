@@ -74,6 +74,14 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public int CalculateNumberOfTransactionDonate()
+        {
+            var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+            int count = transactions.Count();
+            return count;
+        }
+
+
         public IEnumerable<TransactionResponse> GetAllNumberRecentlyTransactions(int? numberOfTransaction)
         {
             if (numberOfTransaction != null)
