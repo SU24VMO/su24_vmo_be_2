@@ -116,7 +116,7 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return transReponse;
+                return transReponse.Where(t => t.TransactionType == TransactionType.Receive);
             }
             else
             {
@@ -150,7 +150,7 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return transReponse;
+                return transReponse.Where(t => t.TransactionType == TransactionType.Receive);
             }
 
         }

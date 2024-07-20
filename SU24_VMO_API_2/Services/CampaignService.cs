@@ -275,7 +275,7 @@ namespace SU24_VMO_API.Services
             }
 
             if (campaignResponse.Transactions != null)
-                campaignResponse.Transactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success).ToList();
+                campaignResponse.Transactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success && c.TransactionType == TransactionType.Receive).ToList();
 
             return campaignResponse;
         }
