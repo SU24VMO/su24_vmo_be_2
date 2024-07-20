@@ -95,6 +95,15 @@ namespace SU24_VMO_API.Services
 
         public async Task<CreateOrganizationRequest?> CreateOrganizationRequest(Guid organizationManagerID, CreateOrganizationRequestRequest request)
         {
+            var organizationExisted = _organizationRepository
+                .GetAll()
+                .FirstOrDefault(o => o.Tax.Trim().ToLower().Equals(request.OrganizationTaxCode.Trim().ToLower()));
+            if (organizationExisted != null)
+            {
+                throw new BadRequestException("Tổ chức với mã số thuế này đã tồn tại!");
+            }
+
+
             var organizationManager = _organizationManagerRepository.GetById(organizationManagerID);
             if (organizationManager == null) { throw new NotFoundException("Quản lý tổ chức không tìm thấy!"); }
             var organization = new Organization
