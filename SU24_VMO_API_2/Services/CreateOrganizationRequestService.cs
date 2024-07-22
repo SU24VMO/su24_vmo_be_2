@@ -274,6 +274,7 @@ namespace SU24_VMO_API.Services
             else
             {
                 request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                request.ApprovedBy = acceptOrRejectCreateOrganizationRequestRequest.ModeratorId;
                 request.IsApproved = false;
                 request.IsPending = false;
                 request.IsLocked = false;

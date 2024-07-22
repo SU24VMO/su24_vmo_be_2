@@ -303,6 +303,7 @@ namespace SU24_VMO_API.Services
                 account = volunteer!.Account;
                 volunteer!.IsVerified = false;
 
+                request.ApprovedBy = updateVolunteerAccountRequest.ModeratorId;
                 request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                 request.IsApproved = false;
                 request.IsPending = false;

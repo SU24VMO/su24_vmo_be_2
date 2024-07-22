@@ -220,6 +220,7 @@ namespace SU24_VMO_API.Services
                 else
                 {
                     createPostRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    createPostRequest.ApprovedBy = request.ModeratorId;
                     createPostRequest.IsApproved = false;
                     createPostRequest.IsLocked = false;
                     createPostRequest.IsPending = false;

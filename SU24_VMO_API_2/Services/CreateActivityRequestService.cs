@@ -369,6 +369,7 @@ namespace SU24_VMO_API.Services
                     createActivityRequest.IsRejected = true;
                     createActivityRequest.IsLocked = false;
                     createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    createActivityRequest.ApprovedBy = moderator.ModeratorID;
                     createActivityRequest.ModifiedBy = moderator.AccountID;
 
                     if (createActivityRequest.CreateByMember != null)
