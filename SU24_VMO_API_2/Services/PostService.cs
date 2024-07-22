@@ -106,6 +106,7 @@ namespace SU24_VMO_API.Services
                         Description = post.Description,
                         Image = post.Image,
                         IsActive = post.IsActive,
+                        IsDisable = post.IsDisable,
                         Title = post.Title,
                         UpdateAt = post.UpdateAt,
                         AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim(),
@@ -206,6 +207,7 @@ namespace SU24_VMO_API.Services
                 Description = post.Description,
                 Image = post.Image,
                 IsActive = post.IsActive,
+                IsDisable = post.IsDisable,
                 Title = post.Title,
                 UpdateAt = post.UpdateAt
             };
