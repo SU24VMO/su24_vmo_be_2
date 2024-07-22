@@ -242,7 +242,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = false;
-                request.IsDisable = false;
+                //request.IsDisable = false;
                 result = true;
                 notification.Content = "Yêu cầu trở thành tài khoản quản lý được xác minh của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
             }
@@ -256,7 +256,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = true;
-                request.IsDisable = true;
+                //request.IsDisable = true;
                 result = true;
                 notification.Content = "Yêu cầu trở thành tài khoản quản lý được xác minh của bạn chưa được công nhận, hãy cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
             }

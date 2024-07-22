@@ -269,7 +269,7 @@ namespace SU24_VMO_API.Services
                 notification.Content = "Yêu cầu tạo tổ chức của bạn vừa được duyệt thành công, hãy trải nghiệm dịch vụ nhé!";
                 organization.IsActive = true;
                 organization.IsModify = true;
-                organization.IsDisable = false;
+                //organization.IsDisable = false;
             }
             else
             {
@@ -282,7 +282,7 @@ namespace SU24_VMO_API.Services
                 notification.Content = "Yêu cầu tạo tổ chức của bạn chưa được công nhận, hãy cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
                 organization.IsActive = false;
                 organization.IsModify = true;
-                organization.IsDisable = true;
+                //organization.IsDisable = true;
             }
 
 

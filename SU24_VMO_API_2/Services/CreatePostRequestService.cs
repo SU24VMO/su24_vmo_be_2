@@ -203,7 +203,7 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = false;
                     post.IsActive = true;
-                    post.IsDisable = false;
+                    //post.IsDisable = false;
                     if (createPostRequest.CreateByOM != null)
                     {
                         om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;
@@ -225,7 +225,7 @@ namespace SU24_VMO_API.Services
                     createPostRequest.IsPending = false;
                     createPostRequest.IsRejected = true;
                     post.IsActive = false;
-                    post.IsDisable = true;
+                    //post.IsDisable = true;
                     if (createPostRequest.CreateByOM != null)
                     {
                         om = _organizationManagerRepository.GetById((Guid)createPostRequest.CreateByOM)!;

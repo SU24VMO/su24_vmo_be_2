@@ -330,7 +330,7 @@ namespace SU24_VMO_API.Services
 
                     activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
                     activity.IsActive = true;
-                    activity.IsDisable = false;
+                    //activity.IsDisable = false;
 
                     createActivityRequest.IsApproved = true;
                     createActivityRequest.IsPending = false;
@@ -362,7 +362,7 @@ namespace SU24_VMO_API.Services
                 {
                     activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
                     activity.IsActive = false;
-                    activity.IsDisable = true;
+                    //activity.IsDisable = true;
 
                     createActivityRequest.IsApproved = false;
                     createActivityRequest.IsPending = false;

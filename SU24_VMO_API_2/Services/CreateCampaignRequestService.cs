@@ -434,7 +434,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = true;
                     campaign.IsTransparent = true;
-                    campaign.IsDisable = false;
+                    //campaign.IsDisable = false;
 
                     request.IsApproved = true;
                     request.IsPending = false;
@@ -508,7 +508,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = false;
                     campaign.IsTransparent = false;
-                    campaign.IsDisable = true;
+                    //campaign.IsDisable = true;
 
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
                     request.IsApproved = false;
@@ -530,7 +530,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = true;
                     campaign.IsTransparent = true;
-                    campaign.IsDisable = false;
+                    //campaign.IsDisable = false;
 
 
 
@@ -606,7 +606,7 @@ namespace SU24_VMO_API.Services
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
                     campaign.IsActive = false;
                     campaign.IsTransparent = false;
-                    campaign.IsDisable = true;
+                    //campaign.IsDisable = true;
 
 
                     request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);

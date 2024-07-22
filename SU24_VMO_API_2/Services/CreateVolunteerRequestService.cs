@@ -291,7 +291,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = false;
-                request.IsDisable = false;
+                //request.IsDisable = false;
                 result = true;
                 account!.Role = Role.Volunteer;
                 notification.AccountID = account!.AccountID;
@@ -308,7 +308,7 @@ namespace SU24_VMO_API.Services
                 request.IsPending = false;
                 request.IsLocked = false;
                 request.IsRejected = true;
-                request.IsDisable = true;
+                //request.IsDisable = true;
                 result = true;
                 account!.Role = Role.Member;
                 notification.AccountID = account!.AccountID;
