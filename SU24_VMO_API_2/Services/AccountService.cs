@@ -205,7 +205,7 @@ namespace SU24_VMO_API.Services
 
                     response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
                     response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
-                    if(member.IsVerified)
+                    if (member.IsVerified)
                         response.IsVerified = true;
 
                 }
@@ -467,6 +467,7 @@ namespace SU24_VMO_API.Services
             if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
             var member = new Member();
             var om = new OrganizationManager();
+            var moderator = new Moderator();
             if (account.Role == Role.Volunteer || account.Role == Role.Member)
             {
                 member = _memberRepository.GetByAccountId(account.AccountID)!;
@@ -489,6 +490,17 @@ namespace SU24_VMO_API.Services
                 account.ModifiedBy = om.OrganizationManagerID;
                 _accountRepository.Update(account);
                 _organizationManagerRepository.Update(om);
+            }
+            else if (account.Role == Role.Moderator)
+            {
+                moderator = _moderatorRepository.GetByAccountID(account.AccountID)!;
+                if (request.IsActived != null)
+                {
+                    account.IsActived = (bool)request.IsActived;
+                }
+                account.ModifiedBy = moderator.ModeratorID;
+                _accountRepository.Update(account);
+                _moderatorRepository.Update(moderator);
             }
             else
             {
