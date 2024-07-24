@@ -296,8 +296,8 @@ namespace SU24_VMO_API.Services
                 {
                     AccountID = account.AccountID,
                     AdminID = Guid.NewGuid(),
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
@@ -310,8 +310,8 @@ namespace SU24_VMO_API.Services
                 {
                     AccountID = account.AccountID,
                     ModeratorID = Guid.NewGuid(),
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
@@ -325,8 +325,8 @@ namespace SU24_VMO_API.Services
                     AccountID = account.AccountID,
                     MemberID = Guid.NewGuid(),
                     Gender = "",
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
@@ -340,8 +340,8 @@ namespace SU24_VMO_API.Services
                     AccountID = account.AccountID,
                     MemberID = Guid.NewGuid(),
                     Gender = "",
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);
@@ -355,8 +355,8 @@ namespace SU24_VMO_API.Services
                     AccountID = account.AccountID,
                     OrganizationManagerID = Guid.NewGuid(),
                     Gender = "",
-                    FirstName = "",
-                    LastName = "",
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     PhoneNumber = ""
                 };
                 var accountCreated = _accountRepository.Save(account);

@@ -12,6 +12,10 @@ namespace SU24_VMO_API.DTOs.Request.AccountRequest
         public string Password { get; set; } = default!;
         [Required]
         public string Username { get; set; } = default!;
+        [Required]
+        public string FirstName { get; set; } = default!;
+        [Required]
+        public string LastName { get; set; } = default!;
         public string? Avatar { get; set; }
         [Required]
         public Role Role { get; set; }
