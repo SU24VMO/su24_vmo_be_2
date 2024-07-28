@@ -60,6 +60,11 @@ namespace SU24_VMO_API.Services
             return _accountRepository.GetAll();
         }
 
+        public IEnumerable<Account> GetAllActiveStatus()
+        {
+            return _accountRepository.GetAll().Where(a => a.IsActived == true);
+        }
+
 
         public int CalculateNumberOfAccountDonate()
         {

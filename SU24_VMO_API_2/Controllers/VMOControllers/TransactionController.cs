@@ -196,6 +196,322 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
+        [Route("all/admin/total-amount")]
+        public IActionResult CalculateTotalAmountOfTransactionByAdmin()
+        {
+            try
+            {
+                var number = _transactionService.CalculateTotalAmountOfTransactionByAdmin();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = number
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/statement/receive-transaction")]
+        public async Task<IActionResult> GetTransactionReceiveForStatementByAdmin()
+        {
+            try
+            {
+                var data = await _transactionService.GetTransactionReceiveForStatementByAdmin();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = data
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+        [HttpGet]
+        [Route("all/statement/send-transaction")]
+        public async Task<IActionResult> GetTransactionSendForStatementByAdmin()
+        {
+            try
+            {
+                var data = await _transactionService.GetTransactionSendForStatementByAdmin();
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = data
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpGet]
+        [Route("all/test")]
+        public async Task<IActionResult> Test(int orderId)
+        {
+            try
+            {
+                var paymentLink = await _transactionService.CheckTransactionAsync(orderId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = paymentLink
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+
+        [HttpGet]
         [Route("all/recently-transaction")]
         public IActionResult GetAllNumberRecentlyTransactions(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, int? numberOfTransaction)
         {
