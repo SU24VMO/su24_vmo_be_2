@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using System.Net;
+using BusinessObject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,32 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             _accountService = accountService;
             _paginationService = paginationService;
+        }
+
+
+        [HttpGet]
+        [Route("GetIpAddress")]
+        public IActionResult GetIpAddress()
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+
+            if (ipAddress == null)
+            {
+                return Ok(new { IPAddress = "IP address not found" });
+            }
+
+            // Check if the address is IPv6 loopback address
+            if (IPAddress.IsLoopback(ipAddress))
+            {
+                ipAddress = IPAddress.Loopback;
+            }
+            // Check if the address is IPv6 and has an IPv4 representation
+            else if (ipAddress.IsIPv4MappedToIPv6)
+            {
+                ipAddress = ipAddress.MapToIPv4();
+            }
+
+            return Ok(new { IPAddress = ipAddress.ToString() });
         }
 
         [HttpGet]

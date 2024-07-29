@@ -19,10 +19,12 @@ namespace SU24_VMO_API.Services
         private readonly IProcessingPhaseRepository _processingPhaseRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IStatementPhaseRepository _statementPhaseRepository;
 
         public DonatePhaseService(IDonatePhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IProcessingPhaseRepository processingPhaseRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IProcessingPhaseRepository processingPhaseRepository, 
+            IStatementPhaseRepository statementPhaseRepository)
         {
             _repository = repository;
             _campaignRepository = campaignRepository;
@@ -32,6 +34,7 @@ namespace SU24_VMO_API.Services
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
             _processingPhaseRepository = processingPhaseRepository;
+            _statementPhaseRepository = statementPhaseRepository;
         }
 
 
@@ -302,6 +305,66 @@ namespace SU24_VMO_API.Services
                 donatePhase.EndDate = request.EndDate;
             }
             _repository.Update(donatePhase);
+        }
+
+
+        public void UpdateResetStartDateOfCampaign(UpdateDonatePhaseRequest request)
+        {
+            var donatePhase = _repository.GetById(request.DonatePhaseId);
+            if (donatePhase == null) { throw new NotFoundException("Giai đoạn quyên góp không tìm thấy!"); }
+
+            var account = _accountRepository.GetById(request.AccountId);
+            if (account == null)
+            {
+                throw new NotFoundException("Tài khoản này không tìm thấy!");
+            }
+
+            if (donatePhase.Percent >= 80)
+            {
+                throw new BadRequestException("Giai đoạn quyên góp chiến dịch này hiện đã đạt được 80%!");
+            }
+
+            var campaign = _campaignRepository.GetById(donatePhase.CampaignId);
+            if (campaign != null)
+            {
+                if (!campaign.IsTransparent)
+                {
+                    throw new BadRequestException(
+                        "Chiến dịch này đã bị báo cáo, hiện tại hệ thống chúng tôi đang xử lý!");
+                }
+            }
+
+            if (request.StartDate != null)
+            {
+                donatePhase.StartDate = request.StartDate;
+            }
+
+
+            donatePhase.EndDate = null;
+            donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+            donatePhase.IsLocked = false;
+            donatePhase.IsEnd = false;
+            donatePhase.IsProcessing = true;
+
+            var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(donatePhase.CampaignId)!;
+            processingPhase.StartDate = null;
+            processingPhase.EndDate = null;
+            processingPhase.IsProcessing = false;
+            processingPhase.IsLocked = false;
+            processingPhase.IsEnd = false;
+            processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+            var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(donatePhase.CampaignId)!;
+            statementPhase.StartDate = null;
+            statementPhase.EndDate = null;
+            statementPhase.IsProcessing = false;
+            statementPhase.IsLocked = false;
+            statementPhase.IsEnd = false;
+            statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+            _repository.Update(donatePhase);
+            _processingPhaseRepository.Update(processingPhase);
+            _statementPhaseRepository.Update(statementPhase);
         }
 
     }
