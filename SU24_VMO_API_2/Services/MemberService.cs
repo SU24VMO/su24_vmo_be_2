@@ -179,6 +179,14 @@ namespace SU24_VMO_API.Services
             {
                 throw new Exception("Người dùng phải từ 18 tuổi trở lên!");
             }
+            if (_accountRepository.GetByEmail(request.Email) != null)
+            {
+                throw new Exception("Email đã tồn tại!");
+            }
+            if (_accountRepository.GetByUsername(request.Username) != null)
+            {
+                throw new Exception("Tên người dùng đã tồn tại!");
+            }
         }
 
 

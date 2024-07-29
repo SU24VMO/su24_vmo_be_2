@@ -44,7 +44,7 @@ namespace SU24_VMO_API.Controllers
                 var response = new ResponseMessage();
                 if (accessToken == null)
                 {
-                    response.Message = "Incorrect username, email or password!";
+                    response.Message = "Sai tên đăng nhập, email hoặc mật khẩu!";
                     return BadRequest(response);
                 }
 
@@ -146,12 +146,12 @@ namespace SU24_VMO_API.Controllers
                 if (request.AccountType.Equals("member"))
                 {
                     var member = _memberService.CreateMember(request);
-                    if (member == null) return BadRequest("Email already exist!");
+                    if (member == null) return BadRequest("Email đã tồn tại!");
                     var response = new ResponseMessage()
                     {
                         Message = "Register successfully!",
                     };
-                    return Login(new LoginRequest() { Account = request.Email, Password = request.Password });
+                    return Login(new LoginRequest() { Account = request.Email.Trim(), Password = request.Password.Trim() });
                 }
                 else if (request.AccountType.Equals("organizationManager"))
                 {
@@ -171,12 +171,12 @@ namespace SU24_VMO_API.Controllers
                         YoutubeUrl = request.YoutubeUrl
                     };
                     var organizationManager = _organizationManagerService.CreateOrganizationManager(omCreateRequest);
-                    if (request == null) return BadRequest("Email already exist!");
+                    if (request == null) return BadRequest("Email đã tồn tại!");
                     var response = new ResponseMessage()
                     {
                         Message = "Register successfully!",
                     };
-                    return Login(new LoginRequest() { Account = request.Email, Password = request.Password });
+                    return Login(new LoginRequest() { Account = request.Email.Trim(), Password = request.Password.Trim() });
                 }
                 return BadRequest(new ResponseMessage
                 {

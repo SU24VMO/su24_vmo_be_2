@@ -144,6 +144,10 @@ namespace SU24_VMO_API.Services
             {
                 throw new Exception("Số điện thoại đã tồn tại!");
             }
+            if (_accountRepository.GetByEmail(request.Email) != null)
+            {
+                throw new Exception("Email đã tồn tại!");
+            }
         }
     }
 }
