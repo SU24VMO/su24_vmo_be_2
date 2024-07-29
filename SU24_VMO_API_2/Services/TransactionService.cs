@@ -96,13 +96,21 @@ namespace SU24_VMO_API.Services
 
         public float CalculateTotalAmountOfTransactionByAdmin()
         {
-            var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
-            float total = 0;
-            foreach (var transaction in transactions)
+            var transactionsTranfer = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
+            float totalTransfer = 0;
+            foreach (var transaction in transactionsTranfer)
             {
-                total += transaction.Amount;
+                totalTransfer += transaction.Amount;
             }
-            return total;
+
+            var transactionsReceive = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+            float totalReceive = 0;
+            foreach (var transaction in transactionsReceive)
+            {
+                totalReceive += transaction.Amount;
+            }
+
+            return totalReceive - totalTransfer;
         }
 
 
