@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 using BusinessObject.Models;
+using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,38 +20,68 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
         private readonly AccountService _accountService;
         private readonly PaginationService<Account> _paginationService;
+        private readonly DatabaseReader _reader;
 
 
-        public AccountController(AccountService accountService, PaginationService<Account> paginationService)
+        public AccountController(AccountService accountService, PaginationService<Account> paginationService, DatabaseReader reader)
         {
             _accountService = accountService;
             _paginationService = paginationService;
+            _reader = reader;
         }
 
 
         [HttpGet]
-        [Route("GetIpAddress")]
-        public IActionResult GetIpAddress()
+        [Route("GetPrivateIpAddress")]
+        public IActionResult GetPrivateIpAddress()
         {
-            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+            var hostName = Dns.GetHostName();
+            var ipAddresses = Dns.GetHostAddresses(hostName);
+            var privateIpAddress = ipAddresses
+                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork && IsPrivateIpAddress(ip));
 
-            if (ipAddress == null)
+            if (privateIpAddress == null)
             {
-                return Ok(new { IPAddress = "IP address not found" });
+                return NotFound("No private IP address found.");
             }
 
-            // Check if the address is IPv6 loopback address
-            if (IPAddress.IsLoopback(ipAddress))
-            {
-                ipAddress = IPAddress.Loopback;
-            }
-            // Check if the address is IPv6 and has an IPv4 representation
-            else if (ipAddress.IsIPv4MappedToIPv6)
-            {
-                ipAddress = ipAddress.MapToIPv4();
-            }
+            var ipAddressString = privateIpAddress.ToString();
 
-            return Ok(new { IPAddress = ipAddress.ToString() });
+            //if (IsPrivateIpAddress(privateIpAddress))
+            //{
+            return Ok(new
+            {
+                IPAddress = ipAddressString,
+                //Message = "Private IP addresses do not have geographical location."
+            });
+            //}
+
+            //try
+            //{
+            //    var response = _reader.City(privateIpAddress);
+
+            //    return Ok(new
+            //    {
+            //        IPAddress = ipAddressString,
+            //        City = response.City?.Name,
+            //        Country = response.Country?.Name,
+            //        Continent = response.Continent?.Name,
+            //        Latitude = response.Location?.Latitude,
+            //        Longitude = response.Location?.Longitude
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, $"Internal server error: {ex.Message}");
+            //}
+        }
+
+        private bool IsPrivateIpAddress(IPAddress ipAddress)
+        {
+            byte[] bytes = ipAddress.GetAddressBytes();
+            return (bytes[0] == 10) ||
+                   (bytes[0] == 172 && (bytes[1] >= 16 && bytes[1] <= 31)) ||
+                   (bytes[0] == 192 && bytes[1] == 168);
         }
 
         [HttpGet]

@@ -1,4 +1,5 @@
 using BusinessObject.Models;
+using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
@@ -28,6 +29,12 @@ namespace SU24_VMO_API_2
 
             // Add services to the container.
             builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
+            builder.Services.AddSingleton(serviceProvider =>
+            {
+                var env = builder.Environment;
+                var databasePath = Path.Combine(env.ContentRootPath, "Supporters/AppData", "GeoLite2-City.mmdb");
+                return new DatabaseReader(databasePath);
+            });
 #else 
             // Add services to the container.
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -121,7 +128,6 @@ namespace SU24_VMO_API_2
             builder.Services.AddScoped<IProcessingPhaseRepository, ProcessingPhaseRepository>();
             builder.Services.AddScoped<IStatementPhaseRepository, StatementPhaseRepository>();
             builder.Services.AddScoped<IDBTransactionRepository, DBTransactionRepository>();
-
 
 
 
