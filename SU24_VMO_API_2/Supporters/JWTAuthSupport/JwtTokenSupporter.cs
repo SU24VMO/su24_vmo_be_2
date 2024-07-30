@@ -390,7 +390,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
 
 
-        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck)
+        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck, HttpContext httpContext)
         {
             try
             {
@@ -444,7 +444,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                             AccountId = account.AccountID,
                             CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
                             LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
-                            IPAddressValue = GetLocalIPAddress()
+                            IPAddressValue = GetIpAddress(httpContext)
                         });
                         return (accessToken, refreshToken);
                     }
@@ -476,7 +476,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                             AccountId = account.AccountID,
                             CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
                             LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
-                            IPAddressValue = GetLocalIPAddress()
+                            IPAddressValue = GetIpAddress(httpContext)
                         });
                         return (accessToken, refreshToken);
                     }
@@ -508,7 +508,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                             AccountId = account.AccountID,
                             CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
                             LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
-                            IPAddressValue = GetLocalIPAddress()
+                            IPAddressValue = GetIpAddress(httpContext)
                         });
                         return (accessToken, refreshToken);
                     }
@@ -540,7 +540,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                             AccountId = account.AccountID,
                             CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
                             LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
-                            IPAddressValue = GetLocalIPAddress()
+                            IPAddressValue = GetIpAddress(httpContext)
                         });
                         return (accessToken, refreshToken);
                     }
@@ -572,7 +572,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                             AccountId = account.AccountID,
                             CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
                             LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
-                            IPAddressValue = GetLocalIPAddress()
+                            IPAddressValue = GetIpAddress(httpContext)
                         });
                         return (accessToken, refreshToken);
                     }

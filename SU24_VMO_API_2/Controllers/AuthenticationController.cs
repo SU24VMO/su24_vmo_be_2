@@ -39,7 +39,7 @@ namespace SU24_VMO_API.Controllers
         {
             try
             {
-                var (accessToken, refreshToken) = _accountService.Login(request.Account, request.Password);
+                var (accessToken, refreshToken) = _accountService.Login(request.Account, request.Password, HttpContext);
 
                 var response = new ResponseMessage();
                 if (accessToken == null)
@@ -123,7 +123,7 @@ namespace SU24_VMO_API.Controllers
         public IActionResult CreateRefreshToken(RefreshTokenRequest request)
         {
             var response = new ResponseMessage();
-            var (accessToken, refresherToken) = _accountService.ValidateRefreshToken(request.RefreshToken);
+            var (accessToken, refresherToken) = _accountService.ValidateRefreshToken(request.RefreshToken, HttpContext);
             if (accessToken == null)
             {
                 return BadRequest("Refresh Token Failed!");

@@ -334,13 +334,13 @@ namespace SU24_VMO_API.Services
                 }
             }
 
-            if (request.StartDate != null)
+            if (request.EndDate != null)
             {
-                donatePhase.StartDate = request.StartDate;
+                donatePhase.EndDate = request.EndDate;
             }
 
 
-            donatePhase.EndDate = null;
+            donatePhase.StartDate = null;
             donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
             donatePhase.IsLocked = false;
             donatePhase.IsEnd = false;

@@ -519,7 +519,7 @@ namespace SU24_VMO_API.Services
         }
 
         //function login
-        public (string?, string?) Login(string? methodAllowed, string password)
+        public (string?, string?) Login(string? methodAllowed, string password, HttpContext httpContext)
         {
             if (!String.IsNullOrEmpty(methodAllowed))
             {
@@ -556,7 +556,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -588,7 +588,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -620,7 +620,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -652,7 +652,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -684,7 +684,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -723,7 +723,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -755,7 +755,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -787,7 +787,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -819,7 +819,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -851,7 +851,7 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetLocalIPAddress()
+                                IPAddressValue = GetIpAddress(httpContext)
                             });
                             return (accessToken, refreshToken);
                         }
@@ -894,9 +894,9 @@ namespace SU24_VMO_API.Services
 
 
         //validation refresh token 
-        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck)
+        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck, HttpContext httpContext)
         {
-            return jwtTokenSupporter.ValidateRefreshToken(refreshTokenCheck);
+            return jwtTokenSupporter.ValidateRefreshToken(refreshTokenCheck, httpContext);
         }
 
 

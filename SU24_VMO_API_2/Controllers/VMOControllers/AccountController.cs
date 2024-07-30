@@ -11,6 +11,7 @@ using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using System.Net.Sockets;
 using System.Net;
+using SU24_VMO_API_2.Supporters;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -20,12 +21,14 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
         private readonly AccountService _accountService;
         private readonly PaginationService<Account> _paginationService;
+        private readonly IpAddressHelper _ipAddressHelper;
 
 
-        public AccountController(AccountService accountService, PaginationService<Account> paginationService)
+        public AccountController(AccountService accountService, PaginationService<Account> paginationService, IpAddressHelper ipAddressHelper)
         {
             _accountService = accountService;
             _paginationService = paginationService;
+            _ipAddressHelper = ipAddressHelper;
         }
 
 
@@ -43,6 +46,8 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
             return Ok(ipAddress?.ToString());
         }
+
+
 
 
         [HttpGet]
