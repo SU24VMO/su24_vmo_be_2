@@ -336,12 +336,16 @@ namespace SU24_VMO_API.Services
 
             if (request.EndDate != null)
             {
-                donatePhase.EndDate = request.EndDate;
+                campaign!.ExpectedEndDate = (DateTime)request.EndDate;
+                campaign.CanBeDonated = true;
+                campaign.ActualEndDate = null;
+                _campaignRepository.Update(campaign);
             }
 
 
             donatePhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
             donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+            donatePhase.EndDate = null;
             donatePhase.IsLocked = false;
             donatePhase.IsEnd = false;
             donatePhase.IsProcessing = true;
