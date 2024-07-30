@@ -3,7 +3,10 @@ using BusinessObject.Models;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Implements;
 using Repository.Interfaces;
+using SU24_VMO_API_2.Services;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Sockets;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -18,10 +21,12 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
         IAdminRepository _adminRepository;
         IOrganizationManagerRepository _organizationManagerRepository;
         IModeratorRepository _moderatorRepository;
+        private readonly IPAddressService ipAddressService;
+
 
 
         public JwtTokenSupporter(IConfiguration config, IMemberRepository memberRepo, IAccountRepository accountRepository, IAccountTokenRepository accountTokenRepository,
-            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository)
+            IAdminRepository adminRepository, IOrganizationManagerRepository organizationManagerRepository, IModeratorRepository moderatorRepository, IPAddressService ipAddressService)
         {
             this.config = config;
             _memberRepository = memberRepo;
@@ -30,6 +35,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             _adminRepository = adminRepository;
             _organizationManagerRepository = organizationManagerRepository;
             _moderatorRepository = moderatorRepository;
+            this.ipAddressService = ipAddressService;
         }
 
         public (string, DateTime?) CreateToken(Member user)
@@ -432,6 +438,14 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         accountTokenRepository.Save(accountTokenWhenRefresh);
                         accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
+                        ipAddressService.CreateIpAddress(new BusinessObject.Models.IPAddress
+                        {
+                            IPAddressId = Guid.NewGuid(),
+                            AccountId = account.AccountID,
+                            CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            IPAddressValue = GetLocalIPAddress()
+                        });
                         return (accessToken, refreshToken);
                     }
 
@@ -456,6 +470,14 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         accountTokenRepository.Save(accountTokenWhenRefresh);
                         accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
+                        ipAddressService.CreateIpAddress(new BusinessObject.Models.IPAddress
+                        {
+                            IPAddressId = Guid.NewGuid(),
+                            AccountId = account.AccountID,
+                            CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            IPAddressValue = GetLocalIPAddress()
+                        });
                         return (accessToken, refreshToken);
                     }
 
@@ -480,6 +502,14 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         accountTokenRepository.Save(accountTokenWhenRefresh);
                         accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
+                        ipAddressService.CreateIpAddress(new BusinessObject.Models.IPAddress
+                        {
+                            IPAddressId = Guid.NewGuid(),
+                            AccountId = account.AccountID,
+                            CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            IPAddressValue = GetLocalIPAddress()
+                        });
                         return (accessToken, refreshToken);
                     }
 
@@ -504,6 +534,14 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         accountTokenRepository.Save(accountTokenWhenRefresh);
                         accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
+                        ipAddressService.CreateIpAddress(new BusinessObject.Models.IPAddress
+                        {
+                            IPAddressId = Guid.NewGuid(),
+                            AccountId = account.AccountID,
+                            CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            IPAddressValue = GetLocalIPAddress()
+                        });
                         return (accessToken, refreshToken);
                     }
 
@@ -528,6 +566,14 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
                         accountTokenRepository.Save(accountTokenWhenRefresh);
                         accountRepository.Update(account);
                         //UpdateTokenForUser(user, token);
+                        ipAddressService.CreateIpAddress(new BusinessObject.Models.IPAddress
+                        {
+                            IPAddressId = Guid.NewGuid(),
+                            AccountId = account.AccountID,
+                            CreateDate = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            LoginTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow),
+                            IPAddressValue = GetLocalIPAddress()
+                        });
                         return (accessToken, refreshToken);
                     }
                 }
@@ -537,6 +583,19 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             {
                 return (null, null);
             }
+        }
+
+        public string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
         private byte[] GetValidBase64Key(string base64Key)
