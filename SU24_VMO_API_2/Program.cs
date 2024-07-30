@@ -15,6 +15,7 @@ using SU24_VMO_API.Supporters.JWTAuthSupport;
 using SU24_VMO_API.Supporters.Middlewares;
 using System.Text;
 using System.Text.Json.Serialization;
+using SU24_VMO_API_2.Services;
 
 namespace SU24_VMO_API_2
 {
@@ -128,6 +129,7 @@ namespace SU24_VMO_API_2
             builder.Services.AddScoped<IProcessingPhaseRepository, ProcessingPhaseRepository>();
             builder.Services.AddScoped<IStatementPhaseRepository, StatementPhaseRepository>();
             builder.Services.AddScoped<IDBTransactionRepository, DBTransactionRepository>();
+            builder.Services.AddScoped<IIPAddressRepository, IPAddressRepository>();
 
 
 
@@ -167,6 +169,7 @@ namespace SU24_VMO_API_2
             builder.Services.AddScoped<FirebaseService, FirebaseService>();
             builder.Services.AddScoped(typeof(PaginationService<>), typeof(PaginationService<>));
             builder.Services.AddScoped<DonatePhaseService, DonatePhaseService>();
+            builder.Services.AddScoped<IPAddressService, IPAddressService>();
 
 
 

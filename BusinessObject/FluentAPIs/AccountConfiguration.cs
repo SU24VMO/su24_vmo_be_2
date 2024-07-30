@@ -44,6 +44,10 @@ namespace BusinessObject.FluentAPIs
                 .WithOne(x => x.Account)
                 .HasForeignKey(x => x.AccountId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x => x.IPAddresses)
+                .WithOne(x => x.Account)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

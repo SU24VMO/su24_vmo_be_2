@@ -44,6 +44,7 @@ namespace BusinessObject.Models
         public DbSet<Transaction> Transactions { get; set; } = default!;
         public DbSet<Member> Members { get; set; } = default!;
         public DbSet<AccountToken> AccountTokens { get; set; } = default!;
+        public DbSet<IPAddress> IPAddresses { get; set; }
 
 
 
@@ -121,6 +122,7 @@ namespace BusinessObject.Models
             modelBuilder.ApplyConfiguration(new StatementPhaseConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new MemberConfiguration());
+            modelBuilder.ApplyConfiguration(new IPAddressConfiguration());
 
 
         }

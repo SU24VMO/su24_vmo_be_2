@@ -30,5 +30,6 @@ namespace BusinessObject.Models
         public List<AccountToken>?  AccountTokens { get; set; }
         public List<BankingAccount>? BankingAccounts { get; set; }
         public List<Transaction>? Transactions { get; set; }
+        public List<IPAddress>? IPAddresses { get; set; }
     }
 }
