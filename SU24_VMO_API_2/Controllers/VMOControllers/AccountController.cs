@@ -29,6 +29,22 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
+        [HttpGet("GetClientIp")]
+        public IActionResult GetClientIp()
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress;
+
+            // Convert IPv6 to IPv4 if necessary
+            if (ipAddress != null && ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+            {
+                ipAddress = System.Net.Dns.GetHostEntry(ipAddress).AddressList
+                    .First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            }
+
+            return Ok(ipAddress?.ToString());
+        }
+
+
         [HttpGet]
         [Route("all")]
         public IActionResult GetAllAccounts(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)

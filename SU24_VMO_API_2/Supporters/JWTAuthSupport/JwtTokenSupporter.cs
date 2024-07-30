@@ -598,6 +598,23 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
+        public string GetIpAddress(HttpContext context)
+        {
+            var ip = context.Connection.RemoteIpAddress?.ToString();
+
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            }
+
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = context.Request.Headers["X-Real-IP"].FirstOrDefault();
+            }
+
+            return ip;
+        }
+
         private byte[] GetValidBase64Key(string base64Key)
         {
             try
