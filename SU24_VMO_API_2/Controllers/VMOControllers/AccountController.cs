@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿
 using BusinessObject.Models;
-using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +9,8 @@ using SU24_VMO_API.DTOs.Response;
 using SU24_VMO_API.Services;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
+using System.Net.Sockets;
+using System.Net;
 
 namespace SU24_VMO_API.Controllers.VMOControllers
 {
@@ -28,58 +28,18 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             _paginationService = paginationService;
         }
 
-
-        //[HttpGet]
-        //[Route("GetPrivateIpAddress")]
-        //public IActionResult GetPrivateIpAddress()
-        //{
-        //    var hostName = Dns.GetHostName();
-        //    var ipAddresses = Dns.GetHostAddresses(hostName);
-        //    var privateIpAddress = ipAddresses
-        //        .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork && IsPrivateIpAddress(ip));
-
-        //    if (privateIpAddress == null)
-        //    {
-        //        return NotFound("No private IP address found.");
-        //    }
-
-        //    var ipAddressString = privateIpAddress.ToString();
-
-        //    //if (IsPrivateIpAddress(privateIpAddress))
-        //    //{
-        //    return Ok(new
-        //    {
-        //        IPAddress = ipAddressString,
-        //        //Message = "Private IP addresses do not have geographical location."
-        //    });
-        //    //}
-
-        //    //try
-        //    //{
-        //    //    var response = _reader.City(privateIpAddress);
-
-        //    //    return Ok(new
-        //    //    {
-        //    //        IPAddress = ipAddressString,
-        //    //        City = response.City?.Name,
-        //    //        Country = response.Country?.Name,
-        //    //        Continent = response.Continent?.Name,
-        //    //        Latitude = response.Location?.Latitude,
-        //    //        Longitude = response.Location?.Longitude
-        //    //    });
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    //}
-        //}
-
-        private bool IsPrivateIpAddress(IPAddress ipAddress)
+        [HttpGet("ip-address")]
+        public string GetLocalIPAddress()
         {
-            byte[] bytes = ipAddress.GetAddressBytes();
-            return (bytes[0] == 10) ||
-                   (bytes[0] == 172 && (bytes[1] >= 16 && bytes[1] <= 31)) ||
-                   (bytes[0] == 192 && bytes[1] == 168);
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
         [HttpGet]
