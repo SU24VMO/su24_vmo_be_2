@@ -20,14 +20,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
     {
         private readonly AccountService _accountService;
         private readonly PaginationService<Account> _paginationService;
-        private readonly DatabaseReader _reader;
 
 
-        public AccountController(AccountService accountService, PaginationService<Account> paginationService, DatabaseReader reader)
+        public AccountController(AccountService accountService, PaginationService<Account> paginationService)
         {
             _accountService = accountService;
             _paginationService = paginationService;
-            _reader = reader;
         }
 
 

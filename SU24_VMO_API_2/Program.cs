@@ -29,12 +29,12 @@ namespace SU24_VMO_API_2
 
             // Add services to the container.
             builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
-            builder.Services.AddSingleton(serviceProvider =>
-            {
-                var env = builder.Environment;
-                var databasePath = Path.Combine(env.ContentRootPath, "Supporters/AppData", "GeoLite2-City.mmdb");
-                return new DatabaseReader(databasePath);
-            });
+            //builder.Services.AddSingleton(serviceProvider =>
+            //{
+            //    var env = builder.Environment;
+            //    var databasePath = Path.Combine(env.ContentRootPath, "Supporters/AppData", "GeoLite2-City.mmdb");
+            //    return new DatabaseReader(databasePath);
+            //});
 #else 
             // Add services to the container.
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -238,7 +238,6 @@ namespace SU24_VMO_API_2
             app.MapControllers();
 
             app.Run();
-
 
 
             static IEdmModel GetEdmModel()
