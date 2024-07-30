@@ -340,7 +340,7 @@ namespace SU24_VMO_API.Services
             }
 
 
-            donatePhase.StartDate = null;
+            donatePhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
             donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
             donatePhase.IsLocked = false;
             donatePhase.IsEnd = false;
