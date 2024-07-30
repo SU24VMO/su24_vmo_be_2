@@ -31,50 +31,50 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
-        [HttpGet]
-        [Route("GetPrivateIpAddress")]
-        public IActionResult GetPrivateIpAddress()
-        {
-            var hostName = Dns.GetHostName();
-            var ipAddresses = Dns.GetHostAddresses(hostName);
-            var privateIpAddress = ipAddresses
-                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork && IsPrivateIpAddress(ip));
+        //[HttpGet]
+        //[Route("GetPrivateIpAddress")]
+        //public IActionResult GetPrivateIpAddress()
+        //{
+        //    var hostName = Dns.GetHostName();
+        //    var ipAddresses = Dns.GetHostAddresses(hostName);
+        //    var privateIpAddress = ipAddresses
+        //        .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork && IsPrivateIpAddress(ip));
 
-            if (privateIpAddress == null)
-            {
-                return NotFound("No private IP address found.");
-            }
+        //    if (privateIpAddress == null)
+        //    {
+        //        return NotFound("No private IP address found.");
+        //    }
 
-            var ipAddressString = privateIpAddress.ToString();
+        //    var ipAddressString = privateIpAddress.ToString();
 
-            //if (IsPrivateIpAddress(privateIpAddress))
-            //{
-            return Ok(new
-            {
-                IPAddress = ipAddressString,
-                //Message = "Private IP addresses do not have geographical location."
-            });
-            //}
+        //    //if (IsPrivateIpAddress(privateIpAddress))
+        //    //{
+        //    return Ok(new
+        //    {
+        //        IPAddress = ipAddressString,
+        //        //Message = "Private IP addresses do not have geographical location."
+        //    });
+        //    //}
 
-            //try
-            //{
-            //    var response = _reader.City(privateIpAddress);
+        //    //try
+        //    //{
+        //    //    var response = _reader.City(privateIpAddress);
 
-            //    return Ok(new
-            //    {
-            //        IPAddress = ipAddressString,
-            //        City = response.City?.Name,
-            //        Country = response.Country?.Name,
-            //        Continent = response.Continent?.Name,
-            //        Latitude = response.Location?.Latitude,
-            //        Longitude = response.Location?.Longitude
-            //    });
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Internal server error: {ex.Message}");
-            //}
-        }
+        //    //    return Ok(new
+        //    //    {
+        //    //        IPAddress = ipAddressString,
+        //    //        City = response.City?.Name,
+        //    //        Country = response.Country?.Name,
+        //    //        Continent = response.Continent?.Name,
+        //    //        Latitude = response.Location?.Latitude,
+        //    //        Longitude = response.Location?.Longitude
+        //    //    });
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    //}
+        //}
 
         private bool IsPrivateIpAddress(IPAddress ipAddress)
         {
