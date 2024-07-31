@@ -8,6 +8,7 @@ using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
 using SU24_VMO_API_2.DTOs.Response;
+using SU24_VMO_API_2.Supporters.ExceptionSupporter;
 
 namespace SU24_VMO_API.Services
 {
@@ -226,19 +227,6 @@ namespace SU24_VMO_API.Services
             else throw new BadRequestException("Bài viết đã tồn tại nhưng không thể tìm thấy yêu cầu thêm tên tác giả cho bài viết này!");
         }
 
-        public async Task<Post?> CreateNewPost(CreateNewPost request)
-        {
-            var post = new Post
-            {
-                PostID = Guid.NewGuid(),
-                Cover = await _firebaseService.UploadImage(request.Cover),
-                Title = request.Title,
-                Content = request.Content,
-                Image = await _firebaseService.UploadImage(request.Image),
-                CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
-            };
-            return repository.Save(post);
-        }
 
         public async void UpdateUpdatePostRequest(Guid postId, UpdatePostRequest request)
         {

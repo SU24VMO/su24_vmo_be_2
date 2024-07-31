@@ -2096,6 +2096,85 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
+        [HttpPost]
+        [Route("report-campaign/send-email")]
+        //[Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> SendEmailforReportCampaign(SendEmailForReportCampaignRequest request)
+        {
+            try
+            {
+                _campaignService.SendEmailforReportCampaign(request.CampaignId);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Sent successfully!"
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
         [HttpPut("update")]
         [Authorize(Roles = "Volunteer, OrganizationManager")]
         public IActionResult UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -2178,6 +2257,82 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 _campaignService.UpdateStatusCampaign(request);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpPut("update/report-campaign")]
+        [Authorize(Roles = "Moderator")]
+        public IActionResult UpdateReportCampaign(UpdateReportCampaignRequest request)
+        {
+            try
+            {
+                _campaignService.UpdateReportCampaign(request);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",

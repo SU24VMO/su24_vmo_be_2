@@ -24,16 +24,20 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         private readonly PaginationService<Transaction> _paginationService;
         private readonly PaginationService<TransactionWithCampaignNameResponse> _paginationService2;
         private readonly PaginationService<TransactionResponse> _paginationService3;
+        private readonly PaginationService<TransactionForStatementByAdmin> _paginationService4;
+
 
 
 
         public TransactionController(TransactionService transactionService, PaginationService<Transaction> paginationService,
-            PaginationService<TransactionWithCampaignNameResponse> paginationService2, PaginationService<TransactionResponse> paginationService3)
+            PaginationService<TransactionWithCampaignNameResponse> paginationService2, PaginationService<TransactionResponse> paginationService3,
+            PaginationService<TransactionForStatementByAdmin> paginationService4)
         {
             _transactionService = transactionService;
             _paginationService = paginationService;
             _paginationService2 = paginationService2;
             _paginationService3 = paginationService3;
+            _paginationService4 = paginationService4;
         }
 
 
@@ -276,16 +280,16 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/statement/receive-transaction")]
-        public async Task<IActionResult> GetTransactionReceiveForStatementByAdmin()
+        public async Task<IActionResult> GetTransactionReceiveForStatementByAdmin(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var data = await _transactionService.GetTransactionReceiveForStatementByAdmin();
+                var data = await _transactionService.GetTransactionReceiveForStatementByAdmin(campaignName);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = data
+                    Data = _paginationService4.PaginateList(data, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
@@ -354,16 +358,16 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/statement/send-transaction")]
-        public async Task<IActionResult> GetTransactionSendForStatementByAdmin()
+        public async Task<IActionResult> GetTransactionSendForStatementByAdmin(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
             {
-                var data = await _transactionService.GetTransactionSendForStatementByAdmin();
+                var data = await _transactionService.GetTransactionSendForStatementByAdmin(campaignName);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = data
+                    Data = _paginationService4.PaginateList(data, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);

@@ -805,13 +805,13 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             }
         }
 
-        [HttpPut("update/start-date")]
+        [HttpPut("update/end-date")]
         [Authorize(Roles = "Volunteer, OrganizationManager, Moderator")]
-        public IActionResult UpdateResetStartDateOfCampaign(UpdateDonatePhaseRequest request)
+        public IActionResult UpdateResetEndDateOfCampaign(UpdateDonatePhaseRequest request)
         {
             try
             {
-                _donatePhaseService.UpdateResetStartDateOfCampaign(request);
+                _donatePhaseService.UpdateResetEndDateOfCampaign(request);
                 var response = new ResponseMessage()
                 {
                     Message = "Update successfully!",

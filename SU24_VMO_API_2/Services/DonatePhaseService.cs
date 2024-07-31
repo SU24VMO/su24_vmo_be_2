@@ -308,7 +308,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public void UpdateResetStartDateOfCampaign(UpdateDonatePhaseRequest request)
+        public void UpdateResetEndDateOfCampaign(UpdateDonatePhaseRequest request)
         {
             var donatePhase = _repository.GetById(request.DonatePhaseId);
             if (donatePhase == null) { throw new NotFoundException("Giai đoạn quyên góp không tìm thấy!"); }

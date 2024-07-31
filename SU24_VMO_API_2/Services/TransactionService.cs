@@ -115,114 +115,234 @@ namespace SU24_VMO_API.Services
 
 
 
-        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionReceiveForStatementByAdmin()
+        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionReceiveForStatementByAdmin(string? campaignName)
         {
-            var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
-            var listResponse = new List<TransactionForStatementByAdmin>();
-            foreach (var transaction in transactions)
+            if (!String.IsNullOrEmpty(campaignName))
             {
-                var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
-                var createCampaignRequest =
-                    _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
-
-                PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
-                
-
-                if (createCampaignRequest.CreateByMember != null)
+                var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+                var listResponse = new List<TransactionForStatementByAdmin>();
+                foreach (var transaction in transactions)
                 {
-                    var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
-                    var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
-                    var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
-                    listResponse.Add(new TransactionForStatementByAdmin
+                    var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
+                    var createCampaignRequest =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+
+                    PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
+
+
+                    if (createCampaignRequest.CreateByMember != null)
                     {
-                        Amount = transaction.Amount,
-                        TransactionImageUrl = transaction.TransactionImageUrl,
-                        IsCognito = transaction.IsIncognito,
-                        CampaignName = campaign.Name,
-                        Status = transaction.TransactionStatus,
-                        Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
-                        Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
-                        ReceiveAccount = usernameReceiveAccount,
-                        SendAccount = sendAccount.Username,
-                        Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
-                    });
-                }
-                if (createCampaignRequest.CreateByOM != null)
-                {
-                    var receiveAccount = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
-                    var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
-                    var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
-                    listResponse.Add(new TransactionForStatementByAdmin
+                        var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                            Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
+                        });
+                    }
+                    if (createCampaignRequest.CreateByOM != null)
                     {
-                        Amount = transaction.Amount,
-                        TransactionImageUrl = transaction.TransactionImageUrl,
-                        IsCognito = transaction.IsIncognito,
-                        CampaignName = campaign.Name,
-                        Status = transaction.TransactionStatus,
-                        Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
-                        Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
-                        ReceiveAccount = usernameReceiveAccount,
-                        SendAccount = sendAccount.Username,
-                        Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
-                    });
+                        var receiveAccount = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                            Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
+                        });
+                    }
                 }
+                return listResponse.Where(x => x.CampaignName.ToLower().Contains(campaignName.ToLower().Trim()));
             }
-            return listResponse;
+            else
+            {
+                var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+                var listResponse = new List<TransactionForStatementByAdmin>();
+                foreach (var transaction in transactions)
+                {
+                    var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
+                    var createCampaignRequest =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+
+                    PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
+
+
+                    if (createCampaignRequest.CreateByMember != null)
+                    {
+                        var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                            Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
+                        });
+                    }
+                    if (createCampaignRequest.CreateByOM != null)
+                    {
+                        var receiveAccount = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                            Platform = paymentLinkInformation.transactions.FirstOrDefault()!.counterAccountName.ToLower().Contains("momo") ? "Ví điện tử" : "Ebanking"
+                        });
+                    }
+                }
+                return listResponse;
+            }
         }
 
 
 
-        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionSendForStatementByAdmin()
+        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionSendForStatementByAdmin(string? campaignName)
         {
-            var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
-            var listResponse = new List<TransactionForStatementByAdmin>();
-            foreach (var transaction in transactions)
+            if (!String.IsNullOrEmpty(campaignName))
             {
-                var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
-                var createCampaignRequest =
-                    _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
-
-                //PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
-                
-
-                if (createCampaignRequest.CreateByMember != null)
+                var transactions = _transactionRepository.GetAll().Where(o =>
+                    o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
+                var listResponse = new List<TransactionForStatementByAdmin>();
+                foreach (var transaction in transactions)
                 {
-                    var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
-                    var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
-                    var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
-                    listResponse.Add(new TransactionForStatementByAdmin
+                    var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
+                    var createCampaignRequest =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+
+                    //PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
+
+
+                    if (createCampaignRequest.CreateByMember != null)
                     {
-                        Amount = transaction.Amount,
-                        TransactionImageUrl = transaction.TransactionImageUrl,
-                        IsCognito = transaction.IsIncognito,
-                        CampaignName = campaign.Name,
-                        Status = transaction.TransactionStatus,
-                        Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
-                        Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
-                        ReceiveAccount = usernameReceiveAccount,
-                        SendAccount = sendAccount.Username,
-                    });
-                }
-                if (createCampaignRequest.CreateByOM != null)
-                {
-                    var receiveAccount = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
-                    var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
-                    var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
-                    listResponse.Add(new TransactionForStatementByAdmin
+                        var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                        });
+                    }
+
+                    if (createCampaignRequest.CreateByOM != null)
                     {
-                        Amount = transaction.Amount,
-                        TransactionImageUrl = transaction.TransactionImageUrl,
-                        IsCognito = transaction.IsIncognito,
-                        CampaignName = campaign.Name,
-                        Status = transaction.TransactionStatus,
-                        Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
-                        Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
-                        ReceiveAccount = usernameReceiveAccount,
-                        SendAccount = sendAccount.Username,
-                    });
+                        var receiveAccount =
+                            _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                        });
+                    }
                 }
+
+                return listResponse.Where(x => x.CampaignName.ToLower().Contains(campaignName.ToLower().Trim()));
             }
-            return listResponse;
+            else
+            {
+                var transactions = _transactionRepository.GetAll().Where(o =>
+                    o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
+                var listResponse = new List<TransactionForStatementByAdmin>();
+                foreach (var transaction in transactions)
+                {
+                    var campaign = _campaignRepository.GetById(transaction.CampaignID)!;
+                    var createCampaignRequest =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+
+                    //PaymentLinkInformation paymentLinkInformation = await payOs.getPaymentLinkInformation(transaction.OrderId);
+
+
+                    if (createCampaignRequest.CreateByMember != null)
+                    {
+                        var receiveAccount = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                        });
+                    }
+
+                    if (createCampaignRequest.CreateByOM != null)
+                    {
+                        var receiveAccount =
+                            _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM)!;
+                        var usernameReceiveAccount = _accountRepository.GetById(receiveAccount.AccountID)!.Username;
+                        var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
+                        listResponse.Add(new TransactionForStatementByAdmin
+                        {
+                            Amount = transaction.Amount,
+                            TransactionImageUrl = transaction.TransactionImageUrl,
+                            IsCognito = transaction.IsIncognito,
+                            CampaignName = campaign.Name,
+                            Status = transaction.TransactionStatus,
+                            Date = transaction.CreateDate.ToString("dd/MM/yyyy"),
+                            Time = transaction.CreateDate.ToString("hh:mmtt", CultureInfo.InvariantCulture),
+                            ReceiveAccount = usernameReceiveAccount,
+                            SendAccount = sendAccount.Username,
+                        });
+                    }
+                }
+
+                return listResponse;
+            }
         }
 
 

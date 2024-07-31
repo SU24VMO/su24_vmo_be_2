@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using System.Net.Sockets;
 using System.Text;
 using DnsClient;
+using System;
 
 namespace SU24_VMO_API.Supporters.EmailSupporter
 {
@@ -12,6 +13,8 @@ namespace SU24_VMO_API.Supporters.EmailSupporter
         private static string subjectForForgetPass = "Xác thực tài khoản: Yêu cầu Đặt lại Mật khẩu";
         private static string subjectForSuccessfulDonate = "Bạn vừa ủng hộ thành công!";
         private static string subjectForCreateNewAccount = "Xác nhận tạo tài khoản!";
+        private static string subjectForBanCampaign = "Báo cáo về Chiến dịch Không Minh bạch!";
+
 
 
 
@@ -60,6 +63,42 @@ namespace SU24_VMO_API.Supporters.EmailSupporter
                 smtp.Port = 587;
                 smtp.Send(mm);
                 return digits;
+            }
+        }
+
+
+        public static void SendEmailForReportCampaign(string email, string campaignName, string username, DateTime startDate, DateTime endDate)
+        {
+            using (MailMessage mm = new MailMessage("vmoautomailer@gmail.com", email))
+            {
+                mm.Subject = subjectForBanCampaign;
+                var startDateFormat = startDate.ToString("HH:mm:ss dd-MM-yyyy");
+                var endDateFormat = endDate.ToString("HH:mm:ss dd-MM-yyyy");
+
+                string body = $@"
+            <p>Kính gửi <b>{username}</b></p>
+            <p>Chúng tôi rất tiếc khi một chiến dịch gần đây mà chúng tôi nhận thấy có dấu hiệu không minh bạch. Chi tiết của chiến dịch như sau:</p>
+            <ul>
+                <li>Tên chiến dịch: <b>{campaignName}</b></li>
+                <li>Ngày bắt đầu: <b>{startDateFormat}</b></li>
+                <li>Ngày kết thúc: <b>{endDateFormat}</b></li>
+            </ul>
+            <p>Chúng tôi nhận thấy rằng các hành động và thông tin trong chiến dịch này không hoàn toàn minh bạch và rõ ràng, điều này có thể gây ảnh hưởng xấu đến tổ chức và uy tín của chúng tôi. Chúng tôi hiện tại đang kiểm tra và xử lý vấn đề này kịp thời để đảm bảo tính minh bạch và uy tín của các chiến dịch trong tương lai.</p>
+            <p>Chúng tôi xin chân thành xin lỗi quý vị và sẽ đưa ra hướng giải quyết cho vấn đề này. Xin chân thành cảm ơn!</p>
+            <p>Bạn có thể theo dõi danh sách ủng hộ và các thông tin cập nhật về các chiến dịch khác <a href='https://su24-vmo-fe.vercel.app/viewCampaigns'>Tại đây</a></p>
+            <p>Chúc bạn hạnh phúc và thành công! Hãy đồng hành cùng chúng tôi!</p>
+            <p>Hệ thống VMO</p>
+        ";
+                mm.Body = body;
+                mm.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                NetworkCredential NetworkCred = new NetworkCredential("vmoautomailer@gmail.com", "rwmplewvbcisefuz");
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = NetworkCred;
+                smtp.Port = 587;
+                smtp.Send(mm);
             }
         }
 

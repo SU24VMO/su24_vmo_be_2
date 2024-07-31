@@ -7,6 +7,7 @@ using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
 using System.Security.Principal;
+using BusinessObject.Enums;
 
 namespace SU24_VMO_API.Services
 {
@@ -55,6 +56,7 @@ namespace SU24_VMO_API.Services
 
         public async Task<CreatePostRequest?> CreateCreatePostRequest(CreatePostRequestRequest request)
         {
+            var account = _accountRepository.GetById(request.AccountId);
             //them post trc
             var post = new Post
             {
@@ -72,8 +74,6 @@ namespace SU24_VMO_API.Services
             if (postCreated == null) { throw new Exception("Tạo đơn thất bại!"); }
 
             //them request tao bai post sau
-
-            var account = _accountRepository.GetById(request.AccountId);
 
             var notification = new Notification
             {

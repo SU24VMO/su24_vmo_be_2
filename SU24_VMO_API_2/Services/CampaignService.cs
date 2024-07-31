@@ -8,6 +8,7 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
 using System.Text;
+using SU24_VMO_API.Supporters.EmailSupporter;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API_2.DTOs.Request;
 
@@ -164,6 +165,50 @@ namespace SU24_VMO_API.Services
             }
             _campaignRepository.Update(campaign);
 
+        }
+
+        public void UpdateReportCampaign(UpdateReportCampaignRequest request)
+        {
+            var campaign = _campaignRepository.GetById(request.CampaignId);
+            if (campaign == null)
+            {
+                throw new NotFoundException("Chiến dịch không tồn tại!");
+            }
+
+            campaign.IsTransparent = request.IsTransparent;
+
+            var campaignRequest =
+                _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
+
+            if (campaignRequest != null && campaignRequest.CreateByOM != null)
+            {
+                var om = _organizationManagerRepository.GetById((Guid)campaignRequest.CreateByOM);
+                if (om != null)
+                {
+                    var account = _accountRepository.GetById(om.AccountID);
+                    if (account != null)
+                    {
+                        account.IsBlocked = true;
+                        _accountRepository.Update(account);
+                    }
+                }
+            }
+
+            if (campaignRequest != null && campaignRequest.CreateByMember != null)
+            {
+                var member = _userRepository.GetById((Guid)campaignRequest.CreateByMember);
+                if (member != null)
+                {
+                    var account = _accountRepository.GetById(member.AccountID);
+                    if (account != null)
+                    {
+                        account.IsBlocked = true;
+                        _accountRepository.Update(account);
+                    }
+                }
+            }
+
+            _campaignRepository.Update(campaign);
         }
 
 
@@ -3674,6 +3719,19 @@ namespace SU24_VMO_API.Services
                 };
                 return _campaignRepository.Save(campaign);
             }
+        }
+
+
+        public void SendEmailforReportCampaign(Guid campaignId)
+        {
+            var campaign = _campaignRepository.GetById(campaignId);
+            if (campaign == null)
+            {
+                throw new NotFoundException("Chiến dịch này không tồn tại!");
+            }
+
+            var listEmail = _accountRepository.GetAll().Select(c => new {c.Email, c.Username}).ToList();
+            listEmail.ForEach(item => EmailSupporter.SendEmailForReportCampaign(item.Email, campaign.Name, item.Username, campaign.StartDate, campaign.ExpectedEndDate));
         }
 
 
