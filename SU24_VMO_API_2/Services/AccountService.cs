@@ -763,7 +763,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -795,7 +803,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -827,7 +843,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -859,7 +883,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -891,7 +923,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
