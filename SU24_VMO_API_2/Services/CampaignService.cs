@@ -8,6 +8,7 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
 using System.Text;
+using Org.BouncyCastle.Asn1.Cms;
 using SU24_VMO_API.Supporters.EmailSupporter;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API_2.DTOs.Request;
@@ -176,6 +177,7 @@ namespace SU24_VMO_API.Services
             }
 
             campaign.IsTransparent = request.IsTransparent;
+            campaign.CheckTransparentDate = TimeHelper.GetTime(DateTime.UtcNow);
 
             var campaignRequest =
                 _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
@@ -188,6 +190,7 @@ namespace SU24_VMO_API.Services
                     var account = _accountRepository.GetById(om.AccountID);
                     if (account != null)
                     {
+                        account.IsActived = false;
                         account.IsBlocked = true;
                         _accountRepository.Update(account);
                     }
@@ -202,6 +205,7 @@ namespace SU24_VMO_API.Services
                     var account = _accountRepository.GetById(member.AccountID);
                     if (account != null)
                     {
+                        account.IsActived = false;
                         account.IsBlocked = true;
                         _accountRepository.Update(account);
                     }

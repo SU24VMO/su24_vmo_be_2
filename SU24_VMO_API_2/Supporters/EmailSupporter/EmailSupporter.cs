@@ -74,14 +74,17 @@ namespace SU24_VMO_API.Supporters.EmailSupporter
                 mm.Subject = subjectForBanCampaign;
                 var startDateFormat = startDate.ToString("HH:mm:ss dd-MM-yyyy");
                 var endDateFormat = endDate.ToString("HH:mm:ss dd-MM-yyyy");
+                var delayTime = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).ToString("HH:mm:ss dd-MM-yyyy");
+                
 
-                string body = $@"
+                    string body = $@"
             <p>Kính gửi <b>{username}</b></p>
             <p>Chúng tôi rất tiếc khi một chiến dịch gần đây mà chúng tôi nhận thấy có dấu hiệu không minh bạch. Chi tiết của chiến dịch như sau:</p>
             <ul>
                 <li>Tên chiến dịch: <b>{campaignName}</b></li>
                 <li>Ngày bắt đầu: <b>{startDateFormat}</b></li>
                 <li>Ngày kết thúc: <b>{endDateFormat}</b></li>
+                <li>Ngày tạm ngưng: <b>{delayTime}</b></li>
             </ul>
             <p>Chúng tôi nhận thấy rằng các hành động và thông tin trong chiến dịch này không hoàn toàn minh bạch và rõ ràng, điều này có thể gây ảnh hưởng xấu đến tổ chức và uy tín của chúng tôi. Chúng tôi hiện tại đang kiểm tra và xử lý vấn đề này kịp thời để đảm bảo tính minh bạch và uy tín của các chiến dịch trong tương lai.</p>
             <p>Chúng tôi xin chân thành xin lỗi quý vị và sẽ đưa ra hướng giải quyết cho vấn đề này. Xin chân thành cảm ơn!</p>
