@@ -15,10 +15,7 @@ namespace BusinessObject.FluentAPIs
         {
             builder.ToTable("IPAddress");
             builder.HasKey(x => x.IPAddressId);
-            builder.Property(x => x.LoginTime).IsRequired();
-            builder.Property(x => x.IPAddressValue).IsRequired();
             builder.Property(x => x.AccountId).IsRequired();
-            builder.Property(x => x.CreateDate).IsRequired();
         }
     }
 }

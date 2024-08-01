@@ -519,7 +519,7 @@ namespace SU24_VMO_API.Services
         }
 
         //function login
-        public (string?, string?) Login(string? methodAllowed, string password, HttpContext httpContext)
+        public (string?, string?) Login(string? methodAllowed, string password, HttpContext httpContext, string? longitude, string? latitude, string? road, string? suburb, string? city, string? country, string? postCode, string? countryCode)
         {
             if (!String.IsNullOrEmpty(methodAllowed))
             {
@@ -556,7 +556,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -588,7 +596,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -620,7 +636,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -652,7 +676,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -684,7 +716,15 @@ namespace SU24_VMO_API.Services
                                 AccountId = account.AccountID,
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 LoginTime = TimeHelper.GetTime(DateTime.UtcNow),
-                                IPAddressValue = GetIpAddress(httpContext)
+                                IPAddressValue = GetIpAddress(httpContext),
+                                Longitude = longitude,
+                                Latitude = latitude,
+                                City = city,
+                                Country = country,
+                                CountryCode = countryCode,
+                                Postcode = postCode,
+                                Road = road,
+                                Suburb = suburb
                             });
                             return (accessToken, refreshToken);
                         }
@@ -899,9 +939,9 @@ namespace SU24_VMO_API.Services
 
 
         //validation refresh token 
-        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck, HttpContext httpContext)
+        public (string?, string?) ValidateRefreshToken(string refreshTokenCheck, HttpContext httpContext, string? longitude, string? latitude, string? road, string? suburb, string? city, string? country, string? postCode, string? countryCode)
         {
-            return jwtTokenSupporter.ValidateRefreshToken(refreshTokenCheck, httpContext);
+            return jwtTokenSupporter.ValidateRefreshToken(refreshTokenCheck, httpContext, longitude, latitude, road, suburb, city, country, postCode, countryCode);
         }
 
 
