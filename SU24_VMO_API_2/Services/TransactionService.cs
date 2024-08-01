@@ -137,7 +137,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -156,7 +156,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -191,7 +191,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -210,7 +210,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -252,7 +252,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -272,7 +272,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -308,7 +308,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,
@@ -328,7 +328,7 @@ namespace SU24_VMO_API.Services
                         var sendAccount = _accountRepository.GetById(transaction.AccountId)!;
                         listResponse.Add(new TransactionForStatementByAdmin
                         {
-                            Amount = transaction.Amount,
+                            Amount = transaction.Amount.ToString(),
                             TransactionImageUrl = transaction.TransactionImageUrl,
                             IsCognito = transaction.IsIncognito,
                             CampaignName = campaign.Name,

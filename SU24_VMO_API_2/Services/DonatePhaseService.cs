@@ -334,6 +334,16 @@ namespace SU24_VMO_API.Services
                 }
             }
 
+            if (request.EndDate <= TimeHelper.GetTime(DateTime.UtcNow))
+            {
+                throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+            }
+
+            if (request.EndDate <= campaign!.ExpectedEndDate)
+            {
+                throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày kết thúc dự kiến ban đầu!");
+            }
+
             if (request.EndDate != null)
             {
                 campaign!.ExpectedEndDate = (DateTime)request.EndDate;

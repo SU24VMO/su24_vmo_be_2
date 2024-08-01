@@ -857,6 +857,11 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
+
+                if (account.IsBlocked)
+                {
+                    throw new BadRequestException("Tài khoản hiện đã bị khóa, vui lòng liên hệ quản trị viên để mở khóa!");
+                }
             }
             return (null, null);
         }
