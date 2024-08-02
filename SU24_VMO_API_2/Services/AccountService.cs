@@ -484,6 +484,10 @@ namespace SU24_VMO_API.Services
                 if (request.IsActived != null)
                 {
                     account.IsActived = (bool)request.IsActived;
+                    if ((bool)request.IsActived)
+                    {
+                        account.IsBlocked = false;
+                    }
                 }
 
                 account.ModifiedBy = member.MemberID;
@@ -496,6 +500,10 @@ namespace SU24_VMO_API.Services
                 if (request.IsActived != null)
                 {
                     account.IsActived = (bool)request.IsActived;
+                    if ((bool)request.IsActived)
+                    {
+                        account.IsBlocked = false;
+                    }
                 }
                 account.ModifiedBy = om.OrganizationManagerID;
                 _accountRepository.Update(account);
@@ -507,6 +515,10 @@ namespace SU24_VMO_API.Services
                 if (request.IsActived != null)
                 {
                     account.IsActived = (bool)request.IsActived;
+                    if ((bool)request.IsActived)
+                    {
+                        account.IsBlocked = false;
+                    }
                 }
                 account.ModifiedBy = moderator.ModeratorID;
                 _accountRepository.Update(account);
