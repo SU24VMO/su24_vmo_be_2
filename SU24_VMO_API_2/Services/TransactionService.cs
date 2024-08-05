@@ -776,12 +776,12 @@ namespace SU24_VMO_API.Services
             var responseString = await PostAPI("https://api-app.payos.vn/auth/sign-in", "", account);
             ApiResponse response = new ApiResponse();
             response = JsonConvert.DeserializeObject<ApiResponse>(responseString)!;
-            var responseListOrder = await GetAPI("https://api-app.payos.vn/organizations/838ab7571bd411ef915f0242ac110002/statistics/payment-link?page=0&pageSize=&typeOrder=", response.Data.Token);
+            var responseListOrder = await GetAPI("https://api-app.payos.vn/organizations/838ab7571bd411ef915f0242ac110002/statistics/payment-link?page=0&pageSize=", response.Data.Token);
             Root listDataPayos = new Root();
             listDataPayos = JsonConvert.DeserializeObject<Root>(responseListOrder)!;
             if (listDataPayos != null)
             {
-                if (listDataPayos.data == null) throw new BadRequestException("Danh sách data của payos bị trống");
+                if (listDataPayos.data == null || listDataPayos.data.orders == null || listDataPayos.data.orders.Count < 1) throw new BadRequestException("Danh sách data của payos bị trống");
                 foreach (var item in listDataPayos.data.orders)
                 {
                     if (item.order_code == orderId)
