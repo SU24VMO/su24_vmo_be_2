@@ -105,7 +105,7 @@ namespace SU24_VMO_API.Supporters.JWTAuthSupport
 
                 Audience = config["Jwt:Audience"],
                 Issuer = config["Jwt:Issuer"],
-                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddMinutes(15),
+                Expires = TimeHelper.TimeHelper.GetTime(DateTime.UtcNow).AddSeconds(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
