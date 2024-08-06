@@ -232,7 +232,7 @@ namespace SU24_VMO_API.Services
             }
 
             if (campaign != null && campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
-            if (campaign != null && campaign.ProcessingPhases != null) campaign.ProcessingPhases = null;
+            //if (campaign != null && campaign.ProcessingPhases != null) campaign.ProcessingPhases = null;
             if (campaign != null && campaign.StatementPhase != null)
             {
                 campaign.StatementPhase.Campaign = null;
@@ -322,11 +322,20 @@ namespace SU24_VMO_API.Services
                                 activity.ActivityImages = activitiesImages.ToList();
                             }
                         }
+
+                    processingPhase.Campaign = null;
                 }
             }
 
+
             if (campaignResponse.Transactions != null)
                 campaignResponse.Transactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success && c.TransactionType == TransactionType.Receive).ToList();
+
+            if (campaignResponse.Transactions != null && campaignResponse.Transactions.Any())
+                foreach (var transaction in campaignResponse.Transactions)
+                {
+                    transaction.Campaign = null;
+                }
 
             return campaignResponse;
         }
