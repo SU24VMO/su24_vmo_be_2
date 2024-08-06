@@ -95,6 +95,9 @@ namespace BusinessObject.Models
             modelBuilder.Entity<CreateVolunteerRequest>()
                 .Property(stage => stage.RoleInClub)
                 .HasConversion<int>();
+            modelBuilder.Entity<Campaign>()
+                .Property(stage => stage.CampaignTier)
+                .HasConversion<int>();
 
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new AccountTokenConfiguration());

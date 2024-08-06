@@ -137,187 +137,412 @@ namespace SU24_VMO_API.Services
             {
                 if (account.Role == Role.OrganizationManager)
                 {
-                    om = _organizationManagerRepository.GetByAccountID(accountId);
-                    var linkImageCampaign = "";
-                    if (request.ImageCampaign != null)
+                    if (request.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
-                        linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        om = _organizationManagerRepository.GetByAccountID(accountId);
+                        var linkImageCampaign = "";
+                        if (request.ImageCampaign != null)
+                        {
+                            linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        }
+
+                        var linkConfirmForm = "";
+                        if (request.ApplicationConfirmForm != null)
+                        {
+                            linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        }
+
+                        var campaign = new Campaign
+                        {
+                            CampaignID = Guid.NewGuid(),
+                            OrganizationID = request.OrganizationId,
+                            Name = request.Name,
+                            CampaignTypeID = request.CampaignTypeId,
+                            Address = request.Address,
+                            Description = request.Description,
+                            Image = linkImageCampaign,
+                            StartDate = request.StartDate,
+                            ExpectedEndDate = request.ExpectedEndDate,
+                            TargetAmount = request.TargetAmount,
+                            ApplicationConfirmForm = linkConfirmForm,
+                            IsTransparent = true,
+                            CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            CanBeDonated = true,
+                            IsActive = false,
+                            IsModify = false,
+                            IsComplete = false,
+                            IsDisable = false,
+                            CampaignTier = request.CampaignTier,
+                        };
+
+                        var qrImageLink = "";
+                        if (request.QRCode != null)
+                        {
+                            qrImageLink = await _firebaseService.UploadImage(request.QRCode);
+                        }
+                        var bankingAccount = new BankingAccount
+                        {
+                            BankingAccountID = Guid.NewGuid(),
+                            BankingName = request.BankingName!,
+                            AccountNumber = request.BankingAccountNumber!,
+                            AccountName = request.AccountName,
+                            CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            AccountId = accountId,
+                            IsAvailable = true,
+                            QRCode = qrImageLink
+                        };
+
+                        campaign.BankingAccountID = bankingAccount.BankingAccountID;
+
+                        var member = _memberRepository.GetByAccountId(accountId);
+
+
+                        var createCampaignRequest = new CreateCampaignRequest
+                        {
+                            CreateCampaignRequestID = Guid.NewGuid(),
+                            CampaignID = campaign.CampaignID,
+                            Campaign = campaign,
+                            CreateByOM = om!.OrganizationManagerID,
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsApproved = false,
+                            IsPending = true,
+                            IsRejected = false,
+                            IsLocked = false,
+                        };
+
+                        var notification = new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = account!.AccountID,
+                            Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        };
+
+
+                        var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
+                        if (createCampaignRequestCreated != null)
+                        {
+                            _notificationRepository.Save(notification);
+                        }
+                        return createCampaignRequestCreated;
                     }
-
-                    var linkConfirmForm = "";
-                    if (request.ApplicationConfirmForm != null)
+                    else
                     {
-                        linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        om = _organizationManagerRepository.GetByAccountID(accountId);
+                        var linkImageCampaign = "";
+                        if (request.ImageCampaign != null)
+                        {
+                            linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        }
+
+                        var linkConfirmForm = "";
+                        if (request.ApplicationConfirmForm != null)
+                        {
+                            linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        }
+
+                        var campaign = new Campaign
+                        {
+                            CampaignID = Guid.NewGuid(),
+                            OrganizationID = request.OrganizationId,
+                            Name = request.Name,
+                            CampaignTypeID = request.CampaignTypeId,
+                            Address = request.Address,
+                            Description = request.Description,
+                            Image = linkImageCampaign,
+                            StartDate = request.StartDate,
+                            ExpectedEndDate = request.ExpectedEndDate,
+                            TargetAmount = request.TargetAmount,
+                            ApplicationConfirmForm = linkConfirmForm,
+                            IsTransparent = true,
+                            CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            CanBeDonated = true,
+                            IsActive = false,
+                            IsModify = false,
+                            IsComplete = false,
+                            IsDisable = false,
+                            CampaignTier = request.CampaignTier,
+                        };
+
+
+
+                        var qrImageLink = "";
+                        if (request.QRCode != null)
+                        {
+                            qrImageLink = await _firebaseService.UploadImage(request.QRCode);
+                        }
+                        var bankingAccount = new BankingAccount
+                        {
+                            BankingAccountID = Guid.NewGuid(),
+                            BankingName = request.BankingName!,
+                            AccountNumber = request.BankingAccountNumber!,
+                            AccountName = request.AccountName,
+                            CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            AccountId = accountId,
+                            IsAvailable = true,
+                            QRCode = qrImageLink
+                        };
+
+                        campaign.BankingAccountID = bankingAccount.BankingAccountID;
+
+                        var member = _memberRepository.GetByAccountId(accountId);
+
+
+                        var createCampaignRequest = new CreateCampaignRequest
+                        {
+                            CreateCampaignRequestID = Guid.NewGuid(),
+                            CampaignID = campaign.CampaignID,
+                            Campaign = campaign,
+                            CreateByOM = om!.OrganizationManagerID,
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsApproved = false,
+                            IsPending = true,
+                            IsRejected = false,
+                            IsLocked = false,
+                        };
+
+                        var notification = new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = account!.AccountID,
+                            Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        };
+
+
+                        var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
+                        if (createCampaignRequestCreated != null)
+                        {
+                            foreach (var stage in request.Stages)
+                            {
+                                int i = 0;
+                                _processingPhaseRepository.Save(new ProcessingPhase
+                                {
+                                    ProcessingPhaseId = Guid.NewGuid(),
+                                    CampaignId = campaign.CampaignID,
+                                    Name = stage.Title,
+                                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                    Priority = i,
+                                    CurrentMoney = stage.Amount,
+                                    Percent = Math.Round((double.Parse(stage.Amount) / double.Parse(campaign.TargetAmount)) * 100, 3),
+                                    IsProcessing = false,
+                                    IsEnd = false,
+                                    IsActive = false,
+                                    IsLocked = false,
+                                });
+                                i++;
+                            }
+                            _notificationRepository.Save(notification);
+                        }
+                        return createCampaignRequestCreated;
                     }
-
-                    var campaign = new Campaign
-                    {
-                        CampaignID = Guid.NewGuid(),
-                        OrganizationID = request.OrganizationId,
-                        Name = request.Name,
-                        CampaignTypeID = request.CampaignTypeId,
-                        Address = request.Address,
-                        Description = request.Description,
-                        Image = linkImageCampaign,
-                        StartDate = request.StartDate,
-                        ExpectedEndDate = request.ExpectedEndDate,
-                        TargetAmount = request.TargetAmount,
-                        ApplicationConfirmForm = linkConfirmForm,
-                        IsTransparent = true,
-                        CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
-                        CanBeDonated = true,
-                        IsActive = false,
-                        IsModify = false,
-                        IsComplete = false,
-                        IsDisable = false,
-                    };
-
-                    var qrImageLink = "";
-                    if (request.QRCode != null)
-                    {
-                        qrImageLink = await _firebaseService.UploadImage(request.QRCode);
-                    }
-                    var bankingAccount = new BankingAccount
-                    {
-                        BankingAccountID = Guid.NewGuid(),
-                        BankingName = request.BankingName!,
-                        AccountNumber = request.BankingAccountNumber!,
-                        AccountName = request.AccountName,
-                        CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
-                        AccountId = accountId,
-                        IsAvailable = true,
-                        QRCode = qrImageLink
-                    };
-
-                    campaign.BankingAccountID = bankingAccount.BankingAccountID;
-
-                    var member = _memberRepository.GetByAccountId(accountId);
-
-
-                    var createCampaignRequest = new CreateCampaignRequest
-                    {
-                        CreateCampaignRequestID = Guid.NewGuid(),
-                        CampaignID = campaign.CampaignID,
-                        Campaign = campaign,
-                        CreateByOM = om!.OrganizationManagerID,
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsApproved = false,
-                        IsPending = true,
-                        IsRejected = false,
-                        IsLocked = false,
-                    };
-
-                    var notification = new Notification
-                    {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = account!.AccountID,
-                        Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    };
-
-
-                    var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
-                    if (createCampaignRequestCreated != null)
-                    {
-                        _notificationRepository.Save(notification);
-                    }
-                    return createCampaignRequestCreated;
+                    
                 }
                 else if (account.Role == Role.Volunteer)
                 {
-                    volunteer = _memberRepository.GetByAccountId(accountId);
-                    var linkImageCampaign = "";
-                    if (request.ImageCampaign != null)
+                    if (request.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
-                        linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        volunteer = _memberRepository.GetByAccountId(accountId);
+                        var linkImageCampaign = "";
+                        if (request.ImageCampaign != null)
+                        {
+                            linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        }
+
+                        var linkConfirmForm = "";
+                        if (request.ApplicationConfirmForm != null)
+                        {
+                            linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        }
+
+                        var campaign = new Campaign
+                        {
+                            CampaignID = Guid.NewGuid(),
+                            Name = request.Name,
+                            CampaignTypeID = request.CampaignTypeId,
+                            Address = request.Address,
+                            Description = request.Description,
+                            Image = linkImageCampaign,
+                            StartDate = request.StartDate,
+                            ExpectedEndDate = request.ExpectedEndDate,
+                            TargetAmount = request.TargetAmount,
+                            ApplicationConfirmForm = linkConfirmForm,
+                            IsTransparent = true,
+                            CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            CanBeDonated = true,
+                            IsActive = false,
+                            IsModify = false,
+                            IsComplete = false,
+                            IsDisable = false,
+                            CampaignTier = request.CampaignTier
+                        };
+
+                        var qrImageLink = "";
+                        if (request.QRCode != null)
+                        {
+                            qrImageLink = await _firebaseService.UploadImage(request.QRCode);
+                        }
+                        var bankingAccount = new BankingAccount
+                        {
+                            BankingAccountID = Guid.NewGuid(),
+                            BankingName = request.BankingName!,
+                            AccountNumber = request.BankingAccountNumber!,
+                            AccountName = request.AccountName,
+                            CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            AccountId = accountId,
+                            IsAvailable = true,
+                            QRCode = qrImageLink
+                        };
+
+                        campaign.BankingAccountID = bankingAccount.BankingAccountID;
+
+                        var createCampaignRequest = new CreateCampaignRequest
+                        {
+                            CreateCampaignRequestID = Guid.NewGuid(),
+                            CampaignID = campaign.CampaignID,
+                            Campaign = campaign,
+                            CreateByMember = volunteer!.MemberID,
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsApproved = false,
+                            IsPending = true,
+                            IsRejected = false,
+                            IsLocked = false,
+                        };
+
+                        var notification = new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = account!.AccountID,
+                            Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        };
+
+
+                        var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
+                        if (createCampaignRequestCreated != null)
+                        {
+                            _notificationRepository.Save(notification);
+                        }
+                        return createCampaignRequestCreated;
                     }
-
-                    var linkConfirmForm = "";
-                    if (request.ApplicationConfirmForm != null)
+                    else
                     {
-                        linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        volunteer = _memberRepository.GetByAccountId(accountId);
+                        var linkImageCampaign = "";
+                        if (request.ImageCampaign != null)
+                        {
+                            linkImageCampaign = await _firebaseService.UploadImage(request.ImageCampaign);
+                        }
+
+                        var linkConfirmForm = "";
+                        if (request.ApplicationConfirmForm != null)
+                        {
+                            linkConfirmForm = await _firebaseService.UploadImage(request.ApplicationConfirmForm);
+                        }
+
+                        var campaign = new Campaign
+                        {
+                            CampaignID = Guid.NewGuid(),
+                            Name = request.Name,
+                            CampaignTypeID = request.CampaignTypeId,
+                            Address = request.Address,
+                            Description = request.Description,
+                            Image = linkImageCampaign,
+                            StartDate = request.StartDate,
+                            ExpectedEndDate = request.ExpectedEndDate,
+                            TargetAmount = request.TargetAmount,
+                            ApplicationConfirmForm = linkConfirmForm,
+                            IsTransparent = true,
+                            CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            CanBeDonated = true,
+                            IsActive = false,
+                            IsModify = false,
+                            IsComplete = false,
+                            IsDisable = false,
+                            CampaignTier = request.CampaignTier
+                        };
+
+                        var qrImageLink = "";
+                        if (request.QRCode != null)
+                        {
+                            qrImageLink = await _firebaseService.UploadImage(request.QRCode);
+                        }
+                        var bankingAccount = new BankingAccount
+                        {
+                            BankingAccountID = Guid.NewGuid(),
+                            BankingName = request.BankingName!,
+                            AccountNumber = request.BankingAccountNumber!,
+                            AccountName = request.AccountName,
+                            CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
+                            AccountId = accountId,
+                            IsAvailable = true,
+                            QRCode = qrImageLink
+                        };
+
+                        campaign.BankingAccountID = bankingAccount.BankingAccountID;
+
+                        var createCampaignRequest = new CreateCampaignRequest
+                        {
+                            CreateCampaignRequestID = Guid.NewGuid(),
+                            CampaignID = campaign.CampaignID,
+                            Campaign = campaign,
+                            CreateByMember = volunteer!.MemberID,
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsApproved = false,
+                            IsPending = true,
+                            IsRejected = false,
+                            IsLocked = false,
+                        };
+
+                        var notification = new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = account!.AccountID,
+                            Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        };
+
+
+                        var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
+                        if (createCampaignRequestCreated != null)
+                        {
+                            foreach (var stage in request.Stages)
+                            {
+                                int i = 0;
+                                _processingPhaseRepository.Save(new ProcessingPhase
+                                {
+                                    ProcessingPhaseId = Guid.NewGuid(),
+                                    CampaignId = campaign.CampaignID,
+                                    Name = stage.Title,
+                                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                    Priority = i,
+                                    CurrentMoney = stage.Amount,
+                                    Percent = Math.Round((double.Parse(stage.Amount) / double.Parse(campaign.TargetAmount)) * 100, 3),
+                                    IsProcessing = false,
+                                    IsEnd = false,
+                                    IsActive = false,
+                                    IsLocked = false,
+                                });
+                                i++;
+                            }
+                            _notificationRepository.Save(notification);
+                        }
+                        return createCampaignRequestCreated;
                     }
-
-                    var campaign = new Campaign
-                    {
-                        CampaignID = Guid.NewGuid(),
-                        Name = request.Name,
-                        CampaignTypeID = request.CampaignTypeId,
-                        Address = request.Address,
-                        Description = request.Description,
-                        Image = linkImageCampaign,
-                        StartDate = request.StartDate,
-                        ExpectedEndDate = request.ExpectedEndDate,
-                        TargetAmount = request.TargetAmount,
-                        ApplicationConfirmForm = linkConfirmForm,
-                        IsTransparent = true,
-                        CreateAt = TimeHelper.GetTime(DateTime.UtcNow),
-                        CanBeDonated = true,
-                        IsActive = false,
-                        IsModify = false,
-                        IsComplete = false,
-                        IsDisable = false,
-                    };
-
-                    var qrImageLink = "";
-                    if (request.QRCode != null)
-                    {
-                        qrImageLink = await _firebaseService.UploadImage(request.QRCode);
-                    }
-                    var bankingAccount = new BankingAccount
-                    {
-                        BankingAccountID = Guid.NewGuid(),
-                        BankingName = request.BankingName!,
-                        AccountNumber = request.BankingAccountNumber!,
-                        AccountName = request.AccountName,
-                        CreatedAt = TimeHelper.GetTime(DateTime.UtcNow),
-                        AccountId = accountId,
-                        IsAvailable = true,
-                        QRCode = qrImageLink
-                    };
-
-                    campaign.BankingAccountID = bankingAccount.BankingAccountID;
-
-                    var createCampaignRequest = new CreateCampaignRequest
-                    {
-                        CreateCampaignRequestID = Guid.NewGuid(),
-                        CampaignID = campaign.CampaignID,
-                        Campaign = campaign,
-                        CreateByMember = volunteer!.MemberID,
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsApproved = false,
-                        IsPending = true,
-                        IsRejected = false,
-                        IsLocked = false,
-                    };
-
-                    var notification = new Notification
-                    {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = account!.AccountID,
-                        Content = "Yêu cầu tạo chiến dịch của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    };
-
-
-                    var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
-                    if (createCampaignRequestCreated != null)
-                    {
-                        _notificationRepository.Save(notification);
-                    }
-                    return createCampaignRequestCreated;
                 }
                 else
                 {
                     return null;
                 }
             }
-
-
         }
 
 
@@ -432,75 +657,158 @@ namespace SU24_VMO_API.Services
                 if (updateCampaignRequest.IsApproved == true)
                 {
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
-                    campaign.IsActive = true;
-                    campaign.IsTransparent = true;
-                    //campaign.IsDisable = false;
-
-                    request.IsApproved = true;
-                    request.IsPending = false;
-                    request.IsLocked = false;
-                    request.ApprovedBy = updateCampaignRequest.ModeratorId;
-                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    request.IsRejected = false;
-                    result = true;
-
-                    member = _memberRepository.GetById((Guid)request!.CreateByMember!);
-
-                    notification.AccountID = member!.AccountID;
-                    notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
-
-                    var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
-                    if (donatePhaseExisted == null)
+                    if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
-                        donatePhase = new DonatePhase
+                        campaign.IsActive = true;
+                        campaign.IsTransparent = true;
+                        //campaign.IsDisable = false;
+
+                        request.IsApproved = true;
+                        request.IsPending = false;
+                        request.IsLocked = false;
+                        request.ApprovedBy = updateCampaignRequest.ModeratorId;
+                        request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.IsRejected = false;
+                        result = true;
+
+                        member = _memberRepository.GetById((Guid)request!.CreateByMember!);
+
+                        notification.AccountID = member!.AccountID;
+                        notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
+
+                        var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                        if (donatePhaseExisted == null)
                         {
-                            DonatePhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            CurrentMoney = "0",
-                            IsProcessing = true,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn ủng hộ",
-                            Percent = 0,
-                            StartDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        };
-                        _donatePhaseRepository.Save(donatePhase);
+                            donatePhase = new DonatePhase
+                            {
+                                DonatePhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                CurrentMoney = "0",
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn ủng hộ",
+                                Percent = 0,
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            };
+                            _donatePhaseRepository.Save(donatePhase);
+                        }
+
+                        var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        if (processingPhaseExisted == null)
+                        {
+                            processingPhase = new ProcessingPhase
+                            {
+                                ProcessingPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = false,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn xử lý, giải ngân",
+                            };
+                            _processingPhaseRepository.Save(processingPhase);
+
+                        }
+
+                        var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
+                        if (statementPhaseExisted == null)
+                        {
+                            statementPhase = new StatementPhase
+                            {
+                                StatementPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = false,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn sao kê",
+                            };
+                            _statementPhaseRepository.Save(statementPhase);
+                        }
+                    }
+                    else
+                    {
+                        campaign.IsActive = true;
+                        campaign.IsTransparent = true;
+                        //campaign.IsDisable = false;
+
+                        request.IsApproved = true;
+                        request.IsPending = false;
+                        request.IsLocked = false;
+                        request.ApprovedBy = updateCampaignRequest.ModeratorId;
+                        request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.IsRejected = false;
+                        result = true;
+
+                        member = _memberRepository.GetById((Guid)request!.CreateByMember!);
+
+                        notification.AccountID = member!.AccountID;
+                        notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
+
+                        var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                        if (donatePhaseExisted == null)
+                        {
+                            donatePhase = new DonatePhase
+                            {
+                                DonatePhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                CurrentMoney = "0",
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn ủng hộ",
+                                Percent = 0,
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            };
+                            _donatePhaseRepository.Save(donatePhase);
+                        }
+
+                        var processingPhaseExisteds = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        if (processingPhaseExisteds != null && processingPhaseExisteds.Any())
+                        {
+                            //processingPhase = new ProcessingPhase
+                            //{
+                            //    ProcessingPhaseId = Guid.NewGuid(),
+                            //    CampaignId = campaign.CampaignID,
+                            //    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            //    StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            //    IsProcessing = true,
+                            //    IsLocked = false,
+                            //    IsEnd = false,
+                            //    Name = "Giai đoạn xử lý, giải ngân",
+                            //};
+                            //_processingPhaseRepository.Save(processingPhase);
+                            foreach (var processingPhaseExisted in processingPhaseExisteds)
+                            {
+                                processingPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                                processingPhaseExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                                _processingPhaseRepository.Update(processingPhaseExisted);
+                            }
+                        }
+
+                        var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
+                        if (statementPhaseExisted == null)
+                        {
+                            statementPhase = new StatementPhase
+                            {
+                                StatementPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn sao kê",
+                            };
+                            _statementPhaseRepository.Save(statementPhase);
+                        }
                     }
 
-                    var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                    if (processingPhaseExisted == null)
-                    {
-                        processingPhase = new ProcessingPhase
-                        {
-                            ProcessingPhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            IsProcessing = false,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn xử lý, giải ngân",
-                        };
-                        _processingPhaseRepository.Save(processingPhase);
-
-                    }
-
-                    var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
-                    if (statementPhaseExisted == null)
-                    {
-                        statementPhase = new StatementPhase
-                        {
-                            StatementPhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            IsProcessing = false,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn sao kê",
-                        };
-                        _statementPhaseRepository.Save(statementPhase);
-                    }
 
                 }
                 else
@@ -529,78 +837,161 @@ namespace SU24_VMO_API.Services
                 if (updateCampaignRequest.IsApproved == true)
                 {
                     campaign = _campaignService.GetCampaignByCampaignId(request!.CampaignID)!;
-                    campaign.IsActive = true;
-                    campaign.IsTransparent = true;
-                    //campaign.IsDisable = false;
-
-
-
-                    request.ApprovedBy = updateCampaignRequest.ModeratorId;
-                    request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    request.IsApproved = true;
-                    request.IsPending = false;
-                    request.IsLocked = false;
-                    request.IsRejected = false;
-                    result = true;
-
-                    om = _organizationManagerRepository.GetById((Guid)request!.CreateByOM!);
-
-                    notification.AccountID = om!.AccountID;
-                    notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
-
-                    var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
-                    if (donatePhaseExisted == null)
+                    if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
-                        donatePhase = new DonatePhase
-                        {
-                            DonatePhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            CurrentMoney = "0",
-                            IsProcessing = true,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn ủng hộ",
-                            Percent = 0,
-                            StartDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        };
-                        _donatePhaseRepository.Save(donatePhase);
-                    }
+                        campaign.IsActive = true;
+                        campaign.IsTransparent = true;
+                        //campaign.IsDisable = false;
 
-                    var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                    if (processingPhaseExisted == null)
+
+
+                        request.ApprovedBy = updateCampaignRequest.ModeratorId;
+                        request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.IsApproved = true;
+                        request.IsPending = false;
+                        request.IsLocked = false;
+                        request.IsRejected = false;
+                        result = true;
+
+                        om = _organizationManagerRepository.GetById((Guid)request!.CreateByOM!);
+
+                        notification.AccountID = om!.AccountID;
+                        notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
+
+                        var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                        if (donatePhaseExisted == null)
+                        {
+                            donatePhase = new DonatePhase
+                            {
+                                DonatePhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                CurrentMoney = "0",
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn ủng hộ",
+                                Percent = 0,
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            };
+                            _donatePhaseRepository.Save(donatePhase);
+                        }
+
+                        var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        if (processingPhaseExisted == null)
+                        {
+                            processingPhase = new ProcessingPhase
+                            {
+                                ProcessingPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = false,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn xử lý, giải ngân",
+                            };
+                            _processingPhaseRepository.Save(processingPhase);
+
+                        }
+
+                        var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
+                        if (statementPhaseExisted == null)
+                        {
+                            statementPhase = new StatementPhase
+                            {
+                                StatementPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = false,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn sao kê",
+                            };
+                            _statementPhaseRepository.Save(statementPhase);
+                        }
+                    }
+                    else
                     {
-                        processingPhase = new ProcessingPhase
+                        campaign.IsActive = true;
+                        campaign.IsTransparent = true;
+                        //campaign.IsDisable = false;
+
+
+
+                        request.ApprovedBy = updateCampaignRequest.ModeratorId;
+                        request.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        request.IsApproved = true;
+                        request.IsPending = false;
+                        request.IsLocked = false;
+                        request.IsRejected = false;
+                        result = true;
+
+                        om = _organizationManagerRepository.GetById((Guid)request!.CreateByOM!);
+
+                        notification.AccountID = om!.AccountID;
+                        notification.Content = "Yêu cầu tạo chiến dịch của bạn vừa được duyệt! Vui lòng theo dõi thông tin chiến dịch đang diễn ra!";
+
+                        var donatePhaseExisted = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                        if (donatePhaseExisted == null)
                         {
-                            ProcessingPhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            IsProcessing = false,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn xử lý, giải ngân",
-                        };
-                        _processingPhaseRepository.Save(processingPhase);
+                            donatePhase = new DonatePhase
+                            {
+                                DonatePhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                CurrentMoney = "0",
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn ủng hộ",
+                                Percent = 0,
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            };
+                            _donatePhaseRepository.Save(donatePhase);
+                        }
 
-                    }
-
-                    var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
-                    if (statementPhaseExisted == null)
-                    {
-                        statementPhase = new StatementPhase
+                        var processingPhaseExisteds = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        if (processingPhaseExisteds != null && processingPhaseExisteds.Any())
                         {
-                            StatementPhaseId = Guid.NewGuid(),
-                            CampaignId = campaign.CampaignID,
-                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            IsProcessing = false,
-                            IsLocked = false,
-                            IsEnd = false,
-                            Name = "Giai đoạn sao kê",
-                        };
-                        _statementPhaseRepository.Save(statementPhase);
-                    }
+                            //processingPhase = new ProcessingPhase
+                            //{
+                            //    ProcessingPhaseId = Guid.NewGuid(),
+                            //    CampaignId = campaign.CampaignID,
+                            //    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            //    StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            //    IsProcessing = true,
+                            //    IsLocked = false,
+                            //    IsEnd = false,
+                            //    Name = "Giai đoạn xử lý, giải ngân",
+                            //};
+                            //_processingPhaseRepository.Save(processingPhase);
+                            foreach (var processingPhaseExisted in processingPhaseExisteds)
+                            {
+                                processingPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                                processingPhaseExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                                _processingPhaseRepository.Update(processingPhaseExisted);
+                            }
+                        }
 
+                        var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
+                        if (statementPhaseExisted == null)
+                        {
+                            statementPhase = new StatementPhase
+                            {
+                                StatementPhaseId = Guid.NewGuid(),
+                                CampaignId = campaign.CampaignID,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                StartDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                IsProcessing = true,
+                                IsLocked = false,
+                                IsEnd = false,
+                                Name = "Giai đoạn sao kê",
+                            };
+                            _statementPhaseRepository.Save(statementPhase);
+                        }
+                    }
                 }
                 else
                 {

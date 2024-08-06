@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 using Org.BouncyCastle.Asn1.Cms;
 using Repository.Implements;
 using Repository.Interfaces;
@@ -134,105 +135,109 @@ namespace SU24_VMO_API.Services
             if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
 
             var campaign = _campaignRepository.GetById(donatePhase.CampaignId)!;
-            var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
-            if (request.IsEnd == true)
+            if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
             {
-                donatePhase.IsEnd = true;
-                donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                donatePhase.IsProcessing = false;
-                donatePhase.IsLocked = true;
-                donatePhase.UpdateBy = request.AccountId;
-                donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
-
-                var processingPhase = new ProcessingPhase();
-                if (campaign.ProcessingPhase != null)
+                var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+                if (request.IsEnd == true)
                 {
-                    processingPhase = campaign.ProcessingPhase;
-                    processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-                    processingPhase.IsProcessing = true;
-                    processingPhase.IsLocked = false;
-                    processingPhase.IsEnd = false;
-                }
+                    donatePhase.IsEnd = true;
+                    donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    donatePhase.IsProcessing = false;
+                    donatePhase.IsLocked = true;
+                    donatePhase.UpdateBy = request.AccountId;
+                    donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
 
-
-
-                _processingPhaseRepository.Update(processingPhase);
-                _repository.Update(donatePhase);
-                if (createCampaignRequest.CreateByOM != null)
-                {
-                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
-                    var notificationCreated = _notificationRepository.Save(new Notification
+                    var processingPhase = new ProcessingPhase();
+                    if (campaign.ProcessingPhases != null)
                     {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = om!.AccountID,
-                        Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    });
-                }
-                else if (createCampaignRequest.CreateByMember != null)
-                {
-                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
-                    var notificationCreated = _notificationRepository.Save(new Notification
+                        processingPhase = campaign.ProcessingPhases.FirstOrDefault();
+                        processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        processingPhase.IsProcessing = true;
+                        processingPhase.IsLocked = false;
+                        processingPhase.IsEnd = false;
+                    }
+
+
+
+                    _processingPhaseRepository.Update(processingPhase);
+                    _repository.Update(donatePhase);
+                    if (createCampaignRequest.CreateByOM != null)
                     {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = member!.AccountID,
-                        Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    });
+                        var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                        var notificationCreated = _notificationRepository.Save(new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = om!.AccountID,
+                            Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        });
+                    }
+                    else if (createCampaignRequest.CreateByMember != null)
+                    {
+                        var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                        var notificationCreated = _notificationRepository.Save(new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = member!.AccountID,
+                            Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        });
+                    }
+                }
+                else
+                {
+                    donatePhase.IsEnd = false;
+                    donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    donatePhase.IsProcessing = true;
+                    donatePhase.UpdateBy = request.AccountId;
+
+
+                    var processingPhase = new ProcessingPhase();
+                    if (campaign.ProcessingPhases != null)
+                    {
+                        processingPhase = campaign.ProcessingPhases.FirstOrDefault();
+                        processingPhase.IsProcessing = false;
+                        processingPhase.IsLocked = false;
+                        processingPhase.IsEnd = false;
+                    }
+
+
+
+                    _processingPhaseRepository.Update(processingPhase);
+                    _repository.Update(donatePhase);
+                    if (createCampaignRequest.CreateByOM != null)
+                    {
+                        var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                        var notificationCreated = _notificationRepository.Save(new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = om!.AccountID,
+                            Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        });
+                    }
+                    else if (createCampaignRequest.CreateByMember != null)
+                    {
+                        var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                        var notificationCreated = _notificationRepository.Save(new Notification
+                        {
+                            NotificationID = Guid.NewGuid(),
+                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                            AccountID = member!.AccountID,
+                            Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                            IsSeen = false,
+                        });
+                    }
                 }
             }
-            else
-            {
-                donatePhase.IsEnd = false;
-                donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                donatePhase.IsProcessing = true;
-                donatePhase.UpdateBy = request.AccountId;
-
-
-                var processingPhase = new ProcessingPhase();
-                if (campaign.ProcessingPhase != null)
-                {
-                    processingPhase = campaign.ProcessingPhase;
-                    processingPhase.IsProcessing = false;
-                    processingPhase.IsLocked = false;
-                    processingPhase.IsEnd = false;
-                }
-
-
-
-                _processingPhaseRepository.Update(processingPhase);
-                _repository.Update(donatePhase);
-                if (createCampaignRequest.CreateByOM != null)
-                {
-                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
-                    var notificationCreated = _notificationRepository.Save(new Notification
-                    {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = om!.AccountID,
-                        Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    });
-                }
-                else if (createCampaignRequest.CreateByMember != null)
-                {
-                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
-                    var notificationCreated = _notificationRepository.Save(new Notification
-                    {
-                        NotificationID = Guid.NewGuid(),
-                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                        AccountID = member!.AccountID,
-                        Content = $"Trạng thái giai đoạn ủng hộ của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
-                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                        IsSeen = false,
-                    });
-                }
-            }
+            
         }
 
         public DonatePhase? CreateDonatePhase(DonatePhase donatePhase)
@@ -247,36 +252,38 @@ namespace SU24_VMO_API.Services
             if (donatePhase != null)
             {
                 var campaign = _campaignRepository.GetById(campaignId)!;
-
-                double currentValue = double.Parse(donatePhase!.CurrentMoney);
-                currentValue = currentValue + amountDonate;
-
-                // Calculate percent and round it to 3 decimal places
-                double targetAmount = double.Parse(campaign.TargetAmount);
-                double percent = Math.Round((currentValue / targetAmount) * 100, 3);
-
-                donatePhase.CurrentMoney = currentValue.ToString();
-                donatePhase.Percent = percent;
-
-                if (currentValue >= double.Parse(campaign.TargetAmount))
+                if (campaign != null && campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                 {
-                    campaign.CanBeDonated = false;
-                    donatePhase.IsEnd = true;
-                    donatePhase.IsProcessing = false;
-                    donatePhase.IsLocked = true;
-                    donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    double currentValue = double.Parse(donatePhase!.CurrentMoney);
+                    currentValue = currentValue + amountDonate;
 
-                    var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId);
-                    if (processingPhase != null)
+                    // Calculate percent and round it to 3 decimal places
+                    double targetAmount = double.Parse(campaign.TargetAmount);
+                    double percent = Math.Round((currentValue / targetAmount) * 100, 3);
+
+                    donatePhase.CurrentMoney = currentValue.ToString();
+                    donatePhase.Percent = percent;
+
+                    if (currentValue >= double.Parse(campaign.TargetAmount))
                     {
-                        processingPhase.IsProcessing = true;
-                        processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-                        processingPhase.IsLocked = false;
-                        _processingPhaseRepository.Update(processingPhase);
+                        campaign.CanBeDonated = false;
+                        donatePhase.IsEnd = true;
+                        donatePhase.IsProcessing = false;
+                        donatePhase.IsLocked = true;
+                        donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                        var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId).FirstOrDefault();
+                        if (processingPhase != null)
+                        {
+                            processingPhase.IsProcessing = true;
+                            processingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            processingPhase.IsLocked = false;
+                            _processingPhaseRepository.Update(processingPhase);
+                        }
+                        _campaignRepository.Update(campaign);
                     }
-                    _campaignRepository.Update(campaign);
+                    _repository.Update(donatePhase);
                 }
-                _repository.Update(donatePhase);
             }
         }
 
@@ -334,51 +341,56 @@ namespace SU24_VMO_API.Services
                 }
             }
 
-            if (request.EndDate <= TimeHelper.GetTime(DateTime.UtcNow))
+            if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
             {
-                throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+                if (request.EndDate <= TimeHelper.GetTime(DateTime.UtcNow))
+                {
+                    throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+                }
+
+                if (request.EndDate <= campaign!.ExpectedEndDate)
+                {
+                    throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày kết thúc dự kiến ban đầu!");
+                }
+
+                if (request.EndDate != null)
+                {
+                    campaign!.ExpectedEndDate = (DateTime)request.EndDate;
+                    campaign.CanBeDonated = true;
+                    campaign.ActualEndDate = null;
+                    _campaignRepository.Update(campaign);
+                }
+
+
+                donatePhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                donatePhase.EndDate = null;
+                donatePhase.IsLocked = false;
+                donatePhase.IsEnd = false;
+                donatePhase.IsProcessing = true;
+
+                var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(donatePhase.CampaignId)!.FirstOrDefault()!;
+                processingPhase.StartDate = null;
+                processingPhase.EndDate = null;
+                processingPhase.IsProcessing = false;
+                processingPhase.IsLocked = false;
+                processingPhase.IsEnd = false;
+                processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(donatePhase.CampaignId)!;
+                statementPhase.StartDate = null;
+                statementPhase.EndDate = null;
+                statementPhase.IsProcessing = false;
+                statementPhase.IsLocked = false;
+                statementPhase.IsEnd = false;
+                statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                _repository.Update(donatePhase);
+                _processingPhaseRepository.Update(processingPhase);
+                _statementPhaseRepository.Update(statementPhase);
             }
 
-            if (request.EndDate <= campaign!.ExpectedEndDate)
-            {
-                throw new BadRequestException("Ngày kết thúc phải lớn hơn ngày kết thúc dự kiến ban đầu!");
-            }
-
-            if (request.EndDate != null)
-            {
-                campaign!.ExpectedEndDate = (DateTime)request.EndDate;
-                campaign.CanBeDonated = true;
-                campaign.ActualEndDate = null;
-                _campaignRepository.Update(campaign);
-            }
-
-
-            donatePhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-            donatePhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-            donatePhase.EndDate = null;
-            donatePhase.IsLocked = false;
-            donatePhase.IsEnd = false;
-            donatePhase.IsProcessing = true;
-
-            var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(donatePhase.CampaignId)!;
-            processingPhase.StartDate = null;
-            processingPhase.EndDate = null;
-            processingPhase.IsProcessing = false;
-            processingPhase.IsLocked = false;
-            processingPhase.IsEnd = false;
-            processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-
-            var statementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(donatePhase.CampaignId)!;
-            statementPhase.StartDate = null;
-            statementPhase.EndDate = null;
-            statementPhase.IsProcessing = false;
-            statementPhase.IsLocked = false;
-            statementPhase.IsEnd = false;
-            statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-
-            _repository.Update(donatePhase);
-            _processingPhaseRepository.Update(processingPhase);
-            _statementPhaseRepository.Update(statementPhase);
+            
         }
 
     }

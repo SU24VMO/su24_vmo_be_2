@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BusinessObject.Enums;
+using SU24_VMO_API_2.DTOs.Request;
 
 namespace SU24_VMO_API.DTOs.Request
 {
@@ -31,5 +33,9 @@ namespace SU24_VMO_API.DTOs.Request
         public string BankingAccountNumber { get; set; } = default!;
         [Required]
         public IFormFile QRCode { get; set; } = default!;
+        [Required] 
+        public CampaignTier CampaignTier { get; set; } = default!;
+        [Required]
+        public List<CreateStageRequest> Stages { get; set; } = default!;
     }
 }

@@ -41,7 +41,7 @@ namespace SU24_VMO_API.Services
                         campaign.Transactions = null;
                         campaign.Organization = null;
                         campaign.CampaignType = null;
-                        campaign.ProcessingPhase = null;
+                        campaign.ProcessingPhases = null;
                         campaign.DonatePhase = null;
                         campaign.StatementPhase = null;
                     }
@@ -114,7 +114,7 @@ namespace SU24_VMO_API.Services
                             campaign.Transactions = null;
                             campaign.Organization = null;
                             campaign.CampaignType = null;
-                            campaign.ProcessingPhase = null;
+                            campaign.ProcessingPhases = null;
                             campaign.DonatePhase = null;
                             campaign.StatementPhase = null;
                         }

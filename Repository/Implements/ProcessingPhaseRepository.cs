@@ -31,12 +31,12 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.ProcessingPhaseId.Equals(id));
         }
 
-        public ProcessingPhase? GetProcessingPhaseByCampaignId(Guid campaignId)
+        public List<ProcessingPhase> GetProcessingPhaseByCampaignId(Guid campaignId)
         {
             using var context = new VMODBContext();
             return context.ProcessingPhases
-                .Include(a => a.Campaign).ToList()
-                .FirstOrDefault(d => d.CampaignId.Equals(campaignId));
+                .Include(a => a.Campaign)
+                .Where(d => d.CampaignId.Equals(campaignId)).ToList();
         }
 
         public ProcessingPhase? Save(ProcessingPhase entity)

@@ -23,7 +23,7 @@ namespace Repository.Implements
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
                 .Include(a => a.Transactions)
-                .Include(a => a.ProcessingPhase)
+                .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
                 .OrderByDescending(a => a.CreateAt).ToList();
@@ -36,7 +36,7 @@ namespace Repository.Implements
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
                 .Include(a => a.Transactions)
-                .Include(a => a.ProcessingPhase)
+                .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase).ToList()
                 .FirstOrDefault(d => d.CampaignID.Equals(id));
@@ -49,7 +49,7 @@ namespace Repository.Implements
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
                 .Include(a => a.Transactions)
-                .Include(a => a.ProcessingPhase)
+                .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
                 .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.Name!.ToLower().Contains(campaignName.ToLower()));
@@ -62,7 +62,7 @@ namespace Repository.Implements
                 .Include(a => a.Organization)
                 .Include(a => a.CampaignType)
                 .Include(a => a.Transactions)
-                .Include(a => a.ProcessingPhase)
+                .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
                 .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));

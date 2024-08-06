@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.Enums;
 
 namespace BusinessObject.Models
 {
@@ -30,6 +31,7 @@ namespace BusinessObject.Models
         public bool IsComplete { get; set; } = default!;
         public bool IsDisable { get; set; } = default!;
         public bool CanBeDonated { get; set; } = default!;
+        public CampaignTier CampaignTier { get; set; } = default!;
 
         public DateTime? CheckTransparentDate { get; set; }
         public string? Note { get; set; } = default!;
@@ -38,7 +40,7 @@ namespace BusinessObject.Models
         public CampaignType? CampaignType { get; set; }
         public BankingAccount? BankingAccount { get; set; }
         public DonatePhase? DonatePhase { get; set; }
-        public ProcessingPhase? ProcessingPhase { get; set; }
+        public List<ProcessingPhase>? ProcessingPhases { get; set; }
         public StatementPhase? StatementPhase { get; set; }
         public CreateCampaignRequest? CreateCampaignRequest { get; set; }
 

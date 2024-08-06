@@ -612,7 +612,7 @@ namespace SU24_VMO_API.Services
                     transaction.Campaign.Transactions = null;
                     transaction.Campaign.Organization = null;
                     transaction.Campaign.DonatePhase = null;
-                    transaction.Campaign.ProcessingPhase = null;
+                    transaction.Campaign.ProcessingPhases = null;
                     transaction.Campaign.CampaignType = null;
                     transaction.Campaign.StatementPhase = null;
 

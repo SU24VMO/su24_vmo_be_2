@@ -9,7 +9,7 @@ namespace Repository.Interfaces
 {
     public interface IProcessingPhaseRepository : ICrudBaseRepository<ProcessingPhase, Guid>
     {
-        public ProcessingPhase? GetProcessingPhaseByCampaignId(Guid campaignId);
+        public List<ProcessingPhase> GetProcessingPhaseByCampaignId(Guid campaignId);
 
     }
 }

@@ -56,7 +56,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ProcessingPhase?> GetProcessingPhaseByOMId(Guid omId)
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
             if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
@@ -72,14 +72,17 @@ namespace SU24_VMO_API.Services
             var listProcessingPhase = new List<ProcessingPhase>();
             foreach (var item in campaign)
             {
-                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null && processingPhase.IsProcessing == true)
-                    listProcessingPhase.Add(processingPhase);
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        listProcessingPhase.Add(processingPhase);
+                    }
             }
             return listProcessingPhase;
         }
 
-        public IEnumerable<ProcessingPhase?> GetProcessingPhaseByMemberId(Guid memberId)
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseByMemberId(Guid memberId)
         {
             var member = _memberRepository.GetById(memberId);
             if (member == null) { throw new NotFoundException("Thành viên không tồn tại!"); }
@@ -95,15 +98,18 @@ namespace SU24_VMO_API.Services
             var listProcessingPhase = new List<ProcessingPhase>();
             foreach (var item in campaign)
             {
-                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null && processingPhase.IsProcessing == true)
-                    listProcessingPhase.Add(processingPhase);
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        listProcessingPhase.Add(processingPhase);
+                    }
             }
             return listProcessingPhase;
         }
 
 
-        public IEnumerable<ProcessingPhaseResponse?> GetProcessingPhaseResponseByOMId(Guid omId)
+        public IEnumerable<ProcessingPhaseResponse>? GetProcessingPhaseResponseByOMId(Guid omId)
         {
             var om = _organizationManagerRepository.GetById(omId);
             if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
@@ -119,13 +125,16 @@ namespace SU24_VMO_API.Services
             var listProcessingPhase = new List<ProcessingPhaseResponse>();
             foreach (var item in campaign)
             {
-                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null && processingPhase.IsProcessing == true)
-                    listProcessingPhase.Add(new ProcessingPhaseResponse
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
                     {
-                        CampaignName = item.Name,
-                        ProcessingPhaseId = processingPhase.ProcessingPhaseId
-                    });
+                        listProcessingPhase.Add(new ProcessingPhaseResponse
+                        {
+                            CampaignName = item.Name,
+                            ProcessingPhaseId = processingPhase.ProcessingPhaseId
+                        });
+                    }
             }
             return listProcessingPhase;
         }
@@ -148,13 +157,16 @@ namespace SU24_VMO_API.Services
             var listProcessingPhase = new List<ProcessingPhaseResponse>();
             foreach (var item in campaign)
             {
-                var processingPhase = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
-                if (processingPhase != null && processingPhase.IsProcessing == true)
-                    listProcessingPhase.Add(new ProcessingPhaseResponse
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
                     {
-                        CampaignName = item.Name,
-                        ProcessingPhaseId = processingPhase.ProcessingPhaseId
-                    });
+                        listProcessingPhase.Add(new ProcessingPhaseResponse
+                        {
+                            CampaignName = item.Name,
+                            ProcessingPhaseId = processingPhase.ProcessingPhaseId
+                        });
+                    }
             }
             return listProcessingPhase;
         }
