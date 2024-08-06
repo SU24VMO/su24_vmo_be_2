@@ -370,7 +370,6 @@ namespace SU24_VMO_API.Services
                     campaign.ProcessingPhases = null;
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
-
             }
             return campaigns;
         }
@@ -2321,7 +2320,10 @@ namespace SU24_VMO_API.Services
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
                 if (campaign.ProcessingPhases != null)
-                    campaign.ProcessingPhases = null;
+                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    {
+                        processingPhase.Campaign = null;
+                    }
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
@@ -2332,6 +2334,12 @@ namespace SU24_VMO_API.Services
                         statementFile.StatementPhase = null;
                     }
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
+                if (campaign.CreateCampaignRequest != null)
+                {
+                    campaign.CreateCampaignRequest.OrganizationManager = null;
+                    campaign.CreateCampaignRequest.Member = null;
+                    campaign.CreateCampaignRequest.Moderator = null;
                 }
             }
             return campaigns;
@@ -2377,7 +2385,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2388,6 +2399,13 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
@@ -2426,7 +2444,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2437,6 +2458,12 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
@@ -2475,7 +2502,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2486,6 +2516,12 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns.Where(a => a.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
@@ -2531,7 +2567,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2542,6 +2581,12 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns;
@@ -2580,7 +2625,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2591,6 +2639,12 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns;
@@ -2629,7 +2683,10 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processingPhase in campaign.ProcessingPhases)
+                            {
+                                processingPhase.Campaign = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -2640,6 +2697,12 @@ namespace SU24_VMO_API.Services
                                 statementFile.StatementPhase = null;
                             }
                             campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                        }
+                        if (campaign.CreateCampaignRequest != null)
+                        {
+                            campaign.CreateCampaignRequest.OrganizationManager = null;
+                            campaign.CreateCampaignRequest.Member = null;
+                            campaign.CreateCampaignRequest.Moderator = null;
                         }
                     }
                     return campaigns;
@@ -3221,7 +3284,10 @@ namespace SU24_VMO_API.Services
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
                 if (campaign.ProcessingPhases != null)
-                    campaign.ProcessingPhases = null;
+                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    {
+                        processingPhase.Campaign = null;
+                    }
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
@@ -3232,6 +3298,12 @@ namespace SU24_VMO_API.Services
                         statementFile.StatementPhase = null;
                     }
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
+                if (campaign.CreateCampaignRequest != null)
+                {
+                    campaign.CreateCampaignRequest.OrganizationManager = null;
+                    campaign.CreateCampaignRequest.Member = null;
+                    campaign.CreateCampaignRequest.Moderator = null;
                 }
             }
             return campaigns;
@@ -3349,7 +3421,10 @@ namespace SU24_VMO_API.Services
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
                 if (campaign.ProcessingPhases != null)
-                    campaign.ProcessingPhases = null;
+                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    {
+                        processingPhase.Campaign = null;
+                    }
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
@@ -3360,6 +3435,12 @@ namespace SU24_VMO_API.Services
                         statementFile.StatementPhase = null;
                     }
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                }
+                if (campaign.CreateCampaignRequest != null)
+                {
+                    campaign.CreateCampaignRequest.OrganizationManager = null;
+                    campaign.CreateCampaignRequest.Member = null;
+                    campaign.CreateCampaignRequest.Moderator = null;
                 }
             }
             return campaigns;
