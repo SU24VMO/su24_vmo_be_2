@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Services
             else return GetCreateCampaignRequests();
         }
 
-        public async Task<CreateCampaignRequest?> CreateCampaignRequestAsync(Guid accountId, CreateCampaignRequestRequest request)
+        public async Task<CreateCampaignRequest?> CreateCampaignRequestAsync(Guid accountId, CreateCampaignRequestRequest request, List<Stage>? stages)
         {
             TryValidateRegisterRequest(request);
 
@@ -317,7 +317,7 @@ namespace SU24_VMO_API.Services
                         var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
                         if (createCampaignRequestCreated != null)
                         {
-                            foreach (var stage in request.Stages)
+                            foreach (var stage in stages)
                             {
                                 int i = 0;
                                 _processingPhaseRepository.Save(new ProcessingPhase
@@ -514,7 +514,7 @@ namespace SU24_VMO_API.Services
                         var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
                         if (createCampaignRequestCreated != null)
                         {
-                            foreach (var stage in request.Stages)
+                            foreach (var stage in stages)
                             {
                                 int i = 0;
                                 _processingPhaseRepository.Save(new ProcessingPhase

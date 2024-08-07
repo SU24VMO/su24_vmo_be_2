@@ -37,8 +37,6 @@ namespace SU24_VMO_API.DTOs.Request
         public IFormFile QRCode { get; set; } = default!;
         [Required] 
         public CampaignTier CampaignTier { get; set; } = default!;
-        //[ModelBinder(BinderType = typeof(JsonModelBinder))]
-        public List<Stage>? Stages { get; set; } = default!;
     }
 
     public class Stage

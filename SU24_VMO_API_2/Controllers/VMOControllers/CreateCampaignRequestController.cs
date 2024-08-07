@@ -276,14 +276,14 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
+                List<Stage>? stages = new List<Stage>();
                 if (!string.IsNullOrEmpty(stagesJson))
                 {
-                    var a = JsonConvert.DeserializeObject<List<Stage>>(stagesJson);
-                    request.Stages = JsonConvert.DeserializeObject<List<Stage>>(stagesJson);
+                    stages = JsonConvert.DeserializeObject<List<Stage>>(stagesJson);
                 }
 
 
-                var result = await _service.CreateCampaignRequestAsync(accountId, request);
+                var result = await _service.CreateCampaignRequestAsync(accountId, request, stages);
                 if (result != null)
                 {
                     var response = new ResponseMessage()
