@@ -730,6 +730,16 @@ namespace SU24_VMO_API.Services
                 throw new Exception("Số tiền quyên góp phải lớn hơn hoặc bằng 2000 đồng!");
             }
 
+            if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
+            {
+                var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID)!;
+                if (createTransactionRequest.Price > (int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)))
+                {
+                    throw new Exception($"Số tiền quyên góp hiện tại tối đa {int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)}");
+                }
+            }
+
+
         }
 
         public async Task<string> GetData(int orderId)
