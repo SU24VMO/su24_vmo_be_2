@@ -716,18 +716,18 @@ namespace SU24_VMO_API.Services
             var campaign = _campaignRepository.GetById(createTransactionRequest.CampaignId);
             if (campaign == null)
             {
-                throw new Exception("Chiến dịch này không tìm thấy!");
+                throw new NotFoundException("Chiến dịch này không tìm thấy!");
             }
 
             var account = _accountRepository.GetById(createTransactionRequest.AccountId);
             if (account == null)
             {
-                throw new Exception("Tài khoản không tìm thấy!");
+                throw new NotFoundException("Tài khoản không tìm thấy!");
             }
 
             if (createTransactionRequest.Price < 2000)
             {
-                throw new Exception("Số tiền quyên góp phải lớn hơn hoặc bằng 2000 đồng!");
+                throw new BadRequestException("Số tiền quyên góp phải lớn hơn hoặc bằng 2000 đồng!");
             }
 
             if (campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
@@ -735,7 +735,7 @@ namespace SU24_VMO_API.Services
                 var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID)!;
                 if (createTransactionRequest.Price > (int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)))
                 {
-                    throw new Exception($"Số tiền quyên góp hiện tại tối đa {int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)}");
+                    throw new BadRequestException($"Số tiền quyên góp hiện tại tối đa {int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)}");
                 }
             }
 
