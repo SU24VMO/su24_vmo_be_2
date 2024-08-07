@@ -317,9 +317,9 @@ namespace SU24_VMO_API.Services
                         var createCampaignRequestCreated = _createCampaignRequestRepository.SaveWithBankingAccount(createCampaignRequest, bankingAccount);
                         if (createCampaignRequestCreated != null)
                         {
+                            int i = 0;
                             foreach (var stage in stages)
                             {
-                                int i = 0;
                                 _processingPhaseRepository.Save(new ProcessingPhase
                                 {
                                     ProcessingPhaseId = Guid.NewGuid(),
