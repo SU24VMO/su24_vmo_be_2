@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 
 namespace SU24_VMO_API_2.DTOs.Response
 {
@@ -23,6 +24,8 @@ namespace SU24_VMO_API_2.DTOs.Response
         public bool IsModify { get; set; } = default!;
         public bool IsComplete { get; set; } = default!;
         public bool CanBeDonated { get; set; } = default!;
+        public CampaignTier CampaignTier { get; set; } = default!;
+
 
         public DateTime? CheckTransparentDate { get; set; }
         public string? Note { get; set; } = default!;

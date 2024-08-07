@@ -274,7 +274,8 @@ namespace SU24_VMO_API.Services
                     StatementPhase = campaign.StatementPhase,
                     TargetAmount = campaign.TargetAmount,
                     Transactions = campaign.Transactions,
-                    UpdatedAt = campaign.UpdatedAt
+                    UpdatedAt = campaign.UpdatedAt,
+                    CampaignTier = campaign.CampaignTier
                 };
             }
             campaignResponse.OrganizationManager = organizationManager;
