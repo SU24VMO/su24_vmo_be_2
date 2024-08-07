@@ -280,6 +280,97 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
 
+        [HttpPost]
+        [Route("tier-ii/create-new")]
+
+        public async Task<IActionResult> CreateActivityTierIIRequestAsync(Guid accountId, [FromForm] CreateActivityTierIIRequestRequest request)
+        {
+            try
+            {
+                var createActivityRequestCreated = await _createActivityRequestService.CreateActivityTierIIRequestAsync(accountId, request);
+                if (createActivityRequestCreated != null)
+                {
+                    var response = new ResponseMessage()
+                    {
+                        Message = "Add successfully!"
+                    };
+
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseMessage()
+                    {
+                        Message = "Add failed!"
+                    };
+
+                    return BadRequest(response);
+                }
+
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
         [HttpGet]
         [Route("{createActivityRequestId}")]
 
@@ -367,6 +458,86 @@ namespace SU24_VMO_API.Controllers.VMOControllers
             try
             {
                 _createActivityRequestService.AcceptOrRejectCreateActivityRequest(request);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!"
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+
+        [HttpPut]
+        [Route("tier-ii/checking")]
+
+        public IActionResult AcceptOrRejectCreateActivityRequestTierII(UpdateCreateActivityRequest request)
+        {
+            try
+            {
+                _createActivityRequestService.AcceptOrRejectCreateActivityRequestTierII(request);
 
                 var response = new ResponseMessage()
                 {

@@ -265,6 +265,10 @@ namespace SU24_VMO_API.Services
             return activies;
         }
 
+
+
+
+
         public async void UpdateActivity(Guid activityId, UpdateActivityRequest request)
         {
             TryValidateUpdateActivityRequest(activityId, request);

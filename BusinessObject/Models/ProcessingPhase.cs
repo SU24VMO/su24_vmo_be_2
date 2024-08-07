@@ -26,6 +26,7 @@ namespace BusinessObject.Models
         public Campaign? Campaign { get; set; }
 
         public List<Activity>? Activities { get; set; }
+        public List<ProcessingPhaseStatementFile> ProcessingPhaseStatementFiles { get; set; }
 
     }
 }

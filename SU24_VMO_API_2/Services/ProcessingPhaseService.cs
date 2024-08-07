@@ -6,6 +6,7 @@ using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Text;
+using BusinessObject.Enums;
 
 namespace SU24_VMO_API.Services
 {
@@ -81,6 +82,60 @@ namespace SU24_VMO_API.Services
             }
             return listProcessingPhase;
         }
+
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseActiveTierIIByOMId(Guid omId)
+        {
+            var om = _organizationManagerRepository.GetById(omId);
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM != null && r.CreateByOM.Equals(omId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign && item.Campaign.IsActive)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhase>();
+            foreach (var item in campaign)
+            {
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        listProcessingPhase.Add(processingPhase);
+                    }
+            }
+            return listProcessingPhase;
+        }
+
+
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseUnActiveTierIIByOMId(Guid omId)
+        {
+            var om = _organizationManagerRepository.GetById(omId);
+            if (om == null) { throw new NotFoundException("Quản lý tổ chức không tồn tại!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByOM != null && r.CreateByOM.Equals(omId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhase>();
+            foreach (var item in campaign)
+            {
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        listProcessingPhase.Add(processingPhase);
+                    }
+            }
+            return listProcessingPhase;
+        }
+
 
         public IEnumerable<ProcessingPhase>? GetProcessingPhaseByMemberId(Guid memberId)
         {

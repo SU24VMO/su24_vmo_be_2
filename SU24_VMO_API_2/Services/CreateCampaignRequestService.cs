@@ -340,7 +340,7 @@ namespace SU24_VMO_API.Services
                         }
                         return createCampaignRequestCreated;
                     }
-                    
+
                 }
                 else if (account.Role == Role.Volunteer)
                 {
@@ -768,27 +768,19 @@ namespace SU24_VMO_API.Services
                             _donatePhaseRepository.Save(donatePhase);
                         }
 
-                        var processingPhaseExisteds = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                        if (processingPhaseExisteds != null && processingPhaseExisteds.Any())
+                        var minPriority = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Min(p => p.Priority);
+                        var minPriorityProcessingPhase = _processingPhaseRepository
+                            .GetProcessingPhaseByCampaignId(campaign.CampaignID)
+                            .FirstOrDefault(p => p.Priority == minPriority);
+                        if (minPriorityProcessingPhase != null)
                         {
-                            //processingPhase = new ProcessingPhase
-                            //{
-                            //    ProcessingPhaseId = Guid.NewGuid(),
-                            //    CampaignId = campaign.CampaignID,
-                            //    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            //    StartDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            //    IsProcessing = true,
-                            //    IsLocked = false,
-                            //    IsEnd = false,
-                            //    Name = "Giai đoạn xử lý, giải ngân",
-                            //};
-                            //_processingPhaseRepository.Save(processingPhase);
-                            foreach (var processingPhaseExisted in processingPhaseExisteds)
-                            {
-                                processingPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-                                processingPhaseExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                                _processingPhaseRepository.Update(processingPhaseExisted);
-                            }
+                            minPriorityProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            minPriorityProcessingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            minPriorityProcessingPhase.IsProcessing = true;
+                            minPriorityProcessingPhase.IsEnd = false;
+                            minPriorityProcessingPhase.IsLocked = false;
+                            minPriorityProcessingPhase.IsActive = true;
+                            _processingPhaseRepository.Update(minPriorityProcessingPhase);
                         }
 
                         var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
@@ -952,27 +944,19 @@ namespace SU24_VMO_API.Services
                             _donatePhaseRepository.Save(donatePhase);
                         }
 
-                        var processingPhaseExisteds = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                        if (processingPhaseExisteds != null && processingPhaseExisteds.Any())
+                        var minPriority = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Min(p => p.Priority);
+                        var minPriorityProcessingPhase = _processingPhaseRepository
+                            .GetProcessingPhaseByCampaignId(campaign.CampaignID)
+                            .FirstOrDefault(p => p.Priority == minPriority);
+                        if (minPriorityProcessingPhase != null)
                         {
-                            //processingPhase = new ProcessingPhase
-                            //{
-                            //    ProcessingPhaseId = Guid.NewGuid(),
-                            //    CampaignId = campaign.CampaignID,
-                            //    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            //    StartDate = TimeHelper.GetTime(DateTime.UtcNow),
-                            //    IsProcessing = true,
-                            //    IsLocked = false,
-                            //    IsEnd = false,
-                            //    Name = "Giai đoạn xử lý, giải ngân",
-                            //};
-                            //_processingPhaseRepository.Save(processingPhase);
-                            foreach (var processingPhaseExisted in processingPhaseExisteds)
-                            {
-                                processingPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-                                processingPhaseExisted.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
-                                _processingPhaseRepository.Update(processingPhaseExisted);
-                            }
+                            minPriorityProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            minPriorityProcessingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            minPriorityProcessingPhase.IsProcessing = true;
+                            minPriorityProcessingPhase.IsEnd = false;
+                            minPriorityProcessingPhase.IsLocked = false;
+                            minPriorityProcessingPhase.IsActive = true;
+                            _processingPhaseRepository.Update(minPriorityProcessingPhase);
                         }
 
                         var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);

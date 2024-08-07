@@ -26,6 +26,11 @@ namespace BusinessObject.FluentAPIs
                 .WithOne(x => x.ProcessingPhase)
                 .HasForeignKey(x => x.ProcessingPhaseId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(x => x.ProcessingPhaseStatementFiles)
+                .WithOne(x => x.ProcessingPhase)
+                .HasForeignKey(x => x.ProcessingPhaseId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

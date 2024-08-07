@@ -514,7 +514,6 @@ namespace SU24_VMO_API.Services
         }
 
 
-
         public IEnumerable<Campaign> GetAllCampaignsWithEndStatus()
         {
             var campaigns = _campaignRepository.GetAll().Where(c => c.IsComplete == true);
@@ -2255,7 +2254,7 @@ namespace SU24_VMO_API.Services
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             }
             else
             {
@@ -2404,7 +2403,91 @@ namespace SU24_VMO_API.Services
             }
         }
 
+        public IEnumerable<Campaign?> GetAllCampaignTierIIByCreateByVolunteerId(Guid userId, string? campaignName)
+        {
+            if (!String.IsNullOrEmpty(campaignName))
+            {
+                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId);
+                var campaigns = new List<Campaign>();
+                if (createCampaignRequests != null)
+                {
+                    foreach (var createCampaignRequest in createCampaignRequests)
+                    {
+                        campaigns.Add(createCampaignRequest.Campaign!);
+                    }
+                }
 
+                foreach (var campaign in campaigns)
+                {
+                    if (campaign.CampaignType != null)
+                        campaign.CampaignType!.Campaigns = null;
+                    if (campaign.Organization != null)
+                        campaign.Organization.OrganizationManager = null;
+                    if (campaign.Organization != null)
+                        campaign.Organization!.Campaigns = null;
+                    if (campaign.ProcessingPhases != null)
+                        campaign.ProcessingPhases = null;
+                    if (campaign.StatementPhase != null)
+                    {
+                        campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
+                }
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+            }
+            else
+            {
+                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId);
+                var campaigns = new List<Campaign>();
+                if (createCampaignRequests != null)
+                {
+                    foreach (var createCampaignRequest in createCampaignRequests)
+                    {
+                        campaigns.Add(createCampaignRequest.Campaign!);
+                    }
+                }
+
+                foreach (var campaign in campaigns)
+                {
+                    if (campaign.CampaignType != null)
+                        campaign.CampaignType!.Campaigns = null;
+                    if (campaign.Organization != null)
+                        campaign.Organization.OrganizationManager = null;
+                    if (campaign.Organization != null)
+                        campaign.Organization!.Campaigns = null;
+                    if (campaign.ProcessingPhases != null)
+                        campaign.ProcessingPhases = null;
+                    if (campaign.StatementPhase != null)
+                    {
+                        campaign.StatementPhase.Campaign = null;
+                        var statementFiles = _statementFileRepository.GetAll().Where(s =>
+                            s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
+                        foreach (var statementFile in statementFiles)
+                        {
+                            statementFile.StatementPhase = null;
+                        }
+                        campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                    }
+                    var request =
+                        _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
+                    if (request != null)
+                    {
+                        request.Campaign = null;
+                        request.OrganizationManager = null;
+                        request.Member = null;
+                        request.Moderator = null;
+                        campaign.CreateCampaignRequest = request;
+                    }
+                }
+                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+            }
+        }
 
         public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId)
         {

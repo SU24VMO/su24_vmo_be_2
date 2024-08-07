@@ -21,12 +21,17 @@ namespace SU24_VMO_API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IActivityImageRepository _activityImageRepository;
+        private readonly IStatementPhaseRepository _statementPhaseRepository;
+        private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
+        private readonly ICampaignRepository _campaignRepository;
         private readonly FirebaseService _firebaseService;
 
         public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository,
             IAccountRepository accountRepository, IOrganizationManagerRepository organizationManagerRepository, IActivityRepository activityRepository,
             IMemberRepository memberRepository, INotificationRepository notificationRepository,
-            IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService)
+            IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService,
+            IStatementPhaseRepository statementPhaseRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository,
+            ICampaignRepository campaignRepository)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
@@ -38,6 +43,9 @@ namespace SU24_VMO_API.Services
             _moderatorRepository = moderatorRepository;
             _activityImageRepository = activityImageRepository;
             _firebaseService = firebaseService;
+            _statementPhaseRepository = statementPhaseRepository;
+            _processingPhaseStatementFileRepository = processingPhaseStatementFileRepository;
+            _campaignRepository = campaignRepository;
         }
 
         public IEnumerable<CreateActivityRequest> GetAll()
@@ -251,6 +259,176 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public async Task<CreateActivityRequest?> CreateActivityTierIIRequestAsync(Guid accountId, CreateActivityTierIIRequestRequest request)
+        {
+            TryValidateRegisterRequestForTierII(request);
+            var createActivityRequest = new CreateActivityRequest();
+            var account = _accountRepository.GetById(accountId)!;
+            if (account.Role == BusinessObject.Enums.Role.OrganizationManager)
+            {
+                var organizationManager = _organizationManagerRepository.GetByAccountID(accountId)!;
+                var activity = new Activity
+                {
+                    ActivityId = Guid.NewGuid(),
+                    ProcessingPhaseId = request.ProcessingPhaseId,
+                    Content = request.Content,
+                    Title = request.Title,
+                    IsDisable = false,
+                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                    IsActive = false,
+                };
+
+
+
+                var activityAdded = _activityRepository.Save(activity);
+                if (activityAdded != null)
+                {
+                    createActivityRequest = new CreateActivityRequest
+                    {
+                        CreateActivityRequestID = Guid.NewGuid(),
+                        ActivityID = activityAdded.ActivityId,
+                        CreateByOM = organizationManager.OrganizationManagerID,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsApproved = false,
+                        IsLocked = false,
+                        IsPending = true,
+                        IsRejected = false,
+                    };
+                    var notification = new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = account!.AccountID,
+                        Content = "Yêu cầu tạo hoạt động của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    };
+
+
+                    if (request.ActivityImages != null)
+                        foreach (var item in request.ActivityImages)
+                        {
+                            var activityImage = new ActivityImage
+                            {
+                                ActivityImageId = Guid.NewGuid(),
+                                ActivityId = activity.ActivityId,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                IsActive = true,
+                            };
+                            _activityImageRepository.Save(activityImage);
+                        }
+
+
+
+                    if (request.ProcessingPhaseStatementFiles != null)
+                    {
+                        foreach (var item in request.ProcessingPhaseStatementFiles)
+                        {
+                            var statementFile = new ProcessingPhaseStatementFile()
+                            {
+                                ProcessingPhaseStatementFileId = Guid.NewGuid(),
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                ProcessingPhaseId = request.ProcessingPhaseId,
+                            };
+
+                            _processingPhaseStatementFileRepository.Save(statementFile);
+
+                        }
+                    }
+
+                    var createActivityRequested = _repository.Save(createActivityRequest);
+                    if (createActivityRequested != null) _notificationRepository.Save(notification);
+                    return createActivityRequested;
+                }
+                return null;
+
+            }
+            else if (account.Role == BusinessObject.Enums.Role.Volunteer)
+            {
+                var volunteer = _memberRepository.GetByAccountId(accountId)!;
+                var activity = new Activity
+                {
+                    ActivityId = Guid.NewGuid(),
+                    ProcessingPhaseId = request.ProcessingPhaseId,
+                    Content = request.Content,
+                    Title = request.Title,
+                    IsDisable = false,
+                    CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                    IsActive = false,
+                };
+
+
+                var activityAdded = _activityRepository.Save(activity);
+                if (activityAdded != null)
+                {
+                    createActivityRequest = new CreateActivityRequest
+                    {
+                        CreateActivityRequestID = Guid.NewGuid(),
+                        ActivityID = activityAdded.ActivityId,
+                        CreateByMember = volunteer.MemberID,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsApproved = false,
+                        IsLocked = false,
+                        IsPending = true,
+                        IsRejected = false,
+                    };
+                    var notification = new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = account!.AccountID,
+                        Content = "Yêu cầu tạo hoạt động của bạn vừa được tạo thành công, vui lòng đợi hệ thống phản hồi trong giây lát!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    };
+
+                    if (request.ActivityImages != null && activityAdded != null)
+                        foreach (var item in request.ActivityImages)
+                        {
+                            var activityImage = new ActivityImage
+                            {
+                                ActivityImageId = Guid.NewGuid(),
+                                ActivityId = activity.ActivityId,
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                IsActive = true,
+                            };
+                            _activityImageRepository.Save(activityImage);
+                        }
+
+
+                    if (request.ProcessingPhaseStatementFiles != null)
+                    {
+                        foreach (var item in request.ProcessingPhaseStatementFiles)
+                        {
+                            var statementFile = new ProcessingPhaseStatementFile()
+                            {
+                                ProcessingPhaseStatementFileId = Guid.NewGuid(),
+                                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                Link = await _firebaseService.UploadImage(item),
+                                ProcessingPhaseId = request.ProcessingPhaseId,
+                            };
+
+                            _processingPhaseStatementFileRepository.Save(statementFile);
+
+                        }
+                    }
+
+                    var createActivityRequested = _repository.Save(createActivityRequest);
+                    if (createActivityRequested != null) _notificationRepository.Save(notification);
+                    return createActivityRequested;
+                }
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
 
         public async Task<bool> UpdateCreateActivityRequestRequest(Guid createActivityRequestId, UpdateCreateActivityRequestRequest updateRequest)
         {
@@ -394,7 +572,146 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public void AcceptOrRejectCreateActivityRequestTierII(UpdateCreateActivityRequest request)
+        {
+            var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
+            if (createActivityRequest == null) { throw new NotFoundException("Yêu cầu không tìm thấy!"); }
+            var moderator = _moderatorRepository.GetById(request.ModeratorId);
+            if (moderator == null) { throw new NotFoundException("Không tìm thấy người duyệt yêu cầu!"); }
+            var notification = new Notification
+            {
+                NotificationID = Guid.NewGuid(),
+                NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                IsSeen = false,
+            };
+            var activity = new Activity();
+            if (createActivityRequest != null && moderator != null)
+            {
+                if (request.IsApproved == true)
+                {
+
+                    activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
+                    activity.IsActive = true;
+                    activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                    var processingPhase = _phaseRepository.GetById(activity.ProcessingPhaseId)!;
+                    var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
+                    var maxPriority = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Max(p => p.Priority);
+                    var finalProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID)
+                        .FirstOrDefault(p => p.Priority == maxPriority);
+
+                    if (processingPhase.Priority != maxPriority)
+                    {
+                        processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        processingPhase.IsProcessing = false;
+                        processingPhase.IsActive = false;
+                        processingPhase.IsEnd = true;
+                        processingPhase.IsLocked = true;
+                        _phaseRepository.Update(processingPhase);
+
+                        var nextProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).FirstOrDefault(p => p.Priority == processingPhase.Priority + 1);
+                        if (nextProcessingPhase != null)
+                        {
+                            nextProcessingPhase.IsProcessing = true;
+                            nextProcessingPhase.IsActive = true;
+                            nextProcessingPhase.IsLocked = false;
+                            nextProcessingPhase.IsEnd = false;
+                            _phaseRepository.Update(nextProcessingPhase);
+                        }
+                    }
+                    else
+                    {
+                        processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        processingPhase.IsProcessing = false;
+                        processingPhase.IsActive = false;
+                        processingPhase.IsEnd = true;
+                        processingPhase.IsLocked = true;
+                        _phaseRepository.Update(processingPhase);
+
+                        campaign.IsComplete = true;
+                        campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        _campaignRepository.Update(campaign);
+                    }
+
+                    //activity.IsDisable = false;
+
+                    createActivityRequest.IsApproved = true;
+                    createActivityRequest.IsPending = false;
+                    createActivityRequest.IsRejected = false;
+                    createActivityRequest.IsLocked = true;
+                    createActivityRequest.ApprovedBy = moderator.ModeratorID;
+                    createActivityRequest.ApprovedDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    createActivityRequest.ModifiedBy = moderator.AccountID;
+                    createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    if (createActivityRequest.CreateByMember != null)
+                    {
+                        var member = _memberRepository.GetById((Guid)createActivityRequest.CreateByMember);
+                        notification.AccountID = member!.AccountID;
+                        notification.Content = "Yêu cầu tạo hoạt động của bạn vừa được duyệt! Vui lòng theo dõi thông tin hoạt động đang diễn ra!";
+                    }
+                    else
+                    {
+                        var om = _organizationManagerRepository.GetById((Guid)createActivityRequest.CreateByOM!);
+                        notification.AccountID = om!.AccountID;
+                        notification.Content = "Yêu cầu tạo hoạt động của bạn vừa được duyệt! Vui lòng theo dõi thông tin hoạt động đang diễn ra!";
+                    }
+
+                    _repository.Update(createActivityRequest);
+                    _activityRepository.Update(activity);
+                    _notificationRepository.Save(notification);
+
+                }
+                else
+                {
+                    activity = _activityRepository.GetById(createActivityRequest.ActivityID)!;
+                    activity.IsActive = false;
+                    //activity.IsDisable = true;
+
+                    createActivityRequest.IsApproved = false;
+                    createActivityRequest.IsPending = false;
+                    createActivityRequest.IsRejected = true;
+                    createActivityRequest.IsLocked = false;
+                    createActivityRequest.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    createActivityRequest.ApprovedBy = moderator.ModeratorID;
+                    createActivityRequest.ModifiedBy = moderator.AccountID;
+
+                    if (createActivityRequest.CreateByMember != null)
+                    {
+                        var member = _memberRepository.GetById((Guid)createActivityRequest.CreateByMember);
+                        notification.AccountID = member!.AccountID;
+                        notification.Content = "Yêu cầu tạo hoạt động của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
+                    }
+                    else
+                    {
+                        var om = _organizationManagerRepository.GetById((Guid)createActivityRequest.CreateByOM!);
+                        notification.AccountID = om!.AccountID;
+                        notification.Content = "Yêu cầu tạo hoạt động của bạn chưa được chấp thuận! Vui lòng cung cấp cho chúng tôi nhiều thông tin xác thực hơn để yêu cầu được dễ dàng thông qua!";
+                    }
+
+                    _repository.Update(createActivityRequest);
+                    _activityRepository.Update(activity);
+                    _notificationRepository.Save(notification);
+                }
+
+            }
+        }
+
+
         private void TryValidateRegisterRequest(CreateActivityRequestRequest request)
+        {
+            if (_phaseRepository.GetById(request.ProcessingPhaseId) == null)
+            {
+                throw new Exception("Giai đoạn giải ngân không tìm thấy!");
+            }
+
+            if (_accountRepository.GetById(request.AccountId) == null)
+            {
+                throw new Exception("Tài khoản không tìm thấy!");
+            }
+        }
+
+        private void TryValidateRegisterRequestForTierII(CreateActivityTierIIRequestRequest request)
         {
             if (_phaseRepository.GetById(request.ProcessingPhaseId) == null)
             {
