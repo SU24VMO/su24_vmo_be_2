@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.DTOs.Response;
@@ -271,10 +272,17 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager, Volunteer")]
         [Route("create-new")]
 
-        public async Task<IActionResult> CreateCampaignRequestAsync(Guid accountId, [FromForm] CreateCampaignRequestRequest request)
+        public async Task<IActionResult> CreateCampaignRequestAsync(Guid accountId, [FromForm] CreateCampaignRequestRequest request, [FromForm] string? stagesJson)
         {
             try
             {
+                if (!string.IsNullOrEmpty(stagesJson))
+                {
+                    var a = JsonConvert.DeserializeObject<List<Stage>>(stagesJson);
+                    request.Stages = JsonConvert.DeserializeObject<List<Stage>>(stagesJson);
+                }
+
+
                 var result = await _service.CreateCampaignRequestAsync(accountId, request);
                 if (result != null)
                 {

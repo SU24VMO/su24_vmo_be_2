@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BusinessObject.Enums;
+using Microsoft.AspNetCore.Mvc;
 using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.Supporters.JsonHelper;
 
 namespace SU24_VMO_API.DTOs.Request
 {
@@ -35,6 +37,15 @@ namespace SU24_VMO_API.DTOs.Request
         public IFormFile QRCode { get; set; } = default!;
         [Required] 
         public CampaignTier CampaignTier { get; set; } = default!;
-        public List<CreateStageRequest>? Stages { get; set; } = default!;
+        //[ModelBinder(BinderType = typeof(JsonModelBinder))]
+        public List<Stage>? Stages { get; set; } = default!;
+    }
+
+    public class Stage
+    {
+        [Required]
+        public string Title { get; set; }
+        [Required]
+        public string Amount { get; set; }
     }
 }
