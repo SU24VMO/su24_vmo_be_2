@@ -35,7 +35,6 @@ namespace SU24_VMO_API.DTOs.Request
         public IFormFile QRCode { get; set; } = default!;
         [Required] 
         public CampaignTier CampaignTier { get; set; } = default!;
-        [Required]
-        public List<CreateStageRequest> Stages { get; set; } = default!;
+        public List<CreateStageRequest>? Stages { get; set; } = default!;
     }
 }
