@@ -338,7 +338,7 @@ namespace SU24_VMO_API.Services
                     transaction.Campaign = null;
                 }
 
-            campaignResponse.ProcessingPhases.OrderBy(c => c.Priority);
+            campaignResponse.ProcessingPhases = campaignResponse.ProcessingPhases.OrderBy(c => c.Priority).ToList();
 
             return campaignResponse;
         }
