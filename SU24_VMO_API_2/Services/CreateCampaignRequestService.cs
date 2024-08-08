@@ -733,6 +733,7 @@ namespace SU24_VMO_API.Services
                     {
                         campaign.IsActive = true;
                         campaign.IsTransparent = true;
+                        campaign.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
                         //campaign.IsDisable = false;
 
                         request.IsApproved = true;
@@ -915,6 +916,8 @@ namespace SU24_VMO_API.Services
                     {
                         campaign.IsActive = true;
                         campaign.IsTransparent = true;
+                        campaign.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+
                         //campaign.IsDisable = false;
 
 
