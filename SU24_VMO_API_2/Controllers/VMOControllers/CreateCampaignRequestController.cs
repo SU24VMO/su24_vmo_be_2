@@ -366,7 +366,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Moderator")]
+        //[Authorize(Roles = "Moderator")]
         [Route("checking")]
 
         public IActionResult AcceptOrRejectCreateCampaignRequest(UpdateCreateCampaignRequest request)

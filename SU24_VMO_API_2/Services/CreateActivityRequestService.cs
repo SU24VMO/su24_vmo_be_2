@@ -605,7 +605,7 @@ namespace SU24_VMO_API.Services
                     {
                         processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
                         processingPhase.IsProcessing = false;
-                        processingPhase.IsActive = false;
+                        processingPhase.IsActive = true;
                         processingPhase.IsEnd = true;
                         processingPhase.IsLocked = true;
                         _phaseRepository.Update(processingPhase);
@@ -624,7 +624,7 @@ namespace SU24_VMO_API.Services
                     {
                         processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
                         processingPhase.IsProcessing = false;
-                        processingPhase.IsActive = false;
+                        processingPhase.IsActive = true;
                         processingPhase.IsEnd = true;
                         processingPhase.IsLocked = true;
                         _phaseRepository.Update(processingPhase);

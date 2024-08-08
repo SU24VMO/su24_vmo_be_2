@@ -783,6 +783,14 @@ namespace SU24_VMO_API.Services
                             _processingPhaseRepository.Update(minPriorityProcessingPhase);
                         }
 
+                        var listProcessingPhase =
+                            _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        foreach (var processingPhaseExisted in listProcessingPhase)
+                        {
+                            processingPhaseExisted.IsActive = true;
+                            _processingPhaseRepository.Update(processingPhaseExisted);
+                        }
+
                         var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
                         if (statementPhaseExisted == null)
                         {
@@ -957,6 +965,14 @@ namespace SU24_VMO_API.Services
                             minPriorityProcessingPhase.IsLocked = false;
                             minPriorityProcessingPhase.IsActive = true;
                             _processingPhaseRepository.Update(minPriorityProcessingPhase);
+                        }
+
+                        var listProcessingPhase =
+                            _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                        foreach (var processingPhaseExisted in listProcessingPhase)
+                        {
+                            processingPhaseExisted.IsActive = true;
+                            _processingPhaseRepository.Update(processingPhaseExisted);
                         }
 
                         var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
