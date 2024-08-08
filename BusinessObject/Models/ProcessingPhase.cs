@@ -17,6 +17,7 @@ namespace BusinessObject.Models
         public int Priority { get; set; }
         public string CurrentMoney { get; set; } = default!;
         public double Percent { get; set; }
+        public double CurrentPercent { get; set; }
         public bool IsProcessing { get; set; }
         public bool IsEnd { get; set; } = default!;
         public Guid? UpdateBy { get; set; }

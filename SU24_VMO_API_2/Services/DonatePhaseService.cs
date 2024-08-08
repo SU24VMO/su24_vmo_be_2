@@ -7,6 +7,8 @@ using SU24_VMO_API.DTOs.Request;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
+using System.Diagnostics.Metrics;
+using System.Globalization;
 
 namespace SU24_VMO_API.Services
 {
@@ -24,7 +26,7 @@ namespace SU24_VMO_API.Services
 
         public DonatePhaseService(IDonatePhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IProcessingPhaseRepository processingPhaseRepository, 
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IProcessingPhaseRepository processingPhaseRepository,
             IStatementPhaseRepository statementPhaseRepository)
         {
             _repository = repository;
@@ -237,7 +239,7 @@ namespace SU24_VMO_API.Services
                     }
                 }
             }
-            
+
         }
 
         public DonatePhase? CreateDonatePhase(DonatePhase donatePhase)
@@ -283,6 +285,80 @@ namespace SU24_VMO_API.Services
                         _campaignRepository.Update(campaign);
                     }
                     _repository.Update(donatePhase);
+                }
+                else
+                {
+                    double currentValue = double.Parse(donatePhase!.CurrentMoney);
+                    currentValue = currentValue + amountDonate;
+
+                    // Calculate percent and round it to 3 decimal places
+                    double targetAmount = double.Parse(campaign.TargetAmount);
+                    double percent = Math.Round((currentValue / targetAmount) * 100, 3);
+
+                    donatePhase.CurrentMoney = currentValue.ToString();
+                    donatePhase.Percent = percent;
+                    if (currentValue >= double.Parse(campaign.TargetAmount))
+                    {
+                        campaign.CanBeDonated = false;
+                        donatePhase.IsEnd = true;
+                        donatePhase.IsProcessing = false;
+                        donatePhase.IsLocked = true;
+                        donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+
+                        var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId).FirstOrDefault(p => p.IsProcessing);
+                        if (processingPhase != null)
+                        {
+                            double currentPercent = campaign.Transactions.Where(t =>
+                                t.TransactionStatus == TransactionStatus.Success &&
+                                t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
+                            processingPhase.CurrentPercent = Math.Round((currentPercent / targetAmount) * 100, 3);
+
+                            if (processingPhase.CurrentPercent >= processingPhase.Percent)
+                            {
+                                var createCampaignRequest =
+                                    _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(
+                                        campaign.CampaignID);
+                                if (createCampaignRequest != null && createCampaignRequest.CreateByOM != null)
+                                {
+                                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                                    if (om != null)
+                                    {
+                                        var notificationCreated = _notificationRepository.Save(new Notification
+                                        {
+                                            NotificationID = Guid.NewGuid(),
+                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                            AccountID = om.AccountID,
+                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                            IsSeen = false,
+                                        });
+                                    }
+                                }
+                                else if (createCampaignRequest != null && createCampaignRequest.CreateByMember != null)
+                                {
+                                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                                    if (member != null)
+                                    {
+                                        var notificationCreated = _notificationRepository.Save(new Notification
+                                        {
+                                            NotificationID = Guid.NewGuid(),
+                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                            AccountID = member.AccountID,
+                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                            IsSeen = false,
+                                        });
+                                    }
+                                }
+
+
+                            }
+                        }
+                        _campaignRepository.Update(campaign);
+
+                    }
+                    _repository.Update(donatePhase);
+
                 }
             }
         }
@@ -390,7 +466,7 @@ namespace SU24_VMO_API.Services
                 _statementPhaseRepository.Update(statementPhase);
             }
 
-            
+
         }
 
     }
