@@ -134,10 +134,10 @@ namespace SU24_VMO_API.Services
                 var campaign = _campaignRepository.GetById(processingPhase!.CampaignId);
                 if (campaign!.CampaignTier == CampaignTier.PartialDisbursementCampaign)
                 {
-                    if (request.Activity != null)
-                    {
-                        request.Activity.ActivityImages = null;
-                    }
+                    //if (request.Activity != null)
+                    //{
+                    //    request.Activity.ActivityImages = null;
+                    //}
                     listRequestTierII.Add(request);
                 }
             }
