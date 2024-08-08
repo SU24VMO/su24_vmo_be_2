@@ -656,6 +656,7 @@ namespace SU24_VMO_API.Services
                         var nextProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).FirstOrDefault(p => p.Priority == processingPhase.Priority + 1);
                         if (nextProcessingPhase != null)
                         {
+                            nextProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
                             nextProcessingPhase.IsProcessing = true;
                             nextProcessingPhase.IsActive = true;
                             nextProcessingPhase.IsLocked = false;
