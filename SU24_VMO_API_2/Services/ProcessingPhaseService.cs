@@ -122,7 +122,7 @@ namespace SU24_VMO_API.Services
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
             {
-                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign && !item.Campaign.IsActive)
                     campaign.Add(item.Campaign);
             }
 
@@ -150,6 +150,61 @@ namespace SU24_VMO_API.Services
             foreach (var item in listsRequest)
             {
                 if (item.Campaign != null)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhase>();
+            foreach (var item in campaign)
+            {
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        listProcessingPhase.Add(processingPhase);
+                    }
+            }
+            return listProcessingPhase;
+        }
+
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseActiveTierIIByMemberId(Guid memberId)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) { throw new NotFoundException("Thành viên không tồn tại!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember != null && r.CreateByMember.Equals(memberId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign && item.Campaign.IsActive)
+                    campaign.Add(item.Campaign);
+            }
+
+            var listProcessingPhase = new List<ProcessingPhase>();
+            foreach (var item in campaign)
+            {
+                var processingPhases = repository.GetProcessingPhaseByCampaignId(item.CampaignID);
+                if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
+                    foreach (var processingPhase in processingPhases)
+                    {
+                        if (processingPhase.IsProcessing)
+                        {
+                            listProcessingPhase.Add(processingPhase);
+                        }
+                    }
+            }
+            return listProcessingPhase;
+        }
+
+        public IEnumerable<ProcessingPhase>? GetProcessingPhaseUnActiveTierIIByMemberId(Guid memberId)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) { throw new NotFoundException("Thành viên không tồn tại!"); }
+            var listsRequest = _createCampaignRequestRepository.GetAll().Where(r => r.CreateByMember != null && r.CreateByMember.Equals(memberId));
+
+            var campaign = new List<Campaign>();
+            foreach (var item in listsRequest)
+            {
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign && !item.Campaign.IsActive)
                     campaign.Add(item.Campaign);
             }
 
