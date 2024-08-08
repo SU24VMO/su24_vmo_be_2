@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 using Repository.Implements;
 using Repository.Interfaces;
 using SU24_VMO_API.DTOs.Request;
@@ -99,6 +100,48 @@ namespace SU24_VMO_API.Services
                 }
             }
             return requests;
+        }
+
+        public IEnumerable<CreateActivityRequest> GetAllCreateActivityRequestsOfCampaignTierI()
+        {
+            var listRequestTierI = new List<CreateActivityRequest>();
+            var requests = GetAll();
+            foreach (var request in requests)
+            {
+                var activity = request.Activity;
+                var processingPhase = _phaseRepository.GetById(activity!.ProcessingPhaseId);
+                var campaign = _campaignRepository.GetById(processingPhase!.CampaignId);
+                if (campaign!.CampaignTier == CampaignTier.FullDisbursementCampaign)
+                {
+                    if (request.Activity != null)
+                    {
+                        request.Activity.ActivityImages = null;
+                    }
+                    listRequestTierI.Add(request);
+                }
+            }
+            return listRequestTierI;
+        }
+
+        public IEnumerable<CreateActivityRequest> GetAllCreateActivityRequestsOfCampaignTierII()
+        {
+            var listRequestTierII = new List<CreateActivityRequest>();
+            var requests = GetAll();
+            foreach (var request in requests)
+            {
+                var activity = request.Activity;
+                var processingPhase = _phaseRepository.GetById(activity!.ProcessingPhaseId);
+                var campaign = _campaignRepository.GetById(processingPhase!.CampaignId);
+                if (campaign!.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                {
+                    if (request.Activity != null)
+                    {
+                        request.Activity.ActivityImages = null;
+                    }
+                    listRequestTierII.Add(request);
+                }
+            }
+            return listRequestTierII;
         }
 
         public IEnumerable<CreateActivityRequest> GetAllByActivityTitle(string? activityTitle)
