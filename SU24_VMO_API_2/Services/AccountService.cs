@@ -15,6 +15,7 @@ using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request.AccountRequest;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -528,6 +529,55 @@ namespace SU24_VMO_API.Services
             {
                 return;
             }
+        }
+
+
+        public List<Top5AccountDonation>? GetTop5AccountsDonate()
+        {
+            var accounts = GetAll()
+                .Where(a => a.Transactions != null && a.Transactions.Count > 0 && a.IsActived && !a.IsBlocked && (a.Role == Role.Member || a.Role == Role.Volunteer || a.Role == Role.OrganizationManager))
+                .OrderByDescending(a => a.Transactions!.Sum(t => t.Amount))
+                .Take(5);
+            var listTop5 = new List<Top5AccountDonation>();
+            foreach (var account in accounts)
+            {
+                if (account.Role == Role.Member)
+                {
+                    var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                    listTop5.Add(new Top5AccountDonation
+                    {
+                        FirstName = member.FirstName,
+                        LastName = member.LastName,
+                        Avatar = account.Avatar,
+                        TotalDonation = account.Transactions!.Sum(t => t.Amount).ToString(CultureInfo.InvariantCulture)
+                    });
+                }
+
+                if (account.Role == Role.Volunteer)
+                {
+                    var member = _memberRepository.GetByAccountId(account.AccountID)!;
+                    listTop5.Add(new Top5AccountDonation
+                    {
+                        FirstName = member.FirstName,
+                        LastName = member.LastName,
+                        Avatar = account.Avatar,
+                        TotalDonation = account.Transactions!.Sum(t => t.Amount).ToString(CultureInfo.InvariantCulture)
+                    });
+                }
+
+                if (account.Role == Role.OrganizationManager)
+                {
+                    var om = _organizationManagerRepository.GetByAccountID(account.AccountID)!;
+                    listTop5.Add(new Top5AccountDonation
+                    {
+                        FirstName = om.FirstName,
+                        LastName = om.LastName,
+                        Avatar = account.Avatar,
+                        TotalDonation = account.Transactions!.Sum(t => t.Amount).ToString(CultureInfo.InvariantCulture)
+                    });
+                }
+            }
+            return listTop5;
         }
 
         //function login

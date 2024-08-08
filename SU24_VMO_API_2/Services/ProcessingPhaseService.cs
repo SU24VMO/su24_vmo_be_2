@@ -103,7 +103,10 @@ namespace SU24_VMO_API.Services
                 if (processingPhases != null && processingPhases.Any(pp => pp.IsProcessing) == true)
                     foreach (var processingPhase in processingPhases)
                     {
-                        listProcessingPhase.Add(processingPhase);
+                        if (processingPhase.IsProcessing)
+                        {
+                            listProcessingPhase.Add(processingPhase);
+                        }
                     }
             }
             return listProcessingPhase;
