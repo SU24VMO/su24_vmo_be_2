@@ -710,7 +710,6 @@ namespace SU24_VMO_API.Services
                                 Name = "Giai đoạn xử lý, giải ngân",
                             };
                             _processingPhaseRepository.Save(processingPhase);
-
                         }
 
                         var statementPhaseExisted = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
@@ -768,6 +767,11 @@ namespace SU24_VMO_API.Services
                             };
                             _donatePhaseRepository.Save(donatePhase);
                         }
+                        else
+                        {
+                            donatePhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            _donatePhaseRepository.Update(donatePhaseExisted);
+                        }
 
                         var minPriority = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Min(p => p.Priority);
                         var minPriorityProcessingPhase = _processingPhaseRepository
@@ -807,6 +811,11 @@ namespace SU24_VMO_API.Services
                                 Name = "Giai đoạn sao kê",
                             };
                             _statementPhaseRepository.Save(statementPhase);
+                        }
+                        else
+                        {
+                            statementPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            _statementPhaseRepository.Update(statementPhaseExisted);
                         }
                     }
 
@@ -954,6 +963,11 @@ namespace SU24_VMO_API.Services
                             };
                             _donatePhaseRepository.Save(donatePhase);
                         }
+                        else
+                        {
+                            donatePhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            _donatePhaseRepository.Update(donatePhaseExisted);
+                        }
 
                         var minPriority = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Min(p => p.Priority);
                         var minPriorityProcessingPhase = _processingPhaseRepository
@@ -993,6 +1007,11 @@ namespace SU24_VMO_API.Services
                                 Name = "Giai đoạn sao kê",
                             };
                             _statementPhaseRepository.Save(statementPhase);
+                        }
+                        else
+                        {
+                            statementPhaseExisted.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                            _statementPhaseRepository.Update(statementPhaseExisted);
                         }
                     }
                 }
