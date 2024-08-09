@@ -23,6 +23,7 @@ namespace SU24_VMO_API.Services
         private readonly INotificationRepository _notificationRepository;
         private readonly IActivityImageRepository _activityImageRepository;
         private readonly IStatementPhaseRepository _statementPhaseRepository;
+        private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly FirebaseService _firebaseService;
@@ -32,7 +33,7 @@ namespace SU24_VMO_API.Services
             IMemberRepository memberRepository, INotificationRepository notificationRepository,
             IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService,
             IStatementPhaseRepository statementPhaseRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository,
-            ICampaignRepository campaignRepository)
+            ICampaignRepository campaignRepository, IDonatePhaseRepository donatePhaseRepository)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
@@ -47,6 +48,7 @@ namespace SU24_VMO_API.Services
             _statementPhaseRepository = statementPhaseRepository;
             _processingPhaseStatementFileRepository = processingPhaseStatementFileRepository;
             _campaignRepository = campaignRepository;
+            _donatePhaseRepository = donatePhaseRepository;
         }
 
         public IEnumerable<CreateActivityRequest> GetAll()
@@ -677,6 +679,15 @@ namespace SU24_VMO_API.Services
 
                         campaign.IsComplete = true;
                         campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                        if (donatePhase != null)
+                        {
+                            campaign.CanBeDonated = false;
+                            donatePhase.IsEnd = true;
+                            donatePhase.IsProcessing = false;
+                            donatePhase.IsLocked = true;
+                            donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        }
                         _campaignRepository.Update(campaign);
                     }
 
