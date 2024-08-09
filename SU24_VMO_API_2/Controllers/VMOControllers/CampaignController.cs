@@ -23,17 +23,20 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         private readonly PaginationService<Campaign> _paginationService;
         private readonly PaginationService<CampaignResponse> _paginationService2;
         private readonly PaginationService<CampaignWithBankingAccountResponse> _paginationService3;
+        private readonly PaginationService<CampaignTierIIWithBankingAccountResponse> _paginationService4;
+
 
 
 
 
         public CampaignController(CampaignService campaignService, PaginationService<Campaign> paginationService, PaginationService<CampaignResponse> paginationService2, 
-            PaginationService<CampaignWithBankingAccountResponse> paginationService3)
+            PaginationService<CampaignWithBankingAccountResponse> paginationService3, PaginationService<CampaignTierIIWithBankingAccountResponse> paginationService4)
         {
             _campaignService = campaignService;
             _paginationService = paginationService;
             _paginationService2 = paginationService2;
             _paginationService3 = paginationService3;
+            _paginationService4 = paginationService4;
         }
 
         [HttpGet]
@@ -351,17 +354,96 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
         [HttpGet]
-        [Route("all/filter/banking-account")]
-        public IActionResult GetAllCampaignsWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        [Route("tier-i/all/filter/banking-account")]
+        public IActionResult GetAllCampaignsTierIWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsWithBankingAccountWithActiveStatus(campaignName);
+                var campaigns = _campaignService.GetAllCampaignsTierIWithBankingAccountWithActiveStatus(campaignName);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
                     Data = _paginationService3.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                };
+
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
+
+
+        [HttpGet]
+        [Route("tier-ii/all/filter/banking-account")]
+        public IActionResult GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        {
+            try
+            {
+                var campaigns = _campaignService.GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(campaignName);
+
+                var response = new ResponseMessage()
+                {
+                    Message = "Get successfully!",
+                    Data = _paginationService4.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
                 };
 
                 return Ok(response);
