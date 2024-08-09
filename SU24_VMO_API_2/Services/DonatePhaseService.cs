@@ -297,6 +297,83 @@ namespace SU24_VMO_API.Services
 
                     donatePhase.CurrentMoney = currentValue.ToString();
                     donatePhase.Percent = percent;
+                    var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId).FirstOrDefault(p => p.IsProcessing);
+                    if (processingPhase != null)
+                    {
+                        double currentPercent = campaign.Transactions.Where(t =>
+                            t.TransactionStatus == TransactionStatus.Success &&
+                            t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
+                        processingPhase.CurrentPercent = Math.Round((currentPercent / targetAmount) * 100, 3);
+
+                        if (processingPhase.CurrentPercent >= processingPhase.Percent)
+                        {
+                            var createCampaignRequest =
+                                _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(
+                                    campaign.CampaignID);
+                            if (createCampaignRequest != null && createCampaignRequest.CreateByOM != null)
+                            {
+                                var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                                if (om != null)
+                                {
+                                    var notificationCreated = _notificationRepository.Save(new Notification
+                                    {
+                                        NotificationID = Guid.NewGuid(),
+                                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                        AccountID = om.AccountID,
+                                        Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                        IsSeen = false,
+                                    });
+                                }
+
+                                var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
+                                if (admin != null)
+                                {
+                                    var notificationCreated = _notificationRepository.Save(new Notification
+                                    {
+                                        NotificationID = Guid.NewGuid(),
+                                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                        AccountID = admin.AccountID,
+                                        Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                        IsSeen = false,
+                                    });
+                                }
+                            }
+                            else if (createCampaignRequest != null && createCampaignRequest.CreateByMember != null)
+                            {
+                                var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                                if (member != null)
+                                {
+                                    var notificationCreated = _notificationRepository.Save(new Notification
+                                    {
+                                        NotificationID = Guid.NewGuid(),
+                                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                        AccountID = member.AccountID,
+                                        Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                        IsSeen = false,
+                                    });
+
+                                }
+
+                                var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
+                                if (admin != null)
+                                {
+                                    var notificationCreated = _notificationRepository.Save(new Notification
+                                    {
+                                        NotificationID = Guid.NewGuid(),
+                                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                        AccountID = admin.AccountID,
+                                        Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                        IsSeen = false,
+                                    });
+                                }
+                            }
+                        }
+                    }
+
                     if (currentValue >= double.Parse(campaign.TargetAmount))
                     {
                         campaign.CanBeDonated = false;
@@ -305,84 +382,6 @@ namespace SU24_VMO_API.Services
                         donatePhase.IsLocked = true;
                         donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
 
-                        var processingPhase = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaignId).FirstOrDefault(p => p.IsProcessing);
-                        if (processingPhase != null)
-                        {
-                            double currentPercent = campaign.Transactions.Where(t =>
-                                t.TransactionStatus == TransactionStatus.Success &&
-                                t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
-                            processingPhase.CurrentPercent = Math.Round((currentPercent / targetAmount) * 100, 3);
-
-                            if (processingPhase.CurrentPercent >= processingPhase.Percent)
-                            {
-                                var createCampaignRequest =
-                                    _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(
-                                        campaign.CampaignID);
-                                if (createCampaignRequest != null && createCampaignRequest.CreateByOM != null)
-                                {
-                                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
-                                    if (om != null)
-                                    {
-                                        var notificationCreated = _notificationRepository.Save(new Notification
-                                        {
-                                            NotificationID = Guid.NewGuid(),
-                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                                            AccountID = om.AccountID,
-                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
-                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                                            IsSeen = false,
-                                        });
-                                    }
-
-                                    var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
-                                    if (admin != null)
-                                    {
-                                        var notificationCreated = _notificationRepository.Save(new Notification
-                                        {
-                                            NotificationID = Guid.NewGuid(),
-                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                                            AccountID = admin.AccountID,
-                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
-                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                                            IsSeen = false,
-                                        });
-                                    }
-                                }
-                                else if (createCampaignRequest != null && createCampaignRequest.CreateByMember != null)
-                                {
-                                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
-                                    if (member != null)
-                                    {
-                                        var notificationCreated = _notificationRepository.Save(new Notification
-                                        {
-                                            NotificationID = Guid.NewGuid(),
-                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                                            AccountID = member.AccountID,
-                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
-                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                                            IsSeen = false,
-                                        });
-
-                                    }
-
-                                    var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
-                                    if (admin != null)
-                                    {
-                                        var notificationCreated = _notificationRepository.Save(new Notification
-                                        {
-                                            NotificationID = Guid.NewGuid(),
-                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
-                                            AccountID = admin.AccountID,
-                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
-                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                                            IsSeen = false,
-                                        });
-                                    }
-                                }
-
-
-                            }
-                        }
                         _campaignRepository.Update(campaign);
 
                     }
