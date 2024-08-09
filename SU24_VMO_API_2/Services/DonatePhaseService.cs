@@ -333,6 +333,20 @@ namespace SU24_VMO_API.Services
                                             IsSeen = false,
                                         });
                                     }
+
+                                    var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
+                                    if (admin != null)
+                                    {
+                                        var notificationCreated = _notificationRepository.Save(new Notification
+                                        {
+                                            NotificationID = Guid.NewGuid(),
+                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                            AccountID = admin.AccountID,
+                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                            IsSeen = false,
+                                        });
+                                    }
                                 }
                                 else if (createCampaignRequest != null && createCampaignRequest.CreateByMember != null)
                                 {
@@ -344,6 +358,21 @@ namespace SU24_VMO_API.Services
                                             NotificationID = Guid.NewGuid(),
                                             NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
                                             AccountID = member.AccountID,
+                                            Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
+                                            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                                            IsSeen = false,
+                                        });
+
+                                    }
+
+                                    var admin = _accountRepository.GetAll().FirstOrDefault(a => a.Role == Role.Admin);
+                                    if (admin != null)
+                                    {
+                                        var notificationCreated = _notificationRepository.Save(new Notification
+                                        {
+                                            NotificationID = Guid.NewGuid(),
+                                            NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                                            AccountID = admin.AccountID,
                                             Content = $"Giai đoạn {processingPhase.Name} với số tiền {processingPhase.CurrentMoney} VND của chiến dịch {campaign.Name} vừa đạt được mục tiêu! Vui lòng kiểm tra cập nhật sao kê và giải ngân cho giai đoạn!",
                                             CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                             IsSeen = false,

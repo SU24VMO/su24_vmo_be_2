@@ -374,6 +374,7 @@ namespace SU24_VMO_API.Services
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 Link = await _firebaseService.UploadImage(item),
                                 ProcessingPhaseId = request.ProcessingPhaseId,
+                                CreateBy = accountId
                             };
 
                             _processingPhaseStatementFileRepository.Save(statementFile);
@@ -452,6 +453,7 @@ namespace SU24_VMO_API.Services
                                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                                 Link = await _firebaseService.UploadImage(item),
                                 ProcessingPhaseId = request.ProcessingPhaseId,
+                                CreateBy = accountId
                             };
 
                             _processingPhaseStatementFileRepository.Save(statementFile);
