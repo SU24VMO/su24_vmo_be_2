@@ -20,14 +20,17 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
                 return context.ProcessingPhases
-                    .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList();
+                    .Include(a => a.Campaign)
+                    .Include(a => a.ProcessingPhaseStatementFiles)
+                    .OrderByDescending(a => a.CreateDate).ToList();
         }
 
         public ProcessingPhase? GetById(Guid id)
         {
             using var context = new VMODBContext();
             return context.ProcessingPhases
-                .Include(a => a.Campaign).ToList()
+                .Include(a => a.Campaign)
+                .Include(a => a.ProcessingPhaseStatementFiles).ToList()
                 .FirstOrDefault(d => d.ProcessingPhaseId.Equals(id));
         }
 
@@ -36,6 +39,7 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.ProcessingPhases
                 .Include(a => a.Campaign)
+                .Include(a => a.ProcessingPhaseStatementFiles)
                 .Where(d => d.CampaignId.Equals(campaignId)).ToList();
         }
 
