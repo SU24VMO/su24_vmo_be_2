@@ -66,5 +66,14 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public IEnumerable<ProcessingPhaseStatementFile> GetProcessingPhaseStatementFilesByProcessingPhaseId(Guid processingPhaseId)
+        {
+            using var context = new VMODBContext();
+            return context.ProcessingPhaseStatementFiles
+                .Include(a => a.ProcessingPhase)
+                .Where(p => p.ProcessingPhaseId.Equals(processingPhaseId))
+                .OrderByDescending(a => a.CreateDate).ToList();
+        }
     }
 }

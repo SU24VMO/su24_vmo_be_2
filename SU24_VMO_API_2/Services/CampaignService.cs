@@ -31,6 +31,7 @@ namespace SU24_VMO_API.Services
         private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IStatementFileRepository _statementFileRepository;
         private readonly IOrganizationRepository _organizationRepository;
+        private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
         private readonly FirebaseService _firebaseService;
         private readonly ActivityService _activityService;
         private readonly StatementFileService _statementFileService;
@@ -40,7 +41,7 @@ namespace SU24_VMO_API.Services
             IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
             IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
             StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository, 
-            ITransactionRepository transactionRepository)
+            ITransactionRepository transactionRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -59,6 +60,7 @@ namespace SU24_VMO_API.Services
             _accountRepository = accountRepository;
             _bankingAccountRepository = bankingAccountRepository;
             _transactionRepository = transactionRepository;
+            _processingPhaseStatementFileRepository = processingPhaseStatementFileRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -340,6 +342,12 @@ namespace SU24_VMO_API.Services
 
             campaignResponse.ProcessingPhases = campaignResponse.ProcessingPhases.OrderBy(c => c.Priority).ToList();
 
+            foreach (var processingPhase in campaignResponse.ProcessingPhases)
+            {
+                var list = _processingPhaseStatementFileRepository
+                    .GetProcessingPhaseStatementFilesByProcessingPhaseId(processingPhase.ProcessingPhaseId);
+                processingPhase.ProcessingPhaseStatementFiles = list.ToList();
+            }
             return campaignResponse;
         }
 

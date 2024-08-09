@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IProcessingPhaseStatementFileRepository : ICrudBaseRepository<ProcessingPhaseStatementFile, Guid>
     {
+        public IEnumerable<ProcessingPhaseStatementFile> GetProcessingPhaseStatementFilesByProcessingPhaseId(Guid  processingPhaseId);
     }
 }
