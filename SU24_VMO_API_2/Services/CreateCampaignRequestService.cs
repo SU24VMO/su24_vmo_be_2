@@ -697,7 +697,7 @@ namespace SU24_VMO_API.Services
                         }
 
                         var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                        if (processingPhaseExisted == null)
+                        if (processingPhaseExisted == null || !processingPhaseExisted.Any())
                         {
                             processingPhase = new ProcessingPhase
                             {
@@ -889,7 +889,7 @@ namespace SU24_VMO_API.Services
                         }
 
                         var processingPhaseExisted = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                        if (processingPhaseExisted == null)
+                        if (processingPhaseExisted == null || !processingPhaseExisted.Any())
                         {
                             processingPhase = new ProcessingPhase
                             {
