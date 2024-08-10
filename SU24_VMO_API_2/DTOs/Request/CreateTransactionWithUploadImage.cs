@@ -4,6 +4,7 @@
     {
         public Guid AccountId { get; set; } = default!;
         public Guid CampaignId { get; set; } = default!;
+        public Guid? ProcessingPhaseId { get; set; } = default!;
         public Guid BankingAccountId { get; set; } = default!;
         public float Amount { get; set; } = default!;
         public IFormFile TransactionImage { get; set; } = default!;

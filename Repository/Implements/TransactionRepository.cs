@@ -55,6 +55,16 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.CampaignID.Equals(campaignId) && d.TransactionType == TransactionType.Transfer);
         }
 
+        public IEnumerable<Transaction>? GetTransactionByCampaignTierIIIdWithTypeIsTransfer(Guid campaignId)
+        {
+            using var context = new VMODBContext();
+            return context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).ToList()
+                .Where(d => d.CampaignID.Equals(campaignId) && d.TransactionType == TransactionType.Transfer);
+        }
+
         public Transaction? GetTransactionByOrderId(int orderId)
         {
             using var context = new VMODBContext();

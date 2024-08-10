@@ -739,6 +739,15 @@ namespace SU24_VMO_API.Services
                 }
             }
 
+            if (campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+            {
+                var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID)!;
+                if (createTransactionRequest.Price > (int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)))
+                {
+                    throw new BadRequestException($"Số tiền quyên góp hiện tại tối đa {(int.Parse(campaign.TargetAmount) - int.Parse(donatePhase.CurrentMoney)).ToString("N0", new CultureInfo("vi-VN"))} VND");
+                }
+            }
+
 
         }
 
@@ -872,9 +881,12 @@ namespace SU24_VMO_API.Services
                 PayerName = "ADMIN",
                 IsIncognito = false,
                 CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
-                TransactionImageUrl = await _firebaseService.UploadImage(request.TransactionImage)
+                TransactionImageUrl = await _firebaseService.UploadImage(request.TransactionImage),
+                ProcessingPhaseId = request.ProcessingPhaseId,
             };
             return _transactionRepository.Save(transaction);
+
+
         }
 
 

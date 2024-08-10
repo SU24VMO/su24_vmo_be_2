@@ -12,5 +12,6 @@ namespace Repository.Interfaces
         public Transaction? GetTransactionByOrderId(int orderId);
         public IEnumerable<Transaction?> GetHistoryTransactionByAccountId(Guid accountId);
         public Transaction? GetTransactionByCampaignIdWithTypeIsTransfer(Guid campaignId);
+        public IEnumerable<Transaction>? GetTransactionByCampaignTierIIIdWithTypeIsTransfer(Guid campaignId);
     }
 }

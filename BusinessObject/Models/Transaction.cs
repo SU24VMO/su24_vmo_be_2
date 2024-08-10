@@ -23,6 +23,7 @@ namespace BusinessObject.Models
         public int OrderId { get; set; } = default!;
         public Guid AccountId { get; set; }
         public Guid? BankingAccountID { get; set; }
+        public Guid? ProcessingPhaseId { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
         public string TransactionImageUrl { get; set; } = default!;
         public BankingAccount? BankingAccount { get; set; }

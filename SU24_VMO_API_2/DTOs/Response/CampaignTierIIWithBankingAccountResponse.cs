@@ -20,5 +20,6 @@
         public bool IsActive { get; set; } = default!;
         public bool IsDisable { get; set; } = default!;
         public bool IsComplete { get; set; } = default!;
+        public Guid? ProcessingPhaseId { get; set; } = default!;
     }
 }

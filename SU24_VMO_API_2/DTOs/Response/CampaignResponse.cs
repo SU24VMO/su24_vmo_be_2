@@ -38,5 +38,6 @@ namespace SU24_VMO_API_2.DTOs.Response
         public Member? Member { get; set; } 
         public OrganizationManager? OrganizationManager { get; set; }
         public List<Transaction>? Transactions { get; set; }
+        public List<Transaction>? AdminTransactions { get; set; }
     }
 }
