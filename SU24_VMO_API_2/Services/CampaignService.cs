@@ -508,7 +508,19 @@ namespace SU24_VMO_API.Services
                                     {
                                         if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing.ProcessingPhaseId))
                                         {
-                                            if (processingPhaseIsProcessing.CurrentPercent >= processingPhaseIsProcessing.Percent)
+                                            var listProcessingPhases =
+                                                _processingPhaseRepository.GetProcessingPhaseByCampaignId(
+                                                    campaign.CampaignID).OrderBy(p => p.Priority);
+
+                                            var listProcessingPhaseBeforeCurrentPriority =
+                                                listProcessingPhases.Where(p =>
+                                                    p.Priority <= processingPhaseIsProcessing.Priority);
+
+                                            var percentBeforePriority =
+                                                listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
+
+
+                                            if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
 
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
@@ -566,7 +578,17 @@ namespace SU24_VMO_API.Services
                                 }
                                 else
                                 {
-                                    if (processingPhaseIsProcessing.CurrentPercent >= processingPhaseIsProcessing.Percent)
+                                    var listProcessingPhases =
+                                        _processingPhaseRepository.GetProcessingPhaseByCampaignId(
+                                            campaign.CampaignID).OrderBy(p => p.Priority);
+
+                                    var listProcessingPhaseBeforeCurrentPriority =
+                                        listProcessingPhases.Where(p =>
+                                            p.Priority <= processingPhaseIsProcessing.Priority);
+
+                                    var percentBeforePriority =
+                                        listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
+                                    if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
 
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
@@ -663,7 +685,17 @@ namespace SU24_VMO_API.Services
                                     {
                                         if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing.ProcessingPhaseId))
                                         {
-                                            if (processingPhaseIsProcessing.CurrentPercent >= processingPhaseIsProcessing.Percent)
+                                            var listProcessingPhases =
+                                                _processingPhaseRepository.GetProcessingPhaseByCampaignId(
+                                                    campaign.CampaignID).OrderBy(p => p.Priority);
+
+                                            var listProcessingPhaseBeforeCurrentPriority =
+                                                listProcessingPhases.Where(p =>
+                                                    p.Priority <= processingPhaseIsProcessing.Priority);
+
+                                            var percentBeforePriority =
+                                                listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
+                                            if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
 
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
@@ -721,7 +753,17 @@ namespace SU24_VMO_API.Services
                                 }
                                 else
                                 {
-                                    if (processingPhaseIsProcessing.CurrentPercent >= processingPhaseIsProcessing.Percent)
+                                    var listProcessingPhases =
+                                        _processingPhaseRepository.GetProcessingPhaseByCampaignId(
+                                            campaign.CampaignID).OrderBy(p => p.Priority);
+
+                                    var listProcessingPhaseBeforeCurrentPriority =
+                                        listProcessingPhases.Where(p =>
+                                            p.Priority <= processingPhaseIsProcessing.Priority);
+
+                                    var percentBeforePriority =
+                                        listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
+                                    if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
 
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
