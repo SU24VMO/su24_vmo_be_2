@@ -534,6 +534,86 @@ namespace SU24_VMO_API.Services
 
 
 
+        public async Task<bool> UpdateCreateActivityRequestCampaignTierIIRequest(Guid createActivityRequestId, UpdateCreateActivityRequestRequest updateRequest)
+        {
+            var requestExisted = _repository.GetById(createActivityRequestId);
+            if (requestExisted == null)
+            {
+                throw new NotFoundException("Đơn tạo yêu cầu cho hoạt động này không tồn tại!");
+            }
+
+            var activityExisted = _activityRepository.GetById(requestExisted.ActivityID);
+            if (activityExisted == null)
+            {
+                throw new NotFoundException("Không tìm thấy hoạt động này!");
+            }
+
+            if (requestExisted.IsApproved)
+            {
+                throw new BadRequestException("Đơn tạo hoạt động này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.Content))
+            {
+                activityExisted.Content = updateRequest.Content;
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.Title))
+            {
+                activityExisted.Title = updateRequest.Title;
+            }
+
+            if (updateRequest.ActivityImages != null)
+            {
+                var activityImagesExisted =
+                    _activityImageRepository.GetAllActivityImagesByActivityId(activityExisted.ActivityId);
+                foreach (var imageExisted in activityImagesExisted)
+                {
+                    _activityImageRepository.DeleteById(imageExisted.ActivityImageId);
+                }
+
+                foreach (var updateRequestImage in updateRequest.ActivityImages)
+                {
+                    var activityImage = new ActivityImage
+                    {
+                        ActivityImageId = Guid.NewGuid(),
+                        ActivityId = activityExisted.ActivityId,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Link = await _firebaseService.UploadImage(updateRequestImage),
+                        IsActive = true,
+                    };
+                    _activityImageRepository.Save(activityImage);
+                }
+
+
+                var processingPhaseStatementFilesExisted =
+                    _processingPhaseStatementFileRepository.GetProcessingPhaseStatementFilesByProcessingPhaseId(
+                        activityExisted.ProcessingPhaseId);
+
+                foreach (var processingPhase in processingPhaseStatementFilesExisted)
+                {
+                    _activityImageRepository.DeleteById(processingPhase.ProcessingPhaseStatementFileId);
+                }
+
+                foreach (var updateRequestImage in updateRequest.ProcessingPhaseStatementFiles)
+                {
+                    var statementFileImage = new ProcessingPhaseStatementFile()
+                    {
+                        ProcessingPhaseStatementFileId = Guid.NewGuid(),
+                        ProcessingPhaseId = activityExisted.ProcessingPhaseId,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Link = await _firebaseService.UploadImage(updateRequestImage),
+                    };
+                    _processingPhaseStatementFileRepository.Save(statementFileImage);
+                }
+
+            }
+            _activityRepository.Update(activityExisted);
+            return true;
+        }
+
+
+
         public void AcceptOrRejectCreateActivityRequest(UpdateCreateActivityRequest request)
         {
             var createActivityRequest = _repository.GetById(request.CreateActivityRequestId);
