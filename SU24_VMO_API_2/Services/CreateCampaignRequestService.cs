@@ -629,6 +629,96 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public async Task<bool> UpdateCreateCampaignTierIIRequest(Guid createCampaignRequestId, UpdateCreateCampaignRequestRequest updateRequest, List<ProcessingPhase>? stages)
+        {
+            TryValidateUpdateCreateCampaignRequest(updateRequest);
+            var requestExisted = _createCampaignRequestRepository.GetById(createCampaignRequestId);
+            if (requestExisted == null) throw new NotFoundException("Đơn tạo này không tìm thấy!");
+            if (requestExisted.IsApproved) throw new BadRequestException("Đơn tạo chiến dịch này hiện đã được duyệt, vì vậy mọi thông tin về đơn này hiện không thể chỉnh sửa!");
+            var campaignExisted = _campaignRepository.GetById(requestExisted.CampaignID);
+            if (campaignExisted == null) throw new NotFoundException("Chiến dịch này không tìm thấy!");
+
+            if (!String.IsNullOrEmpty(updateRequest.Description))
+            {
+                campaignExisted.Description = updateRequest.Description;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Address))
+            {
+                campaignExisted.Address = updateRequest.Address;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.Name))
+            {
+                campaignExisted.Name = updateRequest.Name;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.TargetAmount))
+            {
+                campaignExisted.TargetAmount = updateRequest.TargetAmount;
+            }
+            if (updateRequest.CampaignTypeId != null)
+            {
+                var campaignType = _campaignTypeRepository.GetById((Guid)updateRequest.CampaignTypeId);
+                if (campaignType == null) throw new NotFoundException("Loại hình chiến dịch này không tìm thấy!");
+                campaignExisted.CampaignTypeID = (Guid)updateRequest.CampaignTypeId;
+            }
+            if (updateRequest.StartDate != null)
+            {
+                campaignExisted.StartDate = (DateTime)updateRequest.StartDate;
+            }
+            if (updateRequest.ExpectedEndDate != null)
+            {
+                campaignExisted.ExpectedEndDate = (DateTime)updateRequest.ExpectedEndDate;
+            }
+            if (updateRequest.OrganizationId != null)
+            {
+                var organization = _organizationRepository.GetById((Guid)updateRequest.OrganizationId);
+                if (organization == null) throw new NotFoundException("Tổ chức này không tồn tại!");
+                campaignExisted.OrganizationID = (Guid)updateRequest.OrganizationId;
+            }
+            if (updateRequest.ApplicationConfirmForm != null)
+            {
+                campaignExisted.ApplicationConfirmForm = await _firebaseService.UploadImage(updateRequest.ApplicationConfirmForm);
+            }
+            if (updateRequest.ImageCampaign != null)
+            {
+                campaignExisted.Image = await _firebaseService.UploadImage(updateRequest.ImageCampaign);
+            }
+
+            campaignExisted.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+
+
+            if (campaignExisted.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+            {
+                campaignExisted.ProcessingPhases = stages;
+            }
+            _campaignRepository.Update(campaignExisted);
+
+            var bankingAccount =
+                _bankingAccountRepository.GetBankingAccountByCampaignId(campaignExisted.CampaignID)!;
+            if (!String.IsNullOrEmpty(updateRequest.BankingName))
+            {
+                bankingAccount.BankingName = updateRequest.BankingName;
+            }
+
+            if (!String.IsNullOrEmpty(updateRequest.AccountName))
+            {
+                bankingAccount.AccountName = updateRequest.AccountName;
+            }
+            if (!String.IsNullOrEmpty(updateRequest.BankingAccountNumber))
+            {
+                bankingAccount.AccountNumber = updateRequest.BankingAccountNumber;
+            }
+            if (updateRequest.QRCode != null)
+            {
+                bankingAccount.QRCode = await _firebaseService.UploadImage(updateRequest.QRCode);
+            }
+
+
+            bankingAccount.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
+            _bankingAccountRepository.Update(bankingAccount);
+            return true;
+        }
+
+
         public bool AcceptOrRejectCreateCampaignRequest(UpdateCreateCampaignRequest updateCampaignRequest)
         {
             TryValidateUpdateCreateCampaignRequest(updateCampaignRequest);

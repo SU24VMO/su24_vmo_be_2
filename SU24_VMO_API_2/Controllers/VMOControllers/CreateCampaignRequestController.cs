@@ -530,5 +530,88 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 return StatusCode(500, response); // Internal Server Error
             }
         }
+
+        [HttpPut]
+        [Authorize(Roles = "OrganizationManager, Volunteer, Moderator")]
+        [Route("tier-ii/update/campaign-information")]
+
+        public async Task<IActionResult> UpdateCreateCampaignTierIIRequest(Guid createCampaignRequestId, [FromForm] UpdateCreateCampaignRequestRequest updateRequest, [FromForm] string? processingPhasesJson)
+        {
+            try
+            {
+                List<ProcessingPhase>? processingPhases = new List<ProcessingPhase>();
+                if (!string.IsNullOrEmpty(processingPhasesJson))
+                {
+                    processingPhases = JsonConvert.DeserializeObject<List<ProcessingPhase>>(processingPhasesJson);
+                }
+
+                await _service.UpdateCreateCampaignTierIIRequest(createCampaignRequestId, updateRequest, processingPhases);
+                var response = new ResponseMessage()
+                {
+                    Message = "Update successfully!",
+                };
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                // Handle database update exceptions
+                var response = new ResponseMessage();
+                if (dbEx.InnerException != null)
+                {
+                    response.Message = $"{dbEx.InnerException.Message}";
+                }
+                else
+                {
+                    response.Message = "Database update error.";
+                }
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (NotFoundException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return NotFound(response);
+            }
+            catch (BadRequestException ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (ArgumentNullException argEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{argEx.ParamName}"
+                };
+                // Log the exception details here if necessary
+                return BadRequest(response);
+            }
+            catch (UnauthorizedAccessException unauEx)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{unauEx.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(403, response); // Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseMessage()
+                {
+                    Message = $"{ex.Message}"
+                };
+                // Log the exception details here if necessary
+                return StatusCode(500, response); // Internal Server Error
+            }
+        }
     }
 }
