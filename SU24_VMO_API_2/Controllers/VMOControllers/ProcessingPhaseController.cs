@@ -506,7 +506,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         }
 
         [HttpGet]
-        [Route("tier-i/active-status/create-by/volunteer/{volunteerId}")]
+        [Route("tier-ii/active-status/create-by/volunteer/{volunteerId}")]
         public IActionResult GetProcessingPhaseActiveTierIIByMemberId(Guid volunteerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
             try
