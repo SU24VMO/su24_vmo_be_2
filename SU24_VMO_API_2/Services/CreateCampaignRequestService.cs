@@ -685,6 +685,7 @@ namespace SU24_VMO_API.Services
 
             campaignExisted.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
 
+            if (stages == null || !stages.Any()) throw new BadRequestException("Danh sách stage trống!");
 
             if (campaignExisted.CampaignTier == CampaignTier.PartialDisbursementCampaign)
             {
