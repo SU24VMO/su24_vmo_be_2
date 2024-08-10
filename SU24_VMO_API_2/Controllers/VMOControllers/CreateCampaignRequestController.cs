@@ -544,6 +544,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
                 {
                     processingPhases = JsonConvert.DeserializeObject<List<ProcessingPhase>>(processingPhasesJson);
                 }
+                else throw new BadRequestException("Danh sách trống!");
 
                 await _service.UpdateCreateCampaignTierIIRequest(createCampaignRequestId, updateRequest, processingPhases);
                 var response = new ResponseMessage()
