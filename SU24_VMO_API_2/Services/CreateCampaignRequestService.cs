@@ -118,8 +118,70 @@ namespace SU24_VMO_API.Services
         public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
-                return GetCreateCampaignRequests().Where(c => c.Campaign.Name.ToLower().Contains(campaignName.ToLower()));
-            else return GetCreateCampaignRequests();
+            {
+                var requests = GetCreateCampaignRequests().Where(c => c.Campaign.Name.ToLower().Contains(campaignName.ToLower()));
+                foreach (var request in requests)
+                {
+                    request.Campaign.ProcessingPhases = request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
+                    if (request.Member != null)
+                    {
+                        request.Member.CreateCampaignRequests = null;
+                        request.Member.CreateActivityRequests = null;
+                        request.Member.CreateMemberVerifiedRequests = null;
+                        request.Member.CreatePostRequests = null;
+                    }
+
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Campaign != null)
+                    {
+                        if (request.Campaign.CampaignType != null)
+                        {
+                            request.Campaign.CampaignType.Campaigns = null;
+                        }
+                    }
+
+                }
+                return requests;
+            }
+            else
+            {
+                var requests = GetCreateCampaignRequests();
+                foreach (var request in requests)
+                {
+                    request.Campaign.ProcessingPhases = request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
+                    if (request.Member != null)
+                    {
+                        request.Member.CreateCampaignRequests = null;
+                        request.Member.CreateActivityRequests = null;
+                        request.Member.CreateMemberVerifiedRequests = null;
+                        request.Member.CreatePostRequests = null;
+                    }
+
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Campaign != null)
+                    {
+                        if (request.Campaign.CampaignType != null)
+                        {
+                            request.Campaign.CampaignType.Campaigns = null;
+                        }
+                    }
+                }
+                return requests;
+            }
         }
 
         public async Task<CreateCampaignRequest?> CreateCampaignRequestAsync(Guid accountId, CreateCampaignRequestRequest request, List<Stage>? stages)

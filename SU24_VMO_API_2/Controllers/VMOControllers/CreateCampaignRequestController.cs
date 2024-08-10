@@ -189,7 +189,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all/filter/campaign-name")]
-        [Authorize(Roles = "OrganizationManager, Volunteer, Moderator")]
+        //[Authorize(Roles = "OrganizationManager, Volunteer, Moderator")]
         public IActionResult GetCreateCampaignRequestsByCampaignName(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? campaignName)
         {
             try
