@@ -688,7 +688,30 @@ namespace SU24_VMO_API.Services
 
             if (campaignExisted.CampaignTier == CampaignTier.PartialDisbursementCampaign)
             {
+                foreach (var processingPhase in campaignExisted.ProcessingPhases)
+                {
+                    _processingPhaseRepository.DeleteById(processingPhase.ProcessingPhaseId);
+                }
                 campaignExisted.ProcessingPhases = stages;
+                int i = 0;
+                foreach (var processingPhase in stages)
+                {
+                    _processingPhaseRepository.Save(new ProcessingPhase
+                    {
+                        ProcessingPhaseId = Guid.NewGuid(),
+                        CampaignId = campaignExisted.CampaignID,
+                        Name = processingPhase.Name,
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Priority = i,
+                        CurrentMoney = processingPhase.CurrentMoney,
+                        Percent = Math.Round((double.Parse(processingPhase.CurrentMoney) / double.Parse(campaignExisted.TargetAmount)) * 100, 3),
+                        IsProcessing = false,
+                        IsEnd = false,
+                        IsActive = false,
+                        IsLocked = false,
+                    });
+                    i++;
+                }
             }
             _campaignRepository.Update(campaignExisted);
 

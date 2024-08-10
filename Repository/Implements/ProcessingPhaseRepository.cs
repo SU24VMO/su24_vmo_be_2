@@ -13,7 +13,13 @@ namespace Repository.Implements
     {
         public void DeleteById(Guid id)
         {
-            throw new NotImplementedException();
+            using var context = new VMODBContext();
+            var processingPhase = context.ProcessingPhases.FirstOrDefault(ac => ac.ProcessingPhaseId.Equals(id));
+            if (processingPhase != null)
+            {
+                context.ProcessingPhases.Remove(processingPhase);
+                context.SaveChanges();
+            }
         }
 
         public IEnumerable<ProcessingPhase> GetAll()
