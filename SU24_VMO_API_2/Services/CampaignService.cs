@@ -531,7 +531,7 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = true,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -557,7 +557,7 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = false,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -589,7 +589,7 @@ namespace SU24_VMO_API.Services
                                             CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                             IsEligible = true,
                                             ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                             ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                         });
                                     }
@@ -615,7 +615,7 @@ namespace SU24_VMO_API.Services
                                             CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                             IsEligible = false,
                                             ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                             ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                         });
                                     }
@@ -686,7 +686,7 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = true,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -712,7 +712,7 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = false,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -744,7 +744,7 @@ namespace SU24_VMO_API.Services
                                             CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                             IsEligible = true,
                                             ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                             ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                         });
                                     }
@@ -770,7 +770,7 @@ namespace SU24_VMO_API.Services
                                             CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                             IsEligible = false,
                                             ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = processingPhaseIsProcessing.Percent,
+                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
                                             ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                         });
                                     }
