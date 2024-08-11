@@ -2523,7 +2523,7 @@ namespace SU24_VMO_API.Services
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
             else
             {
@@ -2577,7 +2577,7 @@ namespace SU24_VMO_API.Services
 
 
                 }
-                return campaigns.Where(c => c.IsDisable == false);
+                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
 
         }
@@ -2722,7 +2722,7 @@ namespace SU24_VMO_API.Services
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
             else
             {
@@ -2768,7 +2768,7 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
                 }
-                return campaigns.Where(c => c.IsDisable == false);
+                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
         }
 
