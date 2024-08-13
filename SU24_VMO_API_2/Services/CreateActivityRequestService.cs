@@ -146,7 +146,6 @@ namespace SU24_VMO_API.Services
                     {
                         request.Activity.ProcessingPhase = processingPhase;
                         request.Activity.ProcessingPhase.Activities = null;
-                        request.Activity.ProcessingPhase.ProcessingPhaseStatementFiles = null;
                         request.Activity.ProcessingPhase.Campaign = null;
                         if (request.Activity.ActivityImages != null)
                         {
