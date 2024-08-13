@@ -186,10 +186,10 @@ namespace SU24_VMO_API.Services
             {
                 requestExisted.AreaOfActivity = updateRequest.AreaOfActivity;
             }
-            if (!String.IsNullOrEmpty(updateRequest.AuthorizationDocuments))
+            if (updateRequest.AuthorizationDocuments != null)
             {
-                requestExisted.AuthorizationDocuments = updateRequest.AuthorizationDocuments;
-                organization.OperatingLicense = updateRequest.AuthorizationDocuments;
+                requestExisted.AuthorizationDocuments = await _firebaseService.UploadImage(updateRequest.AuthorizationDocuments);
+                organization.OperatingLicense = await _firebaseService.UploadImage(updateRequest.AuthorizationDocuments);
             }
             if (!String.IsNullOrEmpty(updateRequest.OrganizationManagerEmail))
             {

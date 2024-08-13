@@ -214,8 +214,8 @@ namespace SU24_VMO_API.Services
                     response.LinkTiktok = member.TiktokUrl;
                     response.IsVerified = false;
 
-                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
                     if (member.IsVerified)
                         response.IsVerified = true;
 
@@ -234,8 +234,8 @@ namespace SU24_VMO_API.Services
                     response.LinkTiktok = member.TiktokUrl;
                     response.IsVerified = false;
 
-                    response.Campaigns = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
                     if (member.IsVerified)
                         response.IsVerified = true;
                 }
@@ -253,8 +253,8 @@ namespace SU24_VMO_API.Services
                     response.IsVerified = false;
 
 
-                    response.Campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList().Where(c => c.IsActive == true).Count();
                     if (om.IsVerified)
                         response.IsVerified = true;
                 }

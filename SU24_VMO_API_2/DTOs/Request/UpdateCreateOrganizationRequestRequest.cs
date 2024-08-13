@@ -14,6 +14,6 @@ namespace SU24_VMO_API_2.DTOs.Request
         public string? Address { get; set; } = default!;
         public string? PlanInformation { get; set; } = default!;
         public string? AchievementLink { get; set; } = default!;
-        public string? AuthorizationDocuments { get; set; } = default!;
+        public IFormFile? AuthorizationDocuments { get; set; } = default!;
     }
 }
