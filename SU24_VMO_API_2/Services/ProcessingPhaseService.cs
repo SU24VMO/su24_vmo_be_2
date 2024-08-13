@@ -237,7 +237,7 @@ namespace SU24_VMO_API.Services
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
             {
-                if (item.Campaign != null)
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     campaign.Add(item.Campaign);
             }
 
@@ -269,7 +269,7 @@ namespace SU24_VMO_API.Services
             var campaign = new List<Campaign>();
             foreach (var item in listsRequest)
             {
-                if (item.Campaign != null)
+                if (item.Campaign != null && item.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     campaign.Add(item.Campaign);
             }
 
