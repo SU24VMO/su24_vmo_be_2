@@ -646,7 +646,7 @@ namespace SU24_VMO_API.Services
                             }
                         }
                     }
-                    
+
                 }
                 return campaignsResponse.Where(c => c.Name.ToLower().Trim().Contains(campaignName.ToLower().Trim()));
             }
@@ -2436,7 +2436,52 @@ namespace SU24_VMO_API.Services
             }
         }
 
+        //public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
+        //    string? campaignName, string? createBy)
+        //{
+        //    var isOrganization = !string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization");
+        //    var campaigns = GetAllCampaigns().Where(c => c.IsActive);
 
+        //    if (isOrganization)
+        //        campaigns = campaigns.Where(c => c.OrganizationID != null);
+        //    else if (!string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
+        //        campaigns = campaigns.Where(c => c.OrganizationID == null);
+
+        //    if (campaignTypeId != null)
+        //        campaigns = campaigns.Where(c => c.CampaignTypeID.Equals(campaignTypeId));
+
+        //    if (!string.IsNullOrEmpty(campaignName))
+        //        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+
+        //    if (!string.IsNullOrEmpty(status))
+        //    {
+        //        status = status.ToLower().Trim();
+        //        if (status.Equals("đang thực hiện"))
+        //            campaigns = campaigns.Where(c => c.IsActive);
+        //        else if (status.Equals("đạt mục tiêu"))
+        //            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd);
+        //        else if (status.Equals("đã kết thúc"))
+        //            campaigns = campaigns.Where(c => c.IsComplete);
+        //    }
+
+        //    foreach (var campaign in campaigns)
+        //    {
+        //        NullifyNavigationProperties(campaign);
+        //    }
+
+        //    return campaigns;
+        //}
+
+        //private void NullifyNavigationProperties(Campaign campaign)
+        //{
+        //    if (campaign.CampaignType != null)
+        //        campaign.CampaignType!.Campaigns = null;
+        //    if (campaign.Organization != null)
+        //        campaign.Organization!.Campaigns = null;
+        //    campaign.ProcessingPhases = null;
+        //    if (campaign.StatementPhase != null)
+        //        campaign.StatementPhase.Campaign = null;
+        //}
 
         public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
         {
