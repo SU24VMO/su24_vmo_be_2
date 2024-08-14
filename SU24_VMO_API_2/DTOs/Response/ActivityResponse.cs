@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 
 namespace SU24_VMO_API_2.DTOs.Response
 {
@@ -8,6 +9,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public Guid ProcessingPhaseId { get; set; } = default!;
         public string? OrganizationName { get; set; } = default!;
         public string? CampaignName { get; set; } = default!;
+        public CampaignTier CampaignTier { get; set; } = default!;
         public string Title { get; set; } = default!;
         public string Content { get; set; } = default!;
         public DateTime CreateDate { get; set; }

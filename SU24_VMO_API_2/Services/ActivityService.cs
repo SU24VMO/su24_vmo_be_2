@@ -97,6 +97,23 @@ namespace SU24_VMO_API.Services
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Moderator != null)
+                    {
+                        request.Moderator.CreateActivityRequests = null;
+                        request.Moderator.CreateCampaignRequests = null;
+                        request.Moderator.CreateOrganizationRequests = null;
+                        request.Moderator.CreatePostRequests = null;
+                        request.Moderator.CreateOrganizationManagerRequests = null;
+                        request.Moderator.CreateVolunteerRequests = null;
+                    }
                     if (request.Activity != null)
                     {
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
@@ -120,6 +137,7 @@ namespace SU24_VMO_API.Services
                                     ProcessingPhase = processingPhase,
                                     UpdateDate = request.Activity.UpdateDate,
                                     CampaignName = campaign.Name,
+                                    CampaignTier = campaign.CampaignTier,
                                     OrganizationName = null,
                                     CreateActivityRequest = request
                                 });
@@ -135,6 +153,23 @@ namespace SU24_VMO_API.Services
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Moderator != null)
+                    {
+                        request.Moderator.CreateActivityRequests = null;
+                        request.Moderator.CreateCampaignRequests = null;
+                        request.Moderator.CreateOrganizationRequests = null;
+                        request.Moderator.CreatePostRequests = null;
+                        request.Moderator.CreateOrganizationManagerRequests = null;
+                        request.Moderator.CreateVolunteerRequests = null;
+                    }
                     if (request.Activity != null)
                     {
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
@@ -158,6 +193,7 @@ namespace SU24_VMO_API.Services
                                     ProcessingPhase = processingPhase,
                                     UpdateDate = request.Activity.UpdateDate,
                                     CampaignName = campaign.Name,
+                                    CampaignTier = campaign.CampaignTier,
                                     OrganizationName = null,
                                     CreateActivityRequest = request
                                 });
@@ -178,6 +214,23 @@ namespace SU24_VMO_API.Services
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Moderator != null)
+                    {
+                        request.Moderator.CreateActivityRequests = null;
+                        request.Moderator.CreateCampaignRequests = null;
+                        request.Moderator.CreateOrganizationRequests = null;
+                        request.Moderator.CreatePostRequests = null;
+                        request.Moderator.CreateOrganizationManagerRequests = null;
+                        request.Moderator.CreateVolunteerRequests = null;
+                    }
                     if (request.Activity != null)
                     {
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
@@ -204,6 +257,7 @@ namespace SU24_VMO_API.Services
                                         IsDisable = request.Activity.IsDisable,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
+                                        CampaignTier = campaign.CampaignTier,
                                         OrganizationName = organization.Name,
                                         CreateActivityRequest = request
                                     });
@@ -220,6 +274,23 @@ namespace SU24_VMO_API.Services
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
+                    if (request.OrganizationManager != null)
+                    {
+                        request.OrganizationManager.CreateActivityRequests = null;
+                        request.OrganizationManager.CreateCampaignRequests = null;
+                        request.OrganizationManager.CreateOrganizationRequests = null;
+                        request.OrganizationManager.CreatePostRequests = null;
+                    }
+
+                    if (request.Moderator != null)
+                    {
+                        request.Moderator.CreateActivityRequests = null;
+                        request.Moderator.CreateCampaignRequests = null;
+                        request.Moderator.CreateOrganizationRequests = null;
+                        request.Moderator.CreatePostRequests = null;
+                        request.Moderator.CreateOrganizationManagerRequests = null;
+                        request.Moderator.CreateVolunteerRequests = null;
+                    }
                     if (request.Activity != null)
                     {
                         var processingPhase = _processingPhaseRepository.GetById(request.Activity.ProcessingPhaseId);
@@ -246,6 +317,7 @@ namespace SU24_VMO_API.Services
                                         IsDisable = request.Activity.IsDisable,
                                         UpdateDate = request.Activity.UpdateDate,
                                         CampaignName = campaign.Name,
+                                        CampaignTier = campaign.CampaignTier,
                                         OrganizationName = organization.Name,
                                         CreateActivityRequest = request
                                     });
@@ -328,7 +400,7 @@ namespace SU24_VMO_API.Services
             var activityRequest = _createActivityRequestRepository.GetCreateActivityRequestByActivityId(request.ActivityId);
             if (activityRequest != null)
             {
-                if(activityRequest.IsApproved)
+                if (activityRequest.IsApproved)
                     throw new BadRequestException(
                         "Hoạt động này hiện đã được duyệt, vì vậy mọi thông tin của hoạt động này không thể chỉnh sửa!");
             }
@@ -338,7 +410,7 @@ namespace SU24_VMO_API.Services
                 activity.IsActive = false;
                 activity.IsDisable = true;
             }
-            
+
             activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
             _activityRepository.Update(activity);
         }
@@ -365,7 +437,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        private void TryValidateUpdateActivityRequest(Guid activityId,UpdateActivityRequest request)
+        private void TryValidateUpdateActivityRequest(Guid activityId, UpdateActivityRequest request)
         {
             if (!String.IsNullOrEmpty(activityId.ToString()))
             {
