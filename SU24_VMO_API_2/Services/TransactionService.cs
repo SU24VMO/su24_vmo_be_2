@@ -842,7 +842,14 @@ namespace SU24_VMO_API.Services
 
 
                     var campaign = _campaignRepository.GetById(transaction.CampaignID);
-                    EmailSupporter.SendEmailWithSuccessDonate(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
+                    if (campaign != null && campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
+                    {
+                        EmailSupporter.SendEmailWithSuccessDonateForCampaignTierI(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
+                    }
+                    else
+                    {
+                        EmailSupporter.SendEmailWithSuccessDonateForCampaignTierII(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
+                    }
 
                     _donatePhaseService.UpdateDonatePhaseByCampaignIdAndAmountDonate(transaction.CampaignID, transaction.Amount);
                     _transactionRepository.Update(transaction);
