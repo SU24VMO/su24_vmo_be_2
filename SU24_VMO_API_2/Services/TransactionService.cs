@@ -846,7 +846,7 @@ namespace SU24_VMO_API.Services
                     {
                         EmailSupporter.SendEmailWithSuccessDonateForCampaignTierI(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
                     }
-                    else
+                    if (campaign != null && campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
                     {
                         EmailSupporter.SendEmailWithSuccessDonateForCampaignTierII(request.Email, request.FirstName.ToUpper() + " " + request.LastName.ToUpper(), campaign != null && campaign.Name != null ? campaign.Name : "Chiến dịch thiện nguyện của trang chủ VMO", transaction.Amount, transaction.CreateDate, transaction.CampaignID);
                     }
