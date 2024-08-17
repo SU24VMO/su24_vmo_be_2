@@ -3584,7 +3584,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -3657,7 +3662,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -3730,7 +3740,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -3811,7 +3826,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -3884,7 +3904,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -3957,7 +3982,12 @@ namespace SU24_VMO_API.Services
                         if (campaign.DonatePhase != null)
                             campaign.DonatePhase.Campaign = null;
                         if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
+                            foreach (var processing in campaign.ProcessingPhases)
+                            {
+                                processing.Activities = null;
+                                processing.Campaign = null;
+                                processing.ProcessingPhaseStatementFiles = null;
+                            }
                         if (campaign.StatementPhase != null)
                         {
                             campaign.StatementPhase.Campaign = null;
@@ -4037,7 +4067,12 @@ namespace SU24_VMO_API.Services
                 if (campaign.Organization != null)
                     campaign.Organization!.Campaigns = null;
                 if (campaign.ProcessingPhases != null)
-                    campaign.ProcessingPhases = null;
+                    foreach (var processing in campaign.ProcessingPhases)
+                    {
+                        processing.Activities = null;
+                        processing.Campaign = null;
+                        processing.ProcessingPhaseStatementFiles = null;
+                    }
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
@@ -4088,9 +4123,11 @@ namespace SU24_VMO_API.Services
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
                 if (campaign.ProcessingPhases != null)
-                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    foreach (var processing in campaign.ProcessingPhases)
                     {
-                        processingPhase.Campaign = null;
+                        processing.Activities = null;
+                        processing.Campaign = null;
+                        processing.ProcessingPhaseStatementFiles = null;
                     }
                 if (campaign.StatementPhase != null)
                 {
@@ -4172,7 +4209,12 @@ namespace SU24_VMO_API.Services
                 if (campaign.DonatePhase != null)
                     campaign.DonatePhase.Campaign = null;
                 if (campaign.ProcessingPhases != null)
-                    campaign.ProcessingPhases = null;
+                    foreach (var processing in campaign.ProcessingPhases)
+                    {
+                        processing.Activities = null;
+                        processing.Campaign = null;
+                        processing.ProcessingPhaseStatementFiles = null;
+                    }
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
