@@ -394,7 +394,7 @@ namespace SU24_VMO_API.Services
             var activity = _activityRepository.GetById(request.ActivityId)!;
             if (activity == null)
             {
-                throw new NotFoundException("Không tìm thấy họt động này!");
+                throw new NotFoundException("Không tìm thấy hoạt động này!");
             }
 
             var activityRequest = _createActivityRequestRepository.GetCreateActivityRequestByActivityId(request.ActivityId);
@@ -446,7 +446,7 @@ namespace SU24_VMO_API.Services
 
             if (_activityRepository.GetById(activityId) == null)
             {
-                throw new NotFoundException("Không tìm thấy họt động này!");
+                throw new NotFoundException("Không tìm thấy hoạt động này!");
             }
 
         }

@@ -3567,7 +3567,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -3645,7 +3646,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -3723,7 +3725,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -3809,7 +3812,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -3887,7 +3891,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -3965,7 +3970,8 @@ namespace SU24_VMO_API.Services
                                     TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                                     Transactions = createCampaignRequest.Campaign!.Transactions,
                                     UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                                    Member = member
+                                    Member = member,
+                                    CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                                 });
                             }
                         }
@@ -4052,7 +4058,8 @@ namespace SU24_VMO_API.Services
                             TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                             Transactions = createCampaignRequest.Campaign!.Transactions,
                             UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                            Member = member
+                            Member = member,
+                            CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                         });
                     }
                 }
@@ -4192,7 +4199,8 @@ namespace SU24_VMO_API.Services
                             TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                             Transactions = createCampaignRequest.Campaign!.Transactions,
                             UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                            Member = member
+                            Member = member,
+                            CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                         });
                     }
                 }
@@ -4335,7 +4343,8 @@ namespace SU24_VMO_API.Services
                             TargetAmount = createCampaignRequest.Campaign!.TargetAmount,
                             Transactions = createCampaignRequest.Campaign!.Transactions,
                             UpdatedAt = createCampaignRequest.Campaign!.UpdatedAt,
-                            Member = member
+                            Member = member,
+                            CampaignTier = createCampaignRequest.Campaign!.CampaignTier
                         });
                     }
                 }
