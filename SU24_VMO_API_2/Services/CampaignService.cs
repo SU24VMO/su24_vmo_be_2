@@ -265,7 +265,7 @@ namespace SU24_VMO_API.Services
 
             if (campaignResponse.Transactions != null)
             {
-                campaignResponse.AdminTransactions = GetFilteredTransactions(campaignResponse.Transactions, campaignId);
+                campaignResponse.AdminTransactions = GetFilteredAdminTransactions(campaignResponse.Transactions, campaignId);
             }
             return campaignResponse;
         }
