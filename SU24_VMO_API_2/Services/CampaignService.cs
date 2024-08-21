@@ -424,6 +424,23 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
+        public IEnumerable<Campaign> GetAllCampaignsForPaging(int pageNumber, int pageSize)
+        {
+            var campaigns = _campaignRepository.GetAll(pageNumber, pageSize);
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignType != null)
+                    campaign.CampaignType!.Campaigns = null;
+                if (campaign.Organization != null)
+                    campaign.Organization!.Campaigns = null;
+                if (campaign.ProcessingPhases != null)
+                    campaign.ProcessingPhases = null;
+                if (campaign.StatementPhase != null)
+                    campaign.StatementPhase.Campaign = null;
+            }
+            return campaigns;
+        }
+
         public int CalculateNumberOfCampaignActive()
         {
             var campaignRequests = _createCampaignRequestRepository.GetAll().Where(o => o.IsApproved);
@@ -2474,10 +2491,10 @@ namespace SU24_VMO_API.Services
         //}
 
         public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
-            string? campaignName, string? createBy)
+            string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
             var isOrganization = !string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization");
-            var campaigns = GetAllCampaigns().Where(c => c.IsActive);
+            var campaigns = GetAllCampaignsForPaging(pageNumber, pageSize).Where(c => c.IsActive);
 
             if (isOrganization)
                 campaigns = campaigns.Where(c => c.OrganizationID != null);
@@ -2520,9 +2537,9 @@ namespace SU24_VMO_API.Services
                 campaign.StatementPhase.Campaign = null;
         }
 
-        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
+        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
-            var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy);
+            var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy, pageNumber, pageSize);
             var listCampaignsResponse = new List<CampaignResponse>();
             foreach (var campaign in listCampaigns)
             {

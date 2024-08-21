@@ -11,6 +11,6 @@ namespace Repository.Interfaces
     {
         public IEnumerable<Campaign> GetCampaignsByCampaignName(string campaignName);
         public IEnumerable<Campaign> GetCampaignsByCampaignTypeId(Guid campaignTypeId);
-
+        public IEnumerable<Campaign> GetAll(int pageNumber, int pageSize);
     }
 }

@@ -29,6 +29,22 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateAt).ToList();
         }
 
+        public IEnumerable<Campaign> GetAll(int pageNumber, int pageSize)
+        {
+            using var context = new VMODBContext();
+            return context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhases)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+        }
+
         public Campaign? GetById(Guid id)
         {
             using var context = new VMODBContext();
