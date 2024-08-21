@@ -424,9 +424,9 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
-        public IEnumerable<Campaign> GetAllCampaignsForPaging(int pageNumber, int pageSize)
+        public IEnumerable<Campaign> GetAllCampaignsForPaging(int pageNumber, int pageSize, string? status, Guid? campaignTypeId, string? createBy, string? campaignName)
         {
-            var campaigns = _campaignRepository.GetAll(pageNumber, pageSize);
+            var campaigns = _campaignRepository.GetAll(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -2493,31 +2493,7 @@ namespace SU24_VMO_API.Services
         public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
             string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
-            var isOrganization = !string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization");
-            var campaigns = GetAllCampaignsForPaging(pageNumber, pageSize).Where(c => c.IsActive);
-
-            if (isOrganization)
-                campaigns = campaigns.Where(c => c.OrganizationID != null);
-            else if (!string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
-                campaigns = campaigns.Where(c => c.OrganizationID == null);
-
-            if (campaignTypeId != null)
-                campaigns = campaigns.Where(c => c.CampaignTypeID.Equals(campaignTypeId));
-
-            if (!string.IsNullOrEmpty(campaignName))
-                campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                status = status.ToLower().Trim();
-                if (status.Equals("đang thực hiện"))
-                    campaigns = campaigns.Where(c => c.IsActive);
-                else if (status.Equals("đạt mục tiêu"))
-                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd);
-                else if (status.Equals("đã kết thúc"))
-                    campaigns = campaigns.Where(c => c.IsComplete);
-            }
-
+            var campaigns = GetAllCampaignsForPaging(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
             foreach (var campaign in campaigns)
             {
                 NullifyNavigationProperties(campaign);
