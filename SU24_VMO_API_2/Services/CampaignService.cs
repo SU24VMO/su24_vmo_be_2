@@ -364,7 +364,7 @@ namespace SU24_VMO_API.Services
                 .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
                 .ToList();
 
-            transactions.ForEach(t => t.Campaign = null);
+            transactions.ToList().ForEach(t => t.Campaign = null);
 
             return transactions.ToList();
         }
