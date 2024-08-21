@@ -327,6 +327,7 @@ namespace SU24_VMO_API.Services
                         }
 
                     processingPhase.Campaign = null;
+                    processingPhase.Activities = null;
                 }
             }
 
