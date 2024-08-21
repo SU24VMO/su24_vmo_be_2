@@ -1017,1471 +1017,1471 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
+        //public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
+        //{
+        //    if (!String.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization"))
+        //    {
+        //        var campaigns = GetAllCampaigns().Where(c => c.IsActive == true && c.OrganizationID != null);
+        //        if (campaignTypeId != null)
+        //        {
+        //            campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
+        //            foreach (var campaign in campaigns)
+        //            {
+        //                if (campaign.CampaignType != null)
+        //                    campaign.CampaignType!.Campaigns = null;
+        //                if (campaign.Organization != null)
+        //                    campaign.Organization!.Campaigns = null;
+        //                if (campaign.ProcessingPhases != null)
+        //                    campaign.ProcessingPhases = null;
+        //                if (campaign.StatementPhase != null)
+        //                    campaign.StatementPhase.Campaign = null;
+        //            }
+        //            if (!String.IsNullOrEmpty(campaignName))
+        //            {
+        //                campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            return campaigns;
+        //        }
+        //        else if (!String.IsNullOrEmpty(status))
+        //        {
+        //            if (campaignTypeId != null)
+        //            {
+        //                campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else
+        //                    {
+        //                        return campaigns.Where(c => c.IsActive == true);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else if (!String.IsNullOrEmpty(campaignName))
+        //        {
+        //            campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+        //            if (campaignTypeId != null)
+        //            {
+        //                campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return campaigns.Where(c => c.IsActive == true);
+        //        }
+        //    }
+        //    else if (!String.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
+        //    {
+        //        var campaigns = GetAllCampaigns().Where(c => c.IsActive == true && c.OrganizationID == null);
+        //        if (campaignTypeId != null)
+        //        {
+        //            campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
+        //            foreach (var campaign in campaigns)
+        //            {
+        //                if (campaign.CampaignType != null)
+        //                    campaign.CampaignType!.Campaigns = null;
+        //                if (campaign.Organization != null)
+        //                    campaign.Organization!.Campaigns = null;
+        //                if (campaign.ProcessingPhases != null)
+        //                    campaign.ProcessingPhases = null;
+        //                if (campaign.StatementPhase != null)
+        //                    campaign.StatementPhase.Campaign = null;
+        //            }
+        //            if (!String.IsNullOrEmpty(campaignName))
+        //            {
+        //                campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            return campaigns;
+        //        }
+        //        else if (!String.IsNullOrEmpty(status))
+        //        {
+        //            if (campaignTypeId != null)
+        //            {
+        //                campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else
+        //                    {
+        //                        return campaigns.Where(c => c.IsActive == true);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else if (!String.IsNullOrEmpty(campaignName))
+        //        {
+        //            campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+        //            if (campaignTypeId != null)
+        //            {
+        //                campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return campaigns.Where(c => c.IsActive == true);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (campaignTypeId != null)
+        //        {
+        //            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
+        //            foreach (var campaign in campaigns)
+        //            {
+        //                if (campaign.CampaignType != null)
+        //                    campaign.CampaignType!.Campaigns = null;
+        //                if (campaign.Organization != null)
+        //                    campaign.Organization!.Campaigns = null;
+        //                if (campaign.ProcessingPhases != null)
+        //                    campaign.ProcessingPhases = null;
+        //                if (campaign.StatementPhase != null)
+        //                    campaign.StatementPhase.Campaign = null;
+        //            }
+        //            if (!String.IsNullOrEmpty(campaignName))
+        //            {
+        //                campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //            }
+        //            return campaigns;
+        //        }
+        //        else if (!String.IsNullOrEmpty(status))
+        //        {
+        //            if (campaignTypeId != null)
+        //            {
+        //                var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(campaignName))
+        //                {
+        //                    var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsActive == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                else
+        //                {
+        //                    if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                    {
+        //                        var campaigns = GetAllCampaignsWithActiveStatus();
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                    {
+        //                        var campaigns = GetAllCampaignsWithDonatePhaseWasEnd();
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                    {
+        //                        var campaigns = GetAllCampaignsWithEndStatus();
+        //                        foreach (var campaign in campaigns)
+        //                        {
+        //                            if (campaign.CampaignType != null)
+        //                                campaign.CampaignType!.Campaigns = null;
+        //                            if (campaign.Organization != null)
+        //                                campaign.Organization!.Campaigns = null;
+        //                            if (campaign.ProcessingPhases != null)
+        //                                campaign.ProcessingPhases = null;
+        //                            if (campaign.StatementPhase != null)
+        //                                campaign.StatementPhase.Campaign = null;
+        //                        }
+        //                        return campaigns;
+        //                    }
+        //                    else
+        //                    {
+        //                        return GetAllCampaigns().Where(c => c.IsActive == true);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else if (!String.IsNullOrEmpty(campaignName))
+        //        {
+        //            var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
+        //            if (campaignTypeId != null)
+        //            {
+        //                campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //            else
+        //            {
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsActive == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+
+        //                if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
+        //                {
+        //                    campaigns = campaigns.Where(c => c.IsComplete == true);
+        //                    foreach (var campaign in campaigns)
+        //                    {
+        //                        if (campaign.CampaignType != null)
+        //                            campaign.CampaignType!.Campaigns = null;
+        //                        if (campaign.Organization != null)
+        //                            campaign.Organization!.Campaigns = null;
+        //                        if (campaign.ProcessingPhases != null)
+        //                            campaign.ProcessingPhases = null;
+        //                        if (campaign.StatementPhase != null)
+        //                            campaign.StatementPhase.Campaign = null;
+        //                    }
+        //                    return campaigns;
+        //                }
+        //                return campaigns;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return GetAllCampaigns().Where(c => c.IsActive == true);
+        //        }
+        //    }
+        //}
+
+        public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
+            string? campaignName, string? createBy)
         {
-            if (!String.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization"))
+            var isOrganization = !string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization");
+            var campaigns = GetAllCampaigns().Where(c => c.IsActive);
+
+            if (isOrganization)
+                campaigns = campaigns.Where(c => c.OrganizationID != null);
+            else if (!string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
+                campaigns = campaigns.Where(c => c.OrganizationID == null);
+
+            if (campaignTypeId != null)
+                campaigns = campaigns.Where(c => c.CampaignTypeID.Equals(campaignTypeId));
+
+            if (!string.IsNullOrEmpty(campaignName))
+                campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
+
+            if (!string.IsNullOrEmpty(status))
             {
-                var campaigns = GetAllCampaigns().Where(c => c.IsActive == true && c.OrganizationID != null);
-                if (campaignTypeId != null)
-                {
-                    campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
-                    foreach (var campaign in campaigns)
-                    {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
-                        if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
-                        if (campaign.StatementPhase != null)
-                            campaign.StatementPhase.Campaign = null;
-                    }
-                    if (!String.IsNullOrEmpty(campaignName))
-                    {
-                        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    return campaigns;
-                }
-                else if (!String.IsNullOrEmpty(status))
-                {
-                    if (campaignTypeId != null)
-                    {
-                        campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            return campaigns;
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else
-                            {
-                                return campaigns.Where(c => c.IsActive == true);
-                            }
-                        }
-                    }
-                }
-                else if (!String.IsNullOrEmpty(campaignName))
-                {
-                    campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-                    if (campaignTypeId != null)
-                    {
-                        campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                }
-                else
-                {
-                    return campaigns.Where(c => c.IsActive == true);
-                }
+                status = status.ToLower().Trim();
+                if (status.Equals("đang thực hiện"))
+                    campaigns = campaigns.Where(c => c.IsActive);
+                else if (status.Equals("đạt mục tiêu"))
+                    campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd);
+                else if (status.Equals("đã kết thúc"))
+                    campaigns = campaigns.Where(c => c.IsComplete);
             }
-            else if (!String.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
+
+            foreach (var campaign in campaigns)
             {
-                var campaigns = GetAllCampaigns().Where(c => c.IsActive == true && c.OrganizationID == null);
-                if (campaignTypeId != null)
-                {
-                    campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
-                    foreach (var campaign in campaigns)
-                    {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
-                        if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
-                        if (campaign.StatementPhase != null)
-                            campaign.StatementPhase.Campaign = null;
-                    }
-                    if (!String.IsNullOrEmpty(campaignName))
-                    {
-                        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    return campaigns;
-                }
-                else if (!String.IsNullOrEmpty(status))
-                {
-                    if (campaignTypeId != null)
-                    {
-                        campaigns = campaigns.Where(c => c.IsActive == true && c.CampaignTypeID.Equals(campaignTypeId));
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            return campaigns;
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else
-                            {
-                                return campaigns.Where(c => c.IsActive == true);
-                            }
-                        }
-                    }
-                }
-                else if (!String.IsNullOrEmpty(campaignName))
-                {
-                    campaigns = campaigns.Where(c => c.IsActive == true && c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-                    if (campaignTypeId != null)
-                    {
-                        campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                }
-                else
-                {
-                    return campaigns.Where(c => c.IsActive == true);
-                }
+                NullifyNavigationProperties(campaign);
             }
-            else
-            {
-                if (campaignTypeId != null)
-                {
-                    var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
-                    foreach (var campaign in campaigns)
-                    {
-                        if (campaign.CampaignType != null)
-                            campaign.CampaignType!.Campaigns = null;
-                        if (campaign.Organization != null)
-                            campaign.Organization!.Campaigns = null;
-                        if (campaign.ProcessingPhases != null)
-                            campaign.ProcessingPhases = null;
-                        if (campaign.StatementPhase != null)
-                            campaign.StatementPhase.Campaign = null;
-                    }
-                    if (!String.IsNullOrEmpty(campaignName))
-                    {
-                        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
 
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                    }
-                    return campaigns;
-                }
-                else if (!String.IsNullOrEmpty(status))
-                {
-                    if (campaignTypeId != null)
-                    {
-                        var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId((Guid)campaignTypeId).Where(c => c.IsActive == true);
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()) && c.IsActive == true);
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(campaignName))
-                        {
-                            var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsActive == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                campaigns = campaigns.Where(c => c.IsComplete == true);
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            return campaigns;
-                        }
-                        else
-                        {
-                            if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                            {
-                                var campaigns = GetAllCampaignsWithActiveStatus();
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                            {
-                                var campaigns = GetAllCampaignsWithDonatePhaseWasEnd();
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                            {
-                                var campaigns = GetAllCampaignsWithEndStatus();
-                                foreach (var campaign in campaigns)
-                                {
-                                    if (campaign.CampaignType != null)
-                                        campaign.CampaignType!.Campaigns = null;
-                                    if (campaign.Organization != null)
-                                        campaign.Organization!.Campaigns = null;
-                                    if (campaign.ProcessingPhases != null)
-                                        campaign.ProcessingPhases = null;
-                                    if (campaign.StatementPhase != null)
-                                        campaign.StatementPhase.Campaign = null;
-                                }
-                                return campaigns;
-                            }
-                            else
-                            {
-                                return GetAllCampaigns().Where(c => c.IsActive == true);
-                            }
-                        }
-                    }
-                }
-                else if (!String.IsNullOrEmpty(campaignName))
-                {
-                    var campaigns = GetAllCampaignsByCampaignName(campaignName).Where(c => c.IsActive == true);
-                    if (campaignTypeId != null)
-                    {
-                        campaigns = campaigns.Where(c => c.IsActive == true && campaignTypeId.Equals(campaignTypeId));
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đang thực hiện".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsActive == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đạt mục tiêu".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-
-                        if (!String.IsNullOrEmpty(status) && status.ToLower().Trim().Equals("Đã kết thúc".Trim().ToLower()))
-                        {
-                            campaigns = campaigns.Where(c => c.IsComplete == true);
-                            foreach (var campaign in campaigns)
-                            {
-                                if (campaign.CampaignType != null)
-                                    campaign.CampaignType!.Campaigns = null;
-                                if (campaign.Organization != null)
-                                    campaign.Organization!.Campaigns = null;
-                                if (campaign.ProcessingPhases != null)
-                                    campaign.ProcessingPhases = null;
-                                if (campaign.StatementPhase != null)
-                                    campaign.StatementPhase.Campaign = null;
-                            }
-                            return campaigns;
-                        }
-                        return campaigns;
-                    }
-                }
-                else
-                {
-                    return GetAllCampaigns().Where(c => c.IsActive == true);
-                }
-            }
+            return campaigns;
         }
 
-        //public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
-        //    string? campaignName, string? createBy)
-        //{
-        //    var isOrganization = !string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("organization");
-        //    var campaigns = GetAllCampaigns().Where(c => c.IsActive);
-
-        //    if (isOrganization)
-        //        campaigns = campaigns.Where(c => c.OrganizationID != null);
-        //    else if (!string.IsNullOrEmpty(createBy) && createBy.ToLower().Equals("volunteer"))
-        //        campaigns = campaigns.Where(c => c.OrganizationID == null);
-
-        //    if (campaignTypeId != null)
-        //        campaigns = campaigns.Where(c => c.CampaignTypeID.Equals(campaignTypeId));
-
-        //    if (!string.IsNullOrEmpty(campaignName))
-        //        campaigns = campaigns.Where(c => c.Name != null && c.Name.ToLower().Contains(campaignName.Trim().ToLower()));
-
-        //    if (!string.IsNullOrEmpty(status))
-        //    {
-        //        status = status.ToLower().Trim();
-        //        if (status.Equals("đang thực hiện"))
-        //            campaigns = campaigns.Where(c => c.IsActive);
-        //        else if (status.Equals("đạt mục tiêu"))
-        //            campaigns = campaigns.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd);
-        //        else if (status.Equals("đã kết thúc"))
-        //            campaigns = campaigns.Where(c => c.IsComplete);
-        //    }
-
-        //    foreach (var campaign in campaigns)
-        //    {
-        //        NullifyNavigationProperties(campaign);
-        //    }
-
-        //    return campaigns;
-        //}
-
-        //private void NullifyNavigationProperties(Campaign campaign)
-        //{
-        //    if (campaign.CampaignType != null)
-        //        campaign.CampaignType!.Campaigns = null;
-        //    if (campaign.Organization != null)
-        //        campaign.Organization!.Campaigns = null;
-        //    campaign.ProcessingPhases = null;
-        //    if (campaign.StatementPhase != null)
-        //        campaign.StatementPhase.Campaign = null;
-        //}
+        private void NullifyNavigationProperties(Campaign campaign)
+        {
+            if (campaign.CampaignType != null)
+                campaign.CampaignType!.Campaigns = null;
+            if (campaign.Organization != null)
+                campaign.Organization!.Campaigns = null;
+            campaign.ProcessingPhases = null;
+            if (campaign.StatementPhase != null)
+                campaign.StatementPhase.Campaign = null;
+        }
 
         public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy)
         {
@@ -2492,6 +2492,9 @@ namespace SU24_VMO_API.Services
                 var response = GetCampaignResponseByCampaignId(campaign.CampaignID);
                 if (response != null)
                 {
+                    response.AdminTransactions = null;
+                    response.StatementPhase = null;
+                    response.Transactions = null;
                     listCampaignsResponse.Add(response);
                 }
             }
