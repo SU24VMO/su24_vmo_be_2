@@ -327,7 +327,6 @@ namespace SU24_VMO_API.Services
                         }
 
                     processingPhase.Campaign = null;
-                    processingPhase.Activities = null;
                 }
             }
 
@@ -2497,6 +2496,14 @@ namespace SU24_VMO_API.Services
                     response.StatementPhase = null;
                     response.Transactions = null;
                     listCampaignsResponse.Add(response);
+                }
+
+                if (campaign.ProcessingPhases is { Count: > 0 })
+                {
+                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    {
+                        processingPhase.Activities = null;
+                    }
                 }
             }
             return listCampaignsResponse;
