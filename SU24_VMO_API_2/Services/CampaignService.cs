@@ -263,6 +263,10 @@ namespace SU24_VMO_API.Services
                 campaignResponse.Transactions = GetFilteredTransactions(campaignResponse.Transactions, campaignId);
             }
 
+            if (campaignResponse.Transactions != null)
+            {
+                campaignResponse.AdminTransactions = GetFilteredTransactions(campaignResponse.Transactions, campaignId);
+            }
             return campaignResponse;
         }
 
@@ -367,6 +371,21 @@ namespace SU24_VMO_API.Services
             transactions.ToList().ForEach(t => t.Campaign = null);
 
             return transactions.ToList();
+        }
+
+        private List<Transaction> GetFilteredAdminTransactions(ICollection<Transaction> transactions, Guid campaignId)
+        {
+            var adminTransactions = transactions
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Transfer)
+                .ToList();
+
+            transactions = transactions
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .ToList();
+
+            adminTransactions.ToList().ForEach(t => t.Campaign = null);
+
+            return adminTransactions.ToList();
         }
 
 
