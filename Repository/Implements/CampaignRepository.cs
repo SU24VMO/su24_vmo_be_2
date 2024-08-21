@@ -39,6 +39,7 @@ namespace Repository.Implements
                 .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
+                .Where(c => c.IsActive == true)
                 .OrderByDescending(a => a.CreateAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
