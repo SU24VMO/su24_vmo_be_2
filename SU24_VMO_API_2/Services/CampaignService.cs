@@ -2547,7 +2547,9 @@ namespace SU24_VMO_API.Services
                 if (response != null)
                 {
                     response.AdminTransactions = null;
-                    //response.StatementPhase = null;
+
+                    if(response.StatementPhase != null)
+                        response.StatementPhase.StatementFiles = null;
                     response.Transactions = null;
                     if (response.ProcessingPhases is { Count: > 0 })
                     {
