@@ -258,14 +258,16 @@ namespace SU24_VMO_API.Services
                 campaignResponse.ProcessingPhases = GetProcessingPhases(campaign.ProcessingPhases);
             }
 
-            if (campaignResponse.Transactions != null)
+
+            var transactions = campaignResponse.Transactions;
+            if (transactions != null)
             {
-                campaignResponse.Transactions = GetFilteredTransactions(campaignResponse.Transactions, campaignId);
+                campaignResponse.Transactions = GetFilteredTransactions(transactions, campaignId);
             }
 
-            if (campaignResponse.Transactions != null)
+            if (transactions != null)
             {
-                campaignResponse.AdminTransactions = GetFilteredAdminTransactions(campaignResponse.Transactions, campaignId);
+                campaignResponse.AdminTransactions = GetFilteredAdminTransactions(transactions, campaignId);
             }
             return campaignResponse;
         }
