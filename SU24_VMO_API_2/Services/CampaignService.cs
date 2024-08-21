@@ -220,137 +220,153 @@ namespace SU24_VMO_API.Services
 
         public CampaignResponse? GetCampaignResponseByCampaignId(Guid campaignId)
         {
+            // Fetch campaign and initialize response early
             var campaign = _campaignRepository.GetById(campaignId);
-            var organizationManager = new OrganizationManager();
-            var campaignResponse = new CampaignResponse();
-            if (campaign != null && campaign.Organization != null && campaign.Organization.Campaigns != null)
+            if (campaign == null) return null;
+
+            var campaignResponse = MapCampaignToResponse(campaign);
+
+            if (campaign.Organization != null)
             {
-                campaign.Organization.Campaigns = null;
-                organizationManager = _organizationManagerRepository.GetById(campaign.Organization.OrganizationManagerID);
+                CleanUpOrganization(campaign.Organization, campaignResponse);
             }
-            if (campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
+
+            if (campaign.CampaignType != null)
             {
                 campaign.CampaignType.Campaigns = null;
             }
 
-            if (campaign != null && campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
-            //if (campaign != null && campaign.ProcessingPhases != null) campaign.ProcessingPhases = null;
-            if (campaign != null && campaign.StatementPhase != null)
+            if (campaign.DonatePhase != null)
+            {
+                campaign.DonatePhase.Campaign = null;
+            }
+
+            if (campaign.StatementPhase != null)
             {
                 campaign.StatementPhase.Campaign = null;
-                var statementFiles = _statementFileService.GetAll()
-                    .Where(s => s.StatementPhaseId.Equals(campaign.StatementPhase.StatementPhaseId));
-                foreach (var statementFile in statementFiles)
-                {
-                    statementFile.StatementPhase = null;
-                }
-                campaign.StatementPhase.StatementFiles = statementFiles.ToList();
+                campaign.StatementPhase.StatementFiles = GetStatementFiles(campaign.StatementPhase.StatementPhaseId);
             }
-            if (campaign != null)
-            {
-                campaignResponse = new CampaignResponse
-                {
-                    CampaignID = campaign.CampaignID,
-                    OrganizationID = campaign.OrganizationID,
-                    CampaignTypeID = campaign.CampaignTypeID,
-                    ActualEndDate = campaign.ActualEndDate,
-                    Address = campaign.Address,
-                    ApplicationConfirmForm = campaign.ApplicationConfirmForm,
-                    CampaignType = campaign.CampaignType,
-                    CanBeDonated = campaign.CanBeDonated,
-                    CheckTransparentDate = campaign.CheckTransparentDate,
-                    CreateAt = campaign.CreateAt,
-                    Description = campaign.Description,
-                    DonatePhase = campaign.DonatePhase,
-                    ExpectedEndDate = campaign.ExpectedEndDate,
-                    Image = campaign.Image,
-                    IsActive = campaign.IsActive,
-                    IsComplete = campaign.IsComplete,
-                    IsModify = campaign.IsModify,
-                    IsTransparent = campaign.IsTransparent,
-                    Name = campaign.Name,
-                    Note = campaign.Note,
-                    Organization = campaign.Organization,
-                    ProcessingPhases = campaign.ProcessingPhases,
-                    StartDate = campaign.StartDate,
-                    StatementPhase = campaign.StatementPhase,
-                    TargetAmount = campaign.TargetAmount,
-                    Transactions = campaign.Transactions,
-                    UpdatedAt = campaign.UpdatedAt,
-                    CampaignTier = campaign.CampaignTier
-                };
-            }
-            campaignResponse.OrganizationManager = organizationManager;
-            if (campaignResponse.OrganizationManager != null)
-            {
-                campaignResponse.OrganizationManager.CreateCampaignRequests = null;
-                campaignResponse.OrganizationManager.Organizations = null;
-                campaignResponse.OrganizationManager.CreateOrganizationRequests = null;
-                campaignResponse.OrganizationManager.CreatePostRequests = null;
-                campaignResponse.OrganizationManager.BankingAccounts = null;
-            }
+
             var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaignId);
-            if (campaign != null && createCampaignRequest != null && createCampaignRequest.CreateByMember != null)
+            if (createCampaignRequest?.CreateByMember != null)
             {
-                var member = _userRepository.GetById((Guid)createCampaignRequest.CreateByMember);
-
-                if (campaign.DonatePhase != null) campaign.DonatePhase.Campaign = null;
-                if (campaign.ProcessingPhases != null) campaign.ProcessingPhases = null;
-                if (campaign.StatementPhase != null) campaign.StatementPhase.Campaign = null;
-
-                campaignResponse.Member = member;
-            }
-            var activities = new List<Activity>();
-            if (campaignResponse.ProcessingPhases != null && campaignResponse.ProcessingPhases.Any())
-            {
-                foreach (var processingPhase in campaignResponse.ProcessingPhases)
-                {
-                    activities = _activityService.GetAllActivityWithProcessingPhaseId(processingPhase.ProcessingPhaseId).ToList();
-                    if (activities != null)
-                        processingPhase.Activities = activities;
-                    if (processingPhase.Activities != null)
-                        foreach (var activity in processingPhase.Activities)
-                        {
-                            if (activity.ProcessingPhase != null)
-                            {
-                                activity.ProcessingPhase = null;
-                            }
-                        }
-                    if (activities != null)
-                        foreach (var activity in activities)
-                        {
-                            var activitiesImages = _activityImageRepository.GetAllActivityImagesByActivityId(activity.ActivityId);
-                            if (activitiesImages != null && activity != null)
-                            {
-                                activity.ActivityImages = activitiesImages.ToList();
-                            }
-                        }
-
-                    processingPhase.Campaign = null;
-                }
+                campaignResponse.Member = _userRepository.GetById((Guid)createCampaignRequest.CreateByMember);
             }
 
-            var adminTransactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success && c.TransactionType == TransactionType.Transfer).ToList();
-            campaignResponse.AdminTransactions = adminTransactions;
+            if (campaign.ProcessingPhases != null && campaign.ProcessingPhases.Any())
+            {
+                campaignResponse.ProcessingPhases = GetProcessingPhases(campaign.ProcessingPhases);
+            }
 
             if (campaignResponse.Transactions != null)
-                campaignResponse.Transactions = campaignResponse.Transactions.Where(c => c.CampaignID.Equals(campaignId) && c.TransactionStatus == TransactionStatus.Success && c.TransactionType == TransactionType.Receive).ToList();
-
-            if (campaignResponse.Transactions != null && campaignResponse.Transactions.Any())
-                foreach (var transaction in campaignResponse.Transactions)
-                {
-                    transaction.Campaign = null;
-                }
-
-            campaignResponse.ProcessingPhases = campaignResponse.ProcessingPhases.OrderBy(c => c.Priority).ToList();
-
-            foreach (var processingPhase in campaignResponse.ProcessingPhases)
             {
-                var list = _processingPhaseStatementFileRepository
-                    .GetProcessingPhaseStatementFilesByProcessingPhaseId(processingPhase.ProcessingPhaseId);
-                processingPhase.ProcessingPhaseStatementFiles = list.ToList();
+                campaignResponse.Transactions = GetFilteredTransactions(campaignResponse.Transactions, campaignId);
             }
+
             return campaignResponse;
+        }
+
+        private CampaignResponse MapCampaignToResponse(Campaign campaign)
+        {
+            return new CampaignResponse
+            {
+                CampaignID = campaign.CampaignID,
+                OrganizationID = campaign.OrganizationID,
+                CampaignTypeID = campaign.CampaignTypeID,
+                ActualEndDate = campaign.ActualEndDate,
+                Address = campaign.Address,
+                ApplicationConfirmForm = campaign.ApplicationConfirmForm,
+                CampaignType = campaign.CampaignType,
+                CanBeDonated = campaign.CanBeDonated,
+                CheckTransparentDate = campaign.CheckTransparentDate,
+                CreateAt = campaign.CreateAt,
+                Description = campaign.Description,
+                DonatePhase = campaign.DonatePhase,
+                ExpectedEndDate = campaign.ExpectedEndDate,
+                Image = campaign.Image,
+                IsActive = campaign.IsActive,
+                IsComplete = campaign.IsComplete,
+                IsModify = campaign.IsModify,
+                IsTransparent = campaign.IsTransparent,
+                Name = campaign.Name,
+                Note = campaign.Note,
+                Organization = campaign.Organization,
+                ProcessingPhases = campaign.ProcessingPhases,
+                StartDate = campaign.StartDate,
+                StatementPhase = campaign.StatementPhase,
+                TargetAmount = campaign.TargetAmount,
+                Transactions = campaign.Transactions,
+                UpdatedAt = campaign.UpdatedAt,
+                CampaignTier = campaign.CampaignTier
+            };
+        }
+
+        private void CleanUpOrganization(Organization organization, CampaignResponse campaignResponse)
+        {
+            organization.Campaigns = null;
+            var manager = _organizationManagerRepository.GetById(organization.OrganizationManagerID);
+            if (manager != null)
+            {
+                manager.CreateCampaignRequests = null;
+                manager.Organizations = null;
+                manager.CreateOrganizationRequests = null;
+                manager.CreatePostRequests = null;
+                manager.BankingAccounts = null;
+            }
+            campaignResponse.OrganizationManager = manager;
+        }
+
+        private List<StatementFile> GetStatementFiles(Guid statementPhaseId)
+        {
+            return _statementFileService.GetAll()
+                .Where(s => s.StatementPhaseId.Equals(statementPhaseId))
+                .Select(s =>
+                {
+                    s.StatementPhase = null;
+                    return s;
+                }).ToList();
+        }
+
+        private List<ProcessingPhase> GetProcessingPhases(ICollection<ProcessingPhase> processingPhases)
+        {
+            return processingPhases.Select(phase =>
+            {
+                phase.Campaign = null;
+                phase.Activities = GetActivities(phase.ProcessingPhaseId);
+                phase.ProcessingPhaseStatementFiles = _processingPhaseStatementFileRepository
+                    .GetProcessingPhaseStatementFilesByProcessingPhaseId(phase.ProcessingPhaseId)
+                    .ToList();
+                return phase;
+            }).OrderBy(p => p.Priority).ToList();
+        }
+
+        private List<Activity> GetActivities(Guid processingPhaseId)
+        {
+            var activities = _activityService.GetAllActivityWithProcessingPhaseId(processingPhaseId).ToList();
+            if (activities.Any())
+            {
+                activities.ForEach(a =>
+                {
+                    a.ProcessingPhase = null;
+                    a.ActivityImages = _activityImageRepository.GetAllActivityImagesByActivityId(a.ActivityId).ToList();
+                });
+            }
+            return activities;
+        }
+
+        private List<Transaction> GetFilteredTransactions(ICollection<Transaction> transactions, Guid campaignId)
+        {
+            var adminTransactions = transactions
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Transfer)
+                .ToList();
+
+            transactions = transactions
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .ToList();
+
+            transactions.ForEach(t => t.Campaign = null);
+
+            return transactions.ToList();
         }
 
 
