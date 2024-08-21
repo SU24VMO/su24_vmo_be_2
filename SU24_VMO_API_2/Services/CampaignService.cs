@@ -2511,15 +2511,14 @@ namespace SU24_VMO_API.Services
                     response.AdminTransactions = null;
                     response.StatementPhase = null;
                     response.Transactions = null;
-                    listCampaignsResponse.Add(response);
-                }
-
-                if (campaign.ProcessingPhases is { Count: > 0 })
-                {
-                    foreach (var processingPhase in campaign.ProcessingPhases)
+                    if (response.ProcessingPhases is { Count: > 0 })
                     {
-                        processingPhase.Activities = null;
+                        foreach (var processingPhase in response.ProcessingPhases)
+                        {
+                            processingPhase.Activities = null;
+                        }
                     }
+                    listCampaignsResponse.Add(response);
                 }
             }
             return listCampaignsResponse;
