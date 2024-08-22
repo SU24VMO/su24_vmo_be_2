@@ -38,28 +38,70 @@ namespace SU24_VMO_API.Services
             return _statementFileRepository.GetById(id);
         }
 
+        //public async Task<List<StatementFile>> UploadStatementFileAsync(CreateStatementFileRequest request)
+        //{
+        //    var statementPhase = _statementPhaseRepository.GetById(request.StatementPhaseId);
+        //    if (statementPhase == null) throw new NotFoundException("Giai đoạn sao kê không tìm thấy!");
+        //    var account = _accountRepository.GetById(request.AccountId);
+        //    if (account == null) throw new NotFoundException("Tài khoản không tìm thấy!");
+        //    var listStatementFile = new List<StatementFile>();
+
+        //    foreach (var statementFile in request.StatementFile)
+        //    {
+        //        var statementFileCreate = new StatementFile
+        //        {
+        //            StatementFileId = Guid.NewGuid(),
+        //            CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+        //            StatementPhaseId = statementPhase.StatementPhaseId,
+        //            CreateBy = request.AccountId,
+        //            Link = await _firebaseService.UploadImage(statementFile)
+        //        };
+
+        //        var statementFileCreated = _statementFileRepository.Save(statementFileCreate);
+        //        listStatementFile.Add(statementFileCreate);
+        //    }
+
+        //    var notification = new Notification
+        //    {
+        //        NotificationID = Guid.NewGuid(),
+        //        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+        //        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+        //        IsSeen = false,
+        //        AccountID = account.AccountID,
+        //        Content = "Bạn vừa tải lên thành công bản sao kê!",
+        //    };
+        //    _notificationRepository.Save(notification);
+        //    return listStatementFile;
+        //}
+
         public async Task<List<StatementFile>> UploadStatementFileAsync(CreateStatementFileRequest request)
         {
-            var statementPhase = _statementPhaseRepository.GetById(request.StatementPhaseId);
-            if (statementPhase == null) throw new NotFoundException("Giai đoạn sao kê không tìm thấy!");
-            var account = _accountRepository.GetById(request.AccountId);
-            if (account == null) throw new NotFoundException("Tài khoản không tìm thấy!");
-            var listStatementFile = new List<StatementFile>();
+            var statementPhaseTask = _statementPhaseRepository.GetByIdAsync(request.StatementPhaseId);
+            var accountTask = _accountRepository.GetByIdAsync(request.AccountId);
 
-            foreach (var statementFile in request.StatementFile)
+            var statementPhase = await statementPhaseTask;
+            if (statementPhase == null)
+                throw new NotFoundException("Giai đoạn sao kê không tìm thấy!");
+
+            var account = await accountTask;
+            if (account == null)
+                throw new NotFoundException("Tài khoản không tìm thấy!");
+
+            var uploadTasks = request.StatementFile.Select(async file =>
             {
-                var statementFileCreate = new StatementFile
+                var statementFile = new StatementFile
                 {
                     StatementFileId = Guid.NewGuid(),
                     CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
                     StatementPhaseId = statementPhase.StatementPhaseId,
                     CreateBy = request.AccountId,
-                    Link = await _firebaseService.UploadImage(statementFile)
+                    Link = await _firebaseService.UploadImage(file)
                 };
+                _statementFileRepository.Save(statementFile);
+                return statementFile;
+            }).ToList();
 
-                var statementFileCreated = _statementFileRepository.Save(statementFileCreate);
-                listStatementFile.Add(statementFileCreate);
-            }
+            var listStatementFile = await Task.WhenAll(uploadTasks);
 
             var notification = new Notification
             {
@@ -70,8 +112,9 @@ namespace SU24_VMO_API.Services
                 AccountID = account.AccountID,
                 Content = "Bạn vừa tải lên thành công bản sao kê!",
             };
-            _notificationRepository.Save(notification);
-            return listStatementFile;
+            await Task.Run(() => _notificationRepository.Save(notification));
+
+            return listStatementFile.ToList();
         }
 
         public void Update(StatementFile entity)

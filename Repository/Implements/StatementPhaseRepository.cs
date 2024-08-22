@@ -39,6 +39,14 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.CampaignId.Equals(campaignId));
         }
 
+        public async Task<StatementPhase?> GetByIdAsync(Guid id)
+        {
+            await using var context = new VMODBContext();
+            return await context.StatementPhases
+                .Include(a => a.Campaign)
+                .FirstOrDefaultAsync(d => d.StatementPhaseId.Equals(id));
+        }
+
         public StatementPhase? Save(StatementPhase entity)
         {
             try
