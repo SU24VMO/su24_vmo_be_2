@@ -43,10 +43,10 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
         }
 
-        public Task<Account?> GetByIdAsync(Guid id)
+        public async Task<Account?> GetByIdAsync(Guid id)
         {
-            using var context = new VMODBContext();
-            return context.Accounts
+            await using var context = new VMODBContext();
+            return await context.Accounts
                 .Include(a => a.Notifications)
                 .Include(a => a.Transactions)
                 .Include(a => a.BankingAccounts)

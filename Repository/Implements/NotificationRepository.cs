@@ -36,7 +36,7 @@ namespace Repository.Implements
         {
             try
             {
-                using var context = new VMODBContext();
+                await using var context = new VMODBContext();
                 var notiAdded = await context.Notifications.AddAsync(entity);
                 await context.SaveChangesAsync();
                 return notiAdded.Entity;

@@ -85,7 +85,7 @@ namespace Repository.Implements
 
         public async Task<Member?> GetByAccountIdAsync(Guid? accountId)
         {
-            using var context = new VMODBContext();
+            await using var context = new VMODBContext();
             return await context.Members
                 .Include(b => b.BankingAccounts)
                 .Include(c => c.Account)

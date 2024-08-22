@@ -66,7 +66,7 @@ namespace Repository.Implements
 
         public async Task<OrganizationManager?> GetByAccountIDAsync(Guid accountID)
         {
-            using var context = new VMODBContext();
+            await using var context = new VMODBContext();
             return await context.OrganizationManagers
                 .Include(a => a.CreateOrganizationRequests)
                 .Include(a => a.CreateCampaignRequests)

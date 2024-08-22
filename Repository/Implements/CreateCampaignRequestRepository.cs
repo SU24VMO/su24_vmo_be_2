@@ -146,8 +146,8 @@ namespace Repository.Implements
 
         public async Task<CreateCampaignRequest?> SaveWithBankingAccountAsync(CreateCampaignRequest entity, BankingAccount bankingAccount)
         {
-            using var context = new VMODBContext();
-            using var mytransaction = await context.Database.BeginTransactionAsync();
+            await using var context = new VMODBContext();
+            await using var mytransaction = await context.Database.BeginTransactionAsync();
             try
             {
                 var campaign = entity.Campaign;
