@@ -13,5 +13,7 @@ namespace Repository.Interfaces
 
         public OrganizationManager? GetByAccountID(Guid accountID);
         public OrganizationManager? GetByPhone(string phone);
+        public Task<OrganizationManager?> GetByAccountIDAsync(Guid accountID);
+
     }
 }

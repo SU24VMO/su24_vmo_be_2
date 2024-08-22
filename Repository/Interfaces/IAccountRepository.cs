@@ -16,5 +16,7 @@ namespace Repository.Interfaces
         public IEnumerable<Account> GetAllAccountWithMemberRole();
         public IEnumerable<Account> GetAllAccountsWithModeratorRole();
         public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole();
+        public Task<Account?> GetByIdAsync(Guid id);
+
     }
 }

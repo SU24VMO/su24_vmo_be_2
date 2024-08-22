@@ -11,5 +11,7 @@ namespace Repository.Interfaces
     {
         public Member? GetByAccountId(Guid? accountId);
         public Member? GetByPhone(string phone);
+        public Task<Member?> GetByAccountIdAsync(Guid? accountId);
+
     }
 }

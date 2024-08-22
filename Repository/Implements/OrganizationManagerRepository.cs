@@ -64,6 +64,18 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.PhoneNumber.Equals(phone));
         }
 
+        public async Task<OrganizationManager?> GetByAccountIDAsync(Guid accountID)
+        {
+            using var context = new VMODBContext();
+            return await context.OrganizationManagers
+                .Include(a => a.CreateOrganizationRequests)
+                .Include(a => a.CreateCampaignRequests)
+                .Include(a => a.CreatePostRequests)
+                .Include(a => a.Organizations)
+                .Include(a => a.BankingAccounts)
+                .FirstOrDefaultAsync(d => d.AccountID.Equals(accountID));
+        }
+
         public OrganizationManager? Save(OrganizationManager entity)
         {
             using var context = new VMODBContext();

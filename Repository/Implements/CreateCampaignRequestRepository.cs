@@ -144,6 +144,50 @@ namespace Repository.Implements
             }
         }
 
+        public async Task<CreateCampaignRequest?> SaveWithBankingAccountAsync(CreateCampaignRequest entity, BankingAccount bankingAccount)
+        {
+            using var context = new VMODBContext();
+            using var mytransaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+                var campaign = entity.Campaign;
+                var existingCampaign = await context.Campaigns.FirstOrDefaultAsync(c => c.CampaignID == campaign!.CampaignID);
+
+                var bankingAccountExisted = await context.BankingAccounts
+                    .FirstOrDefaultAsync(b => b.AccountNumber.Equals(bankingAccount.AccountNumber));
+
+                if (bankingAccountExisted == null)
+                {
+                    await context.BankingAccounts.AddAsync(bankingAccount);
+                }
+                else
+                {
+                    campaign!.BankingAccountID = bankingAccountExisted.BankingAccountID;
+                }
+
+                if (existingCampaign == null)
+                {
+                    await context.Campaigns.AddAsync(campaign!);
+                }
+                else
+                {
+                    context.Entry(existingCampaign).CurrentValues.SetValues(campaign!);
+                }
+
+                entity.Member = null;
+                await context.CreateCampaignRequests.AddAsync(entity);
+
+                await context.SaveChangesAsync();
+                await mytransaction.CommitAsync();
+                return entity;
+            }
+            catch
+            {
+                await mytransaction.RollbackAsync();
+                throw;
+            }
+        }
+
         public void Update(CreateCampaignRequest entity)
         {
             try

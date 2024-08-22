@@ -32,6 +32,21 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateDate).Where(a => a.AccountID.Equals(accountId)).ToList();
         }
 
+        public async Task<Notification?> SaveAsync(Notification entity)
+        {
+            try
+            {
+                using var context = new VMODBContext();
+                var notiAdded = await context.Notifications.AddAsync(entity);
+                await context.SaveChangesAsync();
+                return notiAdded.Entity;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public Notification? GetById(Guid id)
         {
             using var context = new VMODBContext();

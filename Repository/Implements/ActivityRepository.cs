@@ -60,5 +60,13 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public async Task<Activity?> GetByIdAsync(Guid id)
+        {
+            using var context = new VMODBContext();
+            return await context.Activities
+                .Include(a => a.ProcessingPhase)
+                .FirstOrDefaultAsync(a => a.ActivityId.Equals(id));
+        }
     }
 }

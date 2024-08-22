@@ -82,5 +82,15 @@ namespace Repository.Implements
                 .Include(c => c.CreateCampaignRequests).ToList()
                 .FirstOrDefault(d => d.PhoneNumber != null && d.PhoneNumber.Equals(phone));
         }
+
+        public async Task<Member?> GetByAccountIdAsync(Guid? accountId)
+        {
+            using var context = new VMODBContext();
+            return await context.Members
+                .Include(b => b.BankingAccounts)
+                .Include(c => c.Account)
+                .Include(c => c.CreateCampaignRequests)
+                .FirstOrDefaultAsync(d => d.AccountID.Equals(accountId));
+        }
     }
 }

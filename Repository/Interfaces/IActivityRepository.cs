@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IActivityRepository : ICrudBaseRepository<Activity, Guid>
     {
+        public Task<Activity?> GetByIdAsync(Guid id);
     }
 }

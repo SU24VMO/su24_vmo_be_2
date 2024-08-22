@@ -13,6 +13,8 @@ namespace Repository.Interfaces
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId);
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId);
         public CreateCampaignRequest? GetCreateCampaignRequestByCampaignId(Guid campaignId);
+        public Task<CreateCampaignRequest?> SaveWithBankingAccountAsync(CreateCampaignRequest entity, BankingAccount bankingAccount);
+
 
     }
 }
