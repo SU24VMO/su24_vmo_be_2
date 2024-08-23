@@ -47,15 +47,15 @@ namespace Repository.Implements
             // Apply status filter
             if (!string.IsNullOrEmpty(status))
             {
-                if (status.Equals("đang thực hiện"))
+                if (status.ToLower().Equals("đang thực hiện"))
                 {
                     query = query.Where(c => c.IsActive && !c.IsComplete);
                 }
-                else if (status.Equals("đạt mục tiêu"))
+                else if (status.ToLower().Equals("đạt mục tiêu"))
                 {
                     query = query.Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd);
                 }
-                else if (status.Equals("đã kết thúc"))
+                else if (status.ToLower().Equals("đã kết thúc"))
                 {
                     query = query.Where(c => c.IsComplete);
                 }
