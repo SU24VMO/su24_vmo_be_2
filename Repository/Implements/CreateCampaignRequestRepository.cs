@@ -4,6 +4,7 @@ using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,42 @@ namespace Repository.Implements
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
                 .OrderByDescending(a => a.CreateDate).ToList();
+        }
+
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId, string? phase)
+        {
+            using var context = new VMODBContext();
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
+                .Include(a => a.Campaign)
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Where(c => c.CreateByOM.Equals(organizationManagerId) && c.Campaign.IsDisable == false)
+                .OrderByDescending(a => a.CreateDate)
+                .AsQueryable();
+
+            if (phase.Trim().ToLower().Equals("donate-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.DonatePhase != null && c.Campaign.IsActive && c.Campaign.DonatePhase.IsProcessing == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("processing-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.ProcessingPhases != null && c.Campaign.IsActive && c.Campaign.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("statement-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.StatementPhase != null && c.Campaign.IsActive && c.Campaign.StatementPhase.IsProcessing == true);
+            }
+
+            // Calculate total count of the filtered list
+            return query.ToList();
         }
 
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, int? pageSize, int? pageNo)
@@ -66,6 +103,39 @@ namespace Repository.Implements
                 .Include(a => a.Moderator)
                 .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.IsDisable == false)
                 .OrderByDescending(a => a.CreateDate);
+            return query.ToList();
+        }
+
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, string? phase)
+        {
+            using var context = new VMODBContext();
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
+                .Include(a => a.Campaign)
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.IsDisable == false)
+                .OrderByDescending(a => a.CreateDate)
+                .AsQueryable();
+            if (phase.Trim().ToLower().Equals("donate-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.DonatePhase != null && c.Campaign.IsActive && c.Campaign.DonatePhase.IsProcessing == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("processing-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.ProcessingPhases != null && c.Campaign.IsActive && c.Campaign.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("statement-phase"))
+            {
+                query = query.Where(c =>
+                    c.Campaign != null && c.Campaign.StatementPhase != null && c.Campaign.IsActive && c.Campaign.StatementPhase.IsProcessing == true);
+            }
             return query.ToList();
         }
 

@@ -29,7 +29,7 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateAt).ToList();
         }
 
-        public IEnumerable<Campaign> GetCampaignsCreateByVolunteer()
+        public IEnumerable<Campaign> GetCampaignsCreateByVolunteer(string? phase)
         {
             using var context = new VMODBContext();
 
@@ -41,8 +41,24 @@ namespace Repository.Implements
                 .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
-                .Where(c => c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true)
                 .AsQueryable();
+            if (phase.Trim().ToLower().Equals("donate-phase"))
+            {
+                query = query.Where(c =>
+                    c.DonatePhase != null && c.IsActive && c.DonatePhase.IsProcessing == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("processing-phase"))
+            {
+                query = query.Where(c =>
+                    c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("statement-phase"))
+            {
+                query = query.Where(c =>
+                    c.StatementPhase != null && c.IsActive && c.StatementPhase.IsProcessing == true);
+            }
             return query.Where(c => c.OrganizationID == null).ToList();
         }
 
@@ -147,7 +163,7 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));
         }
 
-        public IEnumerable<Campaign> GetCampaignsCreateByOM()
+        public IEnumerable<Campaign> GetCampaignsCreateByOM(string? phase)
         {
             using var context = new VMODBContext();
 
@@ -161,6 +177,24 @@ namespace Repository.Implements
                 .Include(a => a.StatementPhase)
                 .Where(c => c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true)
                 .AsQueryable();
+
+            if (phase.Trim().ToLower().Equals("donate-phase"))
+            {
+                query = query.Where(c =>
+                    c.DonatePhase != null && c.IsActive && c.DonatePhase.IsProcessing == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("processing-phase"))
+            {
+                query = query.Where(c =>
+                    c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
+            }
+
+            if (phase.Trim().ToLower().Equals("statement-phase"))
+            {
+                query = query.Where(c =>
+                    c.StatementPhase != null && c.IsActive && c.StatementPhase.IsProcessing == true);
+            }
             return query.Where(c => c.OrganizationID != null).ToList();
         }
 
