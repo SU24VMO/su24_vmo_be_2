@@ -14,6 +14,6 @@ namespace BusinessObject.Models
         public string PhoneNumber { get; set; } = default!;
         public string FirstName { get; set; } = default!;
         public string LastName { get; set; } = default!;
-        public Account? Account { get; set; }
+        public virtual Account? Account { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace BusinessObject.Models
         public DateTime CreateAt { get; set; }
         public bool IsValid { get; set; } = default!;
 
-        public List<Campaign>? Campaigns { get; set; }
+        public virtual List<Campaign>? Campaigns { get; set; }
     }
 }

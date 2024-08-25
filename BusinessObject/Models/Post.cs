@@ -19,6 +19,6 @@ namespace BusinessObject.Models
         public bool IsDisable { get; set; } = default!;
         public DateTime CreateAt { get; set; } = default!;
         public DateTime? UpdateAt { get; set; } = default!;
-        public CreatePostRequest? CreatePostRequest { get; set; }
+        public virtual CreatePostRequest? CreatePostRequest { get; set; }
     }
 }

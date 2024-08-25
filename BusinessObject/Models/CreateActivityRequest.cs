@@ -24,9 +24,9 @@ namespace BusinessObject.Models
         public bool IsPending { get; set; } = default!;
         public bool IsLocked { get; set; } = default!;
 
-        public OrganizationManager? OrganizationManager { get; set; }
-        public Member? Member { get; set; }
-        public Activity? Activity { get; set; }
-        public Moderator? Moderator { get; set; }
+        public virtual OrganizationManager? OrganizationManager { get; set; }
+        public virtual Member? Member { get; set; }
+        public virtual Activity? Activity { get; set; }
+        public virtual Moderator? Moderator { get; set; }
     }
 }

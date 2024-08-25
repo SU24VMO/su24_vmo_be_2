@@ -21,6 +21,6 @@ namespace BusinessObject.Models
         public bool IsProcessing { get; set; }
         public bool IsEnd { get; set; } = default!;
         public DateTime? UpdateDate { get; set; }
-        public Campaign? Campaign { get; set; }
+        public virtual Campaign? Campaign { get; set; }
     }
 }

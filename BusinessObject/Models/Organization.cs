@@ -26,9 +26,9 @@ namespace BusinessObject.Models
         public bool IsDisable { get; set; } = default!;
         public string? Category { get; set; } = default!;
         public string? Note { get; set; } = default!;
-        public CreateOrganizationRequest? CreateOrganizationRequest { get; set; }
-        public OrganizationManager? OrganizationManager { get; set; }
-        public List<Achievement>? Achievements { get; set; }
-        public List<Campaign>? Campaigns { get; set; }
+        public virtual CreateOrganizationRequest? CreateOrganizationRequest { get; set; }
+        public virtual OrganizationManager? OrganizationManager { get; set; }
+        public virtual List<Achievement>? Achievements { get; set; }
+        public virtual List<Campaign>? Campaigns { get; set; }
     }
 }

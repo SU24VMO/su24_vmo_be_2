@@ -15,6 +15,6 @@ namespace BusinessObject.Models
         public string Description { get; set; } = default!;
         public string? Link { get; set;}
         public DateTime? CreatedDate { get; set; } = default!;
-        public Organization? Organization { get; set; }
+        public virtual Organization? Organization { get; set; }
     }
 }

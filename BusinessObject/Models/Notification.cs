@@ -16,6 +16,6 @@ namespace BusinessObject.Models
         public string Content { get; set; } = default!;
         public DateTime CreateDate { get; set; }
         public bool IsSeen { get; set; } = default!;
-        public Account? Account { get; set; }
+        public virtual Account? Account { get; set; }
     }
 }

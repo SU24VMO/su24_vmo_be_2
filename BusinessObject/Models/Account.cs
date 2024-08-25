@@ -26,10 +26,10 @@ namespace BusinessObject.Models
         public bool IsActived { get; set; } = default!;
         public bool IsBlocked { get; set; } = default!;
         public Guid? ModifiedBy { get; set; } = default!;
-        public List<Notification>?  Notifications { get; set; }
-        public List<AccountToken>?  AccountTokens { get; set; }
-        public List<BankingAccount>? BankingAccounts { get; set; }
-        public List<Transaction>? Transactions { get; set; }
-        public List<IPAddress>? IPAddresses { get; set; }
+        public virtual List<Notification>?  Notifications { get; set; }
+        public virtual List<AccountToken>?  AccountTokens { get; set; }
+        public virtual List<BankingAccount>? BankingAccounts { get; set; }
+        public virtual List<Transaction>? Transactions { get; set; }
+        public virtual List<IPAddress>? IPAddresses { get; set; }
     }
 }

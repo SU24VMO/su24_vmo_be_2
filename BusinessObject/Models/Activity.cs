@@ -17,7 +17,7 @@ namespace BusinessObject.Models
         public bool IsActive { get; set; } = default!;
         public bool IsDisable { get; set; } = default!;
 
-        public ProcessingPhase? ProcessingPhase { get; set; }
-        public List<ActivityImage>? ActivityImages { get; set; }
+        public virtual ProcessingPhase? ProcessingPhase { get; set; }
+        public virtual List<ActivityImage>? ActivityImages { get; set; }
     }
 }

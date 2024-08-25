@@ -14,6 +14,6 @@ namespace BusinessObject.Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool IsActive { get; set; } = default!;
-        public Activity? Activity { get; set; }
+        public virtual Activity? Activity { get; set; }
     }
 }

@@ -24,10 +24,10 @@ namespace BusinessObject.Models
         public bool IsLocked { get; set; }
         public bool IsActive { get; set; }
         public DateTime? UpdateDate { get; set; }
-        public Campaign? Campaign { get; set; }
+        public virtual Campaign? Campaign { get; set; }
 
-        public List<Activity>? Activities { get; set; }
-        public List<ProcessingPhaseStatementFile> ProcessingPhaseStatementFiles { get; set; }
+        public virtual List<Activity>? Activities { get; set; }
+        public virtual List<ProcessingPhaseStatementFile> ProcessingPhaseStatementFiles { get; set; }
 
     }
 }

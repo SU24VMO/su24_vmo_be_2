@@ -19,7 +19,7 @@ namespace BusinessObject.Models
         public Guid? UpdateBy { get; set; }
         public bool IsLocked { get; set; }
         public DateTime? UpdateDate { get; set; }
-        public Campaign? Campaign { get; set; }
-        public List<StatementFile>? StatementFiles { get; set; }
+        public virtual Campaign? Campaign { get; set; }
+        public virtual List<StatementFile>? StatementFiles { get; set; }
     }
 }

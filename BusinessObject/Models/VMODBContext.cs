@@ -18,34 +18,34 @@ namespace BusinessObject.Models
         }
 
 
-        public DbSet<Admin> Admins { get; set; } = default!;
-        public DbSet<Account> Accounts { get; set; } = default!;
-        public DbSet<Achievement> Achievements { get; set; } = default!;
-        public DbSet<Activity> Activities { get; set; } = default!;
-        public DbSet<ActivityImage> ActivityImages { get; set; } = default!;
-        public DbSet<BankingAccount> BankingAccounts { get; set; } = default!;
-        public DbSet<Campaign> Campaigns { get; set; } = default!;
-        public DbSet<CampaignType> CampaignTypes { get; set; } = default!;
-        public DbSet<CreateCampaignRequest> CreateCampaignRequests { get; set; } = default!;
-        public DbSet<CreateVolunteerRequest> CreateVolunteerRequests { get; set; } = default!;
-        public DbSet<CreateOrganizationRequest> CreateOrganizationRequests { get; set; } = default!;
-        public DbSet<CreateActivityRequest> CreateActivityRequests { get; set; } = default!;
-        public DbSet<CreateOrganizationManagerRequest> CreateOrganizationManagerRequests { get; set; } = default!;
-        public DbSet<CreatePostRequest> CreatePostRequests { get; set; } = default!;
-        public DbSet<DonatePhase> DonatePhases { get; set; } = default!;
-        public DbSet<Notification> Notifications { get; set; } = default!;
-        public DbSet<Organization> Organizations { get; set; } = default!;
-        public DbSet<OrganizationManager> OrganizationManagers { get; set; } = default!;
-        public DbSet<Post> Posts { get; set; } = default!;
-        public DbSet<ProcessingPhase> ProcessingPhases { get; set; } = default!;
-        public DbSet<Moderator> Moderators { get; set; } = default!;
-        public DbSet<StatementFile> StatementFiles { get; set; } = default!;
-        public DbSet<StatementPhase> StatementPhases { get; set; } = default!;
-        public DbSet<Transaction> Transactions { get; set; } = default!;
-        public DbSet<Member> Members { get; set; } = default!;
-        public DbSet<AccountToken> AccountTokens { get; set; } = default!;
-        public DbSet<IPAddress> IPAddresses { get; set; } = default!;
-        public DbSet<ProcessingPhaseStatementFile> ProcessingPhaseStatementFiles { get; set; } = default!;
+        public virtual DbSet<Admin> Admins { get; set; } = default!;
+        public virtual DbSet<Account> Accounts { get; set; } = default!;
+        public virtual DbSet<Achievement> Achievements { get; set; } = default!;
+        public virtual DbSet<Activity> Activities { get; set; } = default!;
+        public virtual DbSet<ActivityImage> ActivityImages { get; set; } = default!;
+        public virtual DbSet<BankingAccount> BankingAccounts { get; set; } = default!;
+        public virtual DbSet<Campaign> Campaigns { get; set; } = default!;
+        public virtual DbSet<CampaignType> CampaignTypes { get; set; } = default!;
+        public virtual DbSet<CreateCampaignRequest> CreateCampaignRequests { get; set; } = default!;
+        public virtual DbSet<CreateVolunteerRequest> CreateVolunteerRequests { get; set; } = default!;
+        public virtual DbSet<CreateOrganizationRequest> CreateOrganizationRequests { get; set; } = default!;
+        public virtual DbSet<CreateActivityRequest> CreateActivityRequests { get; set; } = default!;
+        public virtual DbSet<CreateOrganizationManagerRequest> CreateOrganizationManagerRequests { get; set; } = default!;
+        public virtual DbSet<CreatePostRequest> CreatePostRequests { get; set; } = default!;
+        public virtual DbSet<DonatePhase> DonatePhases { get; set; } = default!;
+        public virtual DbSet<Notification> Notifications { get; set; } = default!;
+        public virtual DbSet<Organization> Organizations { get; set; } = default!;
+        public virtual DbSet<OrganizationManager> OrganizationManagers { get; set; } = default!;
+        public virtual DbSet<Post> Posts { get; set; } = default!;
+        public virtual DbSet<ProcessingPhase> ProcessingPhases { get; set; } = default!;
+        public virtual DbSet<Moderator> Moderators { get; set; } = default!;
+        public virtual DbSet<StatementFile> StatementFiles { get; set; } = default!;
+        public virtual DbSet<StatementPhase> StatementPhases { get; set; } = default!;
+        public virtual DbSet<Transaction> Transactions { get; set; } = default!;
+        public virtual DbSet<Member> Members { get; set; } = default!;
+        public virtual DbSet<AccountToken> AccountTokens { get; set; } = default!;
+        public virtual DbSet<IPAddress> IPAddresses { get; set; } = default!;
+        public virtual DbSet<ProcessingPhaseStatementFile> ProcessingPhaseStatementFiles { get; set; } = default!;
 
 
 
@@ -53,7 +53,7 @@ namespace BusinessObject.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-                .UseLazyLoadingProxies().UseSqlServer(GetConnectionString());
+                .UseLazyLoadingProxies(false).UseSqlServer(GetConnectionString());
         }
 
 //#if DEBUG

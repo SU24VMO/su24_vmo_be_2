@@ -14,13 +14,13 @@ namespace BusinessObject.Models
         public string PhoneNumber { get; set; } = default!;
         public string FirstName { get; set; } = default!;
         public string LastName { get; set; } = default!;
-        public Account? Account { get; set; }
-        public List<CreateVolunteerRequest>? CreateVolunteerRequests { get; set; }
-        public List<CreatePostRequest>? CreatePostRequests { get; set; }
-        public List<CreateOrganizationRequest>? CreateOrganizationRequests { get; set; }
-        public List<CreateOrganizationManagerRequest>? CreateOrganizationManagerRequests { get; set; }
-        public List<CreateCampaignRequest>? CreateCampaignRequests { get; set; }
-        public List<CreateActivityRequest>? CreateActivityRequests { get; set; }
+        public virtual Account? Account { get; set; }
+        public virtual List<CreateVolunteerRequest>? CreateVolunteerRequests { get; set; }
+        public virtual List<CreatePostRequest>? CreatePostRequests { get; set; }
+        public virtual List<CreateOrganizationRequest>? CreateOrganizationRequests { get; set; }
+        public virtual List<CreateOrganizationManagerRequest>? CreateOrganizationManagerRequests { get; set; }
+        public virtual List<CreateCampaignRequest>? CreateCampaignRequests { get; set; }
+        public virtual List<CreateActivityRequest>? CreateActivityRequests { get; set; }
 
     }
 }

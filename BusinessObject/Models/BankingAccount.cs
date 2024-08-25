@@ -18,8 +18,8 @@ namespace BusinessObject.Models
         public DateTime? UpdatedAt { get; set; }
         public Guid AccountId { get; set; } = default!;
         public bool IsAvailable { get; set; } = default!;
-        public Account? Account { get; set; }
-        public List<Transaction>? Transactions { get; set; }
-        public List<Campaign>? Campaigns { get; set; }
+        public virtual Account? Account { get; set; }
+        public virtual List<Transaction>? Transactions { get; set; }
+        public virtual List<Campaign>? Campaigns { get; set; }
     }
 }

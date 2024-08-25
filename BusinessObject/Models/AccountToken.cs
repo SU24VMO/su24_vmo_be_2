@@ -16,6 +16,6 @@ namespace BusinessObject.Models
         public string RefreshToken { get; set; } = default!;
         public DateTime? ExpiredDateRefreshToken { get; set; } = default!;
         public DateTime CreatedDate {  get; set; } = default!;
-        public Account? Account { get; set; }
+        public virtual Account? Account { get; set; }
     }
 }

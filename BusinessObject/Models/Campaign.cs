@@ -36,15 +36,15 @@ namespace BusinessObject.Models
         public DateTime? CheckTransparentDate { get; set; }
         public string? Note { get; set; } = default!;
 
-        public Organization? Organization { get; set; }
-        public CampaignType? CampaignType { get; set; }
-        public BankingAccount? BankingAccount { get; set; }
-        public DonatePhase? DonatePhase { get; set; }
-        public List<ProcessingPhase>? ProcessingPhases { get; set; }
-        public StatementPhase? StatementPhase { get; set; }
-        public CreateCampaignRequest? CreateCampaignRequest { get; set; }
+        public virtual Organization? Organization { get; set; }
+        public virtual CampaignType? CampaignType { get; set; }
+        public virtual BankingAccount? BankingAccount { get; set; }
+        public virtual DonatePhase? DonatePhase { get; set; }
+        public virtual List<ProcessingPhase>? ProcessingPhases { get; set; }
+        public virtual StatementPhase? StatementPhase { get; set; }
+        public virtual CreateCampaignRequest? CreateCampaignRequest { get; set; }
 
-        public List<Transaction>? Transactions { get; set; }
+        public virtual List<Transaction>? Transactions { get; set; }
 
     }
 }

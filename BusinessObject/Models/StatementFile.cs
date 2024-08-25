@@ -14,6 +14,6 @@ namespace BusinessObject.Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public Guid CreateBy { get; set; }
-        public StatementPhase? StatementPhase { get; set; }
+        public virtual StatementPhase? StatementPhase { get; set; }
     }
 }

@@ -26,8 +26,8 @@ namespace BusinessObject.Models
         public Guid? ProcessingPhaseId { get; set; }
         public TransactionStatus TransactionStatus { get; set; }
         public string TransactionImageUrl { get; set; } = default!;
-        public BankingAccount? BankingAccount { get; set; }
-        public Account? Account { get; set; }
-        public Campaign? Campaign { get; set; }
+        public virtual BankingAccount? BankingAccount { get; set; }
+        public virtual Account? Account { get; set; }
+        public virtual Campaign? Campaign { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace BusinessObject.Models
         public string? CountryCode { get; set; } = default!;
         public Guid AccountId { get; set; } = default!;
         public DateTime? CreateDate { get; set; } = default!;
-        public Account? Account { get; set; }
+        public virtual Account? Account { get; set; }
     }
 }
