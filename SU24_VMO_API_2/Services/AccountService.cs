@@ -253,8 +253,8 @@ namespace SU24_VMO_API.Services
                     response.IsVerified = false;
 
 
-                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null, null, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(om.OrganizationManagerID, null, null, null).ToList().Where(c => c.IsActive == true).Count();
                     if (om.IsVerified)
                         response.IsVerified = true;
                 }

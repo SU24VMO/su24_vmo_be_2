@@ -29,7 +29,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
 
-        public CampaignController(CampaignService campaignService, PaginationService<Campaign> paginationService, PaginationService<CampaignResponse> paginationService2, 
+        public CampaignController(CampaignService campaignService, PaginationService<Campaign> paginationService, PaginationService<CampaignResponse> paginationService2,
             PaginationService<CampaignWithBankingAccountResponse> paginationService3, PaginationService<CampaignTierIIWithBankingAccountResponse> paginationService4)
         {
             _campaignService = campaignService;
@@ -1388,12 +1388,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(organizationManagerId, campaignName);
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerId(organizationManagerId, campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = campaigns
                 };
 
                 return Ok(response);
@@ -1466,12 +1466,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignTierIICreateByOrganizationManagerId(organizationManagerId, campaignName);
+                var campaigns = _campaignService.GetAllCampaignTierIICreateByOrganizationManagerId(organizationManagerId, campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = campaigns
                 };
 
                 return Ok(response);
@@ -1546,12 +1546,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(organizationManagerId, phase, campaignName);
+                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(organizationManagerId, phase, campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = campaigns
                 };
 
                 return Ok(response);
@@ -1622,243 +1622,243 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
 
 
-        [HttpGet]
-        [Route("create-by/organization-manager/{organizationManagerId}/donate-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
-        {
-            try
-            {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(organizationManagerId);
+        //[HttpGet]
+        //[Route("create-by/organization-manager/{organizationManagerId}/donate-phase/processing-status")]
+        //public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        //{
+        //    try
+        //    {
+        //        var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(organizationManagerId);
 
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
-                };
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = "Get successfully!",
+        //            Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+        //        };
 
-                return Ok(response);
-            }
-            catch (DbUpdateException dbEx)
-            {
-                // Handle database update exceptions
-                var response = new ResponseMessage();
-                if (dbEx.InnerException != null)
-                {
-                    response.Message = $"{dbEx.InnerException.Message}";
-                }
-                else
-                {
-                    response.Message = "Database update error.";
-                }
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (NotFoundException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return NotFound(response);
-            }
-            catch (BadRequestException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (ArgumentNullException argEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{argEx.ParamName}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (UnauthorizedAccessException unauEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{unauEx.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(403, response); // Internal Server Error
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(500, response); // Internal Server Error
-            }
-        }
-
-
-
-        [HttpGet]
-        [Route("create-by/organization-manager/{organizationManagerId}/processing-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
-        {
-            try
-            {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(organizationManagerId);
-
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
-                };
-
-                return Ok(response);
-            }
-            catch (DbUpdateException dbEx)
-            {
-                // Handle database update exceptions
-                var response = new ResponseMessage();
-                if (dbEx.InnerException != null)
-                {
-                    response.Message = $"{dbEx.InnerException.Message}";
-                }
-                else
-                {
-                    response.Message = "Database update error.";
-                }
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (NotFoundException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return NotFound(response);
-            }
-            catch (BadRequestException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (ArgumentNullException argEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{argEx.ParamName}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (UnauthorizedAccessException unauEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{unauEx.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(403, response); // Internal Server Error
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(500, response); // Internal Server Error
-            }
-        }
+        //        return Ok(response);
+        //    }
+        //    catch (DbUpdateException dbEx)
+        //    {
+        //        // Handle database update exceptions
+        //        var response = new ResponseMessage();
+        //        if (dbEx.InnerException != null)
+        //        {
+        //            response.Message = $"{dbEx.InnerException.Message}";
+        //        }
+        //        else
+        //        {
+        //            response.Message = "Database update error.";
+        //        }
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (NotFoundException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return NotFound(response);
+        //    }
+        //    catch (BadRequestException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (ArgumentNullException argEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{argEx.ParamName}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (UnauthorizedAccessException unauEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{unauEx.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(403, response); // Internal Server Error
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(500, response); // Internal Server Error
+        //    }
+        //}
 
 
 
-        [HttpGet]
-        [Route("create-by/organization-manager/{organizationManagerId}/statement-phase/processing-status")]
-        public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
-        {
-            try
-            {
-                var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(organizationManagerId);
+        //[HttpGet]
+        //[Route("create-by/organization-manager/{organizationManagerId}/processing-phase/processing-status")]
+        //public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        //{
+        //    try
+        //    {
+        //        var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithProcessingPhaseIsProcessing(organizationManagerId);
 
-                var response = new ResponseMessage()
-                {
-                    Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
-                };
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = "Get successfully!",
+        //            Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+        //        };
 
-                return Ok(response);
-            }
-            catch (DbUpdateException dbEx)
-            {
-                // Handle database update exceptions
-                var response = new ResponseMessage();
-                if (dbEx.InnerException != null)
-                {
-                    response.Message = $"{dbEx.InnerException.Message}";
-                }
-                else
-                {
-                    response.Message = "Database update error.";
-                }
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (NotFoundException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return NotFound(response);
-            }
-            catch (BadRequestException ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (ArgumentNullException argEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{argEx.ParamName}"
-                };
-                // Log the exception details here if necessary
-                return BadRequest(response);
-            }
-            catch (UnauthorizedAccessException unauEx)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{unauEx.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(403, response); // Internal Server Error
-            }
-            catch (Exception ex)
-            {
-                var response = new ResponseMessage()
-                {
-                    Message = $"{ex.Message}"
-                };
-                // Log the exception details here if necessary
-                return StatusCode(500, response); // Internal Server Error
-            }
-        }
+        //        return Ok(response);
+        //    }
+        //    catch (DbUpdateException dbEx)
+        //    {
+        //        // Handle database update exceptions
+        //        var response = new ResponseMessage();
+        //        if (dbEx.InnerException != null)
+        //        {
+        //            response.Message = $"{dbEx.InnerException.Message}";
+        //        }
+        //        else
+        //        {
+        //            response.Message = "Database update error.";
+        //        }
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (NotFoundException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return NotFound(response);
+        //    }
+        //    catch (BadRequestException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (ArgumentNullException argEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{argEx.ParamName}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (UnauthorizedAccessException unauEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{unauEx.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(403, response); // Internal Server Error
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(500, response); // Internal Server Error
+        //    }
+        //}
+
+
+
+        //[HttpGet]
+        //[Route("create-by/organization-manager/{organizationManagerId}/statement-phase/processing-status")]
+        //public IActionResult GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        //{
+        //    try
+        //    {
+        //        var campaigns = _campaignService.GetAllCampaignByCreateByOrganizationManagerIdWithStatementIsProcessing(organizationManagerId);
+
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = "Get successfully!",
+        //            Data = _paginationService.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+        //        };
+
+        //        return Ok(response);
+        //    }
+        //    catch (DbUpdateException dbEx)
+        //    {
+        //        // Handle database update exceptions
+        //        var response = new ResponseMessage();
+        //        if (dbEx.InnerException != null)
+        //        {
+        //            response.Message = $"{dbEx.InnerException.Message}";
+        //        }
+        //        else
+        //        {
+        //            response.Message = "Database update error.";
+        //        }
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (NotFoundException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return NotFound(response);
+        //    }
+        //    catch (BadRequestException ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (ArgumentNullException argEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{argEx.ParamName}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return BadRequest(response);
+        //    }
+        //    catch (UnauthorizedAccessException unauEx)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{unauEx.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(403, response); // Internal Server Error
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var response = new ResponseMessage()
+        //        {
+        //            Message = $"{ex.Message}"
+        //        };
+        //        // Log the exception details here if necessary
+        //        return StatusCode(500, response); // Internal Server Error
+        //    }
+        //}
 
 
         [HttpGet]
