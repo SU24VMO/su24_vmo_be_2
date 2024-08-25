@@ -2725,7 +2725,7 @@ namespace SU24_VMO_API.Services
             return campaigns;
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId,
+        public CampaignCreateByOm? GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId,
             string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
@@ -2773,9 +2773,13 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
-                    c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                        c.CampaignTier == CampaignTier.FullDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
             else
             {
@@ -2835,13 +2839,17 @@ namespace SU24_VMO_API.Services
 
                 }
 
-                return campaigns.Where(c =>
-                    c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
 
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(
+        public CampaignCreateByOm? GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(
             Guid organizationManagerId, string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
@@ -2889,8 +2897,12 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
             else
             {
@@ -2950,7 +2962,11 @@ namespace SU24_VMO_API.Services
 
                 }
 
-                return campaigns.Where(c => c.IsDisable == false);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c => c.IsDisable == false).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
 
         }
