@@ -64,7 +64,7 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
-                .Where(c => c.CreateByMember.Equals(memberId))
+                .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.IsDisable == false)
                 .OrderByDescending(a => a.CreateDate);
             return query.ToList();
         }
@@ -106,7 +106,7 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
-                .Where(c => c.CreateByOM.Equals(organizationManagerId))
+                .Where(c => c.CreateByOM.Equals(organizationManagerId) && c.Campaign.IsDisable == false)
                 .OrderByDescending(a => a.CreateDate);
 
             // Calculate total count of the filtered list

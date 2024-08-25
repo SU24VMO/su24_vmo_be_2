@@ -41,7 +41,7 @@ namespace Repository.Implements
                 .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
-                .Where(c => c.IsActive)
+                .Where(c => c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true)
                 .AsQueryable();
             return query.Where(c => c.OrganizationID == null).ToList();
         }
@@ -159,7 +159,7 @@ namespace Repository.Implements
                 .Include(a => a.ProcessingPhases)
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
-                .Where(c => c.IsActive)
+                .Where(c => c.ProcessingPhases != null && c.IsActive && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true)
                 .AsQueryable();
             return query.Where(c => c.OrganizationID != null).ToList();
         }
