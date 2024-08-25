@@ -29,8 +29,6 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .Include(a => a.Transactions)
-                .Include(a => a.Notifications)
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Volunteer));
         }
 
@@ -38,8 +36,6 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .Include(a => a.Transactions)
-                .Include(a => a.Notifications)
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
         }
 
@@ -57,8 +53,6 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .Include(a => a.Transactions)
-                .Include(a => a.Notifications)
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Moderator));
         }
 
@@ -66,8 +60,6 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .Include(a => a.Transactions)
-                .Include(a => a.Notifications)
                 .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
         }
 

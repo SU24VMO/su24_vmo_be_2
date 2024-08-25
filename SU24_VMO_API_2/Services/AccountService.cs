@@ -214,8 +214,8 @@ namespace SU24_VMO_API.Services
                     response.LinkTiktok = member.TiktokUrl;
                     response.IsVerified = false;
 
-                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null, null, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null, null, null).ToList().Where(c => c.IsActive == true).Count();
                     if (member.IsVerified)
                         response.IsVerified = true;
 
@@ -234,8 +234,8 @@ namespace SU24_VMO_API.Services
                     response.LinkTiktok = member.TiktokUrl;
                     response.IsVerified = false;
 
-                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList();
-                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null).ToList().Where(c => c.IsActive == true).Count();
+                    response.Campaigns = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null, null, null).ToList();
+                    response.NumberOfActiveCampaign = _campaignService.GetAllCampaignTierIAndTierIIByCreateByVolunteerId(member.MemberID, null, null, null).ToList().Where(c => c.IsActive == true).Count();
                     if (member.IsVerified)
                         response.IsVerified = true;
                 }

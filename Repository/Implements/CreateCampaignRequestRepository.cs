@@ -27,15 +27,31 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
-        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId)
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, int? pageSize, int? pageNo)
         {
             using var context = new VMODBContext();
-            return context.CreateCampaignRequests
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
                 .Include(a => a.Campaign)
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
-                .OrderByDescending(a => a.CreateDate).ToList().Where(c => c.CreateByMember.Equals(memberId));
+                .Where(c => c.CreateByMember.Equals(memberId))
+                .OrderByDescending(a => a.CreateDate);
+
+            // Calculate total count of the filtered list
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
         }
 
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId)

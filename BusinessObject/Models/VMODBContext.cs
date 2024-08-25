@@ -52,7 +52,8 @@ namespace BusinessObject.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(GetConnectionString());
+            optionsBuilder
+                .UseLazyLoadingProxies().UseSqlServer(GetConnectionString());
         }
 
 //#if DEBUG
