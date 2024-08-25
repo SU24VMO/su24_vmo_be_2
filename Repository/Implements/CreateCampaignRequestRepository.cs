@@ -54,6 +54,21 @@ namespace Repository.Implements
                 .ToList();
         }
 
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId)
+        {
+            using var context = new VMODBContext();
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
+                .Include(a => a.Campaign)
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Where(c => c.CreateByMember.Equals(memberId))
+                .OrderByDescending(a => a.CreateDate);
+            return query.ToList();
+        }
+
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId, int? pageSize, int? pageNo)
         {
             using var context = new VMODBContext();

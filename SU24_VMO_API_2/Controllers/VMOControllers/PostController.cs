@@ -195,12 +195,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var posts = _postService.GetAllPostsByOrganizationManagerId(organizationManagerId, title);
+                var posts = _postService.GetAllPostsByOrganizationManagerId(organizationManagerId, title, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = posts
                 };
 
                 return Ok(response);
@@ -352,12 +352,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var posts = _postService.GetAllPostsByMemberId(volunteerId, title);
+                var posts = _postService.GetAllPostsByMemberId(volunteerId, title, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(posts, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = posts
                 };
 
                 return Ok(response);

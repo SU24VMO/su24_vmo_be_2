@@ -88,12 +88,14 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByVolunteer(Guid memberId, string? activityTitle)
+        public ActivityCreateByVolunteer? GetAllActivityWhichCreateByVolunteer(Guid memberId, string? activityTitle, int? pageSize, int? pageNo)
         {
             if (!string.IsNullOrEmpty(activityTitle))
             {
                 string normalizedActivityTitle = activityTitle.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
-                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByMember != null && c.CreateByMember.Equals(memberId));
+                var createActivityRequests =
+                    _createActivityRequestRepository.GetAllActivitiesRequestCreateByVolunteer(memberId, pageSize,
+                        pageNo);
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
@@ -145,7 +147,12 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false);
+
+                return new ActivityCreateByVolunteer
+                {
+                    Activities = activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false).ToList(),
+                    TotalItem = _createActivityRequestRepository.GetAllActivitiesRequestCreateByVolunteer(memberId).Count()
+                };
             }
             else
             {
@@ -201,16 +208,20 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(c => c.IsDisable == false);
+                return new ActivityCreateByVolunteer
+                {
+                    Activities = activities.Where(c => c.IsDisable == false).ToList(),
+                    TotalItem = _createActivityRequestRepository.GetAllActivitiesRequestCreateByVolunteer(memberId).Count()
+                };
             }
         }
 
-        public IEnumerable<ActivityResponse?> GetAllActivityWhichCreateByOM(Guid omId, string? activityTitle)
+        public ActivityCreateByOM? GetAllActivityWhichCreateByOM(Guid omId, string? activityTitle, int? pageSize, int? pageNo)
         {
             if (!string.IsNullOrEmpty(activityTitle))
             {
                 string normalizedActivityTitle = activityTitle.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
-                var createActivityRequests = _createActivityRequestRepository.GetAll().Where(c => c.CreateByOM != null && c.CreateByOM.Equals(omId));
+                var createActivityRequests = _createActivityRequestRepository.GetAllActivitiesRequestCreateByOM(omId, pageSize, pageNo);
                 var activities = new List<ActivityResponse?>();
                 foreach (var request in createActivityRequests)
                 {
@@ -266,7 +277,11 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false);
+                return new ActivityCreateByOM
+                {
+                    Activities = activities.Where(a => a.Title.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedActivityTitle) && a.IsDisable == false).ToList(),
+                    TotalItem = _createActivityRequestRepository.GetAllActivitiesRequestCreateByOM(omId).Count()
+                };
             }
             else
             {
@@ -326,7 +341,11 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return activities.Where(a => a.IsDisable == false);
+                return new ActivityCreateByOM
+                {
+                    Activities = activities.Where(a => a.IsDisable == false).ToList(),
+                    TotalItem = _createActivityRequestRepository.GetAllActivitiesRequestCreateByOM(omId).Count()
+                };
             }
         }
 

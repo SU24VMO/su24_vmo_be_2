@@ -45,11 +45,11 @@ namespace SU24_VMO_API.Services
             else return repository.GetAll();
         }
 
-        public IEnumerable<PostResponse> GetAllPostsByOrganizationManagerId(Guid organizationManagerId, string? title)
+        public PostCreateByOM? GetAllPostsByOrganizationManagerId(Guid organizationManagerId, string? title, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(title))
             {
-                var posts = repository.GetAllPostByOrganizationManagerId(organizationManagerId);
+                var posts = repository.GetAllPostByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
                 var postReponses = new List<PostResponse>();
 
                 foreach (var post in posts)
@@ -77,10 +77,15 @@ namespace SU24_VMO_API.Services
                         UpdateAt = post.UpdateAt,
                         AuthorName = om!.FirstName.Trim() + " " + om!.LastName.Trim(),
                         CreatePostRequest = request
-                        
+
                     });
                 }
-                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false);
+
+                return new PostCreateByOM
+                {
+                    Posts = postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false).ToList(),
+                    TotalItem = repository.GetAllPostByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
             else
             {
@@ -114,16 +119,20 @@ namespace SU24_VMO_API.Services
                         CreatePostRequest = request
                     });
                 }
-                return postReponses.Where(p => p.IsDisable == false);
+                return new PostCreateByOM
+                {
+                    Posts = postReponses.Where(p => p.IsDisable == false).ToList(),
+                    TotalItem = repository.GetAllPostByOrganizationManagerId(organizationManagerId).Count()
+                };
             }
 
         }
 
-        public IEnumerable<PostResponse> GetAllPostsByMemberId(Guid memberId, string? title)
+        public PostCreateByVolunteer? GetAllPostsByMemberId(Guid memberId, string? title, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(title))
             {
-                var posts = repository.GetAllPostsByMemberId(memberId);
+                var posts = repository.GetAllPostsByMemberId(memberId, pageSize, pageNo);
                 var postReponses = new List<PostResponse>();
 
 
@@ -155,7 +164,11 @@ namespace SU24_VMO_API.Services
                         CreatePostRequest = request
                     });
                 }
-                return postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false);
+                return new PostCreateByVolunteer
+                {
+                    Posts = postReponses.Where(p => p.Title.ToLower().Contains(title.ToLower().Trim()) && p.IsDisable == false).ToList(),
+                    TotalItem = repository.GetAllPostsByMemberId(memberId).Count()
+                };
 
             }
             else
@@ -191,7 +204,11 @@ namespace SU24_VMO_API.Services
                         CreatePostRequest = request
                     });
                 }
-                return postReponses.Where(p => p.IsDisable == false);
+                return new PostCreateByVolunteer
+                {
+                    Posts = postReponses.Where(p => p.IsDisable == false).ToList(),
+                    TotalItem = repository.GetAllPostsByMemberId(memberId).Count()
+                };
             }
         }
 

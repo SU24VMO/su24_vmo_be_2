@@ -277,12 +277,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var activities = _activityService.GetAllActivityWhichCreateByOM(organizationManagerId, activityTitle);
+                var activities = _activityService.GetAllActivityWhichCreateByOM(organizationManagerId, activityTitle, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = activities
                 };
 
                 return Ok(response);
@@ -356,12 +356,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var activities = _activityService.GetAllActivityWhichCreateByVolunteer(memberId, activityTitle);
+                var activities = _activityService.GetAllActivityWhichCreateByVolunteer(memberId, activityTitle, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService2.PaginateList(activities!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = activities
                 };
 
                 return Ok(response);

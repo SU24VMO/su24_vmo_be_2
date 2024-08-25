@@ -2971,7 +2971,7 @@ namespace SU24_VMO_API.Services
 
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIICreateByOrganizationManagerId(Guid organizationManagerId,
+        public CampaignCreateByOm? GetAllCampaignTierIICreateByOrganizationManagerId(Guid organizationManagerId,
             string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
@@ -3019,9 +3019,13 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
-                    c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                        c.CampaignTier == CampaignTier.PartialDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Where(c => c.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign).Count()
+                };
             }
             else
             {
@@ -3081,8 +3085,12 @@ namespace SU24_VMO_API.Services
 
                 }
 
-                return campaigns.Where(c =>
-                    c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId).Where(c => c.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign).Count()
+                };
             }
 
         }
@@ -3091,7 +3099,7 @@ namespace SU24_VMO_API.Services
 
 
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByVolunteerId(Guid userId, string? campaignName,
+        public CampaignCreateByVolunteerResponse? GetAllCampaignByCreateByVolunteerId(Guid userId, string? campaignName,
             int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
@@ -3131,9 +3139,13 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
-                    c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                return new CampaignCreateByVolunteerResponse
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                        c.CampaignTier == CampaignTier.FullDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId).Count()
+                };
             }
             else
             {
@@ -3183,8 +3195,12 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                return new CampaignCreateByVolunteerResponse
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId).Count()
+                };
             }
         }
 
@@ -3284,7 +3300,7 @@ namespace SU24_VMO_API.Services
             }
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIIByCreateByVolunteerId(Guid userId, string? campaignName,
+        public CampaignCreateByVolunteerResponse? GetAllCampaignTierIIByCreateByVolunteerId(Guid userId, string? campaignName,
             int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
@@ -3324,9 +3340,13 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
-                    c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                return new CampaignCreateByVolunteerResponse
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                        c.CampaignTier == CampaignTier.PartialDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId).Where(c => c.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign).Count()
+                };
             }
             else
             {
@@ -3376,8 +3396,12 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return campaigns.Where(c =>
-                    c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                return new CampaignCreateByVolunteerResponse
+                {
+                    Campaigns = campaigns.Where(c =>
+                        c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign).ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId).Where(c => c.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign).Count()
+                };
             }
         }
 
