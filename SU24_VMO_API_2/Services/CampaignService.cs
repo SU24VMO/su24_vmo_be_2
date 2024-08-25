@@ -36,12 +36,18 @@ namespace SU24_VMO_API.Services
         private readonly ActivityService _activityService;
         private readonly StatementFileService _statementFileService;
 
-        public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService, ICampaignTypeRepository campaignTypeRepository,
-            ICreateCampaignRequestRepository createCampaignRequestRepository, IOrganizationRepository organizationRepository,
-            IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository, IStatementPhaseRepository statementPhaseRepository,
-            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository, ActivityService activityService, IActivityImageRepository activityImageRepository,
-            StatementFileService statementFileService, IStatementFileRepository statementFileRepository, IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository,
-            ITransactionRepository transactionRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository)
+        public CampaignService(ICampaignRepository campaignRepository, FirebaseService firebaseService,
+            ICampaignTypeRepository campaignTypeRepository,
+            ICreateCampaignRequestRepository createCampaignRequestRepository,
+            IOrganizationRepository organizationRepository,
+            IDonatePhaseRepository donatePhaseRepository, IProcessingPhaseRepository processingPhaseRepository,
+            IStatementPhaseRepository statementPhaseRepository,
+            IMemberRepository userRepository, IOrganizationManagerRepository organizationManagerRepository,
+            ActivityService activityService, IActivityImageRepository activityImageRepository,
+            StatementFileService statementFileService, IStatementFileRepository statementFileRepository,
+            IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository,
+            ITransactionRepository transactionRepository,
+            IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -90,6 +96,7 @@ namespace SU24_VMO_API.Services
             {
                 campaign.Name = request.Name;
             }
+
             if (request.StartDate != null)
             {
                 campaign.StartDate = request.StartDate;
@@ -99,35 +106,43 @@ namespace SU24_VMO_API.Services
             {
                 campaign.Address = request.Address;
             }
+
             if (!String.IsNullOrEmpty(request.Description))
             {
                 campaign.Description = request.Description;
             }
+
             if (request.Image != null)
             {
                 var image = await _firebaseService.UploadImage(request.Image);
                 campaign.Image = image;
             }
+
             if (!String.IsNullOrEmpty(request.ExpectedEndDate.ToString()))
             {
                 campaign.ExpectedEndDate = (DateTime)request.ExpectedEndDate!;
             }
+
             if (!String.IsNullOrEmpty(request.ApplicationConfirmForm))
             {
                 campaign.ApplicationConfirmForm = request.ApplicationConfirmForm!;
             }
+
             if (!String.IsNullOrEmpty(request.Note))
             {
                 campaign.Note = request.Note!;
             }
+
             if (!String.IsNullOrEmpty(request.IsTransparent.ToString()))
             {
                 campaign.IsTransparent = (bool)request.IsTransparent!;
             }
+
             if (!String.IsNullOrEmpty(request.IsModify.ToString()))
             {
                 campaign.IsModify = (bool)request.IsModify!;
             }
+
             if (!String.IsNullOrEmpty(request.IsComplete.ToString()))
             {
                 campaign.IsComplete = (bool)request.IsComplete!;
@@ -137,9 +152,11 @@ namespace SU24_VMO_API.Services
             {
                 campaign.CanBeDonated = (bool)request.CanBeDonated!;
             }
+
             campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
             _campaignRepository.Update(campaign);
         }
+
         public void UpdateCampaign(Campaign campaign)
         {
             _campaignRepository.Update(campaign);
@@ -153,7 +170,9 @@ namespace SU24_VMO_API.Services
             {
                 throw new NotFoundException("Không tìm thấy chiến dịch này!");
             }
-            var campaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(request.CampaignId);
+
+            var campaignRequest =
+                _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(request.CampaignId);
             if (campaignRequest != null)
             {
                 if (campaignRequest.IsApproved)
@@ -166,6 +185,7 @@ namespace SU24_VMO_API.Services
                 campaign.IsDisable = true;
                 campaign.UpdatedAt = TimeHelper.GetTime(DateTime.UtcNow);
             }
+
             _campaignRepository.Update(campaign);
 
         }
@@ -247,7 +267,8 @@ namespace SU24_VMO_API.Services
                 campaign.StatementPhase.StatementFiles = GetStatementFiles(campaign.StatementPhase.StatementPhaseId);
             }
 
-            var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaignId);
+            var createCampaignRequest =
+                _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaignId);
             if (createCampaignRequest?.CreateByMember != null)
             {
                 campaignResponse.Member = _userRepository.GetById((Guid)createCampaignRequest.CreateByMember);
@@ -269,6 +290,7 @@ namespace SU24_VMO_API.Services
             {
                 campaignResponse.AdminTransactions = GetFilteredAdminTransactions(transactions, campaignId);
             }
+
             return campaignResponse;
         }
 
@@ -319,6 +341,7 @@ namespace SU24_VMO_API.Services
                 manager.CreatePostRequests = null;
                 manager.BankingAccounts = null;
             }
+
             campaignResponse.OrganizationManager = manager;
         }
 
@@ -357,17 +380,20 @@ namespace SU24_VMO_API.Services
                     a.ActivityImages = _activityImageRepository.GetAllActivityImagesByActivityId(a.ActivityId).ToList();
                 });
             }
+
             return activities;
         }
 
         private List<Transaction> GetFilteredTransactions(ICollection<Transaction> transactions, Guid campaignId)
         {
             var adminTransactions = transactions
-                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Transfer)
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success &&
+                            t.TransactionType == TransactionType.Transfer)
                 .ToList();
 
             transactions = transactions
-                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success &&
+                            t.TransactionType == TransactionType.Receive)
                 .ToList();
 
             transactions.ToList().ForEach(t => t.Campaign = null);
@@ -378,11 +404,13 @@ namespace SU24_VMO_API.Services
         private List<Transaction> GetFilteredAdminTransactions(ICollection<Transaction> transactions, Guid campaignId)
         {
             var adminTransactions = transactions
-                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Transfer)
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success &&
+                            t.TransactionType == TransactionType.Transfer)
                 .ToList();
 
             transactions = transactions
-                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .Where(t => t.CampaignID.Equals(campaignId) && t.TransactionStatus == TransactionStatus.Success &&
+                            t.TransactionType == TransactionType.Receive)
                 .ToList();
 
             adminTransactions.ToList().ForEach(t => t.Campaign = null);
@@ -398,10 +426,12 @@ namespace SU24_VMO_API.Services
             {
                 campaign.Organization.Campaigns = null;
             }
+
             if (campaign != null && campaign.CampaignType != null && campaign.CampaignType.Campaigns != null)
             {
                 campaign.CampaignType.Campaigns = null;
             }
+
             return campaign;
         }
 
@@ -421,12 +451,15 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
-        public IEnumerable<Campaign> GetAllCampaignsForPaging(int pageNumber, int pageSize, string? status, Guid? campaignTypeId, string? createBy, string? campaignName)
+        public IEnumerable<Campaign> GetAllCampaignsForPaging(int pageNumber, int pageSize, string? status,
+            Guid? campaignTypeId, string? createBy, string? campaignName)
         {
-            var campaigns = _campaignRepository.GetAll(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
+            var campaigns =
+                _campaignRepository.GetAll(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -438,6 +471,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -454,14 +488,17 @@ namespace SU24_VMO_API.Services
                         count++;
                 }
             }
+
             return count;
         }
 
-        public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsTierIWithBankingAccountWithActiveStatus(string? campaignName)
+        public IEnumerable<CampaignWithBankingAccountResponse> GetAllCampaignsTierIWithBankingAccountWithActiveStatus(
+            string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var campaigns = GetAllCampaignsWithActiveStatus().Where(c => c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                var campaigns = GetAllCampaignsWithActiveStatus()
+                    .Where(c => c.CampaignTier == CampaignTier.FullDisbursementCampaign);
                 var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -478,7 +515,9 @@ namespace SU24_VMO_API.Services
                         BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                        BankingAccountNumber = bankingAccount != null
+                            ? bankingAccount.AccountNumber
+                            : "không có số tài khoản ngân hàng",
                         Amount = donatePhase.CurrentMoney,
                         Percent = donatePhase.Percent,
                         DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -489,11 +528,13 @@ namespace SU24_VMO_API.Services
                         IsComplete = campaign.IsComplete
                     });
                 }
+
                 return campaignsResponse.Where(c => c.Name.ToLower().Trim().Contains(campaignName.ToLower().Trim()));
             }
             else
             {
-                var campaigns = GetAllCampaignsWithActiveStatus().Where(c => c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+                var campaigns = GetAllCampaignsWithActiveStatus()
+                    .Where(c => c.CampaignTier == CampaignTier.FullDisbursementCampaign);
                 var campaignsResponse = new List<CampaignWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -510,7 +551,9 @@ namespace SU24_VMO_API.Services
                         BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
                         AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
                         QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                        BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "Không có số tài khoản ngân hàng",
+                        BankingAccountNumber = bankingAccount != null
+                            ? bankingAccount.AccountNumber
+                            : "Không có số tài khoản ngân hàng",
                         Amount = donatePhase.CurrentMoney,
                         Percent = donatePhase.Percent,
                         DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -521,15 +564,18 @@ namespace SU24_VMO_API.Services
                         IsComplete = campaign.IsComplete
                     });
                 }
+
                 return campaignsResponse;
             }
         }
 
-        public IEnumerable<CampaignTierIIWithBankingAccountResponse> GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName)
+        public IEnumerable<CampaignTierIIWithBankingAccountResponse>
+            GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var campaigns = GetAllCampaignsWithActiveStatus().Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                var campaigns = GetAllCampaignsWithActiveStatus()
+                    .Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -551,7 +597,8 @@ namespace SU24_VMO_API.Services
                                 double currentPercent = campaign.Transactions.Where(t =>
                                     t.TransactionStatus == TransactionStatus.Success &&
                                     t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
-                                processingPhaseIsProcessing.CurrentPercent = Math.Round((currentPercent / targetAmount) * 100, 3);
+                                processingPhaseIsProcessing.CurrentPercent =
+                                    Math.Round((currentPercent / targetAmount) * 100, 3);
 
                                 var transactions =
                                     _transactionRepository.GetTransactionByCampaignTierIIIdWithTypeIsTransfer(
@@ -560,7 +607,8 @@ namespace SU24_VMO_API.Services
                                 {
                                     foreach (var transaction in transactions)
                                     {
-                                        if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing
+                                                .ProcessingPhaseId))
                                         {
                                             var listProcessingPhases =
                                                 _processingPhaseRepository.GetProcessingPhaseByCampaignId(
@@ -580,15 +628,27 @@ namespace SU24_VMO_API.Services
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                 {
                                                     CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                                    BankingAccountId = bankingAccount != null
+                                                        ? bankingAccount.BankingAccountID
+                                                        : null,
+                                                    BankingName = bankingAccount != null
+                                                        ? bankingAccount.BankingName
+                                                        : "không có tên ngân hàng!",
+                                                    AccountName = bankingAccount != null
+                                                        ? bankingAccount.AccountName
+                                                        : "không có tên tài khoản!",
+                                                    QRCode = bankingAccount != null
+                                                        ? bankingAccount.QRCode
+                                                        : "không có mã QR!",
+                                                    BankingAccountNumber = bankingAccount != null
+                                                        ? bankingAccount.AccountNumber
+                                                        : "không có số tài khoản ngân hàng",
                                                     Amount = processingPhaseIsProcessing.CurrentMoney,
                                                     Percent = donatePhase.Percent,
                                                     DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = transaction != null ? transaction.TransactionImageUrl : null,
+                                                    TransactionImage = transaction != null
+                                                        ? transaction.TransactionImageUrl
+                                                        : null,
                                                     Name = campaign.Name,
                                                     IsDisable = campaign.IsDisable,
                                                     IsActive = campaign.IsActive,
@@ -597,7 +657,8 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = true,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent =
+                                                        (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -606,11 +667,21 @@ namespace SU24_VMO_API.Services
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                 {
                                                     CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                                    BankingAccountId = bankingAccount != null
+                                                        ? bankingAccount.BankingAccountID
+                                                        : null,
+                                                    BankingName = bankingAccount != null
+                                                        ? bankingAccount.BankingName
+                                                        : "không có tên ngân hàng!",
+                                                    AccountName = bankingAccount != null
+                                                        ? bankingAccount.AccountName
+                                                        : "không có tên tài khoản!",
+                                                    QRCode = bankingAccount != null
+                                                        ? bankingAccount.QRCode
+                                                        : "không có mã QR!",
+                                                    BankingAccountNumber = bankingAccount != null
+                                                        ? bankingAccount.AccountNumber
+                                                        : "không có số tài khoản ngân hàng",
                                                     Amount = processingPhaseIsProcessing.CurrentMoney,
                                                     Percent = donatePhase.Percent,
                                                     DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -623,7 +694,8 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = false,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent =
+                                                        (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -648,11 +720,19 @@ namespace SU24_VMO_API.Services
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                         {
                                             CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                            BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                                            BankingAccountId = bankingAccount != null
+                                                ? bankingAccount.BankingAccountID
+                                                : null,
+                                            BankingName = bankingAccount != null
+                                                ? bankingAccount.BankingName
+                                                : "không có tên ngân hàng!",
+                                            AccountName = bankingAccount != null
+                                                ? bankingAccount.AccountName
+                                                : "không có tên tài khoản!",
                                             QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                            BankingAccountNumber = bankingAccount != null
+                                                ? bankingAccount.AccountNumber
+                                                : "không có số tài khoản ngân hàng",
                                             Amount = processingPhaseIsProcessing.CurrentMoney,
                                             Percent = donatePhase.Percent,
                                             DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -674,11 +754,19 @@ namespace SU24_VMO_API.Services
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                         {
                                             CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                            BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                                            BankingAccountId = bankingAccount != null
+                                                ? bankingAccount.BankingAccountID
+                                                : null,
+                                            BankingName = bankingAccount != null
+                                                ? bankingAccount.BankingName
+                                                : "không có tên ngân hàng!",
+                                            AccountName = bankingAccount != null
+                                                ? bankingAccount.AccountName
+                                                : "không có tên tài khoản!",
                                             QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                            BankingAccountNumber = bankingAccount != null
+                                                ? bankingAccount.AccountNumber
+                                                : "không có số tài khoản ngân hàng",
                                             Amount = processingPhaseIsProcessing.CurrentMoney,
                                             Percent = donatePhase.Percent,
                                             DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -702,11 +790,13 @@ namespace SU24_VMO_API.Services
                     }
 
                 }
+
                 return campaignsResponse.Where(c => c.Name.ToLower().Trim().Contains(campaignName.ToLower().Trim()));
             }
             else
             {
-                var campaigns = GetAllCampaignsWithActiveStatus().Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                var campaigns = GetAllCampaignsWithActiveStatus()
+                    .Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -728,7 +818,8 @@ namespace SU24_VMO_API.Services
                                 double currentPercent = campaign.Transactions.Where(t =>
                                     t.TransactionStatus == TransactionStatus.Success &&
                                     t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
-                                processingPhaseIsProcessing.CurrentPercent = Math.Round((currentPercent / targetAmount) * 100, 3);
+                                processingPhaseIsProcessing.CurrentPercent =
+                                    Math.Round((currentPercent / targetAmount) * 100, 3);
 
                                 var transactions =
                                     _transactionRepository.GetTransactionByCampaignTierIIIdWithTypeIsTransfer(
@@ -737,7 +828,8 @@ namespace SU24_VMO_API.Services
                                 {
                                     foreach (var transaction in transactions)
                                     {
-                                        if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (transaction.ProcessingPhaseId.Equals(processingPhaseIsProcessing
+                                                .ProcessingPhaseId))
                                         {
                                             var listProcessingPhases =
                                                 _processingPhaseRepository.GetProcessingPhaseByCampaignId(
@@ -755,15 +847,27 @@ namespace SU24_VMO_API.Services
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                 {
                                                     CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                                    BankingAccountId = bankingAccount != null
+                                                        ? bankingAccount.BankingAccountID
+                                                        : null,
+                                                    BankingName = bankingAccount != null
+                                                        ? bankingAccount.BankingName
+                                                        : "không có tên ngân hàng!",
+                                                    AccountName = bankingAccount != null
+                                                        ? bankingAccount.AccountName
+                                                        : "không có tên tài khoản!",
+                                                    QRCode = bankingAccount != null
+                                                        ? bankingAccount.QRCode
+                                                        : "không có mã QR!",
+                                                    BankingAccountNumber = bankingAccount != null
+                                                        ? bankingAccount.AccountNumber
+                                                        : "không có số tài khoản ngân hàng",
                                                     Amount = processingPhaseIsProcessing.CurrentMoney,
                                                     Percent = donatePhase.Percent,
                                                     DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = transaction != null ? transaction.TransactionImageUrl : null,
+                                                    TransactionImage = transaction != null
+                                                        ? transaction.TransactionImageUrl
+                                                        : null,
                                                     Name = campaign.Name,
                                                     IsDisable = campaign.IsDisable,
                                                     IsActive = campaign.IsActive,
@@ -772,7 +876,8 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = true,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent =
+                                                        (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -781,11 +886,21 @@ namespace SU24_VMO_API.Services
                                                 campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                 {
                                                     CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                                    BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                                    BankingAccountId = bankingAccount != null
+                                                        ? bankingAccount.BankingAccountID
+                                                        : null,
+                                                    BankingName = bankingAccount != null
+                                                        ? bankingAccount.BankingName
+                                                        : "không có tên ngân hàng!",
+                                                    AccountName = bankingAccount != null
+                                                        ? bankingAccount.AccountName
+                                                        : "không có tên tài khoản!",
+                                                    QRCode = bankingAccount != null
+                                                        ? bankingAccount.QRCode
+                                                        : "không có mã QR!",
+                                                    BankingAccountNumber = bankingAccount != null
+                                                        ? bankingAccount.AccountNumber
+                                                        : "không có số tài khoản ngân hàng",
                                                     Amount = processingPhaseIsProcessing.CurrentMoney,
                                                     Percent = donatePhase.Percent,
                                                     DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -798,7 +913,8 @@ namespace SU24_VMO_API.Services
                                                     CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
                                                     IsEligible = false,
                                                     ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                    ProcessingPhasePercent =
+                                                        (double)processingPhaseIsProcessing.Percent,
                                                     ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
                                                 });
                                             }
@@ -823,11 +939,19 @@ namespace SU24_VMO_API.Services
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                         {
                                             CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                            BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                                            BankingAccountId = bankingAccount != null
+                                                ? bankingAccount.BankingAccountID
+                                                : null,
+                                            BankingName = bankingAccount != null
+                                                ? bankingAccount.BankingName
+                                                : "không có tên ngân hàng!",
+                                            AccountName = bankingAccount != null
+                                                ? bankingAccount.AccountName
+                                                : "không có tên tài khoản!",
                                             QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                            BankingAccountNumber = bankingAccount != null
+                                                ? bankingAccount.AccountNumber
+                                                : "không có số tài khoản ngân hàng",
                                             Amount = processingPhaseIsProcessing.CurrentMoney,
                                             Percent = donatePhase.Percent,
                                             DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -849,11 +973,19 @@ namespace SU24_VMO_API.Services
                                         campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                         {
                                             CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null ? bankingAccount.BankingAccountID : null,
-                                            BankingName = bankingAccount != null ? bankingAccount.BankingName : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null ? bankingAccount.AccountName : "không có tên tài khoản!",
+                                            BankingAccountId = bankingAccount != null
+                                                ? bankingAccount.BankingAccountID
+                                                : null,
+                                            BankingName = bankingAccount != null
+                                                ? bankingAccount.BankingName
+                                                : "không có tên ngân hàng!",
+                                            AccountName = bankingAccount != null
+                                                ? bankingAccount.AccountName
+                                                : "không có tên tài khoản!",
                                             QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null ? bankingAccount.AccountNumber : "không có số tài khoản ngân hàng",
+                                            BankingAccountNumber = bankingAccount != null
+                                                ? bankingAccount.AccountNumber
+                                                : "không có số tài khoản ngân hàng",
                                             Amount = processingPhaseIsProcessing.CurrentMoney,
                                             Percent = donatePhase.Percent,
                                             DonatePhaseIsEnd = donatePhase.IsEnd,
@@ -896,6 +1028,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -916,12 +1049,14 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
         public IEnumerable<Campaign> GetAllCampaignsTierIIWithActiveStatus()
         {
-            var campaigns = _campaignRepository.GetAll().Where(c => c.IsActive == true && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+            var campaigns = _campaignRepository.GetAll().Where(c =>
+                c.IsActive == true && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -933,6 +1068,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -951,13 +1087,15 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
 
         public IEnumerable<Campaign> GetAllCampaignsWithDonatePhaseWasEnd()
         {
-            var campaigns = _campaignRepository.GetAll().Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
+            var campaigns = _campaignRepository.GetAll()
+                .Where(c => c.DonatePhase != null && c.DonatePhase.IsEnd == true);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -969,6 +1107,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -986,6 +1125,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -993,7 +1133,8 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Campaign> GetAllCampaignsWithDonatePhaseIsProcessing()
         {
-            var campaigns = _campaignRepository.GetAll().Where(c => c.DonatePhase != null && c.DonatePhase.IsProcessing == true);
+            var campaigns = _campaignRepository.GetAll()
+                .Where(c => c.DonatePhase != null && c.DonatePhase.IsProcessing == true);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -1005,12 +1146,14 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
         public IEnumerable<Campaign> GetAllCampaignsWithProcessingPhaseIsProcessing()
         {
-            var campaigns = _campaignRepository.GetAll().Where(c => c.ProcessingPhases != null && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
+            var campaigns = _campaignRepository.GetAll().Where(c =>
+                c.ProcessingPhases != null && c.ProcessingPhases.Any(pp => pp.IsProcessing) == true);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -1022,13 +1165,15 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
 
         public IEnumerable<Campaign> GetAllCampaignsWithStatementPhaseIsProcessing()
         {
-            var campaigns = _campaignRepository.GetAll().Where(c => c.StatementPhase != null && c.StatementPhase.IsProcessing == true);
+            var campaigns = _campaignRepository.GetAll()
+                .Where(c => c.StatementPhase != null && c.StatementPhase.IsProcessing == true);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -1046,9 +1191,11 @@ namespace SU24_VMO_API.Services
                     {
                         statementFile.StatementPhase = null;
                     }
+
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                 }
             }
+
             return campaigns;
         }
 
@@ -1067,6 +1214,7 @@ namespace SU24_VMO_API.Services
                 if (campaign.StatementPhase != null)
                     campaign.StatementPhase.Campaign = null;
             }
+
             return campaigns;
         }
 
@@ -2493,7 +2641,8 @@ namespace SU24_VMO_API.Services
         public IEnumerable<Campaign> GetAllCampaignsByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status,
             string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
-            var campaigns = GetAllCampaignsForPaging(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
+            var campaigns =
+                GetAllCampaignsForPaging(pageNumber, pageSize, status, campaignTypeId, createBy, campaignName);
             foreach (var campaign in campaigns)
             {
                 NullifyNavigationProperties(campaign);
@@ -2513,9 +2662,11 @@ namespace SU24_VMO_API.Services
                 campaign.StatementPhase.Campaign = null;
         }
 
-        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId, string? status, string? campaignName, string? createBy, int pageNumber, int pageSize)
+        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId,
+            string? status, string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
-            var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName, createBy, pageNumber, pageSize);
+            var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName,
+                createBy, pageNumber, pageSize);
             var listCampaignsResponse = new List<CampaignResponse>();
             foreach (var campaign in listCampaigns)
             {
@@ -2534,9 +2685,11 @@ namespace SU24_VMO_API.Services
                             processingPhase.Activities = null;
                         }
                     }
+
                     listCampaignsResponse.Add(response);
                 }
             }
+
             return listCampaignsResponse;
         }
 
@@ -2545,7 +2698,8 @@ namespace SU24_VMO_API.Services
 
         public IEnumerable<Campaign> GetAllCampaignsWithActiveStatusByCampaignTypeId(Guid campaignTypeId)
         {
-            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId(campaignTypeId).Where(c => c.IsActive == true);
+            var campaigns = _campaignRepository.GetCampaignsByCampaignTypeId(campaignTypeId)
+                .Where(c => c.IsActive == true);
             foreach (var campaign in campaigns)
             {
                 if (campaign.CampaignType != null)
@@ -2563,25 +2717,32 @@ namespace SU24_VMO_API.Services
                     {
                         statementFile.StatementPhase = null;
                     }
+
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                 }
             }
+
             return campaigns;
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerId(Guid organizationManagerId,
+            string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2607,22 +2768,30 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                    c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2648,6 +2817,7 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
 
@@ -2664,24 +2834,31 @@ namespace SU24_VMO_API.Services
 
 
                 }
-                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
 
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(Guid organizationManagerId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignTierIAndTierIIByCreateByOrganizationManagerId(
+            Guid organizationManagerId, string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2707,22 +2884,29 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2748,6 +2932,7 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
 
@@ -2764,24 +2949,30 @@ namespace SU24_VMO_API.Services
 
 
                 }
+
                 return campaigns.Where(c => c.IsDisable == false);
             }
 
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIICreateByOrganizationManagerId(Guid organizationManagerId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignTierIICreateByOrganizationManagerId(Guid organizationManagerId,
+            string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2807,22 +2998,30 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                    c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                        organizationManagerId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
                     foreach (var createCampaignRequest in createCampaignRequests)
                     {
-                        if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
+                        if (createCampaignRequest.Campaign != null &&
+                            createCampaignRequest.Campaign.OrganizationID != null)
                         {
-                            var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                            var organization =
+                                _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                             createCampaignRequest.Campaign!.Organization = organization;
                             campaigns.Add(createCampaignRequest.Campaign!);
                         }
@@ -2848,6 +3047,7 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
 
@@ -2864,7 +3064,9 @@ namespace SU24_VMO_API.Services
 
 
                 }
-                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             }
 
         }
@@ -2873,11 +3075,13 @@ namespace SU24_VMO_API.Services
 
 
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByVolunteerId(Guid userId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignByCreateByVolunteerId(Guid userId, string? campaignName,
+            int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -2906,14 +3110,19 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                    c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -2942,8 +3151,10 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
+
                     var request =
                         _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
                     if (request != null)
@@ -2955,16 +3166,20 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
                 }
-                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.IsDisable == false && c.CampaignTier == CampaignTier.FullDisbursementCampaign);
             }
         }
 
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIAndTierIIByCreateByVolunteerId(Guid userId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignTierIAndTierIIByCreateByVolunteerId(Guid userId,
+            string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -2993,14 +3208,18 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -3029,8 +3248,10 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
+
                     var request =
                         _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
                     if (request != null)
@@ -3042,15 +3263,18 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
                 }
+
                 return campaigns.Where(c => c.IsDisable == false);
             }
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignTierIIByCreateByVolunteerId(Guid userId, string? campaignName, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignTierIIByCreateByVolunteerId(Guid userId, string? campaignName,
+            int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -3079,14 +3303,19 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
                 }
-                return campaigns.Where(c => c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.Name.ToLower().Contains(campaignName.ToLower().Trim()) && c.IsDisable == false &&
+                    c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             }
             else
             {
-                var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+                var createCampaignRequests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
                 var campaigns = new List<Campaign>();
                 if (createCampaignRequests != null)
                 {
@@ -3115,8 +3344,10 @@ namespace SU24_VMO_API.Services
                         {
                             statementFile.StatementPhase = null;
                         }
+
                         campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                     }
+
                     var request =
                         _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID);
                     if (request != null)
@@ -3128,13 +3359,18 @@ namespace SU24_VMO_API.Services
                         campaign.CreateCampaignRequest = request;
                     }
                 }
-                return campaigns.Where(c => c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+
+                return campaigns.Where(c =>
+                    c.IsDisable == false && c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
             }
         }
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(Guid organizationManagerId, int? pageSize, int? pageNo)
+        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerIdWithDonatePhaseIsProcessing(
+            Guid organizationManagerId, int? pageSize, int? pageNo)
         {
-            var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+            var createCampaignRequests =
+                _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                    organizationManagerId, pageSize, pageNo);
             var campaigns = new List<Campaign>();
             if (createCampaignRequests != null)
             {
@@ -3142,9 +3378,11 @@ namespace SU24_VMO_API.Services
                 {
                     if (createCampaignRequest.Campaign != null && createCampaignRequest.Campaign.OrganizationID != null)
                     {
-                        var organization = _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
+                        var organization =
+                            _organizationRepository.GetById((Guid)createCampaignRequest.Campaign!.OrganizationID!);
                         createCampaignRequest.Campaign!.Organization = organization;
-                        var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
+                        var donatePhase =
+                            _donatePhaseRepository.GetDonatePhaseByCampaignId(createCampaignRequest.CampaignID);
                         if (donatePhase != null && donatePhase.IsProcessing == true)
                         {
                             createCampaignRequest.Campaign!.Organization = organization;
@@ -3170,6 +3408,7 @@ namespace SU24_VMO_API.Services
                     {
                         processingPhase.Campaign = null;
                     }
+
                 if (campaign.StatementPhase != null)
                 {
                     campaign.StatementPhase.Campaign = null;
@@ -3179,8 +3418,10 @@ namespace SU24_VMO_API.Services
                     {
                         statementFile.StatementPhase = null;
                     }
+
                     campaign.StatementPhase.StatementFiles = statementFiles.ToList();
                 }
+
                 if (campaign.CreateCampaignRequest != null)
                 {
                     campaign.CreateCampaignRequest.OrganizationManager = null;
@@ -3188,6 +3429,7 @@ namespace SU24_VMO_API.Services
                     campaign.CreateCampaignRequest.Moderator = null;
                 }
             }
+
             return campaigns;
         }
 
@@ -4057,8 +4299,8 @@ namespace SU24_VMO_API.Services
         //    }
         //}
 
-        public IEnumerable<Campaign?> GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(
-    Guid organizationManagerId, string? status, string? campaignName, int? pageSize, int? pageNo)
+        public CampaignCreateByOm? GetAllCampaignByCreateByOrganizationManagerIdWithOptionsPhaseInProcessingPhase(
+            Guid organizationManagerId, string? status, string? campaignName, int? pageSize, int? pageNo)
         {
             // Normalize campaign name once
             string? normalizedCampaignName = campaignName?.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
@@ -4068,10 +4310,12 @@ namespace SU24_VMO_API.Services
             string? normalizedStatus = status?.ToLowerInvariant();
 
             // Fetch createCampaignRequests once
-            var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(organizationManagerId, pageSize, pageNo);
+            var createCampaignRequests =
+                _createCampaignRequestRepository.GetAllCreateCampaignRequestByOrganizationManagerId(
+                    organizationManagerId, pageSize, pageNo);
 
             if (createCampaignRequests == null || !createCampaignRequests.Any())
-                return Enumerable.Empty<Campaign>();
+                return null;
 
             var campaigns = new List<Campaign>();
 
@@ -4092,7 +4336,8 @@ namespace SU24_VMO_API.Services
                 }
                 else if (normalizedStatus == "processing-phase")
                 {
-                    var processingPhases = _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
+                    var processingPhases =
+                        _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
                     if (processingPhases?.Any(pp => pp.IsProcessing) == true)
                     {
                         campaign.ProcessingPhases = processingPhases;
@@ -4101,7 +4346,8 @@ namespace SU24_VMO_API.Services
                 }
                 else if (normalizedStatus == "statement-phase")
                 {
-                    campaign.StatementPhase = _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
+                    campaign.StatementPhase =
+                        _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
                     if (campaign.StatementPhase?.IsProcessing == true)
                     {
                         campaign.StatementPhase.StatementFiles = _statementFileRepository.GetAll()
@@ -4120,10 +4366,23 @@ namespace SU24_VMO_API.Services
 
             if (hasCampaignName)
             {
-                return campaigns.Where(c => c.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD).Contains(normalizedCampaignName));
+                return new CampaignCreateByOm
+                {
+                    Campaigns = campaigns.Where(c =>
+                            c.Name.ToLowerInvariant().Normalize(NormalizationForm.FormD)
+                                .Contains(normalizedCampaignName))
+                        .ToList(),
+                    TotalItem = _campaignRepository.GetAll().Count()
+                };
             }
-            return campaigns;
+            return new CampaignCreateByOm
+            {
+                Campaigns = campaigns,
+                TotalItem = _campaignRepository.GetAll().Count()
+            };
         }
+
+
 
         private void DetachNavigationProperties(Campaign campaign)
         {
