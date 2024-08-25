@@ -29,6 +29,23 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateAt).ToList();
         }
 
+        public IEnumerable<Campaign> GetCampaignsCreateByVolunteer()
+        {
+            using var context = new VMODBContext();
+
+            // Start with the base query
+            var query = context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhases)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase)
+                .Where(c => c.IsActive)
+                .AsQueryable();
+            return query.Where(c => c.OrganizationID == null).ToList();
+        }
+
         public IEnumerable<Campaign> GetAll(int pageNumber, int pageSize, string? status, Guid? campaignTypeId, string? createBy, string? campaignName)
         {
             using var context = new VMODBContext();
@@ -128,6 +145,23 @@ namespace Repository.Implements
                 .Include(a => a.DonatePhase)
                 .Include(a => a.StatementPhase)
                 .OrderByDescending(a => a.CreateAt).ToList().Where(a => a.CampaignTypeID!.Equals(campaignTypeId));
+        }
+
+        public IEnumerable<Campaign> GetCampaignsCreateByOM()
+        {
+            using var context = new VMODBContext();
+
+            // Start with the base query
+            var query = context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhases)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase)
+                .Where(c => c.IsActive)
+                .AsQueryable();
+            return query.Where(c => c.OrganizationID != null).ToList();
         }
 
         public Campaign? Save(Campaign entity)

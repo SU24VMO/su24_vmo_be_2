@@ -4378,7 +4378,7 @@ namespace SU24_VMO_API.Services
             return new CampaignCreateByOm
             {
                 Campaigns = campaigns,
-                TotalItem = _campaignRepository.GetAll().Count()
+                TotalItem = _campaignRepository.GetCampaignsCreateByOM().Count()
             };
         }
 
@@ -4416,7 +4416,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<CampaignResponse?> GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid userId, string? status, string? campaignName, int? pageSize, int? pageNo)
+        public CampaignCreateByVolunteer? GetAllCampaignByCreateByVolunteerIdWithOptionsPhaseInProcessingPhase(Guid userId, string? status, string? campaignName, int? pageSize, int? pageNo)
         {
             if (string.IsNullOrEmpty(campaignName) && string.IsNullOrEmpty(status))
             {
@@ -4431,7 +4431,7 @@ namespace SU24_VMO_API.Services
 
             var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
 
-            if (createCampaignRequests == null) return Enumerable.Empty<CampaignResponse?>();
+            if (createCampaignRequests == null) return null;
 
             var campaigns = new List<CampaignResponse>();
 
@@ -4458,7 +4458,11 @@ namespace SU24_VMO_API.Services
                     .ToList();
             }
 
-            return campaigns;
+            return new CampaignCreateByVolunteer
+            {
+                Campaigns = campaigns,
+                TotalItem = _campaignRepository.GetCampaignsCreateByVolunteer().Count()
+            };
         }
 
         private IEnumerable<object>? GetPhases(Guid campaignId, string? status)
