@@ -575,13 +575,13 @@ namespace SU24_VMO_API.Services
             }
         }
 
-        public IEnumerable<CampaignTierIIWithBankingAccountResponse>
-            GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName)
+        public CampaignsTierIIWithBankingAccountWithActiveStatus?
+            GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var campaigns = GetAllCampaignsWithActiveStatus()
-                    .Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                var campaigns =
+                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -797,12 +797,16 @@ namespace SU24_VMO_API.Services
 
                 }
 
-                return campaignsResponse.Where(c => c.Name.ToLower().Trim().Contains(campaignName.ToLower().Trim()));
+                return new CampaignsTierIIWithBankingAccountWithActiveStatus
+                {
+                    CampaignWithBankingAccountResponses = campaignsResponse,
+                    TotalItem = _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName).Count()
+                };
             }
             else
             {
-                var campaigns = GetAllCampaignsWithActiveStatus()
-                    .Where(c => c.CampaignTier == CampaignTier.PartialDisbursementCampaign);
+                var campaigns =
+                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 foreach (var campaign in campaigns)
                 {
@@ -1016,7 +1020,11 @@ namespace SU24_VMO_API.Services
 
                 }
 
-                return campaignsResponse;
+                return new CampaignsTierIIWithBankingAccountWithActiveStatus
+                {
+                    CampaignWithBankingAccountResponses = campaignsResponse,
+                    TotalItem = _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName).Count()
+                };
             }
         }
 

@@ -16,5 +16,7 @@ namespace Repository.Interfaces
         public IEnumerable<Campaign> GetAll(int pageNumber, int pageSize, string? status, Guid? campaignTypeId, string? createBy, string? campaignName);
         public IEnumerable<Campaign> GetAllCampaignsTierIWithActiveStatus(string? campaignName);
         public IEnumerable<Campaign> GetAllCampaignsTierIWithActiveStatus(string? campaignName, int? pageSize, int? pageNo);
+        public IEnumerable<Campaign> GetAllCampaignsTierIIWithActiveStatus(string? campaignName);
+        public IEnumerable<Campaign> GetAllCampaignsTierIIWithActiveStatus(string? campaignName, int? pageSize, int? pageNo);
     }
 }
