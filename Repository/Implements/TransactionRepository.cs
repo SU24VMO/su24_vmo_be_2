@@ -65,6 +65,76 @@ namespace Repository.Implements
                 .Where(d => d.CampaignID.Equals(campaignId) && d.TransactionType == TransactionType.Transfer);
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionReceiveForStatementByAdminAsync(string? campaignName, int? pageSize, int? pageNo)
+        {
+            await using var context = new VMODBContext();
+            var query = context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList()
+                .Where(o =>
+                    o.Campaign?.Name != null && o.Campaign != null && o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success && o.Campaign.Name.ToLower().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactionReceiveForStatementByAdminAsync(string? campaignName)
+        {
+            await using var context = new VMODBContext();
+            var query = context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList()
+                .Where(o =>
+                    o.Campaign?.Name != null && o.Campaign != null && o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success && o.Campaign.Name.ToLower().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            return query.ToList();
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName)
+        {
+            await using var context = new VMODBContext();
+            var query = context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList()
+                .Where(o =>
+                    o.Campaign?.Name != null && o.Campaign != null && o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success && o.Campaign.Name.ToLower().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            return query.ToList();
+        }
+
+        public async Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName, int? pageSize, int? pageNo)
+        {
+            await using var context = new VMODBContext();
+            var query = context.Transactions
+                .Include(a => a.Account)
+                .Include(a => a.BankingAccount)
+                .Include(a => a.Campaign).OrderByDescending(a => a.CreateDate).ToList()
+                .Where(o =>
+                    o.Campaign?.Name != null && o.Campaign != null && o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success && o.Campaign.Name.ToLower().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+
+        }
+
         public Transaction? GetTransactionByOrderId(int orderId)
         {
             using var context = new VMODBContext();

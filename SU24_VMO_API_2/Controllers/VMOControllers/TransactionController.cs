@@ -284,12 +284,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var data = await _transactionService.GetTransactionReceiveForStatementByAdmin(campaignName);
+                var data = await _transactionService.GetTransactionReceiveForStatementByAdmin(campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService4.PaginateList(data, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = data
                 };
 
                 return Ok(response);
@@ -362,12 +362,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var data = await _transactionService.GetTransactionSendForStatementByAdmin(campaignName);
+                var data = await _transactionService.GetTransactionSendForStatementByAdmin(campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService4.PaginateList(data, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = data
                 };
 
                 return Ok(response);

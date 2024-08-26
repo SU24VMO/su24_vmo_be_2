@@ -115,11 +115,13 @@ namespace SU24_VMO_API.Services
 
 
 
-        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionReceiveForStatementByAdmin(string? campaignName)
+        public async Task<TransactionReceiveForStatementByAdmin?> GetTransactionReceiveForStatementByAdmin(string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+                var transactions = await
+                    _transactionRepository.GetTransactionReceiveForStatementByAdminAsync(campaignName, pageSize,
+                        pageNo);
                 var listResponse = new List<TransactionForStatementByAdmin>();
                 foreach (var transaction in transactions)
                 {
@@ -169,11 +171,18 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return listResponse.Where(x => x.CampaignName.ToLower().Contains(campaignName.ToLower().Trim()));
+
+                return new TransactionReceiveForStatementByAdmin
+                {
+                    TransactionForStatementByAdmins = listResponse,
+                    TotalItem = (await _transactionRepository.GetTransactionReceiveForStatementByAdminAsync(campaignName)).Count()
+                };
             }
             else
             {
-                var transactions = _transactionRepository.GetAll().Where(o => o.TransactionType == TransactionType.Receive && o.TransactionStatus == TransactionStatus.Success);
+                var transactions = await
+                    _transactionRepository.GetTransactionReceiveForStatementByAdminAsync(campaignName, pageSize,
+                        pageNo);
                 var listResponse = new List<TransactionForStatementByAdmin>();
                 foreach (var transaction in transactions)
                 {
@@ -223,18 +232,22 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return listResponse;
+                return new TransactionReceiveForStatementByAdmin
+                {
+                    TransactionForStatementByAdmins = listResponse,
+                    TotalItem = (await _transactionRepository.GetTransactionReceiveForStatementByAdminAsync(campaignName)).Count()
+                };
             }
         }
 
 
 
-        public async Task<IEnumerable<TransactionForStatementByAdmin>> GetTransactionSendForStatementByAdmin(string? campaignName)
+        public async Task<TransactionSendForStatementByAdmin?> GetTransactionSendForStatementByAdmin(string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var transactions = _transactionRepository.GetAll().Where(o =>
-                    o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
+                var transactions = await
+                    _transactionRepository.GetTransactionSendForStatementByAdminAsync(campaignName, pageSize, pageNo);
                 var listResponse = new List<TransactionForStatementByAdmin>();
                 foreach (var transaction in transactions)
                 {
@@ -285,12 +298,16 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return listResponse.Where(x => x.CampaignName.ToLower().Contains(campaignName.ToLower().Trim()));
+                return new TransactionSendForStatementByAdmin
+                {
+                    TransactionForStatementByAdmins = listResponse,
+                    TotalItem = (await _transactionRepository.GetTransactionSendForStatementByAdminAsync(campaignName)).Count()
+                };
             }
             else
             {
-                var transactions = _transactionRepository.GetAll().Where(o =>
-                    o.TransactionType == TransactionType.Transfer && o.TransactionStatus == TransactionStatus.Success);
+                var transactions = await
+                    _transactionRepository.GetTransactionSendForStatementByAdminAsync(campaignName, pageSize, pageNo);
                 var listResponse = new List<TransactionForStatementByAdmin>();
                 foreach (var transaction in transactions)
                 {
@@ -341,7 +358,11 @@ namespace SU24_VMO_API.Services
                     }
                 }
 
-                return listResponse;
+                return new TransactionSendForStatementByAdmin
+                {
+                    TransactionForStatementByAdmins = listResponse,
+                    TotalItem = (await _transactionRepository.GetTransactionSendForStatementByAdminAsync(campaignName)).Count()
+                };
             }
         }
 

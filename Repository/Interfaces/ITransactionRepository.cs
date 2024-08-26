@@ -12,6 +12,14 @@ namespace Repository.Interfaces
         public Transaction? GetTransactionByOrderId(int orderId);
         public IEnumerable<Transaction?> GetHistoryTransactionByAccountId(Guid accountId);
         public Transaction? GetTransactionByCampaignIdWithTypeIsTransfer(Guid campaignId);
-        public IEnumerable<Transaction>? GetTransactionByCampaignTierIIIdWithTypeIsTransfer(Guid campaignId);
+        public IEnumerable<Transaction> GetTransactionByCampaignTierIIIdWithTypeIsTransfer(Guid campaignId);
+        public Task<IEnumerable<Transaction>> GetTransactionReceiveForStatementByAdminAsync(string? campaignName, int? pageSize, int? pageNo);
+        public Task<IEnumerable<Transaction>> GetTransactionReceiveForStatementByAdminAsync(string? campaignName);
+        public Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName);
+        public Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName, int? pageSize, int? pageNo);
+
+
+
+
     }
 }
