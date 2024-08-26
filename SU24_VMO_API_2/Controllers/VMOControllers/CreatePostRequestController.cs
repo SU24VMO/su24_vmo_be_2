@@ -190,11 +190,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var requests = _createPostRequestService.GetAllByPostName(postTitle);
+                var requests = _createPostRequestService.GetAllByPostName(postTitle, pageSize, pageNo);
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(requests, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = requests
                 };
                 return Ok(response);
             }
@@ -422,7 +422,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager, Volunteer, Moderator")]
         [Route("update/post-information")]
 
-        public async Task<IActionResult> UpdateCreatePostRequestRequest(Guid createPostRequestId,[FromForm] UpdateCreatePostRequestRequest updateRequest)
+        public async Task<IActionResult> UpdateCreatePostRequestRequest(Guid createPostRequestId, [FromForm] UpdateCreatePostRequestRequest updateRequest)
         {
             try
             {

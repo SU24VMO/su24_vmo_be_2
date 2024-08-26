@@ -8,6 +8,7 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
 using System.Security.Principal;
 using BusinessObject.Enums;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
 {
@@ -42,11 +43,13 @@ namespace SU24_VMO_API.Services
             return _repository.GetAll();
         }
 
-        public IEnumerable<CreatePostRequest> GetAllByPostName(string? postTitle)
+        public CreatePostRequestByPostTitle? GetAllByPostName(string? postTitle, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(postTitle))
-                return _repository.GetAll().Where(m => m.Post.Title.Trim().ToLower().Contains(postTitle.ToLower().Trim()));
-            else return _repository.GetAll();
+            return new CreatePostRequestByPostTitle
+            {
+                CreatePostRequests = (_repository.GetAllCreatePostRequestsByPostTitle(postTitle, pageSize, pageNo) ?? Array.Empty<CreatePostRequest>()).ToList(),
+                TotalItem = (_repository.GetAllCreatePostRequestsByPostTitle(postTitle) ?? Array.Empty<CreatePostRequest>()).Count()
+            };
         }
 
         public CreatePostRequest? GetById(Guid id)

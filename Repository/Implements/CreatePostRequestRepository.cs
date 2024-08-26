@@ -77,5 +77,38 @@ namespace Repository.Implements
                 .Include(a => a.Moderator).ToList()
                 .FirstOrDefault(a => a.PostID.Equals(postId));
         }
+
+        public IEnumerable<CreatePostRequest>? GetAllCreatePostRequestsByPostTitle(string? postTitle)
+        {
+            using var context = new VMODBContext();
+            return context.CreatePostRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Post)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList()
+                .Where(m => m.Post != null && m.Post.Title.Trim().ToLower().Contains(postTitle?.ToLower().Trim() ?? string.Empty));
+        }
+
+        public IEnumerable<CreatePostRequest>? GetAllCreatePostRequestsByPostTitle(string? postTitle, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreatePostRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Post)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator).ToList()
+                .Where(m => m.Post != null && m.Post.Title.Trim().ToLower().Contains(postTitle?.ToLower().Trim() ?? string.Empty));
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
     }
 }

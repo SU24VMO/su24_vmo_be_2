@@ -54,6 +54,39 @@ namespace Repository.Implements
                 .Where(c => c.PhoneNumber.ToLower().Equals(phoneNumber.ToLower()));
         }
 
+        public IEnumerable<CreateOrganizationManagerRequest> GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateOrganizationManagerRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(m => (m.OrganizationManager!.FirstName.Trim().ToLower() + " " + m.OrganizationManager.LastName.Trim().ToLower()).Contains(organizationManagerName?.ToLower().Trim() ?? string.Empty));
+            return query.ToList();
+        }
+
+        public IEnumerable<CreateOrganizationManagerRequest> GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName,
+            int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateOrganizationManagerRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(m => (m.OrganizationManager!.FirstName.Trim().ToLower() + " " + m.OrganizationManager.LastName.Trim().ToLower()).Contains(organizationManagerName?.ToLower().Trim() ?? string.Empty));
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
+
         public CreateOrganizationManagerRequest? Save(CreateOrganizationManagerRequest entity)
         {
             using var context = new VMODBContext();

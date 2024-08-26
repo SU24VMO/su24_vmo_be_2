@@ -11,5 +11,8 @@ namespace Repository.Interfaces
     {
         public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithEmail(string email);
         public IEnumerable<CreateOrganizationManagerRequest> GetCreateOrganizationManagerRequestsWithPhoneNumber(string phoneNumber);
+        public IEnumerable<CreateOrganizationManagerRequest> GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName);
+        public IEnumerable<CreateOrganizationManagerRequest> GetAllCreateOrganizationManagerRequestsByOrganizationManagerName(string? organizationManagerName, int? pageSize, int? pageNo);
+
     }
 }
