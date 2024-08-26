@@ -73,5 +73,38 @@ namespace Repository.Implements
                 .Include(a => a.Organization).ToList()
                 .FirstOrDefault(a => a.OrganizationID.Equals(organizationId));
         }
+
+        public IEnumerable<CreateOrganizationRequest> GetOrganizationRequestsByOrganizationName(string? organizationName, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateOrganizationRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName?.ToLower().Trim() ?? string.Empty));
+
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
+
+        public IEnumerable<CreateOrganizationRequest> GetOrganizationRequestsByOrganizationName(string? organizationName)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateOrganizationRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Moderator)
+                .OrderByDescending(a => a.CreateDate).ToList()
+                .Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName?.ToLower().Trim() ?? string.Empty));
+            return query.ToList();
+        }
     }
 }

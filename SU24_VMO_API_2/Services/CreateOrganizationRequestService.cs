@@ -8,6 +8,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
 {
@@ -50,11 +51,11 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
-        public IEnumerable<CreateOrganizationRequest> GetAllByOrganizationName(string? organizationName)
+        public CreateOrganizationRequestByOrganizationName? GetAllByOrganizationName(string? organizationName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(organizationName))
             {
-                var requests = repository.GetAll().Where(m => !(String.IsNullOrEmpty(m.OrganizationName)) && m.OrganizationName.ToLower().Contains(organizationName.ToLower().Trim()));
+                var requests = repository.GetOrganizationRequestsByOrganizationName(organizationName, pageSize, pageNo);
                 foreach (var request in requests)
                 {
                     var organization = _organizationRepository.GetById(request.OrganizationID);
@@ -67,11 +68,16 @@ namespace SU24_VMO_API.Services
                     }
                     request.Organization = organization;
                 }
-                return requests;
+
+                return new CreateOrganizationRequestByOrganizationName
+                {
+                    CreateOrganizationRequests = requests.ToList(),
+                    TotalItem = repository.GetOrganizationRequestsByOrganizationName(organizationName).Count()
+                };
             }
             else
             {
-                var requests = repository.GetAll();
+                var requests = repository.GetOrganizationRequestsByOrganizationName(organizationName, pageSize, pageNo);
                 foreach (var request in requests)
                 {
                     var organization = _organizationRepository.GetById(request.OrganizationID);
@@ -84,7 +90,11 @@ namespace SU24_VMO_API.Services
                     }
                     request.Organization = organization;
                 }
-                return requests;
+                return new CreateOrganizationRequestByOrganizationName
+                {
+                    CreateOrganizationRequests = requests.ToList(),
+                    TotalItem = repository.GetOrganizationRequestsByOrganizationName(organizationName).Count()
+                };
             }
         }
 

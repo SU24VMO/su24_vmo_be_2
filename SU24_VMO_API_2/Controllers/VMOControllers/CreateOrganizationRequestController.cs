@@ -190,11 +190,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var requests = _createOrganizationRequestService.GetAllByOrganizationName(organizationName);
+                var requests = _createOrganizationRequestService.GetAllByOrganizationName(organizationName, pageSize, pageNo);
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(requests, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = requests
                 };
                 return Ok(response);
             }
@@ -443,7 +443,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         [Authorize(Roles = "OrganizationManager, Moderator")]
         [Route("update/organization-information")]
 
-        public async Task<IActionResult> UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId,[FromForm] UpdateCreateOrganizationRequestRequest updateRequest)
+        public async Task<IActionResult> UpdateCreateOrganizationRequestRequest(Guid createOrganizationRequestRequestId, [FromForm] UpdateCreateOrganizationRequestRequest updateRequest)
         {
             try
             {
