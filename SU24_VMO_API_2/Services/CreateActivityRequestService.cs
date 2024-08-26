@@ -7,6 +7,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.DTOs.Response;
 using SU24_VMO_API_2.DTOs.Response.PayosReponse;
 
 namespace SU24_VMO_API.Services
@@ -104,10 +105,10 @@ namespace SU24_VMO_API.Services
             return requests;
         }
 
-        public IEnumerable<CreateActivityRequest> GetAllCreateActivityRequestsOfCampaignTierI()
+        public CreateActivityRequestOfCampaignTierI? GetAllCreateActivityRequestsOfCampaignTierI(int? pageSize, int? pageNo)
         {
             var listRequestTierI = new List<CreateActivityRequest>();
-            var requests = GetAll();
+            var requests = _repository.GetActivitiesRequestOfCampaignTierI(pageSize, pageNo);
             foreach (var request in requests)
             {
                 var activity = request.Activity;
@@ -128,13 +129,17 @@ namespace SU24_VMO_API.Services
                     listRequestTierI.Add(request);
                 }
             }
-            return listRequestTierI;
+            return new CreateActivityRequestOfCampaignTierI
+            {
+                CreateActivityRequests = listRequestTierI,
+                TotalItem = _repository.GetActivitiesRequestOfCampaignTierI().Count()
+            };
         }
 
-        public IEnumerable<CreateActivityRequest> GetAllCreateActivityRequestsOfCampaignTierII()
+        public CreateActivityRequestOfCampaignTierII? GetAllCreateActivityRequestsOfCampaignTierII(int? pageSize, int? pageNo)
         {
             var listRequestTierII = new List<CreateActivityRequest>();
-            var requests = GetAll();
+            var requests = _repository.GetActivitiesRequestOfCampaignTierII(pageSize, pageNo);
             foreach (var request in requests)
             {
                 var activity = request.Activity;
@@ -158,7 +163,11 @@ namespace SU24_VMO_API.Services
                     listRequestTierII.Add(request);
                 }
             }
-            return listRequestTierII;
+            return new CreateActivityRequestOfCampaignTierII
+            {
+                CreateActivityRequests = listRequestTierII,
+                TotalItem = _repository.GetActivitiesRequestOfCampaignTierII().Count()
+            };
         }
 
         public IEnumerable<CreateActivityRequest> GetAllByActivityTitle(string? activityTitle)

@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using System.ComponentModel;
+using BusinessObject.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -112,12 +113,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var createActivityRequests = _createActivityRequestService.GetAllCreateActivityRequestsOfCampaignTierI();
+                var createActivityRequests = _createActivityRequestService.GetAllCreateActivityRequestsOfCampaignTierI(pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(createActivityRequests, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = createActivityRequests
                 };
 
                 return Ok(response);
@@ -191,12 +192,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var createActivityRequests = _createActivityRequestService.GetAllCreateActivityRequestsOfCampaignTierII();
+                var createActivityRequests = _createActivityRequestService.GetAllCreateActivityRequestsOfCampaignTierII(pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(createActivityRequests, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = createActivityRequests
                 };
 
                 return Ok(response);

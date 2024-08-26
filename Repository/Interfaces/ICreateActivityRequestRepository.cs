@@ -14,5 +14,9 @@ namespace Repository.Interfaces
         public IEnumerable<CreateActivityRequest> GetAllActivitiesRequestCreateByOM(Guid omId, int? pageSize, int? pageNo);
         public IEnumerable<CreateActivityRequest> GetAllActivitiesRequestCreateByVolunteer(Guid memberId);
         public IEnumerable<CreateActivityRequest> GetAllActivitiesRequestCreateByVolunteer(Guid memberId, int? pageSize, int? pageNo);
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierI();
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierI(int? pageSize, int? pageNo);
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierII();
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierII(int? pageSize, int? pageNo);
     }
 }

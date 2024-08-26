@@ -194,12 +194,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var list = _service.GetCreateCampaignRequestsByCampaignName(campaignName);
+                var list = _service.GetCreateCampaignRequestsByCampaignName(campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(list!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = list
                 };
 
                 return Ok(response);

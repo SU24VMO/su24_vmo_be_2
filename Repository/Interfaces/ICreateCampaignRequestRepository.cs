@@ -18,7 +18,7 @@ namespace Repository.Interfaces
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, string? status);
         public CreateCampaignRequest? GetCreateCampaignRequestByCampaignId(Guid campaignId);
         public Task<CreateCampaignRequest?> SaveWithBankingAccountAsync(CreateCampaignRequest entity, BankingAccount bankingAccount);
-
-
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestsByCampaignName(string? name, int? pageSize, int? pageNo);
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestsByCampaignName(string? name);
     }
 }

@@ -9,6 +9,7 @@ using SU24_VMO_API.DTOs.Request.AccountRequest;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Request;
+using SU24_VMO_API_2.DTOs.Response;
 
 namespace SU24_VMO_API.Services
 {
@@ -115,14 +116,18 @@ namespace SU24_VMO_API.Services
             return request;
         }
 
-        public IEnumerable<CreateCampaignRequest>? GetCreateCampaignRequestsByCampaignName(string? campaignName)
+        public CreateCampaignRequestByName? GetCreateCampaignRequestsByCampaignName(string? campaignName, int? pageSize, int? pageNo)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
-                var requests = GetCreateCampaignRequests().Where(c => c.Campaign.Name.ToLower().Contains(campaignName.ToLower()));
+                var requests =
+                    _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName, pageSize,
+                        pageNo);
                 foreach (var request in requests)
                 {
-                    request.Campaign.ProcessingPhases = request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
+                    if (request.Campaign?.ProcessingPhases != null)
+                        request.Campaign.ProcessingPhases =
+                            request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
                     if (request.Member != null)
                     {
                         request.Member.CreateCampaignRequests = null;
@@ -148,14 +153,20 @@ namespace SU24_VMO_API.Services
                     }
 
                 }
-                return requests;
+                return new CreateCampaignRequestByName
+                {
+                    CreateCampaignRequests = requests.ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName).Count()
+                };
             }
             else
             {
-                var requests = GetCreateCampaignRequests();
+                var requests = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName);
                 foreach (var request in requests)
                 {
-                    request.Campaign.ProcessingPhases = request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
+                    if (request.Campaign?.ProcessingPhases != null)
+                        request.Campaign.ProcessingPhases =
+                            request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
                     if (request.Member != null)
                     {
                         request.Member.CreateCampaignRequests = null;
@@ -180,7 +191,11 @@ namespace SU24_VMO_API.Services
                         }
                     }
                 }
-                return requests;
+                return new CreateCampaignRequestByName
+                {
+                    CreateCampaignRequests = requests.ToList(),
+                    TotalItem = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName).Count()
+                };
             }
         }
 

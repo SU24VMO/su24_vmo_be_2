@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.Enums;
 
 namespace Repository.Implements
 {
@@ -144,6 +145,78 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateDate);
 
             // Calculate total count of the filtered list
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
+
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierI()
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateActivityRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Include(a => a.Activity)
+                .Where(a => a.Activity != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
+                .OrderByDescending(a => a.CreateDate).ToList();
+            return query.ToList();
+        }
+
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierI(int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateActivityRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Include(a => a.Activity)
+                .Where(a => a.Activity != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
+                .OrderByDescending(a => a.CreateDate).ToList();
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
+
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierII()
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateActivityRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Include(a => a.Activity)
+                .Where(a => a.Activity != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                .OrderByDescending(a => a.CreateDate).ToList();
+            return query.ToList();
+        }
+
+        public IEnumerable<CreateActivityRequest> GetActivitiesRequestOfCampaignTierII(int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.CreateActivityRequests
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Include(a => a.Activity)
+                .Where(a => a.Activity != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign != null && a.Activity.ProcessingPhase != null && a.Activity.ProcessingPhase.Campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                .OrderByDescending(a => a.CreateDate).ToList();
             int totalCount = query.Count();
 
             // Set pageSize to the total count if it's not provided
