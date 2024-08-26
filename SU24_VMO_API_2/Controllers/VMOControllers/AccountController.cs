@@ -371,12 +371,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithVolunteerRole(name);
+                var accounts = _accountService.GetAllAccountsWithVolunteerRole(name, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = accounts
                 };
 
                 return Ok(response);
@@ -448,12 +448,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var accounts = _accountService.GetAllAccountWithMemberRole(name);
+                var accounts = _accountService.GetAllAccountWithMemberRole(name, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = accounts
                 };
 
                 return Ok(response);
@@ -525,12 +525,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithModeratorRole(name);
+                var accounts = _accountService.GetAllAccountsWithModeratorRole(name, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = accounts
                 };
 
                 return Ok(response);
@@ -602,12 +602,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var accounts = _accountService.GetAllAccountsWithOrganizationManagerRole(name);
+                var accounts = _accountService.GetAllAccountsWithOrganizationManagerRole(name, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(accounts!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = accounts
                 };
 
                 return Ok(response);

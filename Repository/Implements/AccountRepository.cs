@@ -25,18 +25,31 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreatedAt).ToList();
         }
 
-        public IEnumerable<Account> GetAllAccountsWithVolunteerRole()
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole(string? name)
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Volunteer));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Volunteer) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
         }
 
-        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole()
+        public IEnumerable<Account> GetAllAccountsWithVolunteerRole(string? name, int? pageSize, int? pageNo)
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Volunteer) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
+        }
+
+        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole(string? name)
+        {
+            using var context = new VMODBContext();
+            return context.Accounts
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
+        }
+        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole(string? name, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            return context.Accounts
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.OrganizationManager) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
         }
 
         public async Task<Account?> GetByIdAsync(Guid id)
@@ -49,18 +62,32 @@ namespace Repository.Implements
                 .FirstOrDefaultAsync(d => d.AccountID.Equals(id));
         }
 
-        public IEnumerable<Account> GetAllAccountsWithModeratorRole()
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole(string? name)
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Moderator));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Moderator) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
         }
 
-        public IEnumerable<Account> GetAllAccountWithMemberRole()
+        public IEnumerable<Account> GetAllAccountsWithModeratorRole(string? name, int? pageSize, int? pageNo)
         {
             using var context = new VMODBContext();
             return context.Accounts
-                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Role.Equals(BusinessObject.Enums.Role.Member));
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Moderator) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
+        }
+
+        public IEnumerable<Account> GetAllAccountWithMemberRole(string? name)
+        {
+            using var context = new VMODBContext();
+            return context.Accounts
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Member) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
+        }
+
+        public IEnumerable<Account> GetAllAccountWithMemberRole(string? name, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            return context.Accounts
+                .OrderByDescending(a => a.CreatedAt).ToList().Where(a => a.Username != null && a.Role.Equals(BusinessObject.Enums.Role.Member) && a.Username.ToLower().Contains(name?.ToLower().Trim() ?? string.Empty));
         }
 
         public Account? GetByEmail(string email)

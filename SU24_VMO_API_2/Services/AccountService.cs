@@ -98,35 +98,38 @@ namespace SU24_VMO_API.Services
             return count;
         }
 
-        public IEnumerable<Account> GetAllAccountsWithVolunteerRole(string? name)
+        public AccountsWithVolunteerRole? GetAllAccountsWithVolunteerRole(string? name, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(name))
-                return _accountRepository.GetAllAccountsWithVolunteerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
-            else
-                return _accountRepository.GetAllAccountsWithVolunteerRole();
+            return new AccountsWithVolunteerRole
+            {
+                Accounts = _accountRepository.GetAllAccountsWithVolunteerRole(name, pageSize, pageNo).ToList(),
+                TotalItem = _accountRepository.GetAllAccountsWithVolunteerRole(name).Count()
+            };
         }
-        public IEnumerable<Account> GetAllAccountWithMemberRole(string? name)
+        public AccountsWithMemberRole? GetAllAccountWithMemberRole(string? name, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(name))
-                return _accountRepository.GetAllAccountWithMemberRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
-            else
-                return _accountRepository.GetAllAccountWithMemberRole();
+            return new AccountsWithMemberRole
+            {
+                Accounts = _accountRepository.GetAllAccountWithMemberRole(name, pageSize, pageNo).ToList(),
+                TotalItem = _accountRepository.GetAllAccountWithMemberRole(name).Count()
+            };
         }
-        public IEnumerable<Account> GetAllAccountsWithModeratorRole(string? name)
+        public AccountsWithModeratorRole? GetAllAccountsWithModeratorRole(string? name, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(name))
-                return _accountRepository.GetAllAccountsWithModeratorRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
-            else
-                return _accountRepository.GetAllAccountsWithModeratorRole();
+            return new AccountsWithModeratorRole
+            {
+                Accounts = _accountRepository.GetAllAccountsWithModeratorRole(name, pageSize, pageNo).ToList(),
+                TotalItem = _accountRepository.GetAllAccountsWithModeratorRole(name).Count()
+            };
 
         }
-        public IEnumerable<Account> GetAllAccountsWithOrganizationManagerRole(string? name)
+        public AccountsWithOrganizationManagerRole? GetAllAccountsWithOrganizationManagerRole(string? name, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(name))
-                return _accountRepository.GetAllAccountsWithOrganizationManagerRole().Where(a => a.Username.ToLower().Contains(name.ToLower().Trim()));
-            else
-                return _accountRepository.GetAllAccountsWithOrganizationManagerRole();
-
+            return new AccountsWithOrganizationManagerRole
+            {
+                Accounts = _accountRepository.GetAllAccountsWithOrganizationManagerRole(name, pageSize, pageNo).ToList(),
+                TotalItem = _accountRepository.GetAllAccountsWithOrganizationManagerRole(name).Count()
+            };
         }
 
 
