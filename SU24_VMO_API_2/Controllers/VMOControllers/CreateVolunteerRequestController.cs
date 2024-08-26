@@ -192,11 +192,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var requests = _service.GetAllCreateVolunteerRequestsByMemberName(volunteerName);
+                var requests = _service.GetAllCreateVolunteerRequestsByMemberName(volunteerName, pageSize, pageNo);
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService.PaginateList(requests!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = requests
                 };
                 return Ok(response);
             }

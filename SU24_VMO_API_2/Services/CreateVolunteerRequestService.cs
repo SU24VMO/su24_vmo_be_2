@@ -10,6 +10,8 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API.Supporters.Utils;
 using SU24_VMO_API_2.DTOs.Request;
 using System.Text.RegularExpressions;
+using Microsoft.OData.UriParser;
+using SU24_VMO_API_2.DTOs.Response;
 
 
 namespace SU24_VMO_API.Services
@@ -74,11 +76,15 @@ namespace SU24_VMO_API.Services
             return GetAllCreateVolunteerRequests().FirstOrDefault(c => c.CreateVolunteerRequestID.Equals(createVolunteerRequestId));
         }
 
-        public IEnumerable<CreateVolunteerRequest>? GetAllCreateVolunteerRequestsByMemberName(string? memberName)
+        public CreateVolunteerRequestsByMemberName? GetAllCreateVolunteerRequestsByMemberName(string? memberName, int? pageSize, int? pageNo)
         {
-            if (!String.IsNullOrEmpty(memberName))
-                return GetAllCreateVolunteerRequests().Where(m => (m.Member!.FirstName.Trim().ToLower() + " " + m.Member.LastName.Trim().ToLower()).Contains(memberName.ToLower().Trim()));
-            else return GetAllCreateVolunteerRequests();
+            return new CreateVolunteerRequestsByMemberName
+            {
+                CreateVolunteerRequests = _createVolunteerRequestRepository
+                    .GetAllCreateVolunteerRequestsByMemberName(memberName, pageSize, pageNo).ToList(),
+                TotalITem = _createVolunteerRequestRepository.GetAllCreateVolunteerRequestsByMemberName(memberName)
+                    .Count()
+            };
         }
 
 

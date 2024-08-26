@@ -11,6 +11,7 @@ namespace Repository.Interfaces
     {
         public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithEmail(string email);
         public IEnumerable<CreateVolunteerRequest> GetCreateVolunteerRequestsWithPhoneNumber(string phoneNumber);
-
+        public IEnumerable<CreateVolunteerRequest> GetAllCreateVolunteerRequestsByMemberName(string? memberName, int? pageSize, int? pageNo);
+        public IEnumerable<CreateVolunteerRequest> GetAllCreateVolunteerRequestsByMemberName(string? memberName);
     }
 }
