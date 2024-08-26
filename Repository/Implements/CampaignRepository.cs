@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using System;
@@ -121,6 +122,44 @@ namespace Repository.Implements
                 .OrderByDescending(a => a.CreateAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .ToList();
+        }
+
+        public IEnumerable<Campaign> GetAllCampaignsTierIWithActiveStatus(string? campaignName)
+        {
+            using var context = new VMODBContext();
+            var query = context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhases)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt).ToList().Where(c => c.Name != null && c.IsActive == true && c.CampaignTier == CampaignTier.FullDisbursementCampaign && c.Name.ToLower().Trim().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            return query.ToList();
+        }
+
+        public IEnumerable<Campaign> GetAllCampaignsTierIWithActiveStatus(string? campaignName, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+            var query = context.Campaigns
+                .Include(a => a.Organization)
+                .Include(a => a.CampaignType)
+                .Include(a => a.Transactions)
+                .Include(a => a.ProcessingPhases)
+                .Include(a => a.DonatePhase)
+                .Include(a => a.StatementPhase)
+                .OrderByDescending(a => a.CreateAt).ToList().Where(c => c.Name != null && c.IsActive == true && c.CampaignTier == CampaignTier.FullDisbursementCampaign && c.Name.ToLower().Trim().Contains(campaignName?.ToLower().Trim() ?? string.Empty));
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
                 .ToList();
         }
 

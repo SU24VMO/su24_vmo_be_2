@@ -359,12 +359,12 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsTierIWithBankingAccountWithActiveStatus(campaignName);
+                var campaigns = _campaignService.GetAllCampaignsTierIWithBankingAccountWithActiveStatus(campaignName, pageSize, pageNo);
 
                 var response = new ResponseMessage()
                 {
                     Message = "Get successfully!",
-                    Data = _paginationService3.PaginateList(campaigns!, pageSize, pageNo, orderBy, orderByProperty)
+                    Data = campaigns
                 };
 
                 return Ok(response);
