@@ -332,7 +332,7 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
-                .Where(c => name != null && c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(name.ToLower()))
+                .Where(c => name != null ? c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(name.ToLower()) : c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(""))
                 .OrderByDescending(a => a.CreateDate);
 
             int totalCount = query.Count();
@@ -358,7 +358,7 @@ namespace Repository.Implements
                 .Include(a => a.OrganizationManager)
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
-                .Where(c => name != null && c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(name.ToLower()))
+                .Where(c => name != null ? c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(name.ToLower()) : c.Campaign != null && c.Campaign.Name != null && c.Campaign != null && c.Campaign.Name.ToLower().Contains(""))
                 .OrderByDescending(a => a.CreateDate);
 
             return query.ToList();

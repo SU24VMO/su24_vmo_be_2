@@ -161,7 +161,7 @@ namespace SU24_VMO_API.Services
             }
             else
             {
-                var requests = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName);
+                var requests = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName, pageSize, pageNo);
                 foreach (var request in requests)
                 {
                     if (request.Campaign?.ProcessingPhases != null)
