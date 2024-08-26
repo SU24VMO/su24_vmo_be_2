@@ -125,6 +125,15 @@ namespace SU24_VMO_API.Services
                                 activityImage.Activity = null;
                             }
                         }
+                        else
+                        {
+                            var activityImages = _activityImageRepository.GetAllActivityImagesByActivityId(request.ActivityID);
+                            request.Activity.ActivityImages = activityImages.ToList();
+                            foreach (var activityImage in request.Activity.ActivityImages)
+                            {
+                                activityImage.Activity = null;
+                            }
+                        }
                     }
                     listRequestTierI.Add(request);
                 }
@@ -154,6 +163,17 @@ namespace SU24_VMO_API.Services
                         request.Activity.ProcessingPhase.Campaign = null;
                         if (request.Activity.ActivityImages != null)
                         {
+                            var activityImages = _activityImageRepository.GetAllActivityImagesByActivityId(request.ActivityID);
+                            request.Activity.ActivityImages = activityImages.ToList();
+                            foreach (var activityImage in request.Activity.ActivityImages)
+                            {
+                                activityImage.Activity = null;
+                            }
+                        }
+                        else
+                        {
+                            var activityImages = _activityImageRepository.GetAllActivityImagesByActivityId(request.ActivityID);
+                            request.Activity.ActivityImages = activityImages.ToList();
                             foreach (var activityImage in request.Activity.ActivityImages)
                             {
                                 activityImage.Activity = null;
