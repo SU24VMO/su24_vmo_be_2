@@ -38,6 +38,11 @@ namespace SU24_VMO_API.Services
             return repository.GetAll();
         }
 
+        public IEnumerable<Post> GetAllPostsIsActive()
+        {
+            return repository.GetAll().Where(p => p.IsActive);
+        }
+
         public IEnumerable<Post> GetAllPostsWithPostTitle(string? title)
         {
             if (!String.IsNullOrEmpty(title))
