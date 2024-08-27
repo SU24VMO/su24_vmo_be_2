@@ -125,6 +125,11 @@ namespace SU24_VMO_API.Services
                         pageNo);
                 foreach (var request in requests)
                 {
+                    if (request.Campaign != null)
+                    {
+                        request.Campaign.ProcessingPhases =
+                            _processingPhaseRepository.GetProcessingPhaseByCampaignId(request.CampaignID);
+                    }
                     if (request.Campaign?.ProcessingPhases != null)
                         request.Campaign.ProcessingPhases =
                             request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
@@ -164,6 +169,11 @@ namespace SU24_VMO_API.Services
                 var requests = _createCampaignRequestRepository.GetAllCreateCampaignRequestsByCampaignName(campaignName, pageSize, pageNo);
                 foreach (var request in requests)
                 {
+                    if (request.Campaign != null)
+                    {
+                        request.Campaign.ProcessingPhases =
+                            _processingPhaseRepository.GetProcessingPhaseByCampaignId(request.CampaignID);
+                    }
                     if (request.Campaign?.ProcessingPhases != null)
                         request.Campaign.ProcessingPhases =
                             request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
