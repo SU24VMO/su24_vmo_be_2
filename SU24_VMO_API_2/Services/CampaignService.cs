@@ -12,6 +12,7 @@ using Org.BouncyCastle.Asn1.Cms;
 using SU24_VMO_API.Supporters.EmailSupporter;
 using SU24_VMO_API.Supporters.ExceptionSupporter;
 using SU24_VMO_API_2.DTOs.Request;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SU24_VMO_API.Services
 {
@@ -581,7 +582,7 @@ namespace SU24_VMO_API.Services
             if (!String.IsNullOrEmpty(campaignName))
             {
                 var campaigns =
-                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
+                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 int total = 0;
                 foreach (var campaign in campaigns)
@@ -926,16 +927,28 @@ namespace SU24_VMO_API.Services
 
                 }
 
+                int totalCount = campaignsResponse.Count();
+
+                // Set pageSize to the total count if it's not provided
+                int size = pageSize ?? totalCount;
+                int page = pageNo ?? 1;
+
+                // Apply pagination
+                var query = campaignsResponse
+                    .Skip((page - 1) * size)
+                    .Take(size)
+                    .ToList();
+
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
-                    CampaignWithBankingAccountResponses = campaignsResponse,
+                    CampaignWithBankingAccountResponses = query,
                     TotalItem = total
                 };
             }
             else
             {
                 var campaigns =
-                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
+                    _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
                 int total = 0;
                 foreach (var campaign in campaigns)
@@ -1279,9 +1292,21 @@ namespace SU24_VMO_API.Services
 
                 }
 
+                int totalCount = campaignsResponse.Count();
+
+                // Set pageSize to the total count if it's not provided
+                int size = pageSize ?? totalCount;
+                int page = pageNo ?? 1;
+
+                // Apply pagination
+                var query = campaignsResponse
+                    .Skip((page - 1) * size)
+                    .Take(size)
+                    .ToList();
+
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
-                    CampaignWithBankingAccountResponses = campaignsResponse,
+                    CampaignWithBankingAccountResponses = query,
                     TotalItem = total
                 };
             }
