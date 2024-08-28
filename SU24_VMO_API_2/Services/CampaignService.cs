@@ -756,78 +756,79 @@ namespace SU24_VMO_API.Services
                                                 listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                             if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
-
-                                                campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                                {
-                                                    CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null
-                                                        ? bankingAccount.BankingAccountID
-                                                        : null,
-                                                    BankingName = bankingAccount != null
-                                                        ? bankingAccount.BankingName
-                                                        : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null
-                                                        ? bankingAccount.AccountName
-                                                        : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null
-                                                        ? bankingAccount.QRCode
-                                                        : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null
-                                                        ? bankingAccount.AccountNumber
-                                                        : "không có số tài khoản ngân hàng",
-                                                    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                                    Percent = donatePhase.Percent,
-                                                    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = null,
-                                                    Name = campaign.Name,
-                                                    IsDisable = campaign.IsDisable,
-                                                    IsActive = campaign.IsActive,
-                                                    IsComplete = campaign.IsComplete,
-                                                    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                                    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                                    IsEligible = true,
-                                                    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent =
-                                                        (double)processingPhaseIsProcessing.Percent,
-                                                    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                                });
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                    campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                                    {
+                                                        CampaignID = campaign.CampaignID,
+                                                        BankingAccountId = bankingAccount != null
+                                                            ? bankingAccount.BankingAccountID
+                                                            : null,
+                                                        BankingName = bankingAccount != null
+                                                            ? bankingAccount.BankingName
+                                                            : "không có tên ngân hàng!",
+                                                        AccountName = bankingAccount != null
+                                                            ? bankingAccount.AccountName
+                                                            : "không có tên tài khoản!",
+                                                        QRCode = bankingAccount != null
+                                                            ? bankingAccount.QRCode
+                                                            : "không có mã QR!",
+                                                        BankingAccountNumber = bankingAccount != null
+                                                            ? bankingAccount.AccountNumber
+                                                            : "không có số tài khoản ngân hàng",
+                                                        Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                        Percent = donatePhase.Percent,
+                                                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                        TransactionImage = null,
+                                                        Name = campaign.Name,
+                                                        IsDisable = campaign.IsDisable,
+                                                        IsActive = campaign.IsActive,
+                                                        IsComplete = campaign.IsComplete,
+                                                        IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                        CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                        IsEligible = true,
+                                                        ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                        ProcessingPhasePercent =
+                                                            (double)processingPhaseIsProcessing.Percent,
+                                                        ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                                    });
                                             }
                                             else
                                             {
-                                                campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                                {
-                                                    CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                    campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                                    {
+                                                        CampaignID = campaign.CampaignID,
+                                                        BankingAccountId = bankingAccount != null
                                                         ? bankingAccount.BankingAccountID
                                                         : null,
-                                                    BankingName = bankingAccount != null
+                                                        BankingName = bankingAccount != null
                                                         ? bankingAccount.BankingName
                                                         : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null
+                                                        AccountName = bankingAccount != null
                                                         ? bankingAccount.AccountName
                                                         : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null
+                                                        QRCode = bankingAccount != null
                                                         ? bankingAccount.QRCode
                                                         : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null
+                                                        BankingAccountNumber = bankingAccount != null
                                                         ? bankingAccount.AccountNumber
                                                         : "không có số tài khoản ngân hàng",
-                                                    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                                    Percent = donatePhase.Percent,
-                                                    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = null,
-                                                    Name = campaign.Name,
-                                                    IsDisable = campaign.IsDisable,
-                                                    IsActive = campaign.IsActive,
-                                                    IsComplete = campaign.IsComplete,
-                                                    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                                    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                                    IsEligible = false,
-                                                    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent =
+                                                        Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                        Percent = donatePhase.Percent,
+                                                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                        TransactionImage = null,
+                                                        Name = campaign.Name,
+                                                        IsDisable = campaign.IsDisable,
+                                                        IsActive = campaign.IsActive,
+                                                        IsComplete = campaign.IsComplete,
+                                                        IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                        CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                        IsEligible = false,
+                                                        ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                        ProcessingPhasePercent =
                                                         (double)processingPhaseIsProcessing.Percent,
-                                                    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                                });
+                                                        ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                                    });
                                             }
                                         }
                                     }
@@ -846,72 +847,75 @@ namespace SU24_VMO_API.Services
                                         listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                     if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
 
-                                        campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                        {
-                                            CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
                                                 ? bankingAccount.BankingAccountID
                                                 : null,
-                                            BankingName = bankingAccount != null
+                                                BankingName = bankingAccount != null
                                                 ? bankingAccount.BankingName
                                                 : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null
+                                                AccountName = bankingAccount != null
                                                 ? bankingAccount.AccountName
                                                 : "không có tên tài khoản!",
-                                            QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null
+                                                QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
                                                 ? bankingAccount.AccountNumber
                                                 : "không có số tài khoản ngân hàng",
-                                            Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            Percent = donatePhase.Percent,
-                                            DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            TransactionImage = null,
-                                            Name = campaign.Name,
-                                            IsDisable = campaign.IsDisable,
-                                            IsActive = campaign.IsActive,
-                                            IsComplete = campaign.IsComplete,
-                                            IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            IsEligible = true,
-                                            ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
-                                            ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                        });
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = true,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
                                     }
                                     else
                                     {
-                                        campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                        {
-                                            CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
                                                 ? bankingAccount.BankingAccountID
                                                 : null,
-                                            BankingName = bankingAccount != null
+                                                BankingName = bankingAccount != null
                                                 ? bankingAccount.BankingName
                                                 : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null
+                                                AccountName = bankingAccount != null
                                                 ? bankingAccount.AccountName
                                                 : "không có tên tài khoản!",
-                                            QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null
+                                                QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
                                                 ? bankingAccount.AccountNumber
                                                 : "không có số tài khoản ngân hàng",
-                                            Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            Percent = donatePhase.Percent,
-                                            DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            TransactionImage = null,
-                                            Name = campaign.Name,
-                                            IsDisable = campaign.IsDisable,
-                                            IsActive = campaign.IsActive,
-                                            IsComplete = campaign.IsComplete,
-                                            IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            IsEligible = false,
-                                            ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
-                                            ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                        });
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = false,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
                                     }
                                 }
 
@@ -1102,78 +1106,81 @@ namespace SU24_VMO_API.Services
                                                 listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                             if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
 
-                                                campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                                {
-                                                    CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null
+                                                    campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                                    {
+                                                        CampaignID = campaign.CampaignID,
+                                                        BankingAccountId = bankingAccount != null
                                                         ? bankingAccount.BankingAccountID
                                                         : null,
-                                                    BankingName = bankingAccount != null
+                                                        BankingName = bankingAccount != null
                                                         ? bankingAccount.BankingName
                                                         : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null
+                                                        AccountName = bankingAccount != null
                                                         ? bankingAccount.AccountName
                                                         : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null
+                                                        QRCode = bankingAccount != null
                                                         ? bankingAccount.QRCode
                                                         : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null
+                                                        BankingAccountNumber = bankingAccount != null
                                                         ? bankingAccount.AccountNumber
                                                         : "không có số tài khoản ngân hàng",
-                                                    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                                    Percent = donatePhase.Percent,
-                                                    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = null,
-                                                    Name = campaign.Name,
-                                                    IsDisable = campaign.IsDisable,
-                                                    IsActive = campaign.IsActive,
-                                                    IsComplete = campaign.IsComplete,
-                                                    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                                    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                                    IsEligible = true,
-                                                    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent =
+                                                        Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                        Percent = donatePhase.Percent,
+                                                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                        TransactionImage = null,
+                                                        Name = campaign.Name,
+                                                        IsDisable = campaign.IsDisable,
+                                                        IsActive = campaign.IsActive,
+                                                        IsComplete = campaign.IsComplete,
+                                                        IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                        CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                        IsEligible = true,
+                                                        ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                        ProcessingPhasePercent =
                                                         (double)processingPhaseIsProcessing.Percent,
-                                                    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                                });
+                                                        ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                                    });
                                             }
                                             else
                                             {
-                                                campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                                {
-                                                    CampaignID = campaign.CampaignID,
-                                                    BankingAccountId = bankingAccount != null
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+
+                                                    campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                                    {
+                                                        CampaignID = campaign.CampaignID,
+                                                        BankingAccountId = bankingAccount != null
                                                         ? bankingAccount.BankingAccountID
                                                         : null,
-                                                    BankingName = bankingAccount != null
+                                                        BankingName = bankingAccount != null
                                                         ? bankingAccount.BankingName
                                                         : "không có tên ngân hàng!",
-                                                    AccountName = bankingAccount != null
+                                                        AccountName = bankingAccount != null
                                                         ? bankingAccount.AccountName
                                                         : "không có tên tài khoản!",
-                                                    QRCode = bankingAccount != null
+                                                        QRCode = bankingAccount != null
                                                         ? bankingAccount.QRCode
                                                         : "không có mã QR!",
-                                                    BankingAccountNumber = bankingAccount != null
+                                                        BankingAccountNumber = bankingAccount != null
                                                         ? bankingAccount.AccountNumber
                                                         : "không có số tài khoản ngân hàng",
-                                                    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                                    Percent = donatePhase.Percent,
-                                                    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                    TransactionImage = null,
-                                                    Name = campaign.Name,
-                                                    IsDisable = campaign.IsDisable,
-                                                    IsActive = campaign.IsActive,
-                                                    IsComplete = campaign.IsComplete,
-                                                    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                                    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                                    IsEligible = false,
-                                                    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                                    ProcessingPhasePercent =
+                                                        Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                        Percent = donatePhase.Percent,
+                                                        DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                        TransactionImage = null,
+                                                        Name = campaign.Name,
+                                                        IsDisable = campaign.IsDisable,
+                                                        IsActive = campaign.IsActive,
+                                                        IsComplete = campaign.IsComplete,
+                                                        IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                        CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                        IsEligible = false,
+                                                        ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                        ProcessingPhasePercent =
                                                         (double)processingPhaseIsProcessing.Percent,
-                                                    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                                });
+                                                        ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                                    });
                                             }
                                         }
                                     }
@@ -1192,72 +1199,75 @@ namespace SU24_VMO_API.Services
                                         listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                     if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
 
-                                        campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                        {
-                                            CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
                                                 ? bankingAccount.BankingAccountID
                                                 : null,
-                                            BankingName = bankingAccount != null
+                                                BankingName = bankingAccount != null
                                                 ? bankingAccount.BankingName
                                                 : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null
+                                                AccountName = bankingAccount != null
                                                 ? bankingAccount.AccountName
                                                 : "không có tên tài khoản!",
-                                            QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null
+                                                QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
                                                 ? bankingAccount.AccountNumber
                                                 : "không có số tài khoản ngân hàng",
-                                            Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            Percent = donatePhase.Percent,
-                                            DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            TransactionImage = null,
-                                            Name = campaign.Name,
-                                            IsDisable = campaign.IsDisable,
-                                            IsActive = campaign.IsActive,
-                                            IsComplete = campaign.IsComplete,
-                                            IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            IsEligible = true,
-                                            ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
-                                            ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                        });
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = true,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
                                     }
                                     else
                                     {
-                                        campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                        {
-                                            CampaignID = campaign.CampaignID,
-                                            BankingAccountId = bankingAccount != null
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
                                                 ? bankingAccount.BankingAccountID
                                                 : null,
-                                            BankingName = bankingAccount != null
+                                                BankingName = bankingAccount != null
                                                 ? bankingAccount.BankingName
                                                 : "không có tên ngân hàng!",
-                                            AccountName = bankingAccount != null
+                                                AccountName = bankingAccount != null
                                                 ? bankingAccount.AccountName
                                                 : "không có tên tài khoản!",
-                                            QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
-                                            BankingAccountNumber = bankingAccount != null
+                                                QRCode = bankingAccount != null ? bankingAccount.QRCode : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
                                                 ? bankingAccount.AccountNumber
                                                 : "không có số tài khoản ngân hàng",
-                                            Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            Percent = donatePhase.Percent,
-                                            DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            TransactionImage = null,
-                                            Name = campaign.Name,
-                                            IsDisable = campaign.IsDisable,
-                                            IsActive = campaign.IsActive,
-                                            IsComplete = campaign.IsComplete,
-                                            IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            IsEligible = false,
-                                            ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
-                                            ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                        });
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = false,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent = (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
                                     }
                                 }
 
