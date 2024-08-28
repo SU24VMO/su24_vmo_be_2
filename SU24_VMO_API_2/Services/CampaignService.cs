@@ -780,7 +780,9 @@ namespace SU24_VMO_API.Services
                                                         Amount = processingPhaseIsProcessing.CurrentMoney,
                                                         Percent = donatePhase.Percent,
                                                         DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                        TransactionImage = null,
+                                                        TransactionImage = transaction != null
+                                                            ? transaction.TransactionImageUrl
+                                                            : null,
                                                         Name = campaign.Name,
                                                         IsDisable = campaign.IsDisable,
                                                         IsActive = campaign.IsActive,
@@ -870,7 +872,9 @@ namespace SU24_VMO_API.Services
                                                 Amount = processingPhaseIsProcessing.CurrentMoney,
                                                 Percent = donatePhase.Percent,
                                                 DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                TransactionImage = null,
+                                                TransactionImage = transaction != null
+                                                    ? transaction.TransactionImageUrl
+                                                    : null,
                                                 Name = campaign.Name,
                                                 IsDisable = campaign.IsDisable,
                                                 IsActive = campaign.IsActive,
@@ -1144,7 +1148,9 @@ namespace SU24_VMO_API.Services
                                                         Amount = processingPhaseIsProcessing.CurrentMoney,
                                                         Percent = donatePhase.Percent,
                                                         DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                        TransactionImage = null,
+                                                        TransactionImage = transaction != null
+                                                            ? transaction.TransactionImageUrl
+                                                            : null,
                                                         Name = campaign.Name,
                                                         IsDisable = campaign.IsDisable,
                                                         IsActive = campaign.IsActive,
@@ -1235,7 +1241,9 @@ namespace SU24_VMO_API.Services
                                                 Amount = processingPhaseIsProcessing.CurrentMoney,
                                                 Percent = donatePhase.Percent,
                                                 DonatePhaseIsEnd = donatePhase.IsEnd,
-                                                TransactionImage = null,
+                                                TransactionImage = transaction != null
+                                                    ? transaction.TransactionImageUrl
+                                                    : null,
                                                 Name = campaign.Name,
                                                 IsDisable = campaign.IsDisable,
                                                 IsActive = campaign.IsActive,
