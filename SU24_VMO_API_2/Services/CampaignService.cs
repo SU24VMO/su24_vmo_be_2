@@ -756,7 +756,7 @@ namespace SU24_VMO_API.Services
                                                 listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                             if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
-                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
                                                     campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                     {
                                                         CampaignID = campaign.CampaignID,
@@ -794,7 +794,7 @@ namespace SU24_VMO_API.Services
                                             }
                                             else
                                             {
-                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
                                                     campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                     {
                                                         CampaignID = campaign.CampaignID,
@@ -847,7 +847,7 @@ namespace SU24_VMO_API.Services
                                         listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                     if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
-                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                             campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                             {
@@ -883,7 +883,7 @@ namespace SU24_VMO_API.Services
                                     }
                                     else
                                     {
-                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                             campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                             {
@@ -1106,7 +1106,7 @@ namespace SU24_VMO_API.Services
                                                 listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                             if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                             {
-                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                                     campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                     {
@@ -1145,7 +1145,7 @@ namespace SU24_VMO_API.Services
                                             }
                                             else
                                             {
-                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                                if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                                     campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                     {
@@ -1199,7 +1199,7 @@ namespace SU24_VMO_API.Services
                                         listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                                     if (processingPhaseIsProcessing.CurrentPercent >= percentBeforePriority)
                                     {
-                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                             campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                             {
@@ -1235,7 +1235,7 @@ namespace SU24_VMO_API.Services
                                     }
                                     else
                                     {
-                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId != processingPhaseIsProcessing.ProcessingPhaseId))
+                                        if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
 
                                             campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                             {
