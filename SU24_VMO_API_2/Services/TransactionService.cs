@@ -372,7 +372,7 @@ namespace SU24_VMO_API.Services
         {
             if (numberOfTransaction != null)
             {
-                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success)
+                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
                 .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
                 .Take((int)numberOfTransaction) // Take the top 6 transactions
                 .ToList(); // Convert to a list if needed;
@@ -402,7 +402,8 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return transReponse.Where(t => t.TransactionType == TransactionType.Receive);
+
+                return transReponse;
             }
             else
             {
@@ -436,7 +437,7 @@ namespace SU24_VMO_API.Services
                         });
                     }
                 }
-                return transReponse.Where(t => t.TransactionType == TransactionType.Receive);
+                return transReponse;
             }
 
         }
