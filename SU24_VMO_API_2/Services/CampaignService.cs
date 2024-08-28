@@ -583,6 +583,7 @@ namespace SU24_VMO_API.Services
                 var campaigns =
                     _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
+                int total = 0;
                 foreach (var campaign in campaigns)
                 {
                     var campaignRequest =
@@ -605,7 +606,7 @@ namespace SU24_VMO_API.Services
                                     t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
                                 processingPhaseIsProcessing.CurrentPercent =
                                     Math.Round((currentPercent / targetAmount) * 100, 3);
-
+                                total++;
                                 var transactions =
                                     _transactionRepository.GetTransactionByCampaignTierIIIdWithTypeIsTransfer(
                                         campaign.CampaignID);
@@ -706,6 +707,43 @@ namespace SU24_VMO_API.Services
                                                 });
                                             }
                                         }
+                                        else
+                                        {
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
+                                                    ? bankingAccount.BankingAccountID
+                                                    : null,
+                                                BankingName = bankingAccount != null
+                                                    ? bankingAccount.BankingName
+                                                    : "không có tên ngân hàng!",
+                                                AccountName = bankingAccount != null
+                                                    ? bankingAccount.AccountName
+                                                    : "không có tên tài khoản!",
+                                                QRCode = bankingAccount != null
+                                                    ? bankingAccount.QRCode
+                                                    : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
+                                                    ? bankingAccount.AccountNumber
+                                                    : "không có số tài khoản ngân hàng",
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = false,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent =
+                                                    (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
+                                        }
                                     }
                                 }
                                 else
@@ -800,7 +838,7 @@ namespace SU24_VMO_API.Services
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
                     CampaignWithBankingAccountResponses = campaignsResponse,
-                    TotalItem = _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName).Count()
+                    TotalItem = total
                 };
             }
             else
@@ -808,6 +846,7 @@ namespace SU24_VMO_API.Services
                 var campaigns =
                     _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName, pageSize, pageNo);
                 var campaignsResponse = new List<CampaignTierIIWithBankingAccountResponse>();
+                int total = 0;
                 foreach (var campaign in campaigns)
                 {
                     var campaignRequest =
@@ -830,7 +869,7 @@ namespace SU24_VMO_API.Services
                                     t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
                                 processingPhaseIsProcessing.CurrentPercent =
                                     Math.Round((currentPercent / targetAmount) * 100, 3);
-
+                                total++;
                                 var transactions =
                                     _transactionRepository.GetTransactionByCampaignTierIIIdWithTypeIsTransfer(
                                         campaign.CampaignID);
@@ -929,6 +968,43 @@ namespace SU24_VMO_API.Services
                                                 });
                                             }
                                         }
+                                        else
+                                        {
+                                            campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
+                                            {
+                                                CampaignID = campaign.CampaignID,
+                                                BankingAccountId = bankingAccount != null
+                                                    ? bankingAccount.BankingAccountID
+                                                    : null,
+                                                BankingName = bankingAccount != null
+                                                    ? bankingAccount.BankingName
+                                                    : "không có tên ngân hàng!",
+                                                AccountName = bankingAccount != null
+                                                    ? bankingAccount.AccountName
+                                                    : "không có tên tài khoản!",
+                                                QRCode = bankingAccount != null
+                                                    ? bankingAccount.QRCode
+                                                    : "không có mã QR!",
+                                                BankingAccountNumber = bankingAccount != null
+                                                    ? bankingAccount.AccountNumber
+                                                    : "không có số tài khoản ngân hàng",
+                                                Amount = processingPhaseIsProcessing.CurrentMoney,
+                                                Percent = donatePhase.Percent,
+                                                DonatePhaseIsEnd = donatePhase.IsEnd,
+                                                TransactionImage = null,
+                                                Name = campaign.Name,
+                                                IsDisable = campaign.IsDisable,
+                                                IsActive = campaign.IsActive,
+                                                IsComplete = campaign.IsComplete,
+                                                IsProcessing = processingPhaseIsProcessing.IsProcessing,
+                                                CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
+                                                IsEligible = false,
+                                                ProcessingPhaseName = processingPhaseIsProcessing.Name,
+                                                ProcessingPhasePercent =
+                                                    (double)processingPhaseIsProcessing.Percent,
+                                                ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
+                                            });
+                                        }
                                     }
                                 }
                                 else
@@ -1023,7 +1099,7 @@ namespace SU24_VMO_API.Services
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
                     CampaignWithBankingAccountResponses = campaignsResponse,
-                    TotalItem = _campaignRepository.GetAllCampaignsTierIIWithActiveStatus(campaignName).Count()
+                    TotalItem = total
                 };
             }
         }
