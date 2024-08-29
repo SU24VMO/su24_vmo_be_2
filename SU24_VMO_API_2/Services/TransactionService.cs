@@ -376,12 +376,12 @@ namespace SU24_VMO_API.Services
                 .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
                 .Take((int)numberOfTransaction) // Take the top 6 transactions
                 .ToList(); // Convert to a list if needed;
-                var transReponse = new List<TransactionResponse>();
+                var transResponse = new List<TransactionResponse>();
                 if (trans != null)
                 {
                     foreach (var tran in trans)
                     {
-                        transReponse.Add(new TransactionResponse
+                        transResponse.Add(new TransactionResponse
                         {
                             AccountId = tran.AccountId,
                             Amount = tran.Amount,
@@ -398,12 +398,13 @@ namespace SU24_VMO_API.Services
                             TransactionType = tran.TransactionType,
                             TransactionStatus = tran.TransactionStatus,
                             DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
-                            DonateStatus = "Vừa ủng hộ"
+                            DonateStatus = "Vừa ủng hộ",
+                            CampaignTier = tran.Campaign!.CampaignTier
                         });
                     }
                 }
 
-                return transReponse;
+                return transResponse;
             }
             else
             {
@@ -411,12 +412,12 @@ namespace SU24_VMO_API.Services
                 .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
                 .Take(6) // Take the top 6 transactions
                 .ToList(); // Convert to a list if needed;
-                var transReponse = new List<TransactionResponse>();
+                var transResponse = new List<TransactionResponse>();
                 if (trans != null)
                 {
                     foreach (var tran in trans)
                     {
-                        transReponse.Add(new TransactionResponse
+                        transResponse.Add(new TransactionResponse
                         {
                             AccountId = tran.AccountId,
                             Amount = tran.Amount,
@@ -433,11 +434,12 @@ namespace SU24_VMO_API.Services
                             TransactionType = tran.TransactionType,
                             TransactionStatus = tran.TransactionStatus,
                             DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
-                            DonateStatus = "Vừa ủng hộ"
+                            DonateStatus = "Vừa ủng hộ",
+                            CampaignTier = tran.Campaign!.CampaignTier
                         });
                     }
                 }
-                return transReponse;
+                return transResponse;
             }
 
         }
