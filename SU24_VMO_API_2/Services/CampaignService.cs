@@ -672,6 +672,8 @@ namespace SU24_VMO_API.Services
                                             }
                                             else
                                             {
+
+
                                                 if (campaignsResponse.FirstOrDefault(p => p.ProcessingPhaseId == processingPhaseIsProcessing.ProcessingPhaseId) == null)
                                                     campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
                                                     {
