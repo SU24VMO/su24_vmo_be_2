@@ -711,40 +711,6 @@ namespace SU24_VMO_API.Services
                                         }
                                         else
                                         {
-                                            //campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                            //{
-                                            //    CampaignID = campaign.CampaignID,
-                                            //    BankingAccountId = bankingAccount != null
-                                            //        ? bankingAccount.BankingAccountID
-                                            //        : null,
-                                            //    BankingName = bankingAccount != null
-                                            //        ? bankingAccount.BankingName
-                                            //        : "không có tên ngân hàng!",
-                                            //    AccountName = bankingAccount != null
-                                            //        ? bankingAccount.AccountName
-                                            //        : "không có tên tài khoản!",
-                                            //    QRCode = bankingAccount != null
-                                            //        ? bankingAccount.QRCode
-                                            //        : "không có mã QR!",
-                                            //    BankingAccountNumber = bankingAccount != null
-                                            //        ? bankingAccount.AccountNumber
-                                            //        : "không có số tài khoản ngân hàng",
-                                            //    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            //    Percent = donatePhase.Percent,
-                                            //    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            //    TransactionImage = null,
-                                            //    Name = campaign.Name,
-                                            //    IsDisable = campaign.IsDisable,
-                                            //    IsActive = campaign.IsActive,
-                                            //    IsComplete = campaign.IsComplete,
-                                            //    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            //    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            //    IsEligible = false,
-                                            //    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            //    ProcessingPhasePercent =
-                                            //        (double)processingPhaseIsProcessing.Percent,
-                                            //    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                            //});
 
                                             var listProcessingPhases =
                                                 _processingPhaseRepository.GetProcessingPhaseByCampaignId(
@@ -1082,40 +1048,6 @@ namespace SU24_VMO_API.Services
                                         }
                                         else
                                         {
-                                            //campaignsResponse.Add(new CampaignTierIIWithBankingAccountResponse
-                                            //{
-                                            //    CampaignID = campaign.CampaignID,
-                                            //    BankingAccountId = bankingAccount != null
-                                            //        ? bankingAccount.BankingAccountID
-                                            //        : null,
-                                            //    BankingName = bankingAccount != null
-                                            //        ? bankingAccount.BankingName
-                                            //        : "không có tên ngân hàng!",
-                                            //    AccountName = bankingAccount != null
-                                            //        ? bankingAccount.AccountName
-                                            //        : "không có tên tài khoản!",
-                                            //    QRCode = bankingAccount != null
-                                            //        ? bankingAccount.QRCode
-                                            //        : "không có mã QR!",
-                                            //    BankingAccountNumber = bankingAccount != null
-                                            //        ? bankingAccount.AccountNumber
-                                            //        : "không có số tài khoản ngân hàng",
-                                            //    Amount = processingPhaseIsProcessing.CurrentMoney,
-                                            //    Percent = donatePhase.Percent,
-                                            //    DonatePhaseIsEnd = donatePhase.IsEnd,
-                                            //    TransactionImage = null,
-                                            //    Name = campaign.Name,
-                                            //    IsDisable = campaign.IsDisable,
-                                            //    IsActive = campaign.IsActive,
-                                            //    IsComplete = campaign.IsComplete,
-                                            //    IsProcessing = processingPhaseIsProcessing.IsProcessing,
-                                            //    CurrentMoney = processingPhaseIsProcessing.CurrentMoney,
-                                            //    IsEligible = false,
-                                            //    ProcessingPhaseName = processingPhaseIsProcessing.Name,
-                                            //    ProcessingPhasePercent =
-                                            //        (double)processingPhaseIsProcessing.Percent,
-                                            //    ProcessingPhaseId = processingPhaseIsProcessing.ProcessingPhaseId
-                                            //});
                                             var listProcessingPhases =
                                                 _processingPhaseRepository.GetProcessingPhaseByCampaignId(
                                                     campaign.CampaignID).OrderBy(p => p.Priority);
