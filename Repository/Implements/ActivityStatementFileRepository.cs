@@ -66,5 +66,13 @@ namespace Repository.Implements
                 throw;
             }
         }
+
+        public IEnumerable<ActivityStatementFile>? GetByActivityId(Guid id)
+        {
+            using var context = new VMODBContext();
+            return context.ActivityStatementFiles
+                .Include(a => a.Activity).ToList()
+                .Where(a => a.ActivityId.Equals(id));
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace SU24_VMO_API.Services
         private readonly IStatementFileRepository _statementFileRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
+        private readonly IActivityStatementFileRepository _activityStatementFileRepository;
         private readonly FirebaseService _firebaseService;
         private readonly ActivityService _activityService;
         private readonly StatementFileService _statementFileService;
@@ -48,7 +49,7 @@ namespace SU24_VMO_API.Services
             StatementFileService statementFileService, IStatementFileRepository statementFileRepository,
             IAccountRepository accountRepository, IBankingAccountRepository bankingAccountRepository,
             ITransactionRepository transactionRepository,
-            IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository)
+            IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository, IActivityStatementFileRepository activityStatementFileRepository)
         {
             _campaignRepository = campaignRepository;
             _firebaseService = firebaseService;
@@ -68,6 +69,7 @@ namespace SU24_VMO_API.Services
             _bankingAccountRepository = bankingAccountRepository;
             _transactionRepository = transactionRepository;
             _processingPhaseStatementFileRepository = processingPhaseStatementFileRepository;
+            _activityStatementFileRepository = activityStatementFileRepository;
         }
 
         public async void UpdateCampaignRequest(Guid campaignId, UpdateCampaignRequest request)
@@ -379,6 +381,7 @@ namespace SU24_VMO_API.Services
                 {
                     a.ProcessingPhase = null;
                     a.ActivityImages = _activityImageRepository.GetAllActivityImagesByActivityId(a.ActivityId).ToList();
+                    a.ActivityStatementFiles = _activityStatementFileRepository.GetByActivityId(a.ActivityId).ToList();
                 });
             }
 

@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
     public interface IActivityStatementFileRepository : ICrudBaseRepository<ActivityStatementFile, Guid>
     {
+        public IEnumerable<ActivityStatementFile>? GetByActivityId(Guid id);
     }
 }
