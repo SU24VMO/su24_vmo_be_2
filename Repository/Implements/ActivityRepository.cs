@@ -21,6 +21,7 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return context.Activities
                 .Include(a => a.ProcessingPhase)
+                .Include(a => a.ActivityStatementFiles)
                 .OrderByDescending(a => a.CreateDate).ToList();
         }
 
@@ -28,7 +29,9 @@ namespace Repository.Implements
         {
             using var context = new VMODBContext();
             return context.Activities
-                .Include(a => a.ProcessingPhase).ToList()
+                .Include(a => a.ActivityStatementFiles)
+                .Include(a => a.ProcessingPhase)
+                .ToList()
                 .FirstOrDefault(a => a.ActivityId.Equals(id));
         }
 
@@ -66,6 +69,7 @@ namespace Repository.Implements
             using var context = new VMODBContext();
             return await context.Activities
                 .Include(a => a.ProcessingPhase)
+                .Include(a => a.ActivityStatementFiles)
                 .FirstOrDefaultAsync(a => a.ActivityId.Equals(id));
         }
     }

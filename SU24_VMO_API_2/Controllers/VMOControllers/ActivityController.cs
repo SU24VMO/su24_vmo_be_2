@@ -32,7 +32,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("all")]
-        //[Authorize(Roles = "OrganizationManager, Member, Volunteer, Moderator")]
+        [Authorize(Roles = "OrganizationManager, Member, Volunteer, Moderator")]
 
         public IActionResult GetAllActivitys(int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
         {
