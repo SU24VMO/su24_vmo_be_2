@@ -19,5 +19,7 @@ namespace BusinessObject.Models
 
         public virtual ProcessingPhase? ProcessingPhase { get; set; }
         public virtual List<ActivityImage>? ActivityImages { get; set; }
+        public virtual List<ActivityStatementFile>? ActivityStatementFiles { get; set; }
+
     }
 }

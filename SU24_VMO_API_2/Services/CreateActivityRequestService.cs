@@ -26,6 +26,7 @@ namespace SU24_VMO_API.Services
         private readonly IStatementPhaseRepository _statementPhaseRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
+        private readonly IActivityStatementFileRepository _activityStatementFileRepository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly FirebaseService _firebaseService;
 
@@ -34,7 +35,7 @@ namespace SU24_VMO_API.Services
             IMemberRepository memberRepository, INotificationRepository notificationRepository,
             IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService,
             IStatementPhaseRepository statementPhaseRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository,
-            ICampaignRepository campaignRepository, IDonatePhaseRepository donatePhaseRepository)
+            ICampaignRepository campaignRepository, IDonatePhaseRepository donatePhaseRepository, IActivityStatementFileRepository activityStatementFileRepository)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
@@ -50,6 +51,7 @@ namespace SU24_VMO_API.Services
             _processingPhaseStatementFileRepository = processingPhaseStatementFileRepository;
             _campaignRepository = campaignRepository;
             _donatePhaseRepository = donatePhaseRepository;
+            _activityStatementFileRepository = activityStatementFileRepository;
         }
 
         public IEnumerable<CreateActivityRequest> GetAll()
@@ -727,6 +729,17 @@ namespace SU24_VMO_API.Services
                         CreateBy = accountId,
                     };
                     _processingPhaseStatementFileRepository.Save(statementFile);
+
+                    var activityStatementFile = new ActivityStatementFile
+                    {
+                        ActivityStatementFileId = Guid.NewGuid(),
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        Link = await _firebaseService.UploadImage(item),
+                        ActivityId = activity.ActivityId,
+                        Description = request.Content,
+                        IsActive = true,
+                    };
+                    _activityStatementFileRepository.Save(activityStatementFile);
                 });
                 saveTasks.AddRange(uploadFileTasks);
             }

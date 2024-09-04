@@ -23,6 +23,7 @@ namespace BusinessObject.Models
         public virtual DbSet<Achievement> Achievements { get; set; } = default!;
         public virtual DbSet<Activity> Activities { get; set; } = default!;
         public virtual DbSet<ActivityImage> ActivityImages { get; set; } = default!;
+        public virtual DbSet<ActivityStatementFile> ActivityStatementFiles { get; set; } = default!;
         public virtual DbSet<BankingAccount> BankingAccounts { get; set; } = default!;
         public virtual DbSet<Campaign> Campaigns { get; set; } = default!;
         public virtual DbSet<CampaignType> CampaignTypes { get; set; } = default!;
@@ -106,6 +107,7 @@ namespace BusinessObject.Models
             modelBuilder.ApplyConfiguration(new AchievementConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityConfiguration());
             modelBuilder.ApplyConfiguration(new ActivityImageConfiguration());
+            modelBuilder.ApplyConfiguration(new ActivityStatementFileConfiguration());
             modelBuilder.ApplyConfiguration(new AdminConfiguration());
             modelBuilder.ApplyConfiguration(new BankingAccountConfiguration());
             modelBuilder.ApplyConfiguration(new CampaignConfiguration());

@@ -132,6 +132,7 @@ namespace SU24_VMO_API_2
             builder.Services.AddScoped<IDBTransactionRepository, DBTransactionRepository>();
             builder.Services.AddScoped<IIPAddressRepository, IPAddressRepository>();
             builder.Services.AddScoped<IProcessingPhaseStatementFileRepository, ProcessingPhaseStatementFileRepository>();
+            builder.Services.AddScoped<IActivityStatementFileRepository, ActivityStatementFileRepository>();
 
 
 

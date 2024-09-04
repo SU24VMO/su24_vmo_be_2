@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(VMODBContext))]
-    partial class VMODBContextModelSnapshot : ModelSnapshot
+    [Migration("20240904090938_AddActivityStatementFileTable")]
+    partial class AddActivityStatementFileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1477,9 +1479,9 @@ namespace BusinessObject.Migrations
             modelBuilder.Entity("BusinessObject.Models.ActivityStatementFile", b =>
                 {
                     b.HasOne("BusinessObject.Models.Activity", "Activity")
-                        .WithMany("ActivityStatementFiles")
+                        .WithMany()
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Activity");
@@ -1862,8 +1864,6 @@ namespace BusinessObject.Migrations
             modelBuilder.Entity("BusinessObject.Models.Activity", b =>
                 {
                     b.Navigation("ActivityImages");
-
-                    b.Navigation("ActivityStatementFiles");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.BankingAccount", b =>
