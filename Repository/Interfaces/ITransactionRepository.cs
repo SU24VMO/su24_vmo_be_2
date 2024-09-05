@@ -18,8 +18,6 @@ namespace Repository.Interfaces
         public Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName);
         public Task<IEnumerable<Transaction>> GetTransactionSendForStatementByAdminAsync(string? campaignName, int? pageSize, int? pageNo);
         public Transaction? GetTransactionByProcessingPhaseIdWithTypeIsTransfer(Guid processingPhaseId);
-
-
-
+        public IEnumerable<Transaction>? GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(Guid processingPhaseId);
     }
 }

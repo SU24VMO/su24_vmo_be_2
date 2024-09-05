@@ -145,6 +145,13 @@ namespace Repository.Implements
                 .FirstOrDefault(d => d.ProcessingPhaseId.Equals(processingPhaseId) && d.TransactionType == TransactionType.Transfer);
         }
 
+        public IEnumerable<Transaction>? GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(Guid processingPhaseId)
+        {
+            using var context = new VMODBContext();
+            return context.Transactions.ToList()
+                .Where(d => d.ProcessingPhaseId.Equals(processingPhaseId) && d.TransactionType == TransactionType.Transfer);
+        }
+
         public Transaction? GetTransactionByOrderId(int orderId)
         {
             using var context = new VMODBContext();

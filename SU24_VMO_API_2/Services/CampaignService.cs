@@ -241,7 +241,7 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public CampaignResponse? GetCampaignResponseByCampaignId(Guid campaignId)
+        public CampaignResponseWithAdminTransaction? GetCampaignResponseByCampaignId(Guid campaignId)
         {
             // Fetch campaign and initialize response early
             var campaign = _campaignRepository.GetById(campaignId);
@@ -279,7 +279,7 @@ namespace SU24_VMO_API.Services
 
             if (campaign.ProcessingPhases != null && campaign.ProcessingPhases.Any())
             {
-                campaignResponse.ProcessingPhases = GetProcessingPhases(campaign.ProcessingPhases);
+                campaignResponse.ProcessingPhases = GetProcessingPhases(MapProcessingPhaseToResponse(campaign.ProcessingPhases));
             }
 
 
@@ -297,9 +297,9 @@ namespace SU24_VMO_API.Services
             return campaignResponse;
         }
 
-        private CampaignResponse MapCampaignToResponse(Campaign campaign)
+        private CampaignResponseWithAdminTransaction MapCampaignToResponse(Campaign campaign)
         {
-            return new CampaignResponse
+            return new CampaignResponseWithAdminTransaction()
             {
                 CampaignID = campaign.CampaignID,
                 OrganizationID = campaign.OrganizationID,
@@ -322,7 +322,6 @@ namespace SU24_VMO_API.Services
                 Name = campaign.Name,
                 Note = campaign.Note,
                 Organization = campaign.Organization,
-                ProcessingPhases = campaign.ProcessingPhases,
                 StartDate = campaign.StartDate,
                 StatementPhase = campaign.StatementPhase,
                 TargetAmount = campaign.TargetAmount,
@@ -332,7 +331,33 @@ namespace SU24_VMO_API.Services
             };
         }
 
-        private void CleanUpOrganization(Organization organization, CampaignResponse campaignResponse)
+        private List<ProcessingPhaseResponseWithAdminTransaction>? MapProcessingPhaseToResponse(List<ProcessingPhase> phases)
+        {
+            return phases?.Select(phase => new ProcessingPhaseResponseWithAdminTransaction()
+            {
+                ProcessingPhaseId = phase.ProcessingPhaseId,
+                CampaignId = phase.CampaignId,
+                Name = phase.Name,
+                StartDate = phase.StartDate,
+                EndDate = phase.EndDate,
+                CreateDate = phase.CreateDate,
+                Priority = phase.Priority,
+                CurrentMoney = phase.CurrentMoney,
+                Percent = phase.Percent,
+                CurrentPercent = phase.CurrentPercent,
+                IsProcessing = phase.IsProcessing,
+                IsEnd = phase.IsEnd,
+                UpdateDate = phase.UpdateDate,
+                IsLocked = phase.IsLocked,
+                IsActive = phase.IsActive,
+                UpdateBy = phase.UpdateBy,
+                Campaign = phase.Campaign,
+                Activities = phase.Activities,
+                ProcessingPhaseStatementFiles = phase.ProcessingPhaseStatementFiles,
+            }).ToList();
+        }
+
+        private void CleanUpOrganization(Organization organization, CampaignResponseWithAdminTransaction campaignResponse)
         {
             organization.Campaigns = null;
             var manager = _organizationManagerRepository.GetById(organization.OrganizationManagerID);
@@ -359,7 +384,7 @@ namespace SU24_VMO_API.Services
                 }).ToList();
         }
 
-        private List<ProcessingPhase> GetProcessingPhases(ICollection<ProcessingPhase> processingPhases)
+        private List<ProcessingPhaseResponseWithAdminTransaction> GetProcessingPhases(ICollection<ProcessingPhaseResponseWithAdminTransaction> processingPhases)
         {
             return processingPhases.Select(phase =>
             {
@@ -368,6 +393,8 @@ namespace SU24_VMO_API.Services
                 phase.ProcessingPhaseStatementFiles = _processingPhaseStatementFileRepository
                     .GetProcessingPhaseStatementFilesByProcessingPhaseId(phase.ProcessingPhaseId)
                     .ToList();
+                phase.AdminTransactions =
+                    _transactionRepository.GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(phase.ProcessingPhaseId).ToList();
                 return phase;
             }).OrderBy(p => p.Priority).ToList();
         }
@@ -2911,12 +2938,12 @@ namespace SU24_VMO_API.Services
                 campaign.StatementPhase.Campaign = null;
         }
 
-        public IEnumerable<CampaignResponse> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId,
+        public IEnumerable<CampaignResponseWithAdminTransaction> GetAllCampaignResponsesByCampaignTypeIdWithStatus(Guid? campaignTypeId,
             string? status, string? campaignName, string? createBy, int pageNumber, int pageSize)
         {
             var listCampaigns = GetAllCampaignsByCampaignTypeIdWithStatus(campaignTypeId, status, campaignName,
                 createBy, pageNumber, pageSize);
-            var listCampaignsResponse = new List<CampaignResponse>();
+            var listCampaignsResponse = new List<CampaignResponseWithAdminTransaction>();
             foreach (var campaign in listCampaigns)
             {
                 var response = GetCampaignResponseByCampaignId(campaign.CampaignID);
