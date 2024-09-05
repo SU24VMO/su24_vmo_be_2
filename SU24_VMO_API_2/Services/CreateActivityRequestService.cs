@@ -181,6 +181,9 @@ namespace SU24_VMO_API.Services
                                 activityImage.Activity = null;
                             }
                         }
+
+                        request.Activity.ActivityStatementFiles = (_activityStatementFileRepository
+                            .GetByActivityId(request.ActivityID) ?? Array.Empty<ActivityStatementFile>()).ToList();
                     }
                     listRequestTierII.Add(request);
                 }
