@@ -50,7 +50,7 @@ namespace Repository.Implements
                 .Where(d => d.CampaignId.Equals(campaignId)).ToList();
         }
 
-        public IEnumerable<ProcessingPhase> GetAllByAccountId(Guid accountId, int? pageSize, int? pageNo)
+        public (IEnumerable<ProcessingPhase>, int) GetAllByAccountId(Guid accountId, int? pageSize, int? pageNo, string? processingPhaseName)
         {
             using var context = new VMODBContext();
             //var query = context.ProcessingPhases
@@ -75,6 +75,9 @@ namespace Repository.Implements
                 if (campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
                     listProcessingPhases.AddRange(context.ProcessingPhases.ToList().Where(p => p.CampaignId.Equals(campaign.CampaignID)));
             }
+
+            listProcessingPhases = listProcessingPhases.Where(c =>
+                c.Name.ToLower().Trim().Contains(processingPhaseName?.ToLower().Trim() ?? string.Empty)).ToList();
             int totalCount = listProcessingPhases.Count();
 
             // Set pageSize to the total count if it's not provided
@@ -82,10 +85,10 @@ namespace Repository.Implements
             int page = pageNo ?? 1;
 
             // Apply pagination
-            return listProcessingPhases
+            return (listProcessingPhases
                 .Skip((page - 1) * size)
                 .Take(size)
-                .ToList();
+                .ToList(), totalCount);
         }
 
         public ProcessingPhase? Save(ProcessingPhase entity)

@@ -294,17 +294,21 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ProcessingPhaseResponseForCampaignTierII>? GetProcessingPhaseResponseForCampaignTierII(Guid accountId, int? pageSize, int? pageNo)
+        public ProcessingPhaseResponseForCampaignTierIIWithTotalItem GetProcessingPhaseResponseForCampaignTierII(Guid accountId, int? pageSize, int? pageNo, string? processingPhaseName)
         {
             var account = _accountRepository.GetById(accountId);
             if (account == null) throw new NotFoundException("Tài khoản này không tồn tại!");
-            var processingPhases = repository.GetAllByAccountId(accountId, pageSize, pageNo);
-            foreach (var item in processingPhases)
+            var processingPhases = repository.GetAllByAccountId(accountId, pageSize, pageNo, processingPhaseName);
+            foreach (var item in processingPhases.Item1)
             {
                 if (item.Campaign != null) item.Campaign.ProcessingPhases = null;
             }
-            var response = MapProcessingPhaseToResponse(processingPhases.ToList());
-            return response;
+            var response = MapProcessingPhaseToResponse(processingPhases.Item1.ToList());
+            return new ProcessingPhaseResponseForCampaignTierIIWithTotalItem
+            {
+                ProcessingPhases = response,
+                TotalItem = processingPhases.Item2
+            };
         }
 
         private List<ProcessingPhaseResponseForCampaignTierII>? MapProcessingPhaseToResponse(List<ProcessingPhase> phases)

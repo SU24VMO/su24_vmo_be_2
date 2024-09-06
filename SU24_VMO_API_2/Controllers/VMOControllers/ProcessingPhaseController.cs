@@ -819,11 +819,11 @@ namespace SU24_VMO_API.Controllers.VMOControllers
 
         [HttpGet]
         [Route("tier-ii")]
-        public IActionResult GetProcessingPhaseResponseForCampaignTierII(Guid accountId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty)
+        public IActionResult GetProcessingPhaseResponseForCampaignTierII(Guid accountId, int? pageSize, int? pageNo, string? orderBy, string? orderByProperty, string? processingPhaseName)
         {
             try
             {
-                var processingPhases = _processingPhaseService.GetProcessingPhaseResponseForCampaignTierII(accountId, pageSize, pageNo);
+                var processingPhases = _processingPhaseService.GetProcessingPhaseResponseForCampaignTierII(accountId, pageSize, pageNo, processingPhaseName);
 
                 var response = new ResponseMessage()
                 {
