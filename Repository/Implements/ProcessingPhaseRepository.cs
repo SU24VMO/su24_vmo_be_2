@@ -50,22 +50,39 @@ namespace Repository.Implements
                 .Where(d => d.CampaignId.Equals(campaignId)).ToList();
         }
 
-        public IEnumerable<ProcessingPhase> GetAll(int? pageSize, int? pageNo)
+        public IEnumerable<ProcessingPhase> GetAllByAccountId(Guid accountId, int? pageSize, int? pageNo)
         {
             using var context = new VMODBContext();
-            var query = context.ProcessingPhases
-                .Include(a => a.Campaign)
-                .Include(a => a.ProcessingPhaseStatementFiles)
-                .OrderByDescending(a => a.CreateDate).ToList()
-                .Where(p => p.Campaign is { CampaignTier: CampaignTier.PartialDisbursementCampaign });
-            int totalCount = query.Count();
+            //var query = context.ProcessingPhases
+            //    .Include(a => a.Campaign)
+            //    .Include(a => a.ProcessingPhaseStatementFiles)
+            //    .OrderByDescending(a => a.CreateDate).ToList()
+            //    .Where(p => p.Campaign is { CampaignTier: CampaignTier.PartialDisbursementCampaign });
+            var listProcessingPhases = new List<ProcessingPhase>();
+            var member = context.Members.ToList().FirstOrDefault(m => m.AccountID.Equals(accountId));
+            var om = context.OrganizationManagers.ToList().FirstOrDefault(o => o.AccountID.Equals(accountId));
+            var campaigns = new List<Campaign>();
+            if (member != null)
+            {
+                campaigns = context.Campaigns.Include(c => c.CreateCampaignRequest).ToList().Where(c => c.CreateCampaignRequest != null && c.CreateCampaignRequest.CreateByMember == member.MemberID).ToList();
+            }
+            else if (om != null)
+            {
+                campaigns = context.Campaigns.Include(c => c.CreateCampaignRequest).ToList().Where(c => c.CreateCampaignRequest != null && c.CreateCampaignRequest.CreateByOM == om.OrganizationManagerID).ToList();
+            }
+            foreach (var campaign in campaigns)
+            {
+                if (campaign.CampaignTier == CampaignTier.PartialDisbursementCampaign)
+                    listProcessingPhases.AddRange(context.ProcessingPhases.ToList().Where(p => p.CampaignId.Equals(campaign.CampaignID)));
+            }
+            int totalCount = listProcessingPhases.Count();
 
             // Set pageSize to the total count if it's not provided
             int size = pageSize ?? 10;
             int page = pageNo ?? 1;
 
             // Apply pagination
-            return query
+            return listProcessingPhases
                 .Skip((page - 1) * size)
                 .Take(size)
                 .ToList();

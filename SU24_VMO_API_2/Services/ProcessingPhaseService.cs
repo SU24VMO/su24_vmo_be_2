@@ -294,9 +294,11 @@ namespace SU24_VMO_API.Services
         }
 
 
-        public IEnumerable<ProcessingPhaseResponseForCampaignTierII>? GetProcessingPhaseResponseForCampaignTierII(int? pageSize, int? pageNo)
+        public IEnumerable<ProcessingPhaseResponseForCampaignTierII>? GetProcessingPhaseResponseForCampaignTierII(Guid accountId, int? pageSize, int? pageNo)
         {
-            var processingPhases = repository.GetAll(pageSize, pageNo);
+            var account = _accountRepository.GetById(accountId);
+            if (account == null) throw new NotFoundException("Tài khoản này không tồn tại!");
+            var processingPhases = repository.GetAllByAccountId(accountId, pageSize, pageNo);
             foreach (var item in processingPhases)
             {
                 if (item.Campaign != null) item.Campaign.ProcessingPhases = null;

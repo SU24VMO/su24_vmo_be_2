@@ -171,7 +171,7 @@ namespace SU24_VMO_API.Controllers
                         YoutubeUrl = request.YoutubeUrl
                     };
                     var organizationManager = _organizationManagerService.CreateOrganizationManager(omCreateRequest);
-                    if (request == null) return BadRequest("Email đã tồn tại!");
+                    if (organizationManager == null) return BadRequest("Email đã tồn tại!");
                     var response = new ResponseMessage()
                     {
                         Message = "Register successfully!",
