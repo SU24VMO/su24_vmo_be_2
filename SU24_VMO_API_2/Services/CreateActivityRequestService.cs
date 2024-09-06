@@ -1004,54 +1004,54 @@ namespace SU24_VMO_API.Services
                     activity.IsActive = true;
                     activity.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
 
-                    var processingPhase = _phaseRepository.GetById(activity.ProcessingPhaseId)!;
-                    var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
-                    var maxPriority = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Max(p => p.Priority);
-                    var finalProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID)
-                        .FirstOrDefault(p => p.Priority == maxPriority);
+                    //var processingPhase = _phaseRepository.GetById(activity.ProcessingPhaseId)!;
+                    //var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
+                    //var maxPriority = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Max(p => p.Priority);
+                    //var finalProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID)
+                    //    .FirstOrDefault(p => p.Priority == maxPriority);
 
-                    if (processingPhase.Priority != maxPriority)
-                    {
-                        processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
-                        processingPhase.IsProcessing = false;
-                        processingPhase.IsActive = true;
-                        processingPhase.IsEnd = true;
-                        processingPhase.IsLocked = true;
-                        _phaseRepository.Update(processingPhase);
+                    //if (processingPhase.Priority != maxPriority)
+                    //{
+                    //    processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    //    processingPhase.IsProcessing = false;
+                    //    processingPhase.IsActive = true;
+                    //    processingPhase.IsEnd = true;
+                    //    processingPhase.IsLocked = true;
+                    //    _phaseRepository.Update(processingPhase);
 
-                        var nextProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).FirstOrDefault(p => p.Priority == processingPhase.Priority + 1);
-                        if (nextProcessingPhase != null)
-                        {
-                            nextProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
-                            nextProcessingPhase.IsProcessing = true;
-                            nextProcessingPhase.IsActive = true;
-                            nextProcessingPhase.IsLocked = false;
-                            nextProcessingPhase.IsEnd = false;
-                            _phaseRepository.Update(nextProcessingPhase);
-                        }
-                    }
-                    else
-                    {
-                        processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
-                        processingPhase.IsProcessing = false;
-                        processingPhase.IsActive = true;
-                        processingPhase.IsEnd = true;
-                        processingPhase.IsLocked = true;
-                        _phaseRepository.Update(processingPhase);
+                    //    var nextProcessingPhase = _phaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID).FirstOrDefault(p => p.Priority == processingPhase.Priority + 1);
+                    //    if (nextProcessingPhase != null)
+                    //    {
+                    //        nextProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    //        nextProcessingPhase.IsProcessing = true;
+                    //        nextProcessingPhase.IsActive = true;
+                    //        nextProcessingPhase.IsLocked = false;
+                    //        nextProcessingPhase.IsEnd = false;
+                    //        _phaseRepository.Update(nextProcessingPhase);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    //    processingPhase.IsProcessing = false;
+                    //    processingPhase.IsActive = true;
+                    //    processingPhase.IsEnd = true;
+                    //    processingPhase.IsLocked = true;
+                    //    _phaseRepository.Update(processingPhase);
 
-                        campaign.IsComplete = true;
-                        campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
-                        var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
-                        if (donatePhase != null)
-                        {
-                            campaign.CanBeDonated = false;
-                            donatePhase.IsEnd = true;
-                            donatePhase.IsProcessing = false;
-                            donatePhase.IsLocked = true;
-                            donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
-                        }
-                        _campaignRepository.Update(campaign);
-                    }
+                    //    campaign.IsComplete = true;
+                    //    campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    //    var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                    //    if (donatePhase != null)
+                    //    {
+                    //        campaign.CanBeDonated = false;
+                    //        donatePhase.IsEnd = true;
+                    //        donatePhase.IsProcessing = false;
+                    //        donatePhase.IsLocked = true;
+                    //        donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    //    }
+                    //    _campaignRepository.Update(campaign);
+                    //}
 
                     //activity.IsDisable = false;
 

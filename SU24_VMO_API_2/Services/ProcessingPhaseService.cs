@@ -7,6 +7,7 @@ using SU24_VMO_API.Supporters.TimeHelper;
 using SU24_VMO_API_2.DTOs.Response;
 using System.Text;
 using BusinessObject.Enums;
+using System.Diagnostics;
 
 namespace SU24_VMO_API.Services
 {
@@ -20,10 +21,11 @@ namespace SU24_VMO_API.Services
         private readonly ICreateCampaignRequestRepository _createCampaignRequestRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IDonatePhaseRepository _donatePhaseRepository;
 
         public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository, IDonatePhaseRepository donatePhaseRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -33,6 +35,7 @@ namespace SU24_VMO_API.Services
             _notificationRepository = notificationRepository;
             _accountRepository = accountRepository;
             _statementRepository = statementRepository;
+            _donatePhaseRepository = donatePhaseRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -291,6 +294,43 @@ namespace SU24_VMO_API.Services
         }
 
 
+        public IEnumerable<ProcessingPhaseResponseForCampaignTierII>? GetProcessingPhaseResponseForCampaignTierII(int? pageSize, int? pageNo)
+        {
+            var processingPhases = repository.GetAll(pageSize, pageNo);
+            foreach (var item in processingPhases)
+            {
+                if (item.Campaign != null) item.Campaign.ProcessingPhases = null;
+            }
+            var response = MapProcessingPhaseToResponse(processingPhases.ToList());
+            return response;
+        }
+
+        private List<ProcessingPhaseResponseForCampaignTierII>? MapProcessingPhaseToResponse(List<ProcessingPhase> phases)
+        {
+            return phases?.Select(phase => new ProcessingPhaseResponseForCampaignTierII()
+            {
+                ProcessingPhaseId = phase.ProcessingPhaseId,
+                CampaignId = phase.CampaignId,
+                Name = phase.Name,
+                StartDate = phase.StartDate,
+                EndDate = phase.EndDate,
+                CreateDate = phase.CreateDate,
+                Priority = phase.Priority,
+                CurrentMoney = phase.CurrentMoney,
+                Percent = phase.Percent,
+                CurrentPercent = phase.CurrentPercent,
+                IsProcessing = phase.IsProcessing,
+                IsEnd = phase.IsEnd,
+                UpdateDate = phase.UpdateDate,
+                IsLocked = phase.IsLocked,
+                IsActive = phase.IsActive,
+                UpdateBy = phase.UpdateBy,
+                Campaign = phase.Campaign,
+            }).ToList();
+        }
+
+
+
         public ProcessingPhase? CreateProcessingPhaseRequest(CreateProcessingPhaseRequest request)
         {
             var campaign = _campaignRepository.GetById(request.CampaignId);
@@ -346,6 +386,146 @@ namespace SU24_VMO_API.Services
 
                 _statementRepository.Update(statementPhase);
                 repository.Update(processingPhase);
+                if (createCampaignRequest.CreateByOM != null)
+                {
+                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                    var notificationCreated = _notificationRepository.Save(new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = om!.AccountID,
+                        Content = $"Trạng thái giai đoạn giải ngân của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    });
+                }
+                else if (createCampaignRequest.CreateByMember != null)
+                {
+                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                    var notificationCreated = _notificationRepository.Save(new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = member!.AccountID,
+                        Content = $"Trạng thái giai đoạn giải ngân của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    });
+                }
+            }
+            else
+            {
+                processingPhase.IsEnd = false;
+                processingPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                processingPhase.IsProcessing = true;
+                processingPhase.UpdateBy = request.AccountId;
+
+                var statementPhase = new StatementPhase();
+                if (campaign.StatementPhase != null)
+                {
+                    statementPhase = campaign.StatementPhase;
+                    statementPhase.UpdateDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    statementPhase.IsProcessing = false;
+                    statementPhase.IsLocked = false;
+                    statementPhase.IsEnd = false;
+                }
+
+
+
+                _statementRepository.Update(statementPhase);
+                repository.Update(processingPhase);
+                if (createCampaignRequest.CreateByOM != null)
+                {
+                    var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
+                    var notificationCreated = _notificationRepository.Save(new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = om!.AccountID,
+                        Content = $"Trạng thái giai đoạn giải ngân của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    });
+                }
+                else if (createCampaignRequest.CreateByMember != null)
+                {
+                    var member = _memberRepository.GetById((Guid)createCampaignRequest.CreateByMember);
+                    var notificationCreated = _notificationRepository.Save(new Notification
+                    {
+                        NotificationID = Guid.NewGuid(),
+                        NotificationCategory = BusinessObject.Enums.NotificationCategory.SystemMessage,
+                        AccountID = member!.AccountID,
+                        Content = $"Trạng thái giai đoạn giải ngân của chiến dịch {campaign.Name} vừa được cập nhật! Vui lòng kiểm tra thông tin của chiến dịch!",
+                        CreateDate = TimeHelper.GetTime(DateTime.UtcNow),
+                        IsSeen = false,
+                    });
+                }
+            }
+        }
+
+
+        public void UpdateProcessingPhaseToNextProcessingPhaseOfCampaignTierII(UpdateProcessingPhaseStatusRequest request)
+        {
+            var processingPhase = repository.GetById(request.ProcessingPhaseId);
+            if (processingPhase == null) { throw new NotFoundException("Không tìm thấy giai đoạn giải ngân!"); }
+            var account = _accountRepository.GetById(request.AccountId);
+            if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
+            var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
+            if (campaign.CampaignTier != CampaignTier.PartialDisbursementCampaign)
+            {
+                throw new BadRequestException(
+                    "Chiến dịch bạn mong muốn cập nhật không phải là chiến dịch giải ngân từng phần!");
+            }
+            var createCampaignRequest = _createCampaignRequestRepository.GetCreateCampaignRequestByCampaignId(campaign.CampaignID)!;
+            if (request.IsEnd == true)
+            {
+                var maxPriority = repository.GetProcessingPhaseByCampaignId(campaign.CampaignID).Max(p => p.Priority);
+                var finalProcessingPhase = repository.GetProcessingPhaseByCampaignId(campaign.CampaignID)
+                    .FirstOrDefault(p => p.Priority == maxPriority);
+
+                if (processingPhase.Priority != maxPriority)
+                {
+                    processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    processingPhase.IsProcessing = false;
+                    processingPhase.IsActive = true;
+                    processingPhase.IsEnd = true;
+                    processingPhase.IsLocked = true;
+                    repository.Update(processingPhase);
+
+                    var nextProcessingPhase = repository.GetProcessingPhaseByCampaignId(campaign.CampaignID).FirstOrDefault(p => p.Priority == processingPhase.Priority + 1);
+                    if (nextProcessingPhase != null)
+                    {
+                        nextProcessingPhase.StartDate = TimeHelper.GetTime(DateTime.UtcNow);
+                        nextProcessingPhase.IsProcessing = true;
+                        nextProcessingPhase.IsActive = true;
+                        nextProcessingPhase.IsLocked = false;
+                        nextProcessingPhase.IsEnd = false;
+                        repository.Update(nextProcessingPhase);
+                    }
+                }
+                else
+                {
+                    processingPhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    processingPhase.IsProcessing = false;
+                    processingPhase.IsActive = true;
+                    processingPhase.IsEnd = true;
+                    processingPhase.IsLocked = true;
+                    repository.Update(processingPhase);
+
+                    campaign.IsComplete = true;
+                    campaign.ActualEndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    var donatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
+                    if (donatePhase != null)
+                    {
+                        campaign.CanBeDonated = false;
+                        donatePhase.IsEnd = true;
+                        donatePhase.IsProcessing = false;
+                        donatePhase.IsLocked = true;
+                        donatePhase.EndDate = TimeHelper.GetTime(DateTime.UtcNow);
+                    }
+                    _campaignRepository.Update(campaign);
+                }
+
                 if (createCampaignRequest.CreateByOM != null)
                 {
                     var om = _organizationManagerRepository.GetById((Guid)createCampaignRequest.CreateByOM);
