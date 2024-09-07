@@ -4747,7 +4747,7 @@ namespace SU24_VMO_API.Services
                 normalizedCampaignName = campaignName.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
             }
 
-            var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignRequestByVolunteerId(userId, pageSize, pageNo);
+            var createCampaignRequests = _createCampaignRequestRepository.GetAllCreateCampaignTierIRequestByVolunteerId(userId, pageSize, pageNo);
 
             if (createCampaignRequests == null) return null;
 

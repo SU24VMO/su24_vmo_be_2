@@ -15,6 +15,8 @@ namespace Repository.Interfaces
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByOrganizationManagerId(Guid organizationManagerId, string? status);
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, int? pageSize, int? pageNo);
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId);
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignTierIRequestByVolunteerId(Guid memberId, int? pageSize, int? pageNo);
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignTierIRequestByVolunteerId(Guid memberId);
         public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignRequestByVolunteerId(Guid memberId, string? status);
         public CreateCampaignRequest? GetCreateCampaignRequestByCampaignId(Guid campaignId);
         public Task<CreateCampaignRequest?> SaveWithBankingAccountAsync(CreateCampaignRequest entity, BankingAccount bankingAccount);

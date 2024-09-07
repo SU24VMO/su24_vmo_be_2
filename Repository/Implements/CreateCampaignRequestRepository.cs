@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObject.Enums;
 
 namespace Repository.Implements
 {
@@ -102,6 +103,48 @@ namespace Repository.Implements
                 .Include(a => a.Member)
                 .Include(a => a.Moderator)
                 .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.IsDisable == false)
+                .OrderByDescending(a => a.CreateDate);
+            return query.ToList();
+        }
+
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignTierIRequestByVolunteerId(Guid memberId, int? pageSize, int? pageNo)
+        {
+            using var context = new VMODBContext();
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
+                .Include(a => a.Campaign)
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
+                .OrderByDescending(a => a.CreateDate);
+
+            // Calculate total count of the filtered list
+            int totalCount = query.Count();
+
+            // Set pageSize to the total count if it's not provided
+            int size = pageSize ?? totalCount;
+            int page = pageNo ?? 1;
+
+            // Apply pagination
+            return query
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
+
+        public IEnumerable<CreateCampaignRequest> GetAllCreateCampaignTierIRequestByVolunteerId(Guid memberId)
+        {
+            using var context = new VMODBContext();
+
+            // Get the list of requests filtered by memberId
+            var query = context.CreateCampaignRequests
+                .Include(a => a.Campaign)
+                .Include(a => a.OrganizationManager)
+                .Include(a => a.Member)
+                .Include(a => a.Moderator)
+                .Where(c => c.CreateByMember.Equals(memberId) && c.Campaign.IsDisable == false && c.Campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                 .OrderByDescending(a => a.CreateDate);
             return query.ToList();
         }
