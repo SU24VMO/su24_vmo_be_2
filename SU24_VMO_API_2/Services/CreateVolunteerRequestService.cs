@@ -82,7 +82,7 @@ namespace SU24_VMO_API.Services
             {
                 CreateVolunteerRequests = _createVolunteerRequestRepository
                     .GetAllCreateVolunteerRequestsByMemberName(memberName, pageSize, pageNo).ToList(),
-                TotalITem = _createVolunteerRequestRepository.GetAllCreateVolunteerRequestsByMemberName(memberName)
+                TotalItem = _createVolunteerRequestRepository.GetAllCreateVolunteerRequestsByMemberName(memberName)
                     .Count()
             };
         }

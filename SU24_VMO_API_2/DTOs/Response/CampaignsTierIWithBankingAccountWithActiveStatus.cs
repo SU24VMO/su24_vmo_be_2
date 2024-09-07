@@ -3,6 +3,6 @@
     public class CampaignsTierIWithBankingAccountWithActiveStatus
     {
         public List<CampaignWithBankingAccountResponse> CampaignWithBankingAccountResponses { get; set; }
-        public int TotalITem { get; set; }
+        public int TotalItem { get; set; }
     }
 }

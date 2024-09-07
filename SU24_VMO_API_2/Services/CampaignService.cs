@@ -562,7 +562,7 @@ namespace SU24_VMO_API.Services
                 return new CampaignsTierIWithBankingAccountWithActiveStatus
                 {
                     CampaignWithBankingAccountResponses = campaignsResponse,
-                    TotalITem = _campaignRepository.GetAllCampaignsTierIWithActiveStatus(campaignName).Count()
+                    TotalItem = _campaignRepository.GetAllCampaignsTierIWithActiveStatus(campaignName).Count()
                 };
             }
             else
@@ -601,7 +601,7 @@ namespace SU24_VMO_API.Services
                 return new CampaignsTierIWithBankingAccountWithActiveStatus
                 {
                     CampaignWithBankingAccountResponses = campaignsResponse,
-                    TotalITem = _campaignRepository.GetAllCampaignsTierIWithActiveStatus(campaignName).Count()
+                    TotalItem = _campaignRepository.GetAllCampaignsTierIWithActiveStatus(campaignName).Count()
                 };
             }
         }
