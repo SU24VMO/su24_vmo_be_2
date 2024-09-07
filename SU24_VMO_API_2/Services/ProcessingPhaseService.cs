@@ -24,11 +24,13 @@ namespace SU24_VMO_API.Services
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IActivityRepository _activityRepository;
+        private readonly ICreateActivityRequestRepository _createActivityRequestRepository;
 
         public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
             INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository,
-            IDonatePhaseRepository donatePhaseRepository, ITransactionRepository transactionRepository, IActivityRepository activityRepository)
+            IDonatePhaseRepository donatePhaseRepository, ITransactionRepository transactionRepository, IActivityRepository activityRepository,
+            ICreateActivityRequestRepository createActivityRequestRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -41,6 +43,7 @@ namespace SU24_VMO_API.Services
             _donatePhaseRepository = donatePhaseRepository;
             _transactionRepository = transactionRepository;
             _activityRepository = activityRepository;
+            _createActivityRequestRepository = createActivityRequestRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -515,10 +518,26 @@ namespace SU24_VMO_API.Services
             var transactions =
                 _transactionRepository.GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(request.ProcessingPhaseId);
             var activities = _activityRepository.GetActivitiesByProcessingPhaseId(request.ProcessingPhaseId);
-            if (transactions == null || !transactions.Any() || !activities.Any())
+            if (transactions == null || !transactions.Any())
             {
                 throw new BadRequestException(
                     "Hiện hệ thống chưa giải ngân cho tiến trình này, vì vậy chưa thể kết thúc tiến trình!");
+            }
+
+            if (transactions == null || !transactions.Any() || !activities.Any())
+            {
+                throw new BadRequestException(
+                    "Tiến trình hiện chưa có hoạt động đi cùng sao kê nào!");
+            }
+
+            foreach (var activity in activities)
+            {
+                var createActivityRequest =
+                    _createActivityRequestRepository.GetCreateActivityRequestByActivityId(activity.ActivityId);
+                if (createActivityRequest != null && createActivityRequest.IsPending == true)
+                {
+                    throw new BadRequestException("Tiến trình hiện đang có hoạt động chưa được duyệt!");
+                }
             }
             var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
             if (campaign.CampaignTier != CampaignTier.PartialDisbursementCampaign)
