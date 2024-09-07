@@ -22,10 +22,12 @@ namespace SU24_VMO_API.Services
         private readonly INotificationRepository _notificationRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
         public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
-            INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository, IDonatePhaseRepository donatePhaseRepository)
+            INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository,
+            IDonatePhaseRepository donatePhaseRepository, ITransactionRepository transactionRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -36,6 +38,7 @@ namespace SU24_VMO_API.Services
             _accountRepository = accountRepository;
             _statementRepository = statementRepository;
             _donatePhaseRepository = donatePhaseRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -299,11 +302,33 @@ namespace SU24_VMO_API.Services
             var account = _accountRepository.GetById(accountId);
             if (account == null) throw new NotFoundException("Tài khoản này không tồn tại!");
             var processingPhases = repository.GetAllByAccountId(accountId, pageSize, pageNo, processingPhaseName);
+            processingPhases.Item1 = processingPhases.Item1.OrderBy(p => p.Priority);
+            var response = MapProcessingPhaseToResponse(processingPhases.Item1.ToList());
             foreach (var item in processingPhases.Item1)
             {
                 if (item.Campaign != null) item.Campaign.ProcessingPhases = null;
+                double targetAmount = double.Parse(item.Campaign.TargetAmount);
+                item.Campaign.Transactions = (_transactionRepository.GetTransactionByCampaignId(item.CampaignId) ?? Array.Empty<Transaction>()).ToList();
+                double currentPercent = item.Campaign.Transactions.Where(t =>
+                    t.TransactionStatus == TransactionStatus.Success &&
+                    t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
+                item.CurrentPercent =
+                    Math.Round((currentPercent / targetAmount) * 100, 3);
+                var listProcessingPhaseBeforeCurrentPriority =
+                    processingPhases.Item1.Where(p => p.Priority <= item.Priority);
+                var percentBeforePriority =
+                    listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
+                foreach (var processing in response)
+                {
+                    if (item.CurrentPercent >= Math.Floor((double)percentBeforePriority))
+                    {
+                        if (processing.ProcessingPhaseId.Equals(item.ProcessingPhaseId))
+                        {
+                            processing.IsEligible = true;
+                        }
+                    }
+                }
             }
-            var response = MapProcessingPhaseToResponse(processingPhases.Item1.ToList());
             return new ProcessingPhaseResponseForCampaignTierIIWithTotalItem
             {
                 ProcessingPhases = response,

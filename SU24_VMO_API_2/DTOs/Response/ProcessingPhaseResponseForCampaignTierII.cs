@@ -19,6 +19,7 @@ namespace SU24_VMO_API_2.DTOs.Response
         public Guid? UpdateBy { get; set; }
         public bool IsLocked { get; set; }
         public bool IsActive { get; set; }
+        public bool IsEligible { get; set; }
         public DateTime? UpdateDate { get; set; }
         public virtual Campaign? Campaign { get; set; }
     }

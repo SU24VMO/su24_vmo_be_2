@@ -152,6 +152,13 @@ namespace Repository.Implements
                 .Where(d => d.ProcessingPhaseId.Equals(processingPhaseId) && d.TransactionType == TransactionType.Transfer);
         }
 
+        public IEnumerable<Transaction>? GetTransactionByCampaignId(Guid campaignId)
+        {
+            using var context = new VMODBContext();
+            return context.Transactions.ToList()
+                .Where(d => d.CampaignID.Equals(campaignId));
+        }
+
         public Transaction? GetTransactionByOrderId(int orderId)
         {
             using var context = new VMODBContext();
