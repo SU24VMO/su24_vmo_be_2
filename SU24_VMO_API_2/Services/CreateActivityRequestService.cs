@@ -28,6 +28,7 @@ namespace SU24_VMO_API.Services
         private readonly IProcessingPhaseStatementFileRepository _processingPhaseStatementFileRepository;
         private readonly IActivityStatementFileRepository _activityStatementFileRepository;
         private readonly ICampaignRepository _campaignRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly FirebaseService _firebaseService;
 
         public CreateActivityRequestService(ICreateActivityRequestRepository repository, IProcessingPhaseRepository phaseRepository,
@@ -35,7 +36,8 @@ namespace SU24_VMO_API.Services
             IMemberRepository memberRepository, INotificationRepository notificationRepository,
             IModeratorRepository moderatorRepository, IActivityImageRepository activityImageRepository, FirebaseService firebaseService,
             IStatementPhaseRepository statementPhaseRepository, IProcessingPhaseStatementFileRepository processingPhaseStatementFileRepository,
-            ICampaignRepository campaignRepository, IDonatePhaseRepository donatePhaseRepository, IActivityStatementFileRepository activityStatementFileRepository)
+            ICampaignRepository campaignRepository, IDonatePhaseRepository donatePhaseRepository, IActivityStatementFileRepository activityStatementFileRepository,
+            ITransactionRepository transactionRepository)
         {
             _repository = repository;
             _phaseRepository = phaseRepository;
@@ -52,6 +54,7 @@ namespace SU24_VMO_API.Services
             _campaignRepository = campaignRepository;
             _donatePhaseRepository = donatePhaseRepository;
             _activityStatementFileRepository = activityStatementFileRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public IEnumerable<CreateActivityRequest> GetAll()
@@ -630,6 +633,14 @@ namespace SU24_VMO_API.Services
         public async Task<CreateActivityRequest?> CreateActivityTierIIRequestAsync(Guid accountId, CreateActivityTierIIRequestRequest request)
         {
             TryValidateRegisterRequestForTierII(request);
+
+            var transactions =
+                _transactionRepository.GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(request.ProcessingPhaseId);
+            if (transactions == null || !transactions.Any())
+            {
+                throw new BadRequestException(
+                    "Hiện hệ thống chưa giải ngân cho tiến trình này, vì vậy chưa thể đăng hoạt động!");
+            }
 
             var account = await _accountRepository.GetByIdAsync(accountId);
             if (account == null)
