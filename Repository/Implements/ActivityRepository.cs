@@ -72,5 +72,15 @@ namespace Repository.Implements
                 .Include(a => a.ActivityStatementFiles)
                 .FirstOrDefaultAsync(a => a.ActivityId.Equals(id));
         }
+
+        public IEnumerable<Activity> GetActivitiesByProcessingPhaseId(Guid processingPhaseId)
+        {
+            using var context = new VMODBContext();
+            return context.Activities
+                .Include(a => a.ProcessingPhase)
+                .Include(a => a.ActivityStatementFiles)
+                .ToList()
+                .Where(a => a.ProcessingPhaseId.Equals(processingPhaseId));
+        }
     }
 }

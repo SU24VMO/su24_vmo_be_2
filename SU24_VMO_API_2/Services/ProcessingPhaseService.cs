@@ -23,11 +23,12 @@ namespace SU24_VMO_API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IDonatePhaseRepository _donatePhaseRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IActivityRepository _activityRepository;
 
         public ProcessingPhaseService(IProcessingPhaseRepository repository, ICampaignRepository campaignRepository, IMemberRepository memberRepository,
             IOrganizationManagerRepository organizationManagerRepository, ICreateCampaignRequestRepository createCampaignRequestRepository,
             INotificationRepository notificationRepository, IAccountRepository accountRepository, IStatementPhaseRepository statementRepository,
-            IDonatePhaseRepository donatePhaseRepository, ITransactionRepository transactionRepository)
+            IDonatePhaseRepository donatePhaseRepository, ITransactionRepository transactionRepository, IActivityRepository activityRepository)
         {
             this.repository = repository;
             _campaignRepository = campaignRepository;
@@ -39,6 +40,7 @@ namespace SU24_VMO_API.Services
             _statementRepository = statementRepository;
             _donatePhaseRepository = donatePhaseRepository;
             _transactionRepository = transactionRepository;
+            _activityRepository = activityRepository;
         }
 
         public IEnumerable<ProcessingPhase> GetAllProcessingPhases()
@@ -501,6 +503,14 @@ namespace SU24_VMO_API.Services
             if (processingPhase == null) { throw new NotFoundException("Không tìm thấy giai đoạn giải ngân!"); }
             var account = _accountRepository.GetById(request.AccountId);
             if (account == null) { throw new NotFoundException("Tài khoản không tìm thấy!"); }
+            var transactions =
+                _transactionRepository.GetTransactionsByProcessingPhaseIdWithTypeIsTransfer(request.ProcessingPhaseId);
+            var activities = _activityRepository.GetActivitiesByProcessingPhaseId(request.ProcessingPhaseId);
+            if (transactions == null || !transactions.Any() || !activities.Any())
+            {
+                throw new BadRequestException(
+                    "Hiện hệ thống chưa giải ngân cho tiến trình này, vì vậy chưa thể kết thúc tiến trình!");
+            }
             var campaign = _campaignRepository.GetById(processingPhase.CampaignId)!;
             if (campaign.CampaignTier != CampaignTier.PartialDisbursementCampaign)
             {
