@@ -316,8 +316,10 @@ namespace SU24_VMO_API.Services
                     t.TransactionType == TransactionType.Receive).Sum(t => t.Amount);
                 item.CurrentPercent =
                     Math.Round((currentPercent / targetAmount) * 100, 3);
+                var processingPhaseOfCurrentItemByCampaignId =
+                    repository.GetProcessingPhaseByCampaignId(item.CampaignId);
                 var listProcessingPhaseBeforeCurrentPriority =
-                    processingPhases.Item1.Where(p => p.Priority <= item.Priority);
+                    processingPhaseOfCurrentItemByCampaignId.Where(p => p.Priority <= item.Priority);
                 var percentBeforePriority =
                     listProcessingPhaseBeforeCurrentPriority.Sum(p => p.Percent);
                 foreach (var processing in response)
@@ -328,6 +330,13 @@ namespace SU24_VMO_API.Services
                         {
                             processing.IsEligible = true;
                         }
+                        //foreach (var processingPhase in processingPhaseOfCurrentItemByCampaignId)
+                        //{
+                        //    if (processing.ProcessingPhaseId.Equals(processingPhase.ProcessingPhaseId))
+                        //    {
+                        //        processing.IsEligible = true;
+                        //    }
+                        //}
                     }
                 }
             }
