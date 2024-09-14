@@ -544,6 +544,8 @@ namespace SU24_VMO_API.Services
             var listTop5 = new List<Top5AccountDonation>();
             foreach (var account in accounts)
             {
+                account.Transactions =
+                    account.Transactions.Where(t => t.TransactionStatus == TransactionStatus.Success).ToList();
                 if (account.Role == Role.Member)
                 {
                     var member = _memberRepository.GetByAccountId(account.AccountID)!;
