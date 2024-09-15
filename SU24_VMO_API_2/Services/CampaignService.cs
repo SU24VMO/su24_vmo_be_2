@@ -4280,14 +4280,14 @@ namespace SU24_VMO_API.Services
                 if (normalizedStatus == "donate-phase")
                 {
                     campaign.DonatePhase = _donatePhaseRepository.GetDonatePhaseByCampaignId(campaign.CampaignID);
-                    if (campaign.DonatePhase?.IsProcessing == true)
+                    if (campaign.DonatePhase?.IsProcessing == true && campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                         campaigns.Add(campaign);
                 }
                 else if (normalizedStatus == "processing-phase")
                 {
                     var processingPhases =
                         _processingPhaseRepository.GetProcessingPhaseByCampaignId(campaign.CampaignID);
-                    if (processingPhases?.Any(pp => pp.IsProcessing) == true)
+                    if (processingPhases?.Any(pp => pp.IsProcessing) == true && campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
                         campaign.ProcessingPhases = processingPhases;
                         campaigns.Add(campaign);
@@ -4297,7 +4297,7 @@ namespace SU24_VMO_API.Services
                 {
                     campaign.StatementPhase =
                         _statementPhaseRepository.GetStatementPhaseByCampaignId(campaign.CampaignID);
-                    if (campaign.StatementPhase?.IsProcessing == true)
+                    if (campaign.StatementPhase?.IsProcessing == true && campaign.CampaignTier == CampaignTier.FullDisbursementCampaign)
                     {
                         campaign.StatementPhase.StatementFiles = _statementFileRepository.GetAll()
                             .Where(s => s.StatementPhaseId == campaign.StatementPhase.StatementPhaseId).ToList();
