@@ -538,14 +538,14 @@ namespace SU24_VMO_API.Services
         public List<Top5AccountDonation>? GetTop5AccountsDonate()
         {
             var accounts = GetAll()
-                .Where(a => a.Transactions != null && a.Transactions.Count > 0 && a.IsActived && !a.IsBlocked && (a.Role == Role.Member || a.Role == Role.Volunteer || a.Role == Role.OrganizationManager))
-                .OrderByDescending(a => a.Transactions!.Sum(t => t.Amount))
+                .Where(a => a.Transactions != null && a.Transactions.Count > 0 && a.IsActived && !a.IsBlocked && (a.Role == Role.Member || a.Role == Role.Volunteer || a.Role == Role.OrganizationManager) && a.Transactions.Any(t => t.TransactionStatus == TransactionStatus.Success))
+                .OrderByDescending(a => a.Transactions!.Where(t => t.TransactionStatus == TransactionStatus.Success).Sum(t => t.Amount))
                 .Take(5);
+
+
             var listTop5 = new List<Top5AccountDonation>();
             foreach (var account in accounts)
             {
-                account.Transactions =
-                    account.Transactions.Where(t => t.TransactionStatus == TransactionStatus.Success).ToList();
                 if (account.Role == Role.Member)
                 {
                     var member = _memberRepository.GetByAccountId(account.AccountID)!;
