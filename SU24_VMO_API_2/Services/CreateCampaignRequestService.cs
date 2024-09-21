@@ -111,6 +111,8 @@ namespace SU24_VMO_API.Services
                 if (request.Campaign != null)
                 {
                     request.Campaign.BankingAccount = bankingAccount;
+                    if (request.Campaign.ProcessingPhases != null)
+                        request.Campaign.ProcessingPhases = request.Campaign.ProcessingPhases.OrderBy(p => p.Priority).ToList();
                 }
             }
             return request;
