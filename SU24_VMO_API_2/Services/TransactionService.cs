@@ -444,6 +444,83 @@ namespace SU24_VMO_API.Services
 
         }
 
+
+        public IEnumerable<TransactionResponse> GetAllNumberRecentlyReceiveTransactions(int? numberOfTransaction)
+        {
+            if (numberOfTransaction != null)
+            {
+                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
+                .Take((int)numberOfTransaction) // Take the top 6 transactions
+                .ToList(); // Convert to a list if needed;
+                var transResponse = new List<TransactionResponse>();
+                if (trans != null)
+                {
+                    foreach (var tran in trans)
+                    {
+                        transResponse.Add(new TransactionResponse
+                        {
+                            AccountId = tran.AccountId,
+                            Amount = tran.Amount,
+                            Avatar = tran.Account != null ? tran.Account.Avatar : "Không có ảnh đại diện",
+                            BankingAccountID = tran.BankingAccountID,
+                            CampaignID = tran.CampaignID,
+                            CreateDate = tran.CreateDate,
+                            IsIncognito = tran.IsIncognito,
+                            OrderId = tran.OrderId,
+                            Note = tran.Note,
+                            TransactionID = tran.TransactionID,
+                            PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
+                            TransactionImageUrl = tran.TransactionImageUrl,
+                            TransactionType = tran.TransactionType,
+                            TransactionStatus = tran.TransactionStatus,
+                            DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
+                            DonateStatus = "Vừa ủng hộ",
+                            CampaignTier = tran.Campaign!.CampaignTier
+                        });
+                    }
+                }
+
+                return transResponse;
+            }
+            else
+            {
+                var trans = GetAllTransactions().Where(t => t.TransactionStatus == TransactionStatus.Success && t.TransactionType == TransactionType.Receive)
+                .OrderByDescending(transaction => transaction.CreateDate) // Order by CreateDate descending
+                .Take(6) // Take the top 6 transactions
+                .ToList(); // Convert to a list if needed;
+                var transResponse = new List<TransactionResponse>();
+                if (trans != null)
+                {
+                    foreach (var tran in trans)
+                    {
+                        transResponse.Add(new TransactionResponse
+                        {
+                            AccountId = tran.AccountId,
+                            Amount = tran.Amount,
+                            Avatar = tran.Account != null ? tran.Account.Avatar : "Không có ảnh đại diện",
+                            BankingAccountID = tran.BankingAccountID,
+                            CampaignID = tran.CampaignID,
+                            CreateDate = tran.CreateDate,
+                            IsIncognito = tran.IsIncognito,
+                            OrderId = tran.OrderId,
+                            Note = tran.Note,
+                            TransactionID = tran.TransactionID,
+                            PayerName = tran.IsIncognito ? "Người ủng hộ ẩn danh" : tran.PayerName,
+                            TransactionImageUrl = tran.TransactionImageUrl,
+                            TransactionType = tran.TransactionType,
+                            TransactionStatus = tran.TransactionStatus,
+                            DonatationPeriod = CalculateDonationPeriod(tran.CreateDate),
+                            DonateStatus = "Vừa ủng hộ",
+                            CampaignTier = tran.Campaign!.CampaignTier
+                        });
+                    }
+                }
+                return transResponse;
+            }
+
+        }
+
         public static string CalculateDonationPeriod(DateTime createDate)
         {
             var timeSpan = TimeHelper.GetTime(DateTime.Now) - createDate;
