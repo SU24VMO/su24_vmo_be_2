@@ -438,7 +438,7 @@ namespace SU24_VMO_API.Controllers.VMOControllers
         {
             try
             {
-                var campaigns = _campaignService.GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(campaignName, pageSize, pageNo);
+                var campaigns = _campaignService.GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(campaignName, pageSize, pageNo, orderBy);
 
                 var response = new ResponseMessage()
                 {

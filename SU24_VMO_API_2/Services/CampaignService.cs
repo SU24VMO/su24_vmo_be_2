@@ -619,7 +619,7 @@ namespace SU24_VMO_API.Services
         }
 
         public CampaignsTierIIWithBankingAccountWithActiveStatus?
-            GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo)
+            GetAllCampaignsTierIIWithBankingAccountWithActiveStatus(string? campaignName, int? pageSize, int? pageNo, string? orderBy)
         {
             if (!String.IsNullOrEmpty(campaignName))
             {
@@ -771,6 +771,15 @@ namespace SU24_VMO_API.Services
                     .Take(size)
                     .ToList();
 
+                if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("asc"))
+                {
+                    query = query.OrderBy(c => c.Name);
+                }
+                else if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("desc"))
+                {
+                    query = query.OrderByDescending(c => c.Name);
+                }
+
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
                     CampaignWithBankingAccountResponses = query,
@@ -900,13 +909,13 @@ namespace SU24_VMO_API.Services
 
                                     foreach (var transaction in transactions)
                                     {
-                                            foreach (var response in campaignsResponse)
+                                        foreach (var response in campaignsResponse)
+                                        {
+                                            if (response.ProcessingPhaseId.Equals(transaction.ProcessingPhaseId))
                                             {
-                                                if (response.ProcessingPhaseId.Equals(transaction.ProcessingPhaseId))
-                                                {
-                                                    response.TransactionImage = transaction.TransactionImageUrl;
-                                                }
+                                                response.TransactionImage = transaction.TransactionImageUrl;
                                             }
+                                        }
                                     }
                                 }
                             }
@@ -926,6 +935,15 @@ namespace SU24_VMO_API.Services
                     .Skip((page - 1) * size)
                     .Take(size)
                     .ToList();
+
+                if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("asc"))
+                {
+                    query = query.OrderBy(c => c.Name);
+                }
+                else if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("desc"))
+                {
+                    query = query.OrderByDescending(c => c.Name);
+                }
 
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
                 {
