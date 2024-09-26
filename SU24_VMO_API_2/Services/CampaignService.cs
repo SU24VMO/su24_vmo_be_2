@@ -213,10 +213,16 @@ namespace SU24_VMO_API.Services
                 if (om != null)
                 {
                     var account = _accountRepository.GetById(om.AccountID);
-                    if (account != null)
+                    if (account != null && request.IsTransparent)
                     {
                         account.IsActived = false;
                         account.IsBlocked = true;
+                        _accountRepository.Update(account);
+                    }
+                    else if(account != null && !request.IsTransparent)
+                    {
+                        account.IsActived = true;
+                        account.IsBlocked = false;
                         _accountRepository.Update(account);
                     }
                 }
@@ -228,10 +234,16 @@ namespace SU24_VMO_API.Services
                 if (member != null)
                 {
                     var account = _accountRepository.GetById(member.AccountID);
-                    if (account != null)
+                    if (account != null && request.IsTransparent)
                     {
                         account.IsActived = false;
                         account.IsBlocked = true;
+                        _accountRepository.Update(account);
+                    }
+                    else if (account != null && !request.IsTransparent)
+                    {
+                        account.IsActived = true;
+                        account.IsBlocked = false;
                         _accountRepository.Update(account);
                     }
                 }

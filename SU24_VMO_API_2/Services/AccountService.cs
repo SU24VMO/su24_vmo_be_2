@@ -492,6 +492,10 @@ namespace SU24_VMO_API.Services
                     {
                         account.IsBlocked = false;
                     }
+                    else
+                    {
+                        account.IsBlocked = true;
+                    }
                 }
 
                 account.ModifiedBy = member.MemberID;
@@ -508,6 +512,10 @@ namespace SU24_VMO_API.Services
                     {
                         account.IsBlocked = false;
                     }
+                    else
+                    {
+                        account.IsBlocked = true;
+                    }
                 }
                 account.ModifiedBy = om.OrganizationManagerID;
                 _accountRepository.Update(account);
@@ -522,6 +530,10 @@ namespace SU24_VMO_API.Services
                     if ((bool)request.IsActived)
                     {
                         account.IsBlocked = false;
+                    }
+                    else
+                    {
+                        account.IsBlocked = true;
                     }
                 }
                 account.ModifiedBy = moderator.ModeratorID;
