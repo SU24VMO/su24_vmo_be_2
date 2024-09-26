@@ -773,11 +773,11 @@ namespace SU24_VMO_API.Services
 
                 if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("asc"))
                 {
-                    query = query.OrderBy(c => c.Name);
+                    query = query.OrderBy(c => c.Name).ToList();
                 }
                 else if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("desc"))
                 {
-                    query = query.OrderByDescending(c => c.Name);
+                    query = query.OrderByDescending(c => c.Name).ToList();
                 }
 
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
@@ -938,11 +938,11 @@ namespace SU24_VMO_API.Services
 
                 if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("asc"))
                 {
-                    query = query.OrderBy(c => c.Name);
+                    query = query.OrderBy(c => c.Name).ToList();
                 }
                 else if (!String.IsNullOrEmpty(orderBy) && orderBy.Equals("desc"))
                 {
-                    query = query.OrderByDescending(c => c.Name);
+                    query = query.OrderByDescending(c => c.Name).ToList();
                 }
 
                 return new CampaignsTierIIWithBankingAccountWithActiveStatus
