@@ -808,6 +808,10 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
                     }
+                    else
+                    {
+                        return (null, null);
+                    }
                 }
                 account = _accountRepository.GetByUsername(methodAllowed);
                 if (account != null && account.IsBlocked == false)
@@ -1015,9 +1019,13 @@ namespace SU24_VMO_API.Services
                             return (accessToken, refreshToken);
                         }
                     }
+                    else
+                    {
+                        return (null, null);
+                    }
                 }
 
-                if (account.IsBlocked)
+                if (account != null && account.IsBlocked)
                 {
                     throw new BadRequestException("Tài khoản hiện đã bị khóa, vui lòng liên hệ quản trị viên để mở khóa!");
                 }
